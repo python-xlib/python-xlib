@@ -1,4 +1,4 @@
-# $Id: request.py,v 1.6 2000-12-22 13:23:34 petli Exp $
+# $Id: request.py,v 1.7 2001-11-30 16:10:13 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
@@ -671,8 +671,8 @@ class QueryFont(rq.ReplyRequest):
 	rq.Card16('default_char'),
 	rq.LengthOf('properties', 2),  
 	rq.Card8('draw_direction'),
-	rq.Card8('min_byte1,'),
-	rq.Card8('max_byte1,'),
+	rq.Card8('min_byte1'),
+	rq.Card8('max_byte1'),
 	rq.Card8('all_chars_exist'),
 	rq.Int16('font_ascent'),
 	rq.Int16('font_descent'),
@@ -1531,8 +1531,8 @@ class GetKeyboardControl(rq.ReplyRequest):
 	rq.Card16('sequence_number'),
 	rq.Pad(4),  
 	rq.Card32('led_mask'),
-	rq.Card8('key_click_percent,'),
-	rq.Card8('bell_percent,'),
+	rq.Card8('key_click_percent'),
+	rq.Card8('bell_percent'),
 	rq.Card16('bell_pitch'),
 	rq.Card16('bell_duration'),
 	rq.Pad(2),
