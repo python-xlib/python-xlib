@@ -1,4 +1,4 @@
-# $Id: icccm.py,v 1.1 2000-09-22 11:37:51 petli Exp $
+# $Id: icccm.py,v 1.2 2000-12-21 12:23:07 petli Exp $
 #
 # Xlib.xobject.icccm -- ICCCM structures 
 #
@@ -25,29 +25,30 @@ Aspect = rq.Struct( rq.Int32('num'), rq.Int32('denum') )
 
 WMNormalHints = rq.Struct( rq.Card32('flags'),
 			   rq.Pad(16),
-			   rq.Int32('min_width'),
-			   rq.Int32('min_height'),
-			   rq.Int32('max_width'),
-			   rq.Int32('max_height'),
-			   rq.Int32('width_inc'),
-			   rq.Int32('height_inc'),
-			   rq.Object('min_aspect', Aspect),
-			   rq.Object('max_aspect', Aspect),
-			   rq.Int32('base_width'),
-			   rq.Int32('base_height'),
-			   rq.Int32('win_gravity'),
+			   rq.Int32('min_width', default = 0),
+			   rq.Int32('min_height', default = 0),
+			   rq.Int32('max_width', default = 0),
+			   rq.Int32('max_height', default = 0),
+			   rq.Int32('width_inc', default = 0),
+			   rq.Int32('height_inc', default = 0),
+			   rq.Object('min_aspect', Aspect, default = (0, 0)),
+			   rq.Object('max_aspect', Aspect, default = (0, 0)),
+			   rq.Int32('base_width', default = 0),
+			   rq.Int32('base_height', default = 0),
+			   rq.Int32('win_gravity', default = 0),
 			   )
 
 WMHints = rq.Struct( rq.Card32('flags'),
-		     rq.Card32('input'),
+		     rq.Card32('input', default = 0),
 		     rq.Set('initial_state', 4,
-			    ( Xutil.NormalState, Xutil.IconicState )),
-		     rq.Pixmap('icon_pixmap'),
-		     rq.Window('icon_window'),
-		     rq.Int32('icon_x'),
-		     rq.Int32('icon_y'),
-		     rq.Pixmap('icon_mask'),
-		     rq.Window('window_group'),
+			    ( Xutil.NormalState, Xutil.IconicState ),
+			    default = Xutil.NormalState),
+		     rq.Pixmap('icon_pixmap', default = 0),
+		     rq.Window('icon_window', default = 0),
+		     rq.Int32('icon_x', default = 0),
+		     rq.Int32('icon_y', default = 0),
+		     rq.Pixmap('icon_mask', default = 0),
+		     rq.Window('window_group', default = 0),
 		     )
 
 WMState = rq.Struct( rq.Set('state', 4,

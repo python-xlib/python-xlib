@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.9 2000-09-22 11:37:51 petli Exp $
+# $Id: display.py,v 1.10 2000-12-21 12:23:07 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -58,7 +58,22 @@ _resource_hierarchy = {
     
 class _BaseDisplay(protocol.display.Display):
     resource_classes = _resource_baseclasses.copy()
+
+    # Implement a cache of atom names, used by Window objects when
+    # dealing with some ICCCM properties not defined in Xlib.Xatom
     
+    def __init__(self, *args, **keys):
+	apply(protocol.display.Display.__init__, (self, ) + args, keys)
+	self._atom_cache = {}
+
+    def get_atom(self, atomname):
+	if not self._atom_cache.has_key(atomname):
+	    r = request.InternAtom(display = self, name = atomname, only_if_exists = 0)
+	    self._atom_cache[atom] = r.atom
+	    
+	return self._atom_cache[atom]
+
+	
 class Display:
     def __init__(self, display = None):
 	self.display = _BaseDisplay(display)
@@ -102,6 +117,9 @@ class Display:
 	    screen.default_colormap = self.display.resource_classes['colormap'](self.display, screen.default_colormap.id)
 	    
 	
+    def get_display_name(self):
+	return self.display.get_display_name()
+
     def fileno(self):
 	return self.display.fileno()
 
@@ -146,6 +164,12 @@ class Display:
 	else:
 	    return self.display.info.roots[sno]
 
+    def screen_count(self):
+	return len(self.display.info.roots)
+
+    def get_default_screen(self):
+	return self.display.get_default_screen()
+    
     ###
     ### Extension module interface
     ###

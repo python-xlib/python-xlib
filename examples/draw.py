@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# $Id: draw.py,v 1.3 2000-08-08 09:47:47 petli Exp $
+# $Id: draw.py,v 1.4 2000-12-21 12:23:07 petli Exp $
 #
 # examples/draw.py -- high-level xlib test application.
 #
@@ -27,7 +27,7 @@ import os
 # Change path so we find Xlib
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from Xlib import X, display
+from Xlib import X, display, Xutil
 
 # Application window (only one)
 class Window:
@@ -59,6 +59,20 @@ class Window:
 	    background = self.screen.white_pixel,
 	    )
 
+	# Set some WM info
+
+	self.window.set_wm_name('Xlib example: draw.py')
+	self.window.set_wm_icon_name('draw.py')
+	self.window.set_wm_class('draw', 'XlibExample')
+
+	self.window.set_wm_hints(flags = Xutil.StateHint,
+				 initial_state = Xutil.NormalState)
+
+	self.window.set_wm_normal_hints(flags = (Xutil.PPosition | Xutil.PSize
+						 | Xutil.PMinSize),
+					min_width = 20,
+					min_height = 20)
+	
 	# Map the window, making it visible
 	self.window.map()
 
