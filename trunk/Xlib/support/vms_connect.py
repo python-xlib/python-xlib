@@ -1,4 +1,4 @@
-# $Id: vms_connect.py,v 1.1 2000-09-06 01:51:34 petli Exp $
+# $Id: vms_connect.py,v 1.2 2003-01-29 23:53:37 petli Exp $
 #
 # Xlib.support.vms_connect -- VMS-type display connection functions
 #
@@ -68,7 +68,7 @@ def get_socket(dname, host, dno):
     return s
 
 
-def get_auth(dname, host, dno):
+def get_auth(sock, dname, host, dno):
     # VMS doesn't have xauth
     return '', ''
 

@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.18 2002-07-15 21:43:50 petli Exp $
+# $Id: display.py,v 1.19 2003-01-29 23:53:37 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -47,7 +47,8 @@ class Display:
 
 	self.socket = connect.get_socket(name, host, displayno)
 
-	auth_name, auth_data = connect.get_auth(name, host, displayno)
+	auth_name, auth_data = connect.get_auth(self.socket,
+						name, host, displayno)
 
 	# Internal structures for communication, grouped
 	# by their function and locks

@@ -1,4 +1,4 @@
-# $Id: connect.py,v 1.1 2000-09-06 01:51:34 petli Exp $
+# $Id: connect.py,v 1.2 2003-01-29 23:53:37 petli Exp $
 #
 # Xlib.support.connect -- OS-independent display connection functions
 #
@@ -81,12 +81,11 @@ def get_socket(dname, host, dno):
     return mod.get_socket(dname, host, dno)
 
 
-def get_auth(dname, host, dno):
-    """auth_name, auth_data = get_auth(dname, host, dno)
+def get_auth(sock, dname, host, dno):
+    """auth_name, auth_data = get_auth(sock, dname, host, dno)
 
-    Return authentication data for the display specified by DNAME,
-    HOST and DNO, which are the corresponding values from a previous call
-    to get_display().
+    Return authentication data for the display on the other side of
+    SOCK, which was opened with DNAME, HOST and DNO.
 
     Return AUTH_NAME and AUTH_DATA, two strings to be used in the
     connection setup request.
@@ -94,5 +93,5 @@ def get_auth(dname, host, dno):
     
     modname = _auth_mods.get(platform, _default_auth_mod)
     mod = __import__(modname, globals())
-    return mod.get_auth(dname, host, dno)
+    return mod.get_auth(sock, dname, host, dno)
 
