@@ -16,6 +16,7 @@ setup(name = 'python-xlib',
       packages = [
 	  'Xlib',
 	  'Xlib.ext',
+	  'Xlib.keysymdef',
 	  'Xlib.protocol',
 	  'Xlib.support',
 	  'Xlib.xobject'

@@ -1,3 +1,18 @@
+Fri Jan 19 17:49:45 2001  Peter Liljenberg  <petli@cendio.se>
+
+	* XK.py: Moved all keysyms into separate modules, based on their
+	category.  By default only the miscellany and latin1 keysyms are
+	loaded, and other have to be loaded by importing the
+	Xlib.keysymdef.<category> module, or calling
+	load_keysym_group('category'). 
+
+	* display.py (Display.lookup_string): 
+	(Display.rebind_string):
+
+	Functions to translate keysyms to strings, and binding keysyms to
+	new strings.
+	
+
 2001-01-16    <petli@cendio.se>
 
 	* xobject/drawable.py (Window.send_event): 

@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.15 2001-01-18 13:11:04 petli Exp $
+# $Id: display.py,v 1.16 2001-01-19 18:59:37 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -86,6 +86,9 @@ class Display:
 			    (self.display.info.max_keycode
 			     - self.display.info.min_keycode + 1))
 	
+	# Translations for keysyms to strings.
+	self.keysym_translations = {}
+    
 	# Find all supported extensions
 	self.extensions = []
 	self.class_extension_dicts = {}
@@ -322,6 +325,33 @@ class Display:
 		index = index + 1
 	    code = code + 1
 
+    ###
+    ### client-internal keysym to string translations
+    ###
+	    
+    def lookup_string(self, keysym):
+    	"""Return a string corresponding to KEYSYM, or None if no
+    	reasonable translation is found.
+    	"""
+    	s = self.keysym_translations.get(keysym)
+    	if s is not None:
+    	    return s
+
+	import Xlib.XK
+	return Xlib.XK.keysym_to_string(keysym)
+    
+    def rebind_string(self, keysym, newstring):
+    	"""Change the translation of KEYSYM to NEWSTRING.
+    	If NEWSTRING is None, remove old translation if any.
+    	"""
+    	if newstring is None:
+    	    try:
+    		del self.keysym_translations[keysym]
+    	    except KeyError:
+    		pass
+    	else:
+    	    self.keysym_translations[keysym] = newstring
+    
 	
     ###
     ### X requests
