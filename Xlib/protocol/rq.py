@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.10 2001-01-06 17:58:06 petli Exp $
+# $Id: rq.py,v 1.11 2001-02-19 11:16:10 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -404,7 +404,7 @@ class String16(ValueField):
 	else:
 	    slen = length
 	    
-	return struct.unpack('>' + 'H' * length, data[:length]), buffer(data, slen)
+	return struct.unpack('>' + 'H' * length, data[:length * 2]), buffer(data, slen)
 
 
 
@@ -760,7 +760,10 @@ class EventField(ValueField):
 
 	return value._binary, None, None
 
-
+    def parse_binary_value(self, data, display, length, format):
+	raise RuntimeError('Implement me!!!')
+    
+    
 #
 # Objects usable for List and FixedList fields.
 # Struct is also usable.
