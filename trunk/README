@@ -7,8 +7,8 @@ The main part of the code is
 
     Copyright (C) 2000-2002  Peter Liljenberg
 
-Some code is copyrighted to their contributors, this is indicated at
-the top of the source files.
+Some contributed code is copyrighted by the contributors, in these
+cases that is indicated in the source files in question.
 
 The Python X Library is released under GPL, see the file COPYING for
 details.
@@ -17,7 +17,7 @@ details.
 *** Requirements
 
 The Python X Library requires Python 1.5.2 or newer.  It has been
-tested with Python 1.5.2, 2.0 and 2.1.
+tested to various extents with Pythons 1.5.2, 2.0, 2.1 and 2.2.
 
 
 *** Installation
