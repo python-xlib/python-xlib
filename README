@@ -21,7 +21,7 @@ Make sure that that directory exists before copying.
 Alternatively, you can run programs from the distribution directory,
 or changing the module path in programs.
 
-There are a simple example program, implemented twice using both the
+There's a simple example program, implemented twice using both the
 high-level interface and the low-level protocol.
 
 
@@ -57,7 +57,7 @@ library:
 The low-level protocol and a rudimentary object oriented interface is
 complete, implementing client-side X11R6.  This should be usable for
 writing applications.  It runs at least on Linux using XFree86 as the
-server, but should run on most Unices at least.
+server, but should run on most Unices.
 
 A resource database has been implemented and there is a framework for
 adding X extension code.  Currently only the XTEST extension has been
@@ -77,15 +77,11 @@ approximately ordered by importance.
 
 *** Contact information
 
-Mailing list: <python-xlib@ctrl-c.liu.se>
-
-To subscribe, send a message to <python-xlib-request@ctrl-c.liu.se>
-with the body "SUBSCRIBE".  The subject line is ignored, and can be
-blank. 
-
-
 Author email: Peter Liljenberg <petli@ctrl-c.liu.se>
 
+The Python X Library is a SourceForged project.  The project page is
+http://sourgeforge.net/projects/python-xlib/.  Source is available
+from that page as real releases and from the CVS tree.
 
-There isn't any real web page yet, although new versions can be
-downloaded from http://www.cendio.se/~petli/python-xlib/.
+There isn't any real web page yet, only a derivative of this file.  It
+is located at http://python-xlib.sourceforge.net/.
