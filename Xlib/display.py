@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.17 2002-03-24 22:31:06 petli Exp $
+# $Id: display.py,v 1.18 2002-07-16 20:48:58 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -431,7 +431,7 @@ class Display:
 	request.UngrabServer(display = self.display,
 			     onerror = onerror)
 
-    def warp_pointer(self, x, y, src_window = 0, src_x = 0, src_y = 0,
+    def warp_pointer(self, x, y, src_window = X.NONE, src_x = 0, src_y = 0,
 		     src_width = 0, src_height = 0, onerror = None):
 
 	request.WarpPointer(display = self.display,

@@ -295,169 +295,501 @@ that it will be returned by @code{Display.lookup_string()}.
 X requests methods:
 
 @defmethod Display intern_atom ( name, only_if_exists = 0 )
-Returns Card32(atom)
+
+Intern the string @var{name}, returning its atom number.  If
+@var{only_if_exists} is true and the atom does not already exist,
+it will not be created and @code{X.NONE} is returned.
+
 @end defmethod
+
 
 @defmethod Display get_atom_name ( atom )
-Returns String(name)
+
+Look up the name of @var{atom}, returning it as a string.  Will raise
+@code{BadAtom} if @var{atom} does not exist.
+
 @end defmethod
+
 
 @defmethod Display get_selection_owner ( selection )
-Returns Window(owner, (X.NONE, ))
+
+Return the window that owns @var{selection} (an atom), or @code{X.NONE}
+if there is no owner for the selection.  Can raise @code{BadAtom}.
+
 @end defmethod
 
-@defmethod Display send_event ( destination, event, event_mask = 0, propagate = 0, onerror = None )
+
+@defmethod Display send_event ( destination, event, @w{event_mask = 0,} @w{propagate = 0,} @w{onerror = None )}
+
+Send a synthetic event to the window @code{destination} which can be a
+window object, or @code{X.PointerWindow} or @code{X.InputFocus}.
+@code{event} is the event object to send, instantiated from one of the
+classes in @code{protocol.events}.  See XSendEvent(3X11) for details.
+
+There is also a @code{Window.send_event()} method.
+
 @end defmethod
+
 
 @defmethod Display ungrab_pointer ( time, onerror = None )
+
+Release a grabbed pointer and any queued events.  See
+XUngrabPointer(3X11).
+
 @end defmethod
 
-@defmethod Display change_active_pointer_grab ( event_mask, cursor, time, onerror = None )
+
+@defmethod Display change_active_pointer_grab ( event_mask, cursor, time, @w{onerror = None )}
+
+Change the dynamic parameters of a pointer grab.  See
+XChangeActivePointerGrab(3X11).
+
 @end defmethod
+
 
 @defmethod Display ungrab_keyboard ( time, onerror = None )
+
+Ungrab a grabbed keyboard and any queued events.  See
+XUngrabKeyboard(3X11).
+
 @end defmethod
 
-@defmethod Display allow_events ( mode, time, onerror = None )
+@defmethod Display allow_events ( mode, time, @w{onerror = None )}
+
+Release some queued events.  @var{mode} should be one of
+@code{X.AsyncPointer}, @code{X.SyncPointer}, @code{X.AsyncKeyboard},
+@code{X.SyncKeyboard}, @code{X.ReplayPointer}, @code{X.ReplayKeyboard},
+@code{X.AsyncBoth}, or @code{X.SyncBoth}.  @var{time} should be a
+timestamp or @code{X.CurrentTime}.
+
 @end defmethod
+
 
 @defmethod Display grab_server ( onerror = None )
+
+Disable processing of requests on all other client connections until the
+server is ungrabbed.  Server grabbing should be avoided as much as
+possible.
+
 @end defmethod
+
 
 @defmethod Display ungrab_server ( onerror = None )
+
+Release the server if it was previously grabbed by this client.
+
 @end defmethod
 
-@defmethod Display warp_pointer ( x, y, src_window = 0, src_x = 0, src_y = 0, src_width = 0, src_height = 0, onerror = None )
+
+@defmethod Display warp_pointer ( x, y, @w{src_window = X.NONE,} @w{src_x = 0,} @w{src_y = 0,} @w{src_width = 0,} @w{src_height = 0,} @w{onerror = None )}
+
+Move the pointer relative its current position by the offsets
+(@var{x}, @var{y}).  However, if @var{src_window} is a window the
+pointer is only moved if the specified rectangle in @var{src_window}
+contains it.  If @var{src_width} is 0 it will be replaced with the width
+of @var{src_window} - @var{src_x}.  @var{src_height} is treated in a
+similar way.
+
+To move the pointer to absolute coordinates, use
+@code{Window.warp_pointer()}.
+
 @end defmethod
 
-@defmethod Display set_input_focus ( focus, revert_to, time, onerror = None )
+
+@defmethod Display set_input_focus ( focus, revert_to, time, @w{onerror = None )}
+
+Set input focus to @var{focus}, which should be a window,
+@code{X.PointerRoot} or @code{X.NONE}.  @var{revert_to} specifies where
+the focus reverts to if the focused window becomes not visible, and
+should be @code{X.RevertToParent}, @code{RevertToPointerRoot}, or
+@code{RevertToNone}.  See XSetInputFocus(3X11) for details.
+
+There is also a @code{Window.set_input_focus()}.
+
 @end defmethod
+
 
 @defmethod Display get_input_focus ( )
-Returns Card8('revert_to'), Window('focus', (X.NONE, X.PointerRoot))
+
+Return an object with the following attributes:
+
+@table @code
+@item focus
+The window which currently holds the input focus, @code{X.NONE} or
+@code{X.PointerRoot}. 
+
+@item revert_to
+Where the focus will revert, one of @code{X.RevertToParent},
+@code{RevertToPointerRoot}, or @code{RevertToNone}.
+
+@end table
+
 @end defmethod
+
 
 @defmethod Display query_keymap ( )
-Returns FixedList('map', 32, Card8Obj)
+
+Return a bit vector for the logical state of the keyboard, where each
+bit set to 1 indicates that the corresponding key is currently pressed
+down.  The vector is represented as a list of 32 integers.  List item N
+contains the bits for keys 8N to 8N + 7 with the least significant bit
+in the byte representing key 8N.
+
 @end defmethod
 
+
 @defmethod Display open_font ( name )
-Returns Font or None.
+
+Open the font identifed by the pattern @var{name} and return its font
+object.  If @var{name} does not match any font, @code{None} is returned.
+
 @end defmethod
 
 @defmethod Display list_fonts ( pattern, max_names )
-Returns List('fonts', Str)
+
+Return a list of font names matching @var{pattern}.  No more than
+@var{max_names} will be returned.
+
 @end defmethod
+
 
 @defmethod Display list_fonts_with_info ( pattern, max_names )
-Returns a list of 
-Object('min_bounds', structs.CharInfo),
-Object('max_bounds', structs.CharInfo),
-Card16('min_char_or_byte2'),
-Card16('max_char_or_byte2'),
-Card16('default_char'),
-Card8('draw_direction'),
-Card8('min_byte1'),
-Card8('max_byte1'),
-Card8('all_chars_exist'),
-Int16('font_ascent'),
-Int16('font_descent'),
-Card32('replies_hint'),
-List('properties', structs.FontProp),
-String8('name'),
+
+Return a list of fonts matching @var{pattern}.  No more than
+@var{max_names} will be returned.  Each list item represents one font
+and has the following properties:
+
+@table @code
+@item name
+The name of the font.
+
+@item min_bounds
+@itemx max_bounds
+@itemx min_char_or_byte2
+@itemx max_char_or_byte2
+@itemx default_char
+@itemx draw_direction
+@itemx min_byte1
+@itemx max_byte1
+@itemx all_chars_exist
+@itemx font_ascent
+@itemx font_descent
+@itemx replies_hint
+See the descripton of XFontStruct in XGetFontProperty(3X11) for details
+on these values.
+
+@item properties
+A list of properties.  Each entry has two attributes:
+
+@table @code
+@item name
+The atom identifying this property.
+
+@item value
+A 32-bit unsigned value.
+
+@end table
+
+@end table
+
 @end defmethod
+
 
 @defmethod Display set_font_path ( path, onerror = None )
+
+Set the font path to @var{path}, which should be a list of strings.  If
+@var{path} is empty, the default font path of the server will be
+restored.
+
 @end defmethod
+
 
 @defmethod Display get_font_path ( )
-Returns List('paths', Str)
+
+Return the current font path as a list of strings.
+
 @end defmethod
+
 
 @defmethod Display query_extension ( name )
-Returns None, or  Card8('major_opcode'),
-Card8('first_event'),
-Card8('first_error'),
+
+Ask the server if it supports the extension @var{name}.  If it is
+supported an object with the following attributes is returned:
+
+@table @code
+@item major_opcode
+The major opcode that the requests of this extension uses.
+
+@item first_event
+The base event code if the extension have additional events, or 0.
+
+@item first_error
+The base error code if the extension have additional errors, or 0.
+
+@end table
+
+If the extension is not supported, @code{None} is returned.
+
 @end defmethod
+
 
 @defmethod Display list_extensions ( )
-Returns List('names', Str)
+
+Return a list of all the extensions provided by the server.
+
 @end defmethod
 
-@defmethod Display change_keyboard_mapping ( first_keycode, keysyms, onerror = None )
+
+@defmethod Display change_keyboard_mapping ( first_keycode, keysyms, @w{onerror = None )}
+
+Modify the keyboard mapping, starting with @var{first_keycode}.
+@var{keysyms} is a list of tuples of keysyms.  @code{keysyms[n][i]} will
+be assigned to keycode @code{first_keycode+n} at index @code{i}.
+
 @end defmethod
+
 
 @defmethod Display get_keyboard_mapping ( first_keycode, count )
-Returns KeyboardMapping('keysyms'),
+
+Return the current keyboard mapping as a list of tuples, starting at
+@var{first_keycount} and no more than @var{count}.
+
 @end defmethod
 
-@defmethod Display change_keyboard_control ( onerror = None, **keys )
+
+@defmethod Display change_keyboard_control ( @w{onerror = None,} **keys )
+
+Change the parameters provided as keyword arguments:
+
+@table @code
+@item key_click_percent
+The volume of key clicks between 0 (off) and 100 (load).  -1 will restore
+default setting.
+
+@item bell_percent
+The base volume of the bell, coded as above.
+
+@item bell_pitch
+The pitch of the bell in Hz, -1 restores the default.
+
+@item bell_duration
+The duration of the bell in milliseconds, -1 restores the default.
+
+@item led
+@itemx led_mode
+@code{led_mode} should be @code{X.LedModeOff} or @code{X.LedModeOn}.  If
+@code{led} is provided, it should be a 32-bit mask listing the LEDs that
+should change.  If @code{led} is not provided, all LEDs are changed.
+
+@item key
+@itemx auto_repeat_mode
+@code{auto_repeat_mode} should be one of @code{X.AutoRepeatModeOff},
+@code{X.AutoRepeatModeOn}, or @code{X.AutoRepeatModeDefault}.  If
+@code{key} is provided, that key will be modified, otherwise the global
+state for the entire keyboard will be modified.
+
+@end table
+
 @end defmethod
 
 @defmethod Display get_keyboard_control ( )
+
+Return an object with the following attributes:
+
+@table @code
+@item global_auto_repeat
+@code{X.AutoRepeatModeOn} or @code{X.AutoRepeatModeOff}.
+
+@item auto_repeats
+A list of 32 integers.  List item N contains the bits for keys 8N to 8N
++ 7 with the least significant bit in the byte representing key 8N.  If
+a bit is on, autorepeat is enabled for the corresponding key.
+
+@item led_mask
+A 32-bit mask indicating which LEDs are on.
+
+@item key_click_percent
+The volume of key click, from 0 to 100.
+
+@item bell_percent
+@itemx bell_pitch
+@itemx bell_duration
+The volume, pitch and duration of the bell.
+
+@end table
+
 @end defmethod
+
 
 @defmethod Display bell ( percent = 0, onerror = None )
+
+Ring the bell at the volume @var{percent} which is relative the base
+volume.  See XBell(3X11).
+
 @end defmethod
 
-@defmethod Display change_pointer_control ( accel = None, threshold = None, onerror = None )
-@var{accel} should be @code{None} or @code{(num, denum)}.
+
+@defmethod Display change_pointer_control ( @w{accel = None,} @w{threshold = None,} @w{onerror = None )}
+
+To change the pointer acceleration, set @var{accel} to a tuple
+@code{(num, denum)}.  The pointer will then move @code{num/denum} times
+the normal speed if it moves beyond the threshold number of pixels at
+once.  To change the threshold, set it to the number of pixels.  -1
+restores the default.
+
 @end defmethod
+
 
 @defmethod Display get_pointer_control ( )
-Returns
-Card16('accel_num'),
-Card16('accel_denom'),
-Card16('threshold'),
+
+Return an object with the following attributes:
+
+@table @code
+@item accel_num
+@itemx accel_denom
+The acceleration as numerator/denumerator.
+
+@item threshold
+The number of pixels the pointer must move before the acceleration kicks
+in.
+
+@end table
+
 @end defmethod
 
-@defmethod Display set_screen_saver ( timeout, interval, prefer_blank, allow_exposures, onerror = None )
+
+@defmethod Display set_screen_saver ( timeout, interval, prefer_blank, allow_exposures, @w{onerror = None )}
+
+See XSetScreenSaver(3X11).
+
 @end defmethod
+
 
 @defmethod Display get_screen_saver ( )
-Returns
-Card16('timeout'),
-Card16('interval'),
-Card8('prefer_blanking'),
-Card8('allow_exposures'),
+
+Return an object with the attributes @code{timeout}, @code{interval},
+@code{prefer_blanking}, @code{allow_exposures}.  See
+XGetScreenSaver(3X11) for details.
 
 @end defmethod
 
-@defmethod Display change_hosts ( mode, host_family, host, onerror = None )
+
+@defmethod Display change_hosts ( mode, host_family, host, @w{onerror = None )}
+
+@var{mode} is either @code{X.HostInsert} or @code{X.HostDelete}.
+@var{host_family} is one of @code{X.FamilyInternet},
+@code{X.FamilyDECnet} or @code{X.FamilyChaos}.
+
+@var{host} is a list of bytes.  For the Internet family, it should be
+the four bytes of an IPv4 address.
+
 @end defmethod
 
 @defmethod Display list_hosts ( )
-Returns
-Card8('mode'),
-List('hosts', structs.Host),
+
+Return an object with the following attributes:
+
+@table @code
+@item mode
+@code{X.EnableAccess} if the access control list is used,
+@code{X.DisableAccess} otherwise.
+
+@item hosts
+The hosts on the access list.  Each entry has the following attributes:
+
+@table @code
+@item family
+@code{X.FamilyInternet}, @code{X.FamilyDECnet}, or @code{X.FamilyChaos}.
+
+@item name
+A list of byte values, the coding depends on @code{family}.  For the
+Internet family, it is the 4 bytes of an IPv4 address. 
+
+@end table
+
+@end table
+
 @end defmethod
+
 
 @defmethod Display set_access_control ( mode, onerror = None )
+
+Enable use of access control lists at connection setup if @var{mode} is
+@code{X.EnableAccess}, disable if it is @code{X.DisableAccess}.
+
 @end defmethod
+
 
 @defmethod Display set_close_down_mode ( mode, onerror = None )
+
+Control what will happen with the client's resources at connection
+close.  The default is @code{X.DestroyAll}, the other values are
+@code{X.RetainPermanent} and @code{X.RetainTemporary}.
+
 @end defmethod
+
 
 @defmethod Display force_screen_saver ( mode, onerror = None )
+
+If @var{mode} is @code{X.ScreenSaverActive} the screen saver is
+activated.  If it is @code{X.ScreenSaverReset}, the screen saver is
+deactivated as if device input had been received.
+
 @end defmethod
+
 
 @defmethod Display set_pointer_mapping ( map )
-Returns Card8('status'),
+
+Set the mapping of the pointer buttons.  @var{map} is a list of logical
+button numbers.  @var{map} must be of the same length as the list
+returned by @code{Display.get_pointer_mapping()}.
+
+@code{map[n]} sets the logical number for the physical button
+@code{n+1}.  Logical number 0 disables the button.  Two physical buttons
+cannot be mapped to the same logical number.
+
+If one of the buttons to be altered are logically in the down state,
+@code{X.MappingBusy} is returned and the mapping is not changed.
+Otherwise the mapping is changed and @code{X.MappingSuccess} is returned.
+
 @end defmethod
+
 
 @defmethod Display get_pointer_mapping ( )
-Returns List('map', Card8Obj),
+
+Return a list of the pointer button mappings.  Entry N in the list sets
+the logical button number for the physical button N+1.
+
 @end defmethod
 
+
 @defmethod Display set_modifier_mapping ( keycodes )
-Returns Card8('status'),
+
+Set the keycodes for the eight modifiers @code{X.Shift}, @code{X.Lock},
+@code{X.Control}, @code{X.Mod1}, @code{X.Mod2}, @code{X.Mod3},
+@code{X.Mod4} and @code{X.Mod5}.  @var{keycodes} should be a
+eight-element list where each entry is a list of the keycodes that
+should be bound to that modifier.
+
+If any changed key is logically in the down state, @code{X.MappingBusy}
+is returned and the mapping is not changed.  If the mapping violates
+some server restriction, @code{X.MappingFailed} is returned.  Otherwise
+the mapping is changed and @code{X.MappingSuccess} is returned.
+
 @end defmethod
 
 @defmethod Display get_modifier_mapping ( )
-Returns ModifierMapping('keycodes')
+
+Return a list of eight lists, one for each modifier.  The list can be
+indexed using @code{X.ShiftMapIndex}, @code{X.Mod1MapIndex}, and so on.
+The sublists list the keycodes bound to that modifier.
+
 @end defmethod
 
 @defmethod Display no_operation ( onerror = None )
+
+Do nothing but send a request to the server.
+
 @end defmethod
 
 
