@@ -1,8 +1,8 @@
-# $Id: unix_connect.py,v 1.1 2000-09-06 01:51:34 petli Exp $
+# $Id: unix_connect.py,v 1.2 2002-03-30 00:14:13 petli Exp $
 #
 # Xlib.support.unix_connect -- Unix-type display connection functions
 #
-#    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000,2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -22,8 +22,22 @@ import re
 import string
 import os
 import socket
+
+# FCNTL is deprecated from Python 2.2, so only import it if we doesn't
+# get the names we need.  Furthermore, FD_CLOEXEC seems to be missing
+# in Python 2.2.
+
 import fcntl
-import FCNTL
+
+if hasattr(fcntl, 'F_SETFD'):
+    F_SETFD = fcntl.F_SETFD
+    if hasattr(fcntl, 'FD_CLOEXEC'):
+	FD_CLOEXEC = fcntl.FD_CLOEXEC
+    else:
+	FD_CLOEXEC = 1
+else:
+    from FCNTL import F_SETFD, FD_CLOEXEC
+
 
 from Xlib import error
 
@@ -65,7 +79,7 @@ def get_socket(dname, host, dno):
 	raise error.DisplayConnectionError(dname, str(val))
 
     # Make sure that the connection isn't inherited in child processes
-    fcntl.fcntl(s.fileno(), FCNTL.F_SETFD, FCNTL.FD_CLOEXEC)
+    fcntl.fcntl(s.fileno(), F_SETFD, FD_CLOEXEC)
 
     return s
 
