@@ -1,7 +1,7 @@
 
 			 The Python X Library
 
-		       Version 0.2, 8 Aug 2000
+		       Version 0.3, 22 Aug 2000
 
 
 *** Copyright
@@ -58,6 +58,10 @@ The low-level protocol and a rudimentary object oriented interface is
 complete, implementing client-side X11R6.  This should be usable for
 writing applications.  It runs at least on Linux using XFree86 as the
 server, but should run on most Unices at least.
+
+A resource database has been implemented and there is a framework for
+adding X extension code.  Currently only the XTEST extension has been
+implemented.  
 
 There are most likely bugs, as only a rather small subset of all the
 requests and methods have been tested.  The code is released anyway to

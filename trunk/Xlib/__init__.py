@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.2 2000-08-08 09:59:45 petli Exp $
+# $Id: __init__.py,v 1.3 2000-08-22 13:53:02 petli Exp $
 #
 # Xlib.__init__ -- glue for Xlib package
 #
@@ -26,5 +26,5 @@ __all__ = [
     'xobject',
     ]
 
-__version__ = (0, 2)
+__version__ = (0, 3)
 

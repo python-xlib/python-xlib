@@ -1,4 +1,4 @@
-# $Id: rdb.py,v 1.3 2000-08-15 10:09:48 petli Exp $
+# $Id: rdb.py,v 1.4 2000-08-22 13:53:02 petli Exp $
 #
 # Xlib.rdb -- X resource database implementation
 #
@@ -27,6 +27,7 @@
 import string
 import types
 import re
+import sys
 
 # Xlib modules
 from support import lock
@@ -339,7 +340,7 @@ class ResourceDB:
 	self.lock.release()
 	return text
     
-    def getopt(name, argv, opts):
+    def getopt(self, name, argv, opts):
 	"""getopt(name, argv, opts)
 
 	Parse X command line options, inserting the recognised options
@@ -366,13 +367,16 @@ class ResourceDB:
 	rdb.OptionError is raised if there is an error in the argument list.
 	"""
 
-	while len(argv) and argv[0] and argv[0][0] == '-':
+	while argv and argv[0] and argv[0][0] == '-':
 	    try:
 		argv = opts[argv[0]].parse(name, self, argv)
 	    except KeyError:
 		raise OptionError('unknown option: %s' % argv[0])
 	    except IndexError:
 		raise OptionError('missing argument to option: %s' % argv[0])
+
+	return argv
+
 
 class _Match:
     def __init__(self, path, dbs):
@@ -614,6 +618,47 @@ class SkipNArgs(Option):
     def parse(self, name, db, args):
 	return args[1 + self.count:]
 
+
+
+def get_display_opts(options, argv = sys.argv):
+    """display, name, db, args = get_display_opts(options, [argv])
+
+    Parse X OPTIONS from ARGV (or sys.argv if not provided).
+    
+    Connect to the display specified by a *.display resource if one is
+    set, or to the default X display otherwise.  Extract the
+    RESOURCE_MANAGER property and insert all resources from ARGV.
+
+    The four return values are:
+      DISPLAY -- the display object
+      NAME    -- the application name (the filname of ARGV[0])
+      DB      -- the created resource database 
+      ARGS    -- any remaining arguments
+    """
+    
+    from Xlib import display, Xatom
+    import os
+    
+    name = os.path.splitext(os.path.basename(argv[0]))[0]
+    
+    optdb = ResourceDB()
+    leftargv = optdb.getopt(name, argv[1:], options)
+
+    dname = optdb.get(name + '.display', name + '.Display', None)
+    d = display.Display(dname)
+
+    rdbstring = d.screen(0).root.get_full_property(Xatom.RESOURCE_MANAGER,
+						   Xatom.STRING)
+    if rdbstring:
+	data = rdbstring.value
+    else:
+	data = None
+	
+    db = ResourceDB(string = data)
+    db.update(optdb)
+
+    return d, name, db, leftargv
+
 	
 # Common X options
 stdopts = {'-bg': SepArg('*background'),
@@ -626,6 +671,8 @@ stdopts = {'-bg': SepArg('*background'),
 	   '-title': SepArg('.title'),
 	   '-synchronous': NoArg('*synchronous', 'on'),
 	   '-xrm': ResArg,
+	   '-display': SepArg('.display'),
+	   '-d': SepArg('.display'),
 	   }
 
 	    

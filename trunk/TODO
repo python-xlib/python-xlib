@@ -20,10 +20,9 @@
   such a way that one can still use the library without the thread
   support, for systems where the thread module is missing.
 
-* Extensions:  There should be hooks for adding requests, events,
-  errors and high-level methods for X extensions.  Preferably,
-  Xlib.display.Display would itself find all extensions supported by
-  the server and install corresponding code automatically.
+  An attempt has been made, but it is not entirely correct.  However,
+  the framework is there.
+
 
 
 *** To be a real C Xlib replacement
@@ -39,11 +38,7 @@
 * Events: advanced event queue handling, e.g. filtering out events,
   only process events for a certain window, etc.
 
-* Extensions: as many extensions as possible should be implemented,
-  using the yet-to-be-written framework.
-
-* Resource database: an implementation of the Xlib resource database
-  must be implemented.
+* Extensions: as many extensions as possible should be implemented.
 
 
 *** Miscellaneous
