@@ -1,8 +1,8 @@
-# $Id: event.py,v 1.5 2001-12-16 14:23:38 petli Exp $
+# $Id: event.py,v 1.6 2002-02-25 11:09:23 petli Exp $
 #
 # Xlib.protocol.event -- definitions of core events
 #
-#    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -288,8 +288,8 @@ class ResizeRequest(rq.Event):
 			 rq.Pad(20),
 			 )
 
-class CirculateNotify(rq.Event):
-    _code = X.CirculateNotify
+class Circulate(rq.Event):
+    _code = None
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
 			 rq.Card16('sequence_number'),
@@ -300,17 +300,11 @@ class CirculateNotify(rq.Event):
 			 rq.Pad(15),
 			 )
 
-class CirculateRequest(rq.Event):
+class CirculateNotify(Circulate):
+    _code = X.CirculateNotify
+
+class CirculateRequest(Circulate):
     _code = X.CirculateRequest
-    _fields = rq.Struct( rq.Card8('type'),
-			 rq.Pad(1),
-			 rq.Card16('sequence_number'),
-			 rq.Window('parent'),
-			 rq.Window('window'),
-			 rq.Pad(4),
-			 rq.Card8('place'),
-			 rq.Pad(15),
-			 )
 
 class PropertyNotify(rq.Event):
     _code = X.PropertyNotify
@@ -398,7 +392,7 @@ class ClientMessage(rq.Event):
 class KeymapNotify(rq.Event):
     _code = X.KeymapNotify
     _fields = rq.Struct( rq.Card8('type'),
-			 rq.FixedList('data', 31, rq.Card8Obj)
+			 rq.FixedList('data', 31, rq.Card8Obj, pad = 0)
 			 )
     
 			 

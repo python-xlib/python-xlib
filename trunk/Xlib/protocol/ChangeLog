@@ -1,3 +1,13 @@
+2002-02-22  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
+
+	* event.py(CirculateNotify, CirculateRequest): These are
+	identical, so subclass the common Circulate.
+
+2002-02-13  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
+
+	* rq.py (ValueList.parse_binary_value): Use = both for calcsize
+	and unpacking.  Caused problems on Alpha.
+
 2002-02-11  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
 
 	* request.py (GetWindowAttributes): Rename class to win_class. 

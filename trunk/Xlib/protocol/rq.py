@@ -1,8 +1,8 @@
-# $Id: rq.py,v 1.13 2002-02-12 10:11:11 petli Exp $
+# $Id: rq.py,v 1.14 2002-02-25 11:09:23 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
-#    Copyright (C) 2000,2001 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -446,9 +446,10 @@ class List(ValueField):
     
     structcode = None
 
-    def __init__(self, name, type):
+    def __init__(self, name, type, pad = 1):
 	ValueField.__init__(self, name)
 	self.type = type
+	self.pad = pad
 	
     def parse_binary_value(self, data, display, length, format):
 	if length is None:
@@ -501,7 +502,8 @@ class List(ValueField):
 
 		data = buffer(data, pos)
 
-	data = buffer(data, len(data) % 4)
+	if self.pad:
+	    data = buffer(data, len(data) % 4)
 	
 	return ret, data
 
@@ -517,15 +519,16 @@ class List(ValueField):
 		
 	    data = string.join(data, '')
 
-	dlen = len(data)
-	data = data + '\0' * ((4 - dlen % 4) % 4)
+	if self.pad:
+	    dlen = len(data)
+	    data = data + '\0' * ((4 - dlen % 4) % 4)
 	    
 	return data, len(val), None
 	
 
 class FixedList(List):
-    def __init__(self, name, size, type):
-	List.__init__(self, name, type)
+    def __init__(self, name, size, type, pad = 1):
+	List.__init__(self, name, type, pad)
 	self.size = size
 
     def parse_binary_value(self, data, display, length, format):
@@ -721,7 +724,7 @@ class ValueList(Field):
 	    if mask & flag:
 		if field.structcode:
 		    vals = struct.unpack('=' + field.structcode,
-					 data[:struct.calcsize(field.structcode)])
+					 data[:struct.calcsize('=' + field.structcode)])
 		    if field.structvalues == 1:
 			vals = vals[0]
 

@@ -2,6 +2,21 @@
 
 		      NEWS for Python X Library
 
+* Version 0.11  23 Feb 2001
+
+** Regression tests for the protocol definition
+
+Regressions tests have been created for all requests, replies and
+events.  The tests use PyUnit, and the old resource database test has
+been updated to use it too.
+
+** A lot of protocol bugfixes
+
+The bugs discovered by the regression tests have been fixed.
+Additionally, a subtle bug in the core engine which could cause a
+"can't happen"-error has also been found and fixed.
+
+
 * Version 0.10  16 Dec 2001
 
 ** Event bugfix
