@@ -1,0 +1,112 @@
+\input texinfo   @c -*-texinfo-*-
+@c
+@c $Id: python-xlib.texi,v 1.1 2000-09-06 01:47:19 petli Exp $
+@c
+@c %**start of header
+@setfilename python-xlib.info
+@settitle The Python X Library
+@setchapternewpage odd
+@c %**end of header
+
+@ifinfo
+This file documents the Python X Library.
+
+Copyright 2000 Peter Liljenberg
+
+Permission is granted to make and distribute verbatim
+copies of this manual provided the copyright notice and
+this permission notice are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX
+and print the results, provided the printed document
+carries a copying permission notice identical to this
+one except for the removal of this paragraph (this
+paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified
+versions of this manual under the conditions for
+verbatim copying, provided also that the sections
+entitled ``Copying'' and ``GNU General Public License''
+are included exactly as in the original, and provided
+that the entire resulting derived work is distributed
+under the terms of a permission notice identical to this
+one.
+
+Permission is granted to copy and distribute
+translations of this manual into another language,
+under the above conditions for modified versions,
+except that this permission notice may be stated in a
+translation approved by the Free Software Foundation.
+@end ifinfo
+
+@titlepage
+@title The Python X Library
+@author Peter Liljenberg
+
+@c  The following two commands
+@c  start the copyright page.
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2000 Peter Liljenberg
+
+Permission is granted to make and distribute verbatim
+copies of this manual provided the copyright notice and
+this permission notice are preserved on all copies.
+
+Permission is granted to copy and distribute modified
+versions of this manual under the conditions for
+verbatim copying, provided also that the sections
+entitled ``Copying'' and ``GNU General Public License''
+are included exactly as in the original, and provided
+that the entire resulting derived work is distributed
+under the terms of a permission notice identical to this
+one.
+
+Permission is granted to copy and distribute
+translations of this manual into another language,
+under the above conditions for modified versions,
+except that this permission notice may be stated in a
+translation approved by the Free Software Foundation.
+@end titlepage
+
+@contents
+
+@node Top
+@top
+
+The Python X Library is a complete library for writing X Windows client
+applications in Python.  It implements the entire X11R6 protocol and
+some extensions, and also some supplementary functionality such as a
+resource database.  It is written entirely in Python, and is therefore
+entirely independent of the traditional C Xlib; it only requires a
+Python installation with network support.
+
+Although the X11R6 protocol is the basis of all X client applications,
+it is a little too low-level to be useful for writing advanced graphical
+interfaces.  To this end, many different widget sets has been developed,
+a few of the more popular are Motif, Qt and Gtk.  The Python X Library
+is not compatible with any of these, as they are based on the C Xlib.
+As a result the Python X Library isn't in itself very useful for writing
+GUIs, but is eminent for writing small X applications with no advanced
+GUI, e.g. simple monitor programs, or for that matter more advanced
+background applications such as window managers.
+
+@menu
+* Basic X Concepts::      The fundamental X Windows concepts.
+* Package Layout::        The layout of the Python Xlib package.
+* Connect to a Display::  Connecting to a X server display.
+* Error Handling::        Handling X errors.
+* Event Handling::        Handling X events.
+* Xlib and Threads::      Using the Python Xlib in threaded applications.
+* X Objects::             X objects and their operations.
+* Extensions::            Various X protocol extensions.
+@end menu
+
+@include concepts.texi
+@include package.texi
+@include connect.texi
+@include errors.texi
+ 
+@bye

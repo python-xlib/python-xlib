@@ -1,0 +1,85 @@
+@c The Python X Library -- package layout
+@c $Id: package.texi,v 1.1 2000-09-06 01:47:19 petli Exp $
+@c
+@c Copyright 2000 Peter Liljenberg
+@c
+
+@node Package Layout
+@chapter Package Layout
+
+The Python X Library is distrubuted as a Python package, named
+@code{Xlib}.  It contains a number of modules providing the main
+library interface:
+
+@table @code
+
+@item display
+
+Contains the @code{Display} class, providing the X connection and access
+to all other X objects and operations.
+
+@item error
+
+Contains all @code{Xlib} exception classes.
+
+@item threaded
+
+Imported to set up the library to be thread-safe.
+
+@item rdb
+
+Contains @code{ResourceDB}, an X resource database class, and related
+code.
+
+@item X
+
+Contains symbolic names for all basic X protocol constants.
+
+@item Xutil
+
+Contains additional constants for mainly the ICCCM standard.
+
+@item XK
+
+Contains symbolic names for all X keysyms.
+
+@item Xatom
+
+Contains symbolic names for all standard X atoms.
+
+@item Xcursorfont
+
+Contains symbolic names for all standard X fonts.
+
+@end table
+
+
+There is also a number of subpackages, but they will mainly be of
+interest to developers of the Xlib itself:
+
+@table @code
+
+@item protocol
+
+The low-level protocol implementation.  Contains definitions of all X
+request, responses, events and errors, in addition to the core network
+code.  The high-level object oriented interface provided by
+@code{Xlib.display} is merely a wrapper around this package.
+
+@item support
+
+Miscellaneous supporting code for handling threads and operating
+system-specific features.
+
+@item xobject
+
+Contains classes for all X objects, which are returned by various
+display operations.
+
+@item ext
+
+Contains various X protocol extensions.  Extensions supported by the
+server are loaded automatically at the display connection.
+
+@end table
+

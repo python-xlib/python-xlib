@@ -1,0 +1,101 @@
+@c The Python X Library -- display connection
+@c $Id: connect.texi,v 1.1 2000-09-06 01:47:19 petli Exp $
+@c
+@c Copyright 2000 Peter Liljenberg
+@c
+
+@node Connect to a Display
+@chapter Connect to a Display
+
+To be able to perform any X operations, you must first establish a
+connection to the display.  This is done by instantiating a
+@code{display.Display} object:
+
+@deffn Class Display ( [ displayname ] )
+
+Create a connection to the display called @var{displayname}.  If
+@var{displayname} is None or not provided, connect to the default
+display.
+
+If the connection fails for some reason, one of the errors from the
+following error class tree is raised:
+
+@display
+@group
+Exception
+ \_error.DisplayError 
+    \_error.DisplayNameError
+    \_error.DisplayConnectionError
+@end group
+@end display
+
+@code{error.DisplayNameError} is raised if @var{displayname}, or the
+default display name, is malformed.  @code{error.DisplayConnectionError}
+is raised if the connection to the X server fails.  This might be caused
+by the network connection to the display failing, or if the client
+isn't authorized to connect to the display.
+
+@end deffn
+
+The syntax of a display name and how the library finds the default
+display name depends on the operating system where the client runs.
+
+@menu
+* Unix Display Names::     Most Unix-style operating systems.
+* OpenVMS Display Names::  Digital^H^H^H^H^H^H^HCompaq OpenVMS.
+@end menu
+
+
+@node Unix Display Names
+@section Unix Display Names
+
+A display name on Unix has the following syntax:
+
+@example
+[hostname]:displayno[.screenno]
+@end example
+
+If @var{hostname} is omitted this refers to a display on the same
+machine as the client is running on.  A Unix socket is used to connect
+to the display identified by @code{displayno}, which must be an integer
+from 0 and upwards.
+
+If @var{hostname} is specified, it gives the network name or IP-number
+of the machine to contact.  A TCP socket is used, connecting to port
+6000+@var{displayno} on @var{hostname}.
+
+If the display contains more than one screen, @var{screenno} can be
+specified to make another screen than 0 the default screen.  If the
+number is larger than the available maximum screen number, it will be
+set to the maximum.
+
+A few examples:
+
+@example
+:0           Display 0 on this host, connects to the Unix socket
+             /tmp/.X11-unix/X0
+:0.1         Same as above, but specifying a different default screen
+
+myhost:0     Display 0 on myhost, connects to TCP port 6000
+myhost:10    Display 10 on myhost, connects to TCP port 6010
+
+localhost:0  Display 0 on localhost, i.e. the same host as the client
+             runs on.  Uses a TCP socket, while :0 uses a Unix socket
+@end example
+
+The default display name is stored in the environmental variable
+@code{DISPLAY}.  If that isn't set, @code{error.DisplayNameError} is
+raised. 
+
+
+@node OpenVMS Display Names
+@section OpenVMS Display Names
+
+Currently the X Python Library only supports TCP connections on OpenVMS.
+Display names are identical to Unix display names, but if the hostname
+is omitted, @code{localhost} is used.  The default display name is
+hard-coded to @code{localhost:0.0}.
+
+In the future, the native DECWindows system should be used.  This means
+using LOCAL or DECNET transports if set, and using the logical name
+@code{DECW$DISPLAY} as the default display.
