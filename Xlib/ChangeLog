@@ -1,3 +1,10 @@
+2001-01-10    <petli@cendio.se>
+
+	* display.py (Display._update_keymap): The first half of the
+	update algorithm operated on an earlier type of code->sym map than
+	the second half.  Stupid, stupid.  It would have been nice with a
+	type-checker now.
+
 Tue Jan  9 13:03:19 2001  Peter Liljenberg  <petli@cendio.se>
 
 	* display.py (Display._update_keymap): Fixed call to append with

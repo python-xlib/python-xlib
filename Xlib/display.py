@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.13 2001-01-09 12:05:06 petli Exp $
+# $Id: display.py,v 1.14 2001-01-11 15:13:05 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -249,6 +249,16 @@ class Display:
     ### keymap cache implementation
     ###
 
+    # The keycode->keysym map is stored in a list with 256 elements.
+    # Each element represents a keycode, and the tuple elements are
+    # the keysyms bound to the key.
+
+    # The keysym->keycode map is stored in a mapping, where the keys
+    # are keysyms.  The values are a sorted list of tuples with two
+    # elements each: (index, keycode)
+    # keycode is the code for a key to which this keysym is bound, and
+    # index is the keysyms index in the map for that keycode.
+
     def keycode_to_keysym(self, keycode, index):
 	try:
 	    return self._keymap_codes[keycode][index]
@@ -263,7 +273,8 @@ class Display:
 
     def keysym_to_keycodes(self, keysym):
 	try:
-	    return map(lambda x: x[1], self._keymap_syms[keysym])
+	    # Copy the map list, reversing the arguments
+	    return map(lambda x: (x[1], x[0]), self._keymap_syms[keysym])
 	except KeyError:
 	    return []
     
@@ -280,37 +291,36 @@ class Display:
 	# Delete all sym->code maps for the changed codes
 	
 	lastcode = first_keycode + count
-	for keysym, code in self._keymap_syms.items():
-	    if code >= first_keycode and code < lastcode:
-		symcodes = self._keymap_syms[keysym]
-		i = 0
-		while i < len(symcodes):
-		    if symcodes[i][1] == code:
-			del symcodes[i]
-		    else:
-			i = i + 1
+	for keysym, codes in self._keymap_syms.items():
+	    i = 0
+	    while i < len(codes):
+		code = codes[i][1]
+		if code >= first_keycode and code < lastcode:
+		    del codes[i]
+		else:
+		    i = i + 1
 
-		
+	# Get the new keyboard mapping
 	keysyms = self.get_keyboard_mapping(first_keycode, count)
 
 	# Replace code->sym map with the new map
 	self._keymap_codes[first_keycode:lastcode] = keysyms
 
 	# Update sym->code map
-	i = first_keycode
+	code = first_keycode
 	for syms in keysyms:
-	    j = 0
+	    index = 0
 	    for sym in syms:
 		if sym != X.NoSymbol:
 		    if self._keymap_syms.has_key(sym):
 			symcodes = self._keymap_syms[sym]
-			symcodes.append((j, i))
+			symcodes.append((index, code))
 			symcodes.sort()
 		    else:
-			self._keymap_syms[sym] = [(j, i)]
+			self._keymap_syms[sym] = [(index, code)]
 			
-		j = j + 1
-	    i = i + 1
+		index = index + 1
+	    code = code + 1
 
 	
     ###
