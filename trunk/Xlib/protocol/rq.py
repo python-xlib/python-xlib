@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.14 2002-02-25 11:09:23 petli Exp $
+# $Id: rq.py,v 1.15 2005-03-29 05:21:03 calroc99 Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -631,7 +631,7 @@ class PropertyData(ValueField):
 	fmt, val = value
 
 	if fmt not in (8, 16, 32):
-	    raise BadDataError('Invalid property data format %s' % format)
+	    raise BadDataError('Invalid property data format %d' % format)
 	
 	if type(val) is types.StringType:
 	    size = fmt / 8
