@@ -2,10 +2,7 @@
 
 		      NEWS for Python X Library
 
-* Version 0.12a  24 Mar 2002
-
-This is an alpha release to allow people to start messing with the
-following new feature:
+* Version 0.12  29 Mar 2002
 
 ** SHAPE extension
 
@@ -14,6 +11,12 @@ Xlib programs to use shaped windows.  Take a look at
 examples/shapewin.py for ideas on how to use it.  For more information
 on shaped windows, see
 http://ftp.x.org/pub/R6.6/xc/doc/hardcopy/Xext/shape.PS.gz
+
+** Python 2.2 fix
+
+In Python 2.2 FCNTL.FD_CLOEXEC has disappeared and FCNTL on the whole
+is deprecated, so that had to be dealt with to make the Xlib work with
+that version.  
 
 
 * Version 0.11  23 Feb 2002
