@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.11 2001-01-08 15:28:37 petli Exp $
+# $Id: display.py,v 1.12 2001-01-09 09:06:06 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -305,7 +305,7 @@ class Display:
 	request._serial = self.request_serial
 	self.request_serial = (self.request_serial + 1) % 65536
 
-	self.request_queue.append(request, wait_for_response)
+	self.request_queue.append((request, wait_for_response))
 	qlen = len(self.request_queue)
 	
 	self.request_queue_lock.release()
