@@ -2,4 +2,296 @@
 @node Event Handling
 @chapter Event Handling
 
+Events are sent from the X server to the X client.  Most of the event
+types deal with user input, but there are also event types used for
+inter-client communication.
+
+Most X applications are built around an event loop, where the client
+waits for the server to send events.  The client responds to the events,
+typically by doing one or more X requests.
+
+@menu
+* Getting Events::    Waiting for events.
+* Selecting Events::  Selecting interesting events.
+* Event Types::       Details on all event types.
+* Sending Events::    Clients sending events to other clients.
+@end menu
+
+
+@node Getting Events
+@section Getting Events
+
+Events can be sent at any time, not necessarily when the client is ready
+to recieve an event. Therefore they must be stored temporarily from that
+they are read from the network until the client is ready to handle them.
+Read but unhandled events are stored on an event queue in the Display
+object.  There are two functions to access this queue:
+
+@defmethod Display next_event ( )
+
+Return the next event in the event queue.  If the event queue is empty,
+block until an event is read from the network, and return that one.
+
+@end defmethod
+
+@defmethod Display pending_events ( )
+
+Return the number of events which can be returned without blocking.
+
+@end defmethod
+
+
+A trivial event loop would simply loop infinitely, waiting for an
+event and then handling it.  It could look like this:
+
+@example
+while 1:
+   event = disp.next_event()
+   handle_event(event)
+@end example
+
+
+However, most applications need more control, e.g. to simultaneously
+handle a network connection or at regular intervals schedule timeouts.
+The module @code{select} is often used for this.  @code{Display} objects
+can be used with @code{select}, since they have the required
+@code{fileno()} method.  When @code{select} indicates that a
+@code{Display} object is ready for reading, that means that the server
+has sent some data to the client.  That alone doesn't guarantee that an
+entire event has arrived, so one must first use @code{pending_events()}
+to make sure that @code{next_event()} will return without blocking.  A
+simple event loop which waits for events or a one-second timeout looks
+like this:
+
+@example
+while 1:
+    # Wait for display to send something, or a timeout of one second
+    readable, w, e = select.select([disp], [], [], 1)
+
+    # if no files are ready to be read, it's an timeout
+    if not readable:
+        handle_timeout()
+
+    # if display is readable, handle as many events as have been recieved
+    elif disp in readable:
+        i = disp.pending_events()
+        while i > 0:
+            event = disp.next_event()
+            handle_event(event)
+            i = i - 1
+
+    # loop around to wait for more things to happen
+@end example
+
+
+@node Selecting Events
+@section Selecting Events
+
+To avoid flooding the clients with events in which they have no
+interest, they must explicitly tell the server which events they are
+interested in.  This is done by providing the @code{event_mask}
+attribute when creating windows with @code{Window.create_window} or in
+calls to @code{Window.change_attributes}.  The value of this attribute
+is a mask of all types of events the client is interested in on that
+particular window.  Whenever the server generates an event for a window
+which matches the clients event mask on that window, the event will be
+sent to the client.
+
+The following table lists all event masks and the corresponding event
+types and classes.  All event masks and types are integer constants
+defined in the module @code{Xlib.X}.  Classes have the same name as the
+event type, and are defined in @code{Xlib.protocol.event}.
+
+@multitable {SubstructureRedirectMask} {VisibilityNotify} {Colormap changed or installed}
+@item @strong{Mask} @tab @strong{Type and Class} @tab @strong{Generated when}
+
+@item ButtonMotionMask @*
+  Button1MotionMask @*
+  Button2MotionMask @*
+  Button3MotionMask @*
+  Button4MotionMask @*
+  Button5MotionMask
+  @tab MotionNotify
+  @tab Pointer moved with any or a certain button down
+
+@item @tab @tab
+  
+@item ButtonPressMask	@tab ButtonPress
+  @tab Pointer button pressed
+
+@item ButtonReleaseMask	@tab ButtonRelease
+  @tab Pointer button released
+
+@item @tab @tab
+  
+@item ColormapChangeMask @tab ColormapNotify
+  @tab Colormap changed or installed
+
+@item @tab @tab
+  
+@item EnterWindowMask @tab EnterNotify
+  @tab Pointer enters window
+
+@item LeaveWindowMask @tab LeaveNotify
+  @tab Pointer leaves window
+
+@item @tab @tab
+  
+@item ExposureMask @tab Expose @* NoExpose
+  @tab Window needs to be redrawn
+
+@item @tab @tab
+  
+@item FocusChangeMask @tab FocusIn @* FocusOut
+  @tab Focus changes
+
+@item KeymapStateMask @tab KeymapNotify
+  @tab After EnterNotify and FocusIn
+
+@item @tab @tab
+  
+@item KeyPressMask @tab KeyPress
+  @tab Key is pressed
+
+@item KeyReleaseMask @tab ReleasePress
+  @tab Key is released
+
+@item @tab @tab
+  
+@item PointerMotionMask @tab MotionNotify
+  @tab Pointer is moved
+
+@item @tab @tab
+  
+@item PropertyChangeMask @tab PropertyNotify
+  @tab Window properties change
+
+@item @tab @tab
+    
+@item StructureNotifyMask
+  @tab CirculateNotify @*
+  ConfigureNotify @*
+  DestroyNotify @*
+  GravityNotify @*
+  MapNotify @*
+  ReparentNotify @*
+  UnmapNotify
+  @tab Window structure changes
+
+@item @tab @tab
+    
+@item SubstructureNotifyMask
+  @tab CirculateNotify @*
+  ConfigureNotify @*
+  CreateNotify @*
+  DestroyNotify @*
+  GravityNotify @*
+  MapNotify @*
+  ReparentNotify @*
+  UnmapNotify
+  @tab Child window structure changes
+
+@item @tab @tab
+    
+@item ResizeRedirectMask @tab ResizeRequest
+  @tab Controlling window size change
+
+@item @tab @tab
+    
+@item SubstructureRedirectMask
+  @tab CirculateRequest @*
+  ConfigureRequest @*
+  MapRequest
+  @tab Controlling changes to child windows
+
+@item @tab @tab
+    
+@item VisibilityChangeMask @tab VisibilityNotify
+  @tab Window is obscured or visible
+
+@end multitable
+
+There are also some event types which are always sent to the clients,
+regardless of any event masks:
+
+@multitable {@strong{Type and Class}} {Other client sends message}
+
+@item @strong{Type and Class}	@tab @strong{Cut'n'pasting between windows}
+
+@item ClientMessage @tab Other client sends message
+@item @tab 
+    
+@item MappingMotify @tab Keyboard mapping changes
+@item @tab 
+    
+@item SelectionClear @*
+  SelectionNotify @*
+  SelectionRequest
+  @tab Cut'n'pasting between windows
+
+@end multitable
+
+    
+@node Event Types
+@section Event Types
+
+This section describes all event types by listing their fields and basic
+information on when they are generated.  For detailed discussions on all
+possible event variants, refer to the X Protocol documentation or the C
+Xlib documentation.
+
+FIXME: actually write this
+
+@node Sending Events
+@section Sending Events
+
+Clients can send events to each others.  Most often these are
+general-purpose @code{ClientMessage} events, but any event type can be
+sent.
+
+To send an event, an event object must be created.  This is done by
+instantiating an event class, providing values to all its fields as
+keyword parameters.  The event is then sent with the @code{send_event()}
+method:
+
+@defmethod Window send_event ( event, event_mask = 0, propagate = 0, @w{onerror = None )}
+
+Send @var{event} to this window.
+
+If @var{event_mask} is 0, the event is sent to the client that created
+the window.  Otherwise the event is sent to every client selecting any
+of the event types in @var{event_mask}.
+
+If no clients have selected any of the event types and @var{propagate}
+is true, the X server will search for an ancestor of this window on
+which some client has selected any of the event types.  For details, see
+XSendEvent(3X11).
+
+@end defmethod
+
+@defmethod Display send_event ( destination, event, @w{event_mask = 0,} @w{propagate = 0,} @w{onerror = None )}
+
+Send @var{event} to @var{destination}, which can either be a
+@code{Window} object or a constant:  If @code{X.PointerWindow} is
+specified, send the event to the window the pointer is in. If
+@code{X.InputFocus} is specified and the focus window contains the
+pointer, send the event to the window that the pointer is in.
+Otherwise, send the event to the focus window.
+
+@end defmethod
+
+
+As an example, this creates and sends a @code{ClientMessage} event of
+the client specific type @code{HELLO_WORLD} (an atom), to the window
+@code{dest} and with the 8-bitformat value @code{"G'day, mate"} (which
+must be exactly twenty bytes):
+
+@example
+cm_event = Xlib.protocol.event.ClientMessage(
+    window = dest,
+    client_type = HELLO_WORLD,
+    data = (8, "G'day mate\0\0\0\0\0\0\0\0\0\0"))
+
+dest.send_event(cm_event)
+@end example
 
