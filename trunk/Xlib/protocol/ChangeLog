@@ -1,3 +1,9 @@
+Tue Jan  9 10:03:25 2001  Peter Liljenberg  <petli@cendio.se>
+
+	* display.py (Display.send_request): Fixed a call to append() with
+	multiple arguments, something that modern Pythons don't allow.
+	
+
 2001-01-04    <petli@cendio.se>
 
 	* rq.py: The fix for 64-bit platforms didn't work, and close
