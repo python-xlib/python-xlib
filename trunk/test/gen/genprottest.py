@@ -234,42 +234,24 @@ def build_request(endian):
 	    fpy.write('''
     def testPackRequest%(n)d(self):
 	bin = apply(request.%(req)s._request.to_binary, (), self.req_args_%(n)d)
-	try:
-	    assert bin == self.req_bin_%(n)d
-	except AssertionError:
-	    raise AssertionError(tohex(bin))
+	self.assert_(bin == self.req_bin_%(n)d, tohex(bin))
 
     def testUnpackRequest%(n)d(self):
 	args, remain = request.%(req)s._request.parse_binary(self.req_bin_%(n)d, dummy_display, 1)
-	try:
-	    assert len(remain) == 0
-	except AssertionError:
-	    raise AssertionError(tohex(remain))
-	try:
-	    assert args == self.req_args_%(n)d
-	except AssertionError:
-	    raise AssertionError(args)
+	self.assert_(len(remain) == 0, tohex(remain))
+	self.assert_(args == self.req_args_%(n)d, args)
 ''' % { 'req': req.__name__, 'n': i })
 
 	for i in range(0, replies + 1):
 	    fpy.write('''
     def testPackReply%(n)d(self):
 	bin = apply(request.%(req)s._reply.to_binary, (), self.reply_args_%(n)d)
-	try:
-	    assert bin == self.reply_bin_%(n)d
-	except AssertionError:
-	    raise AssertionError(tohex(bin))
+	self.assert_(bin == self.reply_bin_%(n)d, tohex(bin))
 
     def testUnpackReply%(n)d(self):
 	args, remain = request.%(req)s._reply.parse_binary(self.reply_bin_%(n)d, dummy_display, 1)
-	try:
-	    assert len(remain) == 0
-	except AssertionError:
-	    raise AssertionError(tohex(remain))
-	try:
-	    assert args == self.reply_args_%(n)d
-	except AssertionError:
-	    raise AssertionError(args)
+	self.assert_(len(remain) == 0, tohex(remain))
+	self.assert_(args == self.reply_args_%(n)d, args)
 ''' % { 'req': req.__name__, 'n': i })
 
     fpy.write('''
@@ -414,21 +396,12 @@ def build_event(endian):
 	    fpy.write('''
     def testPack%(n)d(self):
 	bin = apply(event.%(evt)s._fields.to_binary, (), self.evt_args_%(n)d)
-	try:
-	    assert bin == self.evt_bin_%(n)d
-	except AssertionError:
-	    raise AssertionError(tohex(bin))
+	self.assert_(bin == self.evt_bin_%(n)d, tohex(bin))
 
     def testUnpack%(n)d(self):
 	args, remain = event.%(evt)s._fields.parse_binary(self.evt_bin_%(n)d, dummy_display, 1)
-	try:
-	    assert len(remain) == 0
-	except AssertionError:
-	    raise AssertionError(tohex(remain))
-	try:
-	    assert args == self.evt_args_%(n)d
-	except AssertionError:
-	    raise AssertionError(args)
+	self.assert_(len(remain) == 0, tohex(remain))
+	self.assert_(args == self.evt_args_%(n)d, args)
 ''' % { 'evt': evt.__name__, 'n': i })
 
     fpy.write('''
