@@ -8,9 +8,9 @@
 
 *** To be a real C Xlib replacement
 
-* High-level functions: currently, there are only methods which
-  directly correspond to X requests.  Perhaps there should be some
-  simpler functions (e.g. Window.resize_window() in addition to
+* High-level functions: currently, there are mostly methods which
+  directly correspond to X requests.  There should be some simpler
+  functions (e.g. Window.resize_window() in addition to
   Window.configure(), Drawable.rectangle() in addition to
   Drawable.poly_rectangle(), etc), and possibly also compound
   functions (e.g. create_pixmap_from_image() which would load an image
@@ -23,6 +23,9 @@
 
 
 *** Miscellaneous
+
+* Faster, faster!  The protocol engine isn't very fast, despite the
+  optimizations in version 0.7.
 
 * The tread support and the protocol engine needs to be stress
   tested.  They _seem_ to work, but that's no guarantee.

@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.7 2000-12-22 13:23:34 petli Exp $
+# $Id: drawable.py,v 1.8 2001-01-06 17:58:06 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -713,7 +713,7 @@ class Window(Drawable):
 	else:
 	    keys.update(hints)
 
-	value = pstruct.build_from_args((), keys)
+	value = apply(pstruct.to_binary, (), keys)
 
 	self.change_property(pname, ptype, 32, value, onerror = onerror)
 	

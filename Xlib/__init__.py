@@ -1,8 +1,8 @@
-# $Id: __init__.py,v 1.7 2000-12-29 16:16:54 petli Exp $
+# $Id: __init__.py,v 1.8 2001-01-06 17:58:06 petli Exp $
 #
 # Xlib.__init__ -- glue for Xlib package
 #
-#    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000,2001 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -33,4 +33,6 @@ __all__ = [
     'xobject',
     ]
 
-__version__ = (0, 6)
+__version__ = (0, 7)
+
+
