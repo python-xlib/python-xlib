@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.6 2000-08-22 13:53:02 petli Exp $
+# $Id: display.py,v 1.7 2000-08-22 14:06:22 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -64,13 +64,16 @@ class Display:
 	self.display = _BaseDisplay(display)
 
 	# Find all supported extensions
-	self.extensions = self.list_extensions()
+	self.extensions = []
 	self.class_extension_dicts = {}
+	self.display_extension_methods = {}
 	
+	exts = self.list_extensions()
+
 	# Go through all extension modules
 	for extname, modname in ext.__extensions__:
-	    if extname in self.extensions:
-
+	    if extname in exts:
+		
 		# Import the module and fetch it
 		__import__('Xlib.ext.' + modname)
 		mod = getattr(ext, modname)
@@ -81,6 +84,9 @@ class Display:
 		# Call initialiasation function
 		mod.init(self, info)
 
+		self.extensions.append(extname)
+
+		
 	# Finalize extensions by creating new classes
 	for type, dict in self.class_extension_dicts.items():
 	    origcls = self.display.resource_classes[type]
@@ -116,10 +122,20 @@ class Display:
     def pending_events(self):
 	return self.display.pending_events()
 
-
+    def has_extension(self, extension):
+	return extension in self.extensions
+    
     def create_resource_object(self, type, id):
 	return self.display.resource_classes[type](self.display, id)
-    
+
+    # We need this to handle display extension methods
+    def __getattr__(self, attr):
+	try:
+	    function = self.display_extension_methods[attr]
+	    return new.instancemethod(function, self, self.__class__)
+	except KeyError:
+	    raise AttributeError(attr)
+	
     ###
     ### display information retrieval
     ###
@@ -158,8 +174,8 @@ class Display:
 	if object == 'display':
 	    if hasattr(self, name):
 		raise error.MethodOverrideError('attempting to replace display method: %s' % name)
-	    
-	    setattr(self, name, new.instancemethod(function, self, self.__class__))
+
+	    self.display_extension_methods[name] = function
 
 	else:
 	    types = (object, ) + _resource_hierarchy.get(object, ())
