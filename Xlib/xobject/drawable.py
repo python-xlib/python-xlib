@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.10 2001-12-16 14:23:38 petli Exp $
+# $Id: drawable.py,v 1.11 2002-03-24 22:31:07 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -187,11 +187,11 @@ class Drawable(resource.Resource):
 			    arcs = arcs)
 
     def fill_arc(self, gc,  x, y, width, height, angle1, angle2, onerror = None):
-	request.PolyArc(display = self.display,
-			onerror = onerror,
-			drawable = self.id,
-			gc = gc,
-			arcs = [(x, y, width, height, angle1, angle2)])
+	request.PolyFillArc(display = self.display,
+			    onerror = onerror,
+			    drawable = self.id,
+			    gc = gc,
+			    arcs = [(x, y, width, height, angle1, angle2)])
 
     
     def put_image(self, gc, x, y, width, height, format,

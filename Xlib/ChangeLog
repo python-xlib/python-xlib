@@ -1,3 +1,8 @@
+2002-03-11  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
+
+	* xobject/drawable.py (Drawable.fill_arc): This should be a
+	PolyFillArc. 
+
 Fri Jan 19 17:49:45 2001  Peter Liljenberg  <petli@cendio.se>
 
 	* XK.py: Moved all keysyms into separate modules, based on their
