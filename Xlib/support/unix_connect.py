@@ -1,4 +1,4 @@
-# $Id: unix_connect.py,v 1.2 2002-03-30 00:14:13 petli Exp $
+# $Id: unix_connect.py,v 1.3 2003-01-29 23:53:37 petli Exp $
 #
 # Xlib.support.unix_connect -- Unix-type display connection functions
 #
@@ -39,7 +39,7 @@ else:
     from FCNTL import F_SETFD, FD_CLOEXEC
 
 
-from Xlib import error
+from Xlib import error, xauth
 
 display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 
@@ -84,7 +84,27 @@ def get_socket(dname, host, dno):
     return s
 
 
-def get_auth(dname, host, dno):
+def new_get_auth(sock, dname, host, dno):
+    # Translate socket address into the xauth domain
+    if host:
+	family = xauth.FamilyInternet
+
+	# Convert the prettyprinted IP number into 4-octet string.
+	# Sometimes these modules are to smart...
+	octets = string.split(sock.getpeername()[0], '.')
+	addr = string.join(map(lambda x: chr(int(x)), octets), '')
+    else:
+	family = xauth.FamilyLocal
+	addr = socket.gethostname()
+
+    au = xauth.Xauthority()
+    try:
+	return au.get_best_auth(family, addr, dno)
+    except error.XNoAuthError:
+	return '', ''
+	
+    
+def old_get_auth(sock, dname, host, dno):
     # Find authorization cookie
     auth_name = auth_data = ''
     
@@ -115,3 +135,4 @@ def get_auth(dname, host, dno):
 
     return auth_name, auth_data
     
+get_auth = old_get_auth

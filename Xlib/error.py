@@ -1,4 +1,4 @@
-# $Id: error.py,v 1.4 2000-08-21 10:03:45 petli Exp $
+# $Id: error.py,v 1.5 2003-01-29 23:53:31 petli Exp $
 #
 # Xlib.error -- basic error classes
 #
@@ -54,6 +54,9 @@ class ConnectionClosedError(Exception):
     def __str__(self):
 	return 'Display connection closed by %s' % self.whom
 
+
+class XauthError(Exception): pass
+class XNoAuthError(Exception): pass
 
 class ResourceIDError(Exception): pass
 
