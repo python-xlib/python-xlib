@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.4 2000-08-21 10:03:46 petli Exp $
+# $Id: rq.py,v 1.5 2000-09-06 01:51:34 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -437,7 +437,7 @@ class String16(ValueField):
 	else:
 	    pad = ''
 	    
-	return struct.pack('>' + 'H' * slen, val) + pad, slen
+	return apply(struct.pack, ('>' + 'H' * slen, ) + tuple(val)) + pad, slen
 
     def parse_binary_value(self, data, display, length, format):
 	if self.pad:

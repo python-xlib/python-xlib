@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# $Id: threadtest.py,v 1.1 2000-08-22 13:53:02 petli Exp $
+# $Id: threadtest.py,v 1.2 2000-09-06 01:51:34 petli Exp $
 
 import sys
 import os
@@ -21,7 +21,8 @@ def blink(display, win, gc, cols):
 	gc.change(foreground = cols[0])
 	cols = (cols[1], cols[0])
 	redraw(win, gc)
-    
+	display.flush()
+	
 def main():
     d = display.Display()
     root = d.screen().root

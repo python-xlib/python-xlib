@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.1 2000-08-14 10:51:37 petli Exp $
+# $Id: __init__.py,v 1.2 2000-09-06 01:51:34 petli Exp $
 #
 # Xlib.support.__init__ -- support code package
 #
@@ -18,4 +18,7 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-__all__ = [ 'lock' ]
+__all__ = [
+    'lock',
+    'connect'
+    ]

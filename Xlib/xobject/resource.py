@@ -1,4 +1,4 @@
-# $Id: resource.py,v 1.3 2000-08-21 10:03:46 petli Exp $
+# $Id: resource.py,v 1.4 2000-09-06 01:51:34 petli Exp $
 #
 # Xlib.xobject.resource -- any X resource object
 #
@@ -45,7 +45,7 @@ class Resource:
 	return '%s(0x%08x)' % (self.__class__, self.id)
 
     def __repr__(self):
-	return '%s(%s, 0x%08x)' % (self.__class__, repr(self.display), self.id)
+	return '<%s 0x%08x>' % (self.__class__, self.id)
 
     def kill_client(self, onerror = None):
 	request.KillClient(display = self.display,
