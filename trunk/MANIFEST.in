@@ -13,5 +13,6 @@ include doc/ps/python-xlib.ps
 include utils/tcpbug.py utils/parsexbug.py
 
 include examples/draw.py examples/draw-proto.py examples/profilex.py
+include examples/shapewin.py
 include examples/threadtest.py
 
