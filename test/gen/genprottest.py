@@ -990,7 +990,7 @@ reply_var_defs = {
     'AllocColorPlanes': (4, ),
     'QueryColors': (('rgb', 5), ),
     'ListExtensions': (['XTRA', 'XTRA-II'], ),
-    'GetKeyboardControl': (8, ),
+    'GetKeyboardControl': (32, ),
     'GetPointerMapping': (5, ),
 #    '': (, ),
     }

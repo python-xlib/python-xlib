@@ -63,13 +63,13 @@ def check_endian():
 class TestKeymapNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'type': 186,
-            'data': [165, 253, 213, 175, 197, 174, 235, 241, 132, 130, 197, 157, 194, 140, 236, 206, 159, 165, 149, 171, 171, 204, 253, 164, 141, 173, 190, 230, 133, 204, 180],
+            'type': 173,
+            'data': [130, 181, 177, 244, 167, 144, 216, 185, 228, 220, 254, 130, 239, 213, 142, 240, 233, 248, 161, 238, 160, 205, 212, 205, 166, 156, 241, 169, 198, 147, 144],
             }
-        self.evt_bin_0 = '\xba\xa5\xfd\xd5' '\xaf\xc5\xae\xeb' \
-            '\xf1\x84\x82\xc5' '\x9d\xc2\x8c\xec' \
-            '\xce\x9f\xa5\x95' '\xab\xab\xcc\xfd' \
-            '\xa4\x8d\xad\xbe' '\xe6\x85\xcc\xb4'
+        self.evt_bin_0 = '\xad\x82\xb5\xb1' '\xf4\xa7\x90\xd8' \
+            '\xb9\xe4\xdc\xfe' '\x82\xef\xd5\x8e' \
+            '\xf0\xe9\xf8\xa1' '\xee\xa0\xcd\xd4' \
+            '\xcd\xa6\x9c\xf1' '\xa9\xc6\x93\x90'
 
 
     def testPack0(self):
@@ -94,18 +94,18 @@ class TestKeymapNotify(unittest.TestCase):
 class TestExpose(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 57457,
-            'sequence_number': 43449,
-            'type': 197,
-            'x': 39873,
-            'y': 36255,
-            'window': 2026743979,
-            'width': 44271,
-            'count': 33251,
+            'count': 31063,
+            'width': 57024,
+            'window': 1993119152,
+            'y': 29154,
+            'x': 15652,
+            'type': 192,
+            'sequence_number': 45668,
+            'height': 29709,
             }
-        self.evt_bin_0 = '\xc5\x00\xb9\xa9' '\xab\xa8\xcd\x78' \
-            '\xc1\x9b\x9f\x8d' '\xef\xac\x71\xe0' \
-            '\xe3\x81\x00\x00' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\xc0\x00\x64\xb2' '\xb0\x95\xcc\x76' \
+            '\x24\x3d\xe2\x71' '\xc0\xde\x0d\x74' \
+            '\x57\x79\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -131,20 +131,20 @@ class TestExpose(unittest.TestCase):
 class TestGraphicsExpose(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 5890,
-            'sequence_number': 45710,
-            'type': 229,
-            'drawable': 509134898,
-            'x': 47429,
-            'y': 4032,
-            'major_event': 255,
-            'count': 19526,
-            'width': 26463,
-            'minor_event': 6877,
+            'count': 7002,
+            'width': 21650,
+            'major_event': 238,
+            'minor_event': 44368,
+            'y': 2412,
+            'x': 50041,
+            'drawable': 950531249,
+            'type': 138,
+            'sequence_number': 9516,
+            'height': 10465,
             }
-        self.evt_bin_0 = '\xe5\x00\x8e\xb2' '\x32\xc8\x58\x1e' \
-            '\x45\xb9\xc0\x0f' '\x5f\x67\x02\x17' \
-            '\xdd\x1a\x46\x4c' '\xff\x00\x00\x00' \
+        self.evt_bin_0 = '\x8a\x00\x2c\x25' '\xb1\xf4\xa7\x38' \
+            '\x79\xc3\x6c\x09' '\x92\x54\xe1\x28' \
+            '\x50\xad\x5a\x1b' '\xee\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -170,14 +170,14 @@ class TestGraphicsExpose(unittest.TestCase):
 class TestNoExpose(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 33494,
-            'major_event': 214,
-            'type': 201,
-            'window': 1850880805,
-            'minor_event': 52658,
+            'minor_event': 49058,
+            'window': 1389793826,
+            'type': 198,
+            'major_event': 149,
+            'sequence_number': 51301,
             }
-        self.evt_bin_0 = '\xc9\x00\xd6\x82' '\x25\x33\x52\x6e' \
-            '\xb2\xcd\xd6\x00' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\xc6\x00\x65\xc8' '\x22\x92\xd6\x52' \
+            '\xa2\xbf\x95\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -204,13 +204,13 @@ class TestNoExpose(unittest.TestCase):
 class TestVisibilityNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'state': 192,
-            'sequence_number': 17401,
-            'type': 221,
-            'window': 2046433634,
+            'window': 848538738,
+            'type': 233,
+            'state': 239,
+            'sequence_number': 38248,
             }
-        self.evt_bin_0 = '\xdd\x00\xf9\x43' '\x62\x19\xfa\x79' \
-            '\xc0\x00\x00\x00' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\xe9\x00\x68\x95' '\x72\xac\x93\x32' \
+            '\xef\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -237,20 +237,20 @@ class TestVisibilityNotify(unittest.TestCase):
 class TestCreateNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 16744,
-            'sequence_number': 18590,
-            'type': 185,
-            'border_width': 21365,
-            'x': -15988,
-            'y': -16181,
+            'width': 24559,
+            'window': 1328254552,
+            'parent': 112487253,
             'override': 0,
-            'parent': 633561251,
-            'window': 943449734,
-            'width': 53147,
+            'y': -31372,
+            'x': -13676,
+            'border_width': 32812,
+            'type': 230,
+            'sequence_number': 14268,
+            'height': 8803,
             }
-        self.evt_bin_0 = '\xb9\x00\x9e\x48' '\xa3\x60\xc3\x25' \
-            '\x86\xe6\x3b\x38' '\x8c\xc1\xcb\xc0' \
-            '\x9b\xcf\x68\x41' '\x75\x53\x00\x00' \
+        self.evt_bin_0 = '\xe6\x00\xbc\x37' '\x55\x6b\xb4\x06' \
+            '\x58\x8e\x2b\x4f' '\x94\xca\x74\x85' \
+            '\xef\x5f\x63\x22' '\x2c\x80\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -276,13 +276,13 @@ class TestCreateNotify(unittest.TestCase):
 class TestDestroyNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 1876,
-            'event': 1071958935,
-            'type': 196,
-            'window': 2007819931,
+            'window': 1384567865,
+            'type': 183,
+            'event': 1596763581,
+            'sequence_number': 37839,
             }
-        self.evt_bin_0 = '\xc4\x00\x54\x07' '\x97\xcb\xe4\x3f' \
-            '\x9b\xe6\xac\x77' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\xb7\x00\xcf\x93' '\xbd\xad\x2c\x5f' \
+            '\x39\xd4\x86\x52' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -309,14 +309,14 @@ class TestDestroyNotify(unittest.TestCase):
 class TestUnmapNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'from_configure': 1,
-            'sequence_number': 21657,
-            'event': 1231045924,
-            'type': 155,
-            'window': 1767649953,
+            'window': 1267184116,
+            'type': 192,
+            'event': 913541146,
+            'sequence_number': 55135,
+            'from_configure': 0,
             }
-        self.evt_bin_0 = '\x9b\x00\x99\x54' '\x24\x45\x60\x49' \
-            '\xa1\x32\x5c\x69' '\x01\x00\x00\x00' \
+        self.evt_bin_0 = '\xc0\x00\x5f\xd7' '\x1a\x88\x73\x36' \
+            '\xf4\xb1\x87\x4b' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -343,14 +343,14 @@ class TestUnmapNotify(unittest.TestCase):
 class TestMapNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 57255,
-            'event': 1950231896,
-            'type': 209,
-            'window': 1876096300,
             'override': 0,
+            'window': 2002432488,
+            'type': 216,
+            'event': 1566597012,
+            'sequence_number': 8920,
             }
-        self.evt_bin_0 = '\xd1\x00\xa7\xdf' '\x58\x2d\x3e\x74' \
-            '\x2c\xf5\xd2\x6f' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\xd8\x00\xd8\x22' '\x94\x5f\x60\x5d' \
+            '\xe8\xb1\x5a\x77' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -377,13 +377,13 @@ class TestMapNotify(unittest.TestCase):
 class TestMapRequest(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'parent': 1412864960,
-            'sequence_number': 3631,
-            'type': 140,
-            'window': 909987208,
+            'window': 1740270413,
+            'type': 242,
+            'parent': 1188866605,
+            'sequence_number': 6729,
             }
-        self.evt_bin_0 = '\x8c\x00\x2f\x0e' '\xc0\x9b\x36\x54' \
-            '\x88\x4d\x3d\x36' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\xf2\x00\x49\x1a' '\x2d\xaa\xdc\x46' \
+            '\x4d\x6b\xba\x67' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -410,18 +410,18 @@ class TestMapRequest(unittest.TestCase):
 class TestReparentNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 8846,
-            'event': 154719893,
-            'type': 203,
             'override': 0,
-            'x': -7695,
-            'y': -16870,
-            'parent': 434073314,
-            'window': 1908206096,
+            'window': 918878719,
+            'parent': 1046822430,
+            'y': -10755,
+            'x': -11814,
+            'type': 185,
+            'event': 1344092894,
+            'sequence_number': 31034,
             }
-        self.evt_bin_0 = '\xcb\x00\x8e\x22' '\x95\xd6\x38\x09' \
-            '\x10\xea\xbc\x71' '\xe2\x6e\xdf\x19' \
-            '\xf1\xe1\x1a\xbe' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\xb9\x00\x3a\x79' '\xde\x3a\x1d\x50' \
+            '\xff\xf9\xc4\x36' '\x1e\x3e\x65\x3e' \
+            '\xda\xd1\xfd\xd5' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -447,22 +447,22 @@ class TestReparentNotify(unittest.TestCase):
 class TestConfigureNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 21833,
-            'sequence_number': 43966,
-            'event': 1058232245,
-            'type': 209,
-            'border_width': 24372,
-            'x': -29423,
-            'y': -24830,
+            'y': -32583,
+            'above_sibling': 1143940649,
+            'height': 44365,
+            'width': 24191,
+            'window': 1699527401,
             'override': 1,
-            'above_sibling': 143009970,
-            'window': 1313929058,
-            'width': 8146,
+            'x': -23713,
+            'border_width': 51797,
+            'type': 191,
+            'event': 2102634753,
+            'sequence_number': 21818,
             }
-        self.evt_bin_0 = '\xd1\x00\xbe\xab' '\xb5\x57\x13\x3f' \
-            '\x62\xf7\x50\x4e' '\xb2\x28\x86\x08' \
-            '\x11\x8d\x02\x9f' '\xd2\x1f\x49\x55' \
-            '\x34\x5f\x01\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = '\xbf\x00\x3a\x55' '\x01\xa9\x53\x7d' \
+            '\xe9\xba\x4c\x65' '\x29\x26\x2f\x44' \
+            '\x5f\xa3\xb9\x80' '\x7f\x5e\x4d\xad' \
+            '\x55\xca\x01\x00' '\x00\x00\x00\x00'
 
 
     def testPack0(self):
@@ -487,23 +487,23 @@ class TestConfigureNotify(unittest.TestCase):
 class TestConfigureRequest(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 50651,
-            'value_mask': 29375,
-            'type': 176,
-            'border_width': 18503,
-            'x': -25928,
-            'y': -15243,
-            'window': 1060859268,
-            'width': 14856,
-            'height': 63131,
-            'sibling': 282352008,
-            'stack_mode': 146,
-            'parent': 929791867,
+            'parent': 1484835068,
+            'width': 46666,
+            'value_mask': 41755,
+            'stack_mode': 155,
+            'height': 27280,
+            'sibling': 1153557246,
+            'window': 549283037,
+            'y': -1019,
+            'x': -11524,
+            'border_width': 41299,
+            'type': 140,
+            'sequence_number': 48820,
             }
-        self.evt_bin_0 = '\xb0\x92\xdb\xc5' '\x7b\x7f\x6b\x37' \
-            '\x84\x6d\x3b\x3f' '\x88\x59\xd4\x10' \
-            '\xb8\x9a\x75\xc4' '\x08\x3a\x9b\xf6' \
-            '\x47\x48\xbf\x72' '\x00\x00\x00\x00'
+        self.evt_bin_0 = '\x8c\x9b\xb4\xbe' '\xfc\xc8\x80\x58' \
+            '\xdd\x64\xbd\x20' '\xfe\xe2\xc1\x44' \
+            '\xfc\xd2\x05\xfc' '\x4a\xb6\x90\x6a' \
+            '\x53\xa1\x1b\xa3' '\x00\x00\x00\x00'
 
 
     def testPack0(self):
@@ -528,15 +528,15 @@ class TestConfigureRequest(unittest.TestCase):
 class TestGravityNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 7983,
-            'event': 196785485,
-            'type': 147,
-            'window': 1932944214,
-            'x': -1592,
-            'y': -6080,
+            'window': 1471159096,
+            'y': -26841,
+            'x': -10882,
+            'type': 191,
+            'event': 860169186,
+            'sequence_number': 48472,
             }
-        self.evt_bin_0 = '\x93\x00\x2f\x1f' '\x4d\xb5\xba\x0b' \
-            '\x56\x63\x36\x73' '\xc8\xf9\x40\xe8' \
+        self.evt_bin_0 = '\xbf\x00\x58\xbd' '\xe2\x23\x45\x33' \
+            '\x38\x1b\xb0\x57' '\x7e\xd5\x27\x97' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -563,14 +563,14 @@ class TestGravityNotify(unittest.TestCase):
 class TestResizeRequest(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 9912,
-            'sequence_number': 44998,
-            'type': 131,
-            'window': 1301144144,
-            'width': 29687,
+            'width': 8842,
+            'window': 995086195,
+            'type': 139,
+            'sequence_number': 9443,
+            'height': 58942,
             }
-        self.evt_bin_0 = '\x83\x00\xc6\xaf' '\x50\xe2\x8d\x4d' \
-            '\xf7\x73\xb8\x26' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\x8b\x00\xe3\x24' '\x73\xcf\x4f\x3b' \
+            '\x8a\x22\x3e\xe6' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -597,16 +597,16 @@ class TestResizeRequest(unittest.TestCase):
 class TestPropertyNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'atom': 1495377327,
-            'sequence_number': 1751,
-            'time': 1695557742,
-            'type': 139,
-            'state': 163,
-            'window': 1112748504,
+            'window': 1763395006,
+            'time': 936540618,
+            'atom': 47197280,
+            'type': 205,
+            'state': 241,
+            'sequence_number': 47586,
             }
-        self.evt_bin_0 = '\x8b\x00\xd7\x06' '\xd8\x31\x53\x42' \
-            '\xaf\xa5\x21\x59' '\x6e\x28\x10\x65' \
-            '\xa3\x00\x00\x00' '\x00\x00\x00\x00' \
+        self.evt_bin_0 = '\xcd\x00\xe2\xb9' '\xbe\x45\x1b\x69' \
+            '\x60\x2c\xd0\x02' '\xca\x79\xd2\x37' \
+            '\xf1\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -632,14 +632,14 @@ class TestPropertyNotify(unittest.TestCase):
 class TestSelectionClear(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'time': 1437358133,
-            'sequence_number': 60498,
-            'atom': 1873249900,
-            'type': 138,
-            'window': 1733318162,
+            'window': 336291153,
+            'atom': 256452607,
+            'type': 232,
+            'sequence_number': 26660,
+            'time': 1732839301,
             }
-        self.evt_bin_0 = '\x8a\x00\x52\xec' '\x35\x58\xac\x55' \
-            '\x12\x56\x50\x67' '\x6c\x86\xa7\x6f' \
+        self.evt_bin_0 = '\xe8\x00\x24\x68' '\x85\x07\x49\x67' \
+            '\x51\x65\x0b\x14' '\xff\x27\x49\x0f' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -666,19 +666,19 @@ class TestSelectionClear(unittest.TestCase):
 class TestSelectionRequest(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 36984,
-            'type': 211,
-            'property': 983580162,
-            'owner': 177882841,
-            'time': 1526056960,
-            'target': 1426934685,
-            'selection': 1822659914,
-            'requestor': 2139818089,
+            'requestor': 264947265,
+            'selection': 1535909824,
+            'target': 607705863,
+            'time': 1423586793,
+            'owner': 764886771,
+            'property': 1148098854,
+            'type': 147,
+            'sequence_number': 20571,
             }
-        self.evt_bin_0 = '\xd3\x00\x78\x90' '\x00\xc8\xf5\x5a' \
-            '\xd9\x46\x9a\x0a' '\x69\x08\x8b\x7f' \
-            '\x4a\x95\xa3\x6c' '\x9d\x4b\x0d\x55' \
-            '\x02\x3e\xa0\x3a' '\x00\x00\x00\x00'
+        self.evt_bin_0 = '\x93\x00\x5b\x50' '\xe9\x35\xda\x54' \
+            '\xf3\x3e\x97\x2d' '\x41\xc6\xca\x0f' \
+            '\xc0\x1f\x8c\x5b' '\x07\xdb\x38\x24' \
+            '\x26\x99\x6e\x44' '\x00\x00\x00\x00'
 
 
     def testPack0(self):
@@ -703,17 +703,17 @@ class TestSelectionRequest(unittest.TestCase):
 class TestSelectionNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 33180,
-            'type': 134,
-            'property': 921665219,
-            'time': 2051752575,
-            'target': 430622250,
-            'selection': 1613640904,
-            'requestor': 2117848699,
+            'requestor': 971528625,
+            'selection': 327380230,
+            'target': 1874329297,
+            'time': 1022248107,
+            'property': 1791820478,
+            'type': 133,
+            'sequence_number': 30741,
             }
-        self.evt_bin_0 = '\x86\x00\x9c\x81' '\x7f\x42\x4b\x7a' \
-            '\x7b\xce\x3b\x7e' '\xc8\x34\x2e\x60' \
-            '\x2a\xc6\xaa\x19' '\xc3\x7e\xef\x36' \
+        self.evt_bin_0 = '\x85\x00\x15\x78' '\xab\x44\xee\x3c' \
+            '\xb1\x59\xe8\x39' '\x06\x6d\x83\x13' \
+            '\xd1\xfe\xb7\x6f' '\xbe\x02\xcd\x6a' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -739,15 +739,15 @@ class TestSelectionNotify(unittest.TestCase):
 class TestColormapNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'state': 160,
-            'sequence_number': 50674,
-            'colormap': 1988387051,
-            'type': 198,
-            'window': 1445764713,
+            'window': 1353796539,
+            'colormap': 659729309,
             'new': 1,
+            'type': 211,
+            'state': 168,
+            'sequence_number': 8684,
             }
-        self.evt_bin_0 = '\xc6\x00\xf2\xc5' '\x69\x9e\x2c\x56' \
-            '\xeb\x60\x84\x76' '\x01\xa0\x00\x00' \
+        self.evt_bin_0 = '\xd3\x00\xec\x21' '\xbb\x4b\xb1\x50' \
+            '\x9d\xab\x52\x27' '\x01\xa8\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -774,38 +774,38 @@ class TestColormapNotify(unittest.TestCase):
 class TestClientMessage(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 51883,
+            'type': 237,
+            'window': 1804643202,
+            'client_type': 455293257,
             'data': (8, '01234567890123456789'),
-            'type': 223,
-            'client_type': 926681334,
-            'window': 1737261199,
+            'sequence_number': 14854,
             }
-        self.evt_bin_0 = '\xdf\x08\xab\xca' '\x8f\x80\x8c\x67' \
-            '\xf6\x08\x3c\x37' '\x30\x31\x32\x33' \
+        self.evt_bin_0 = '\xed\x08\x06\x3a' '\x82\xab\x90\x6b' \
+            '\x49\x39\x23\x1b' '\x30\x31\x32\x33' \
             '\x34\x35\x36\x37' '\x38\x39\x30\x31' \
             '\x32\x33\x34\x35' '\x36\x37\x38\x39'
 
         self.evt_args_1 = {
-            'sequence_number': 47465,
+            'type': 160,
+            'window': 948875838,
+            'client_type': 212297388,
             'data': (16, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-            'type': 136,
-            'client_type': 125979976,
-            'window': 1615259319,
+            'sequence_number': 28171,
             }
-        self.evt_bin_1 = '\x88\x10\x69\xb9' '\xb7\xe6\x46\x60' \
-            '\x48\x4d\x82\x07' '\x01\x00\x02\x00' \
+        self.evt_bin_1 = '\xa0\x10\x0b\x6e' '\x3e\xb2\x8e\x38' \
+            '\xac\x66\xa7\x0c' '\x01\x00\x02\x00' \
             '\x03\x00\x04\x00' '\x05\x00\x06\x00' \
             '\x07\x00\x08\x00' '\x09\x00\x0a\x00'
 
         self.evt_args_2 = {
-            'sequence_number': 54021,
+            'type': 243,
+            'window': 581929030,
+            'client_type': 966878718,
             'data': (32, [1, 2, 3, 4, 5]),
-            'type': 184,
-            'client_type': 1714086272,
-            'window': 1276109555,
+            'sequence_number': 63569,
             }
-        self.evt_bin_2 = '\xb8\x20\x05\xd3' '\xf3\xe2\x0f\x4c' \
-            '\x80\xe1\x2a\x66' '\x01\x00\x00\x00' \
+        self.evt_bin_2 = '\xf3\x20\x51\xf8' '\x46\x88\xaf\x22' \
+            '\xfe\x65\xa1\x39' '\x01\x00\x00\x00' \
             '\x02\x00\x00\x00' '\x03\x00\x00\x00' \
             '\x04\x00\x00\x00' '\x05\x00\x00\x00'
 
@@ -868,13 +868,13 @@ class TestClientMessage(unittest.TestCase):
 class TestMappingNotify(unittest.TestCase):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 1565,
-            'count': 221,
-            'request': 209,
-            'type': 182,
-            'first_keycode': 179,
+            'first_keycode': 246,
+            'request': 189,
+            'type': 198,
+            'count': 201,
+            'sequence_number': 32665,
             }
-        self.evt_bin_0 = '\xb6\x00\x1d\x06' '\xd1\xb3\xdd\x00' \
+        self.evt_bin_0 = '\xc6\x00\x99\x7f' '\xbd\xf6\xc9\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
