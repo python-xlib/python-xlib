@@ -1,4 +1,4 @@
-# $Id: cursor.py,v 1.1 2000-08-07 10:30:20 petli Exp $
+# $Id: cursor.py,v 1.2 2000-08-08 09:47:46 petli Exp $
 #
 # Xlib.xobject.cursor -- cursor object
 #
@@ -24,3 +24,24 @@ import resource
 
 class Cursor(resource.Resource):
     __cursor__ = resource.Resource.__resource__
+
+    def free(self):
+	request.FreeCursor(display = self.display,
+			   cursor = self.id)
+	self.display.free_resource_id(self.id)
+
+    def recolor(self, (fore_red, fore_green, fore_blue),
+		(back_red, back_green, back_blue)):
+
+	request.RecolorCursor(display = self.display,
+			      cursor = self.id,
+			      fore_red = fore_red,
+			      fore_green = fore_green,
+			      fore_blue = fore_blue,
+			      back_red = back_red,
+			      back_green = back_green,
+			      back_blue = back_blue)
+
+    
+			      
+    

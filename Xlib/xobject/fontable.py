@@ -1,6 +1,6 @@
-# $Id: gc.py,v 1.1 2000-08-07 10:30:20 petli Exp $
+# $Id: fontable.py,v 1.1 2000-08-08 09:47:47 petli Exp $
 #
-# Xlib.xobject.gc -- graphic context object
+# Xlib.xobject.fontable -- fontable objects (GC, font)
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
@@ -21,14 +21,27 @@
 from Xlib.protocol import request
 
 import resource
+import cursor
 
-class GC(resource.Resource):
-    __gc__ = resource.Resource.__resource__
+class Fontable(resource.Resource):
     __fontable__ = resource.Resource.__resource__
 
+    def query(self):
+	return request.QueryFont(display = self.display,
+				 font = self.id)
+    
+    def query_text_extents(self, string):
+	return request.QueryTextExtents(display = self.display,
+					font = self.id,
+					string = string)
+
+
+class GC(Fontable):
+    __gc__ = resource.Resource.__resource__
+
     def change(self, **keys):
-	request.Request(display = self.display,
-			attrs = keys)
+	request.ChangeGC(display = self.display,
+			 attrs = keys)
 
 
     def copy(self, src_gc, mask):
@@ -53,9 +66,37 @@ class GC(resource.Resource):
     def free(self):
 	request.FreeGC(display = self.display,
 		       gc = self.id)
-	if self.owner:
-	    self.display.free_resource_id(self.id)
-	    self.id = None
-	    self.owner = 0
+
+	self.display.free_resource_id(self.id)
 
     
+
+class Font(Fontable):
+    __font__ = resource.Resource.__resource__
+
+    def close(self):
+	request.CloseFont(display = self.display,
+			  font = self.id)
+	self.display.free_resource_id(self.id)
+
+    def create_glyph_cursor(self, mask, source_char, mask_char,
+			    (fore_red, fore_green, fore_blue),
+			    (back_red, back_green, back_blue)):
+
+	cid = self.display.allocate_resource_id()
+	request.CreateGlyphCursor(display = self.display,
+				  cid = cid,
+				  source = self.id,
+				  mask = mask,
+				  source_char = source_char,
+				  mask_char = mask_char,
+				  fore_red = fore_red,
+				  fore_green = fore_green,
+				  fore_blue = fore_blue,
+				  back_red = back_red,
+				  back_green = back_green,
+				  back_blue = back_blue)
+
+	return cursor.Cursor(self.display, cid, owner = 1)
+	
+			     

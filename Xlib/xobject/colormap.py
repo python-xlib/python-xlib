@@ -1,4 +1,4 @@
-# $Id: colormap.py,v 1.1 2000-08-07 10:30:20 petli Exp $
+# $Id: colormap.py,v 1.2 2000-08-08 09:47:46 petli Exp $
 #
 # Xlib.xobject.colormap -- colormap object
 #
@@ -24,3 +24,83 @@ import resource
 
 class Colormap(resource.Resource):
     __colormap__ = resource.Resource.__resource__
+
+    def free(self):
+	request.FreeColormap(display = self.display,
+			     cmap = self.id)
+
+	self.display.free_resource_id(self.id)
+
+    def copy_colormap_and_free(self, scr_cmap):
+	mid = self.display.allocate_resource_id()
+	request.CopyColormapAndFree(display = self.display,
+				    mid = mid,
+				    src_cmap = src_cmap)
+
+	return Colormap(self.display, mid, owner = 1)
+
+    def install_colormap(self):
+	request.InstallColormap(display = self.display,
+				cmap = self.id)
+
+    def uninstall_colormap(self):
+	request.UninstallColormap(display = self.display,
+				  cmap = self.id)
+
+    def alloc_color(self, red, green, blue):
+	return request.AllocColor(display = self.display,
+				  cmap = self.id,
+				  red = red,
+				  green = green,
+				  blue = blue)
+
+    def alloc_named_color(self, name):
+	return request.AllocNamedColor(display = self.display,
+				       cmap = self.id,
+				       name = name)
+
+    def alloc_color_cells(self, contiguous, colors, planes):
+	return request.AllocColorCells(display = self.display,
+				       contiguous = contiguous,
+				       cmap = self.id,
+				       colors = colors,
+				       planes = planes)
+
+    def alloc_color_planes(self, contiguous, colors, red, green, blue):
+	return request.AllocColorPlanes(display = self.display,
+					contiguous = contiguous,
+					cmap = self.id,
+					colors = colors,
+					red = red,
+					green = green,
+					blue = blue)
+
+    def free_colors(self, pixels, plane_mask):
+	request.FreeColors(display = self.display,
+			   cmap = self.id,
+			   plane_mask = plane_mask,
+			   pixels = pixels)
+
+    def store_colors(self, items):
+	request.StoreColors(display = self.display,
+			    cmap = self.id,
+			    items = items)
+    
+    def store_named_color(self, name, pixel, flags):
+	request.StoreNamedColor(display = self.display,
+				flags = flags,
+				cmap = self.id,
+				pixel = pixel,
+				name = name)
+
+    def query_colors(self, pixels):
+	r = request.QueryColors(display = self.display,
+				cmap = self.id,
+				pixels = pixels)
+	return r.colors
+
+    def lookup_color(self, name):
+	return request.LookupColor(display = self.display,
+				   cmap = self.id,
+				   name = name)
+    
