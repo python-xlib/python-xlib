@@ -1,0 +1,13 @@
+Source: python-xlib
+Section: x11
+Priority: extra
+Maintainer: Moshe Zadka <moshez@debian.org>
+Build-Depends: debhelper
+Standards-Version: 3.0.1
+
+Package: python-xlib
+Architecture: all
+Depends: python
+Description: Interface for Python to the X11 Protocol
+ python-xlib is a 100% pure python implementation of the X11
+ protocol.

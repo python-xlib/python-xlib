@@ -1,0 +1,9 @@
+python-xlib (0.8-1) unstable; urgency=low
+
+  * Initial Release. (Closes: #105388)
+
+ -- Moshe Zadka <moshez@debian.org>  Sun, 15 Jul 2001 13:12:01 +0300
+
+Local variables:
+mode: debian-changelog
+End:

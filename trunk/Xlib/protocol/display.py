@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.12 2001-01-09 09:06:06 petli Exp $
+# $Id: display.py,v 1.13 2001-07-25 18:48:25 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -310,8 +310,8 @@ class Display:
 	
 	self.request_queue_lock.release()
 
-	if qlen > 10:
-	    self.flush()
+#	if qlen > 10:
+#	    self.flush()
 	    
     def close_internal(self, whom):
 	# Clear out data structures
