@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.8 2000-12-22 13:23:34 petli Exp $
+# $Id: rq.py,v 1.9 2000-12-29 16:17:02 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -33,16 +33,23 @@ from Xlib.support import lock
 
 class BadDataError(Exception): pass
 
-unsigned_codes = { 1: 'b',
-		   2: 'h',
-		   4: 'l'
-		   }
 
-unsigned_codes = { 1: 'B',
-		   2: 'H',
-		   4: 'L'
-		   }
+# Thanks to buggy behaviour of struct and array on 64-bit architectures,
+# we have to probe which format codes to use for 8, 16 and 32-bit values
 
+signed_codes = { } 
+unsigned_codes = { }
+
+for c in 'bhil':
+    signed_codes[struct.calcsize('=' + c)] = c
+    unsigned_codes[struct.calcsize('=' + c)] = string.upper(c)
+
+sb_code = signed_codes[1]
+ub_code = unsigned_codes[1]
+sw_code = signed_codes[2]
+uw_code = unsigned_codes[2]
+sl_code = signed_codes[4]
+ul_code = unsigned_codes[4]
 
 class Field:
     """Field objects represent the data fields of a Struct.
@@ -152,7 +159,7 @@ class ConstantField(Field):
 
 
 class Opcode(ConstantField):
-    structcode = 'B'
+    structcode = ub_code
     structvalues = 1
 
     
@@ -278,27 +285,27 @@ class ValueField(Field):
 	return val
 	
 class Int8(ValueField):
-    structcode = 'b'
+    structcode = sb_code
     structvalues = 1
 
 class Int16(ValueField):
-    structcode = 'h'
+    structcode = sw_code
     structvalues = 1
 
 class Int32(ValueField):
-    structcode = 'l'
+    structcode = sl_code
     structvalues = 1
 
 class Card8(ValueField):
-    structcode = 'B'
+    structcode = ub_code
     structvalues = 1
 
 class Card16(ValueField):
-    structcode = 'H'
+    structcode = uw_code
     structvalues = 1
 
 class Card32(ValueField):
-    structcode = 'L'
+    structcode = ul_code
     structvalues = 1
 
 
@@ -361,7 +368,7 @@ class Cursor(Resource):
 
 class Bool(ValueField):
     structvalues = 1
-    structcode = 'B'
+    structcode = ub_code
     
     def check_value(self, value):
 	return not not value
@@ -441,7 +448,7 @@ class String16(ValueField):
 	else:
 	    pad = ''
 	    
-	return apply(struct.pack, ('>' + 'H' * slen, ) + tuple(val)) + pad, slen
+	return apply(struct.pack, ('>' + uw_code * slen, ) + tuple(val)) + pad, slen
 
     def parse_binary_value(self, data, display, length, format):
 	if self.pad:
@@ -449,7 +456,7 @@ class String16(ValueField):
 	else:
 	    slen = length
 	    
-	return struct.unpack('>' + 'H' * length, data[:length]), data[slen:]
+	return struct.unpack('>' + uw_code * length, data[:length]), data[slen:]
 
 
 
@@ -596,11 +603,11 @@ class PropertyData(ValueField):
 	    data = data[length + ((4 - length % 4) % 4):]
 
 	elif format == 16:
-	    ret = (16, array.array('H', data[:2 * length]))
+	    ret = (16, array.array(uw_code, data[:2 * length]))
 	    data = data[2 * (length + length % 2):]
 
 	elif format == 32:
-	    ret = (32, array.array('L', data[:4 * length]))
+	    ret = (32, array.array(ul_code, data[:4 * length]))
 	    data = data[4 * length:]
 
 	return ret, data
@@ -725,7 +732,7 @@ class KeyboardMapping(ValueField):
 	else:
 	    dlen = length * format
 	    
-	a = array.array('L', data[:dlen])
+	a = array.array(ul_code, data[:dlen])
 
 	ret = []
 	for i in range(0, len(a), format):
@@ -738,7 +745,7 @@ class KeyboardMapping(ValueField):
 	for v in value:
 	    keycodes = max(keycodes, len(v))
 
-	a = array.array('L')
+	a = array.array(ul_code)
 	
 	for v in value:
 	    for k in v:
@@ -753,7 +760,7 @@ class ModifierMapping(ValueField):
     structcode = None
 
     def parse_binary_value(self, data, display, length, format):
-	a = array.array('B', data[:8 * format])
+	a = array.array(ub_code, data[:8 * format])
 
 	ret = []
 	for i in range(0, 8):
@@ -769,7 +776,7 @@ class ModifierMapping(ValueField):
 	for v in value:
 	    keycodes = max(keycodes, len(v))
 
-	a = array.array('B')
+	a = array.array(ub_code)
 	
 	for v in value:
 	    for k in v:
@@ -802,12 +809,12 @@ class ScalarObj:
     def parse_value(self, value, display):
 	return value
     
-Card8Obj  = ScalarObj('B')
-Card16Obj = ScalarObj('H')
-Card32Obj = ScalarObj('L')
+Card8Obj  = ScalarObj(ub_code)
+Card16Obj = ScalarObj(uw_code)
+Card32Obj = ScalarObj(ul_code)
 
 class ResourceObj:
-    structcode = 'L'
+    structcode = ul_code
     structvalues = 1
     
     def __init__(self, class_name):

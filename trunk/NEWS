@@ -1,4 +1,14 @@
 
+* Version 0.6  29 Dec 2000
+
+** Fix to make python-xlib work on 64-bytes architectures.
+
+The struct and array modules uses sizeof(long) to determine the number
+of bytes used when representing the type code 'l'.  On Intel and VAX,
+this is 32 bits as expected.  On Alpha, it's 64 bits.  python-xlib now
+probes how large each type code is to avoid this problem.
+
+
 * Version 0.5  28 Dec 2000
 
 ** Functions implemented to get and set all ICCCM WM properties on
