@@ -5,8 +5,14 @@ import os
 import pprint
 import struct
 
+
 # Change path so we find Xlib
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
+def dummy_buffer(str, x, y = sys.maxint):
+    return str[x:y]
+
+__builtins__.buffer = dummy_buffer
 
 from Xlib.protocol import display, request, rq, event
 from Xlib import error
@@ -91,7 +97,6 @@ class ParseString:
 	    self.data = self.data + self.get_data(j - len(self.data))
 	
 	return self.data[i:j]
-
 
 class DummyDisplay:
     def get_resource_class(self, name):
