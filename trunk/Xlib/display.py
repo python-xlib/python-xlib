@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.16 2001-01-19 18:59:37 petli Exp $
+# $Id: display.py,v 1.17 2002-03-24 22:31:06 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -28,7 +28,7 @@ import X
 
 # Xlib.protocol modules
 import protocol.display
-from protocol import request, event
+from protocol import request, event, rq
 
 # Xlib.xobjects modules
 import xobject.resource
@@ -93,6 +93,8 @@ class Display:
 	self.extensions = []
 	self.class_extension_dicts = {}
 	self.display_extension_methods = {}
+
+	self.extension_event = rq.DictWrapper({})
 	
 	exts = self.list_extensions()
 
@@ -230,14 +232,29 @@ class Display:
 		except KeyError:
 		    self.class_extension_dicts[type] = { name: method }
 	    
-    def add_extension_event(self, code, evt):
-	"""add_extension_event(code, evt)
+    def extension_add_event(self, code, evt, name = None):
+	"""extension_add_event(code, evt, [name])
 
 	Add an extension event.  CODE is the numeric code, and EVT is
-	the event class.
+	the event class.  EVT will be cloned, and the attribute _code
+	of the new event class will be set to CODE.
+
+	If NAME is ommitted, it will be set to the name of EVT.  This
+	name is used to insert an entry in the DictWrapper
+	extension_event.
 	"""
+
+	newevt = new.classobj(evt.__name__, evt.__bases__,
+			      evt.__dict__.copy())
+	newevt._code = code
 	
-	self.display.add_extension_event(code, evt)
+	self.display.add_extension_event(code, newevt)
+
+	if name is None:
+	    name = evt.__name__
+	    
+	setattr(self.extension_event, name, code)
+	
 
     def add_extension_error(self, code, err):
 	"""add_extension_error(code, err)

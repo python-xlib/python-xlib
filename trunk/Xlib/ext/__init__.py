@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.1 2000-08-21 10:03:45 petli Exp $
+# $Id: __init__.py,v 1.2 2002-03-24 22:31:06 petli Exp $
 #
 # Xlib.ext.__init__ -- X extension modules 
 #
@@ -23,7 +23,8 @@
 # protocol.  extmod is the name of the module in this package.
 
 __extensions__ = [
-    ('XTEST', 'xtest')
+    ('XTEST', 'xtest'),
+    ('SHAPE', 'shape'),
     ]
 
 __all__ = map(lambda x: x[1], __extensions__)

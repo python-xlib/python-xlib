@@ -5,7 +5,7 @@ global-include .cvsignore
 
 recursive-include doc Makefile
 include doc/src/*.texi
-include doc/info/python-xlib.info
+include doc/info/python-xlib.info doc/info/python-xlib.info-*[0-9]
 include doc/html/index.html doc/html/python-xlib_toc.html
 include doc/html/python-xlib_*.html doc/html/texi2html
 include doc/ps/python-xlib.ps

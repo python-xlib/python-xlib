@@ -1,8 +1,8 @@
-# $Id: __init__.py,v 1.12 2002-02-25 11:09:23 petli Exp $
+# $Id: __init__.py,v 1.13 2002-03-24 22:31:06 petli Exp $
 #
 # Xlib.__init__ -- glue for Xlib package
 #
-#    Copyright (C) 2000,2001 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,9 +20,11 @@
 
 import string
 
-__version__ = (0, 11)
+__version__ = (0, 12)
 
-__version_string__ = string.join(map(str, __version__), '.')
+__version_extra__ = 'a'
+
+__version_string__ = string.join(map(str, __version__), '.') + __version_extra__
 
 __all__ = [
     'X',
