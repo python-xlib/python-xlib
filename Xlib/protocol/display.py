@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.15 2001-12-14 17:03:10 petli Exp $
+# $Id: display.py,v 1.16 2002-01-14 16:50:22 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -742,8 +742,12 @@ class Display:
 	self.data_recv = buffer(self.data_recv, 32)
 
 	# Drop all requests having an error handler,
-	# but which obviously succeded
-	self.get_waiting_request(e.sequence_number)
+	# but which obviously succeded.
+
+	# Decrement it by one, so that we don't remove the request
+	# that generated these events, if there is such a one.
+	# Bug reported by Ilpo Nyyssönen
+	self.get_waiting_request((e.sequence_number - 1) % 65536)
 	
 	# print 'recv Event:', e
 
