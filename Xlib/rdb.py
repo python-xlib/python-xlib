@@ -1,4 +1,4 @@
-# $Id: rdb.py,v 1.2 2000-08-14 10:51:36 petli Exp $
+# $Id: rdb.py,v 1.3 2000-08-15 10:09:48 petli Exp $
 #
 # Xlib.rdb -- X resource database implementation
 #
@@ -23,16 +23,19 @@
 # data structures used.
 
 
+# Standard modules
 import string
 import types
 import re
 
+# Xlib modules
+from support import lock
 
 # Set up a few regexpes for parsing string representation of resources
 
 comment_re = re.compile(r'^\s*!')
-resource_spec_re = re.compile(r'^\s*([-_a-zA-Z0-9?.*]+)\s*:\s*(.*?)\s*$')
-value_escape_re = re.compile('\\\\([ \tn\\]|[0-7]{3,3})')
+resource_spec_re = re.compile(r'^\s*([-_a-zA-Z0-9?.*]+)\s*:\s*(.*)$')
+value_escape_re = re.compile('\\\\([ \tn\\\\]|[0-7]{3,3})')
 resource_parts_re = re.compile(r'([.*]+)')
 
 # Constants used for determining which match is best
@@ -42,10 +45,16 @@ CLASS_MATCH = 2
 WILD_MATCH = 4
 MATCH_SKIP = 6
 
+# Option error class
+class OptionError(Exception):
+    pass
+
 
 class ResourceDB:
     def __init__(self, file = None, string = None, resources = None):
 	self.db = {}
+	self.lock = lock.allocate_lock()
+	
 	if file is not None:
 	    self.insert_file(file)
 	if string is not None:
@@ -110,7 +119,7 @@ class ResourceDB:
 	    
 	    # Convert all escape sequences in value
 	    splits = value_escape_re.split(value)
-
+	    
 	    for i in range(1, len(splits), 2):
 		s = splits[i]
 		if len(s) == 3:
@@ -118,6 +127,10 @@ class ResourceDB:
 		elif s == 'n':
 		    splits[i] = '\n'
 
+	    # strip the last value part to get rid of any
+	    # unescaped blanks
+	    splits[-1] = string.rstrip(splits[-1])
+	    
 	    value = string.join(splits, '')
 
 	    self.insert(res, value)
@@ -153,6 +166,8 @@ class ResourceDB:
 	# which we simply ignore
 	if parts[-1] == '':
 	    return
+
+	self.lock.acquire()
 	
 	db = self.db
 	for i in range(1, len(parts), 2):
@@ -173,6 +188,7 @@ class ResourceDB:
 	else:
 	    db[parts[-1]] = ({}, {}, value)
 
+	self.lock.release()
 
     def __getitem__(self, (name, cls)):
 	"""db[name, class]
@@ -193,91 +209,99 @@ class ResourceDB:
 	    raise ValueError('Different number of parts in resource name/class: %s/%s' % (name, cls))
 
 	complen = len(namep)
-
 	matches = []
 
-	# Precedence order: name -> class -> ? 
+	# Lock database and wrap the lookup code in a try-finally
+	# block to make sure that it is unlocked.
 	
-	if self.db.has_key(namep[0]):
-	    bin_insert(matches, _Match((NAME_MATCH, ), self.db[namep[0]]))
-
-	elif self.db.has_key(clsp[0]):
-	    bin_insert(matches, _Match((CLASS_MATCH, ), self.db[clsp[0]]))
-
-	elif self.db.has_key('?'):
-	    bin_insert(matches, _Match((WILD_MATCH, ), self.db['?']))
-
-
-	# Special case for the unlikely event that the resource
-	# only has one component
-	if complen == 1 and matches:
-	    x = matches[0]
-	    if x.final(complen):
-		return x.value()
-	    else:
-		raise KeyError((name, cls))
-
+	self.lock.acquire()
+	try:
 	    
-	# Special case for resources which begins with a loose
-	# binding, e.g. '*foo.bar'
-	if self.db.has_key(''):
-	    bin_insert(matches, _Match((), self.db[''][1]))
-	
-	
-	# Now iterate over all components until we find the best match.
+	    # Precedence order: name -> class -> ? 
 
-	# For each component, we choose the best partial match among
-	# the mappings by applying these rules in order:
-	    
-	# Rule 1: If the current group contains a match for the
-	# name, class or '?', we drop all previously found loose
-	# binding mappings.
+	    if self.db.has_key(namep[0]):
+		bin_insert(matches, _Match((NAME_MATCH, ), self.db[namep[0]]))
 
-	# Rule 2: A matching name has precedence over a matching
-	# class, which in turn has precedence over '?'.
+	    if self.db.has_key(clsp[0]):
+		bin_insert(matches, _Match((CLASS_MATCH, ), self.db[clsp[0]]))
 
-	# Rule 3: Tight bindings have precedence over loose
-	# bindings.
-	
-	while matches:
+	    if self.db.has_key('?'):
+		bin_insert(matches, _Match((WILD_MATCH, ), self.db['?']))
 
-	    # Work on the first element == the best current match
-	    
-	    x = matches[0]
-	    del matches[0]
 
-	    # print 'path:  ', x.path
-	    # if x.skip:
-	    # 	  print 'skip:  ', x.db
-	    # else:
-	    # 	  print 'group: ', x.group
-	    # print
-	    
-	    i = x.match_length()
+	    # Special case for the unlikely event that the resource
+	    # only has one component
+	    if complen == 1 and matches:
+		x = matches[0]
+		if x.final(complen):
+		    return x.value()
+		else:
+		    raise KeyError((name, cls))
 
-	    for part, score in ((namep[i], NAME_MATCH),
-				(clsp[i], CLASS_MATCH),
-				('?', WILD_MATCH)):
 
-		# Attempt to find a match in x
-		match = x.match(part, score)
-		if match:
-		    # Hey, we actually found a value!  
-		    if match.final(complen):
-			return match.value()
+	    # Special case for resources which begins with a loose
+	    # binding, e.g. '*foo.bar'
+	    if self.db.has_key(''):
+		bin_insert(matches, _Match((), self.db[''][1]))
 
-		    # Else just insert the new match
-		    else:
+
+	    # Now iterate over all components until we find the best match.
+
+	    # For each component, we choose the best partial match among
+	    # the mappings by applying these rules in order:
+
+	    # Rule 1: If the current group contains a match for the
+	    # name, class or '?', we drop all previously found loose
+	    # binding mappings.
+
+	    # Rule 2: A matching name has precedence over a matching
+	    # class, which in turn has precedence over '?'.
+
+	    # Rule 3: Tight bindings have precedence over loose
+	    # bindings.
+
+	    while matches:
+
+		# Work on the first element == the best current match
+
+		x = matches[0]
+		del matches[0]
+
+		# print 'path:  ', x.path
+		# if x.skip:
+		# 	  print 'skip:  ', x.db
+		# else:
+		# 	  print 'group: ', x.group
+		# print
+
+		i = x.match_length()
+
+		for part, score in ((namep[i], NAME_MATCH),
+				    (clsp[i], CLASS_MATCH),
+				    ('?', WILD_MATCH)):
+
+		    # Attempt to find a match in x
+		    match = x.match(part, score)
+		    if match:
+			# Hey, we actually found a value!  
+			if match.final(complen):
+			    return match.value()
+
+			# Else just insert the new match
+			else:
+			    bin_insert(matches, match)
+
+		    # Generate a new loose match
+		    match = x.skip_match(complen)
+		    if match:
 			bin_insert(matches, match)
-		    
-		# Generate a new loose match
-		match = x.skip_match(complen)
-		if match:
-		    bin_insert(matches, match)
 
-	# Oh well, nothing matched
-	raise KeyError((name, cls))
+	    # Oh well, nothing matched
+	    raise KeyError((name, cls))
 
+	finally:
+	    self.lock.release()
+	    
     def get(self, res, cls, default = None):
 	"""get(name, class [, default])
 	
@@ -300,8 +324,21 @@ class ResourceDB:
 
 	"""
 
+	self.lock.acquire()
 	update_db(self.db, db.db)
+	self.lock.release()
 
+    def output(self):
+	"""output()
+
+	Return the resource database in text representation.
+	"""
+
+	self.lock.acquire()
+	text = output_db('', self.db)
+	self.lock.release()
+	return text
+    
     def getopt(name, argv, opts):
 	"""getopt(name, argv, opts)
 
@@ -326,15 +363,16 @@ class ResourceDB:
 
 	The remaining, non-option, oparguments is returned.
 
-	getxopt.error is raised if there is an error in the argument list.
+	rdb.OptionError is raised if there is an error in the argument list.
 	"""
-	try:
-	    while len(argv):
-		argv = opts[args[0]].parse(name, self, argv)
-	except KeyError:
-	    return argv
-	except IndexError:
-	    raise error, 'Missing argument to option %s' % argv[0]
+
+	while len(argv) and argv[0] and argv[0][0] == '-':
+	    try:
+		argv = opts[argv[0]].parse(name, self, argv)
+	    except KeyError:
+		raise OptionError('unknown option: %s' % argv[0])
+	    except IndexError:
+		raise OptionError('missing argument to option: %s' % argv[0])
 
 class _Match:
     def __init__(self, path, dbs):
@@ -469,6 +507,44 @@ def copy_db(db):
     return newdb
 
 
+#
+# Helper functions for output
+#
+
+def output_db(prefix, db):
+    res = ''
+    for comp, group in db.items():
+
+	# There's a value for this component
+	if len(group) > 2:
+	    res = res + '%s%s: %s\n' % (prefix, comp, output_escape(group[2]))
+
+	# Output tight and loose bindings
+	res = res + output_db(prefix + comp + '.', group[0])
+	res = res + output_db(prefix + comp + '*', group[1])
+
+    return res
+
+def output_escape(value):
+    value = str(value)
+    if not value:
+	return value
+    
+    for char, esc in (('\\', '\\\\'),
+		      ('\000', '\\000'),
+		      ('\n', '\\n')):
+
+	value = string.replace(value, char, esc)
+
+    # If first or last character is space or tab, escape them.
+    if value[0] in ' \t':
+	value = '\\' + value
+    if value[-1] in ' \t' and value[-2:-1] != '\\':
+	value = value[:-1] + '\\' + value[-1]
+	
+    return value
+    
+	
 #
 # Option type definitions
 #
