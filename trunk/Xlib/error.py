@@ -1,4 +1,4 @@
-# $Id: error.py,v 1.3 2000-08-07 10:30:19 petli Exp $
+# $Id: error.py,v 1.4 2000-08-21 10:03:45 petli Exp $
 #
 # Xlib.error -- basic error classes
 #
@@ -62,7 +62,7 @@ class XError(rq.GetAttrData, Exception):
     _fields = rq.Struct( rq.Card8('type'),  # Always 0
 			 rq.Card8('code'),
 			 rq.Card16('sequence_number'),
-			 rq.Resource('resource_id'),
+			 rq.Card32('resource_id'),
 			 rq.Card16('minor_opcode'),
 			 rq.Card8('major_opcode'),
 			 rq.Pad(21)
@@ -75,24 +75,34 @@ class XError(rq.GetAttrData, Exception):
 	s = []
 	for f in ('code', 'resource_id', 'sequence_number',
 		  'major_opcode', 'minor_opcode'):
-	    s.append('%s = %d' % (f, self._data[f]))
+	    s.append('%s = %s' % (f, self._data[f]))
 	    
 	return '%s: %s' % (self.__class__, string.join(s, ', '))
 
+class XResourceError(XError):
+    _fields = rq.Struct( rq.Card8('type'),  # Always 0
+			 rq.Card8('code'),
+			 rq.Card16('sequence_number'),
+			 rq.Resource('resource_id'),
+			 rq.Card16('minor_opcode'),
+			 rq.Card8('major_opcode'),
+			 rq.Pad(21)
+			 )
+    
 class BadRequest(XError): pass
 class BadValue(XError): pass
-class BadWindow(XError): pass
-class BadPixmap(XError): pass
+class BadWindow(XResourceError): pass
+class BadPixmap(XResourceError): pass
 class BadAtom(XError): pass
-class BadCursor(XError): pass
-class BadFont(XError): pass
+class BadCursor(XResourceError): pass
+class BadFont(XResourceError): pass
 class BadMatch(XError): pass
-class BadDrawable(XError): pass
+class BadDrawable(XResourceError): pass
 class BadAccess(XError): pass
 class BadAlloc(XError): pass
-class BadColor(XError): pass
-class BadGC(XError): pass
-class BadIDChoice(XError): pass
+class BadColor(XResourceError): pass
+class BadGC(XResourceError): pass
+class BadIDChoice(XResourceError): pass
 class BadName(XError): pass
 class BadLength(XError): pass
 class BadImplementation(XError): pass
@@ -116,3 +126,35 @@ xerror_class = {
     X.BadLength: BadLength,
     X.BadImplementation: BadImplementation,
     }    
+
+
+class CatchError:
+    def __init__(self, *errors):
+	self.error_types = errors
+	self.error = None
+	self.request = None
+	
+    def __call__(self, error, request):
+	if self.error_types:
+	    for etype in self.error_types:
+		if isinstance(error, etype):
+		    self.error = error
+		    self.request = request
+		    return 1
+
+	    return 0
+	else:
+	    self.error = error
+	    self.request = request
+	    return 1
+	
+    def get_error(self):
+	return self.error
+
+    def get_request(self):
+	return self.request
+
+    def reset(self):
+	self.error = None
+	self.request = None
+	

@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.4 2000-08-14 10:51:37 petli Exp $
+# $Id: display.py,v 1.5 2000-08-21 10:03:45 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -42,6 +42,9 @@ display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 
 class Display:
     resource_classes = {}
+    extension_major_opcodes = {}
+    error_classes = error.xerror_class.copy()
+    event_classes = event.event_class.copy()
     
     def __init__(self, display = None):
 	# Use $DISPLAY if display isn't provided
@@ -105,39 +108,52 @@ class Display:
 	except os.error:
 	    pass
 	
-	# Internal structures for communication
-	self.request_serial = 1
 
+	# Internal structures for communication, grouped
+	# by their function and locks
+
+	# Socket error indicator, set when the socket is closed
+	# in one way or another
 	self.socket_error_lock = lock.allocate_lock()
 	self.socket_error = None
 
+	# Event queue 
 	self.event_queue_read_lock = lock.allocate_lock()
 	self.event_queue_write_lock = lock.allocate_lock()
 	self.event_queue = []
 
+	# Unsent request queue and sequence number counter
 	self.request_queue_lock = lock.allocate_lock()
+	self.request_serial = 1
 	self.request_queue = []
-	
+
+	# Send-and-recieve loop, see function send_and_recive
+	# for a detailed explanation
+	self.send_recv_lock = lock.allocate_lock()
+	self.send_recv_active = 0
+	self.event_waiting = 0
+	self.event_wait_lock = lock.allocate_lock()
+	self.request_waiting = 0
+	self.request_wait_lock = lock.allocate_lock()
+
+	# Data used by the send-and-recieve loop
 	self.sent_requests = []
 	self.request_length = 0
-
-	self.send_recv_lock = lock.allocate_lock()
-	self.event_wait_lock = lock.allocate_lock()
-	self.request_wait_lock = lock.allocate_lock()
-	self.send_recv_active = 0
-	
 	self.data_send = ''
 	self.data_recv = ''
 	self.data_sent_bytes = 0
 	
-	# Use an default error handler, one which just prints the error
-	self.error_handler = None
-
 	# Resource ID structures
 	self.resource_id_lock = lock.allocate_lock()
 	self.resource_ids = {}
 	self.last_resource_id = 0
 
+	# Use an default error handler, one which just prints the error
+	self.error_handler = None
+
+
+	# Right, now we're all set up for the connection setup
+	# request with the server.
 	
 	# Figure out which endianess the hardware uses
 	self.big_endian = struct.unpack('BB', struct.pack('H', 0x0100))[0]
@@ -159,9 +175,8 @@ class Display:
 	if r.status != 1:
 	    raise error.DisplayConnectionError(self.display_name, r.reason)
 
-	# Set up remaining info structures
+	# Set up remaining info
 	self.info = r
-
 	self.default_screen = max(self.default_screen, len(self.info.roots) - 1)
 
 	
@@ -194,7 +209,7 @@ class Display:
 
 	    # Lock send_recv so no send_and_recieve
 	    # can start or stop while we're checking
-	    # whether there are one.
+	    # whether there are one active.
 	    self.send_recv_lock.acquire()
 
 	    # Relase event queue to allow an send_and_recv to
@@ -303,7 +318,20 @@ class Display:
 	"""
 
 	return self.resource_classes.get(class_name, None)
-    
+
+    def set_extension_major(self, extname, major):
+	self.extension_major_opcodes[extname] = major
+
+    def get_extension_major(self, extname):
+	return self.extension_major_opcodes[extname]
+
+    def add_extension_event(self, code, evt):
+	self.event_classes[code] = evt
+
+    def add_extension_error(self, code, err):
+	self.error_classes[code] = err
+	
+	
     #
     # Private functions
     #
@@ -379,6 +407,30 @@ class Display:
 	# There is an active send_and_recieve, go to sleep
 	if self.send_recv_active:
 
+	    # Signal that we are waiting for something.  These locks
+	    # together with the *_waiting variables are used as
+	    # semaphores.  When an event or a reqeust respone arrives,
+	    # it will zero the *_waiting and unlock the lock.  The
+	    # locks will also be unlocked when an active send_and_recv
+	    # finishes to signal the other waiting threads that one of
+	    # them has to take over the send_and_recv function.
+
+	    # All this makes these locks and variables a part of the
+	    # send_and_recv control logic, and hence must be modified
+	    # only when we have the send_recv_lock locked.
+	    
+	    if event:
+		wait_lock = self.event_wait_lock
+		if not self.event_waiting:
+		    self.event_waiting = 1
+		    wait_lock.acquire()
+		    
+	    elif request is not None:
+		wait_lock = self.request_wait_lock
+		if not self.request_waiting:
+		    self.request_waiting = 1
+		    wait_lock.acquire()
+		
 	    # Release send_recv, allowing a send_and_recive
 	    # to terminate or other threads to queue up
 	    self.send_recv_lock.release()
@@ -386,29 +438,25 @@ class Display:
 	    # Return immediately if flushing, even if that
 	    # might mean that not necessarily all requests
 	    # have been sent.
-	    
 	    if flush:
 		return
 
 	    # Wait for something to happen, as the wait locks are
-	    # unlocked either when what we wait for (not necessarily
-	    # the exact object we're waiting for, though), or when
-	    # an active send_and_recv exits.
+	    # unlocked either when what we wait for has arrived (not
+	    # necessarily the exact object we're waiting for, though),
+	    # or when an active send_and_recv exits.
 	    
 	    # Release it immediately afterwards as we're only using
-	    # the lock for synchonization
-	    
-	    if event:
-		wait_lock = self.event_wait_lock
-	    elif request:
-		wait_lock = self.request_wait_lock
-		
+	    # the lock for synchonization.  Since we're not modifying
+	    # event_waiting or request_waiting here we don't have
+	    # to lock send_and_recv_lock.  In fact, we can't do that
+	    # or we trigger a dead-lock.
+
 	    wait_lock.acquire()
 	    wait_lock.release()
 
-	    # Return to caller, since it might have got the
-	    # needed data and hence isn't interested in doing
-	    # more send_and_recv.
+	    # Return to caller to let it check whether it has
+	    # got the data it was waiting for
 	    return
 
 
@@ -420,9 +468,6 @@ class Display:
 	# hand on.  
 
 	self.send_recv_active = 1
-	
-	self.event_wait_lock.acquire()
-	self.request_wait_lock.acquire()
 
 	# Finally release send_recv and start doing some useful work
 	self.send_recv_lock.release()
@@ -519,6 +564,7 @@ class Display:
 	    # Else there's still data which must be sent,
 	    # so loop around to another blocking select
 
+
 	# We have accomplished the callers request.
 	# Record that there are now no active send_and_recv,
 	# and wake up all waiting thread
@@ -526,9 +572,12 @@ class Display:
 	self.send_recv_lock.acquire()
 	self.send_recv_active = 0
 
-	if self.event_wait_lock.locked():
+	if self.event_waiting:
+	    self.event_waiting = 0
 	    self.event_wait_lock.release()
-	if self.request_wait_lock.locked():
+	    
+	if self.request_waiting:
+	    self.request_waiting = 0
 	    self.request_wait_lock.release()
 
 	self.send_recv_lock.release()
@@ -588,7 +637,7 @@ class Display:
 	code = ord(self.data_recv[1])
 
 	# Fetch error class
-	estruct = error.xerror_class.get(code, error.XError)
+	estruct = self.error_classes.get(code, error.XError)
 	
 	e = estruct(self, self.data_recv[:32])
 	self.data_recv = self.data_recv[32:]
@@ -598,15 +647,30 @@ class Display:
 	req = self.get_waiting_request(e.sequence_number)
 	
 	# Error for a request whose response we are waiting for,
-	# or which have an error handler
-	if req:
-	    req._set_error(e)
+	# or which have an error handler.  However, if the error
+	# handler indicates that it hasn't taken care of the
+	# error, pass it on to the default error handler
+
+	if req and req._set_error(e):
+
+	    # If this was a ReplyRequest, unlock any threads waiting
+	    # for a request to finish
+
+	    if isinstance(req, rq.ReplyRequest):
+		self.send_recv_lock.acquire()
+
+		if self.request_waiting:
+		    self.request_waiting = 0
+		    self.request_wait_lock.release()
+
+		self.send_recv_lock.release()
+
 	    return request == e.sequence_number
 
 	# Else call the error handler
 	else:
 	    if self.error_handler:
-		rq.call_error_handler(self.error_handler, e)
+		rq.call_error_handler(self.error_handler, e, None)
 	    else:
 		self.default_error_handler(e)
 		
@@ -633,15 +697,23 @@ class Display:
 	self.data_recv = self.data_recv[self.request_length:]
 	self.request_length = 0
 
+
 	# Unlock any response waiting threads
-	if self.request_wait_lock.locked():
+	
+	self.send_recv_lock.acquire()
+	
+	if self.request_waiting:
+	    self.request_waiting = 0
 	    self.request_wait_lock.release()
+
+	self.send_recv_lock.release()
+	    
 	
 	return req.sequence_number == request
 	
 
     def parse_event_response(self, etype):
-	estruct = event.event_class.get(etype, event.AnyEvent)
+	estruct = self.event_classes.get(etype, event.AnyEvent)
 
 	e = estruct(display = self, binarydata = self.data_recv[:32])
 	self.data_recv = self.data_recv[32:]
@@ -658,8 +730,14 @@ class Display:
 	self.event_queue_write_lock.release()
 
 	# Unlock any event waiting threads
-	if self.event_wait_lock.locked():
+	self.send_recv_lock.acquire()
+	
+	if self.event_waiting:
+	    self.event_waiting = 0
 	    self.event_wait_lock.release()
+
+	self.send_recv_lock.release()
+
 
     def get_waiting_request(self, sno):
 	if not self.sent_requests:
