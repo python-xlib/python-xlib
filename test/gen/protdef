@@ -1,0 +1,187 @@
+RESOURCEREQUEST GetWindowAttributes
+RESOURCEREQUEST DestroyWindow
+RESOURCEREQUEST DestroySubWindows
+RESOURCEREQUEST MapWindow
+RESOURCEREQUEST MapSubwindows
+RESOURCEREQUEST UnmapWindow
+RESOURCEREQUEST UnmapSubwindows
+RESOURCEREQUEST GetGeometry
+RESOURCEREQUEST QueryTree
+RESOURCEREQUEST GetAtomName
+RESOURCEREQUEST ListProperties
+RESOURCEREQUEST GetSelectionOwner
+RESOURCEREQUEST UngrabPointer
+RESOURCEREQUEST UngrabKeyboard
+RESOURCEREQUEST QueryPointer
+RESOURCEREQUEST CloseFont
+RESOURCEREQUEST QueryFont
+RESOURCEREQUEST FreePixmap
+RESOURCEREQUEST FreeGC
+RESOURCEREQUEST FreeColormap
+RESOURCEREQUEST InstallColormap
+RESOURCEREQUEST UninstallColormap
+RESOURCEREQUEST ListInstalledColormaps
+RESOURCEREQUEST FreeCursor
+RESOURCEREQUEST KillClient
+MINIREQUEST GetFontPath
+MINIREQUEST GrabServer
+MINIREQUEST UngrabServer
+MINIREQUEST GetInputFocus
+MINIREQUEST QueryKeymap
+MINIREQUEST ListExtensions
+MINIREQUEST GetKeyboardControl
+MINIREQUEST GetPointerControl
+MINIREQUEST GetScreenSaver
+MINIREQUEST GetPointerMapping
+MINIREQUEST GetModifierMapping
+MINIREQUEST NoOperation
+REQUEST RotateProperties  CARD8:reqType BYTE:pad CARD16:length CARD32:window CARD16:nAtoms INT16:nPositions
+REQUEST AllocColor  CARD8:reqType BYTE:pad CARD16:length CARD32:cmap CARD16:red CARD16:green CARD16:blue CARD16:pad2
+REQUEST PolyText  CARD8:reqType CARD8:pad CARD16:length CARD32:drawable CARD32:gc INT16:x INT16:y
+REQUEST DeleteProperty  CARD8:reqType BYTE:pad CARD16:length CARD32:window CARD32:property
+REQUEST ChangeProperty  CARD8:reqType CARD8:mode CARD16:length CARD32:window CARD32:property CARD32:type CARD8:format BYTE:pad[3] CARD32:nUnits
+REQUEST   CARD8:reqType CARD8:data CARD16:length
+REQUEST SetPointerMapping  CARD8:reqType CARD8:nElts CARD16:length
+REQUEST CreateGlyphCursor  CARD8:reqType BYTE:pad CARD16:length CARD32:cid CARD32:source CARD32:mask CARD16:sourceChar CARD16:maskChar CARD16:foreRed CARD16:foreGreen CARD16:foreBlue CARD16:backRed CARD16:backGreen CARD16:backBlue
+REQUEST StoreColors  CARD8:reqType BYTE:pad CARD16:length CARD32:cmap
+REQUEST PolyText8  CARD8:reqType CARD8:pad CARD16:length CARD32:drawable CARD32:gc INT16:x INT16:y
+REQUEST FillPoly  CARD8:reqType BYTE:pad CARD16:length CARD32:drawable CARD32:gc BYTE:shape BYTE:coordMode CARD16:pad1
+REQUEST PolyLine  CARD8:reqType BYTE:coordMode CARD16:length CARD32:drawable CARD32:gc
+REQUEST WarpPointer  CARD8:reqType BYTE:pad CARD16:length CARD32:srcWid CARD32:dstWid INT16:srcX INT16:srcY CARD16:srcWidth CARD16:srcHeight INT16:dstX INT16:dstY
+REQUEST CirculateWindow  CARD8:reqType CARD8:direction CARD16:length CARD32:window
+REQUEST ChangeWindowAttributes  CARD8:reqType BYTE:pad CARD16:length CARD32:window CARD32:valueMask
+REQUEST ChangeHosts  CARD8:reqType BYTE:mode CARD16:length CARD8:hostFamily BYTE:pad CARD16:hostLength
+REQUEST PolyText16  CARD8:reqType CARD8:pad CARD16:length CARD32:drawable CARD32:gc INT16:x INT16:y
+REQUEST CopyArea  CARD8:reqType BYTE:pad CARD16:length CARD32:srcDrawable CARD32:dstDrawable CARD32:gc INT16:srcX INT16:srcY INT16:dstX INT16:dstY CARD16:width CARD16:height
+REQUEST CopyGC  CARD8:reqType BYTE:pad CARD16:length CARD32:srcGC CARD32:dstGC CARD32:mask
+REQUEST SetFontPath  CARD8:reqType BYTE:pad CARD16:length CARD16:nFonts BYTE:pad1 BYTE:pad2
+REQUEST OpenFont  CARD8:reqType BYTE:pad CARD16:length CARD32:fid CARD16:nbytes BYTE:pad1 BYTE:pad2
+REQUEST UngrabButton  CARD8:reqType CARD8:button CARD16:length CARD32:grabWindow CARD16:modifiers CARD16:pad
+REQUEST ConfigureWindow  CARD8:reqType CARD8:pad CARD16:length CARD32:window CARD16:mask CARD16:pad2
+REQUEST ReparentWindow  CARD8:reqType BYTE:pad CARD16:length CARD32:window CARD32:parent INT16:x INT16:y
+REQUEST ForceScreenSaver  CARD8:reqType BYTE:mode CARD16:length
+REQUEST ChangeMode  CARD8:reqType BYTE:mode CARD16:length
+REQUEST ChangePointerControl  CARD8:reqType BYTE:pad CARD16:length INT16:accelNum INT16:accelDenum INT16:threshold BOOL:doAccel BOOL:doThresh
+REQUEST Bell  CARD8:reqType INT8:percent CARD16:length
+REQUEST ChangeKeyboardControl  CARD8:reqType BYTE:pad CARD16:length CARD32:mask
+REQUEST AllocNamedColor  CARD8:reqType BYTE:pad CARD16:length CARD32:cmap CARD16:nbytes BYTE:pad1 BYTE:pad2
+REQUEST GetImage  CARD8:reqType CARD8:format CARD16:length CARD32:drawable INT16:x INT16:y CARD16:width CARD16:height CARD32:planeMask
+REQUEST PolyFillArc  CARD8:reqType BYTE:pad CARD16:length CARD32:drawable CARD32:gc
+REQUEST CreatePixmap  CARD8:reqType CARD8:depth CARD16:length CARD32:pid CARD32:drawable CARD16:width CARD16:height
+REQUEST QueryTextExtents  CARD8:reqType BOOL:oddLength CARD16:length CARD32:fid
+REQUEST GrabKeyboard  CARD8:reqType BOOL:ownerEvents CARD16:length CARD32:grabWindow CARD32:time BYTE:pointerMode BYTE:keyboardMode CARD16:pad
+REQUEST QueryColors  CARD8:reqType BYTE:pad CARD16:length CARD32:cmap
+REQUEST CopyColormapAndFree  CARD8:reqType BYTE:pad CARD16:length CARD32:mid CARD32:srcCmap
+REQUEST ImageText16  CARD8:reqType BYTE:nChars CARD16:length CARD32:drawable CARD32:gc INT16:x INT16:y
+REQUEST PolyRectangle  CARD8:reqType BYTE:pad CARD16:length CARD32:drawable CARD32:gc
+REQUEST PolySegment  CARD8:reqType BYTE:pad CARD16:length CARD32:drawable CARD32:gc
+REQUEST TranslateCoords  CARD8:reqType BYTE:pad CARD16:length CARD32:srcWid CARD32:dstWid INT16:srcX INT16:srcY
+REQUEST GrabButton  CARD8:reqType BOOL:ownerEvents CARD16:length CARD32:grabWindow CARD16:eventMask BYTE:pointerMode BYTE:keyboardMode CARD32:confineTo CARD32:cursor CARD8:button BYTE:pad CARD16:modifiers
+REQUEST SetSelectionOwner  CARD8:reqType BYTE:pad CARD16:length CARD32:window CARD32:selection CARD32:time
+REQUEST SetAccessControl  CARD8:reqType BYTE:mode CARD16:length
+REQUEST ChangeKeyboardMapping  CARD8:reqType CARD8:keyCodes CARD16:length CARD8:firstKeyCode CARD8:keySymsPerKeyCode CARD16:pad1
+REQUEST QueryExtension  CARD8:reqType BYTE:pad CARD16:length CARD16:nbytes BYTE:pad1 BYTE:pad2
+REQUEST AllocColorPlanes  CARD8:reqType BOOL:contiguous CARD16:length CARD32:cmap CARD16:colors CARD16:red CARD16:green CARD16:blue
+REQUEST AllocColorCells  CARD8:reqType BOOL:contiguous CARD16:length CARD32:cmap CARD16:colors CARD16:planes
+REQUEST ImageText8  CARD8:reqType BYTE:nChars CARD16:length CARD32:drawable CARD32:gc INT16:x INT16:y
+REQUEST ImageText  CARD8:reqType BYTE:nChars CARD16:length CARD32:drawable CARD32:gc INT16:x INT16:y
+REQUEST PolyPoint  CARD8:reqType BYTE:coordMode CARD16:length CARD32:drawable CARD32:gc
+REQUEST ChangeSaveSet  CARD8:reqType BYTE:mode CARD16:length CARD32:window
+REQUEST QueryBestSize  CARD8:reqType CARD8:class CARD16:length CARD32:drawable CARD16:width CARD16:height
+REQUEST LookupColor  CARD8:reqType BYTE:pad CARD16:length CARD32:cmap CARD16:nbytes BYTE:pad1 BYTE:pad2
+REQUEST PolyArc  CARD8:reqType BYTE:pad CARD16:length CARD32:drawable CARD32:gc
+REQUEST SetDashes  CARD8:reqType BYTE:pad CARD16:length CARD32:gc CARD16:dashOffset CARD16:nDashes
+REQUEST ChangeActivePointerGrab  CARD8:reqType BYTE:pad CARD16:length CARD32:cursor CARD32:time CARD16:eventMask CARD16:pad2
+REQUEST GrabPointer  CARD8:reqType BOOL:ownerEvents CARD16:length CARD32:grabWindow CARD16:eventMask BYTE:pointerMode BYTE:keyboardMode CARD32:confineTo CARD32:cursor CARD32:time
+REQUEST ConvertSelection  CARD8:reqType BYTE:pad CARD16:length CARD32:requestor CARD32:selection CARD32:target CARD32:property CARD32:time
+REQUEST CreateWindow  CARD8:reqType CARD8:depth CARD16:length CARD32:wid CARD32:parent INT16:x INT16:y CARD16:width CARD16:height CARD16:borderWidth CARD16:class CARD32:visual CARD32:mask
+REQUEST PolyFillRectangle  CARD8:reqType BYTE:pad CARD16:length CARD32:drawable CARD32:gc
+REQUEST SetClipRectangles  CARD8:reqType BYTE:ordering CARD16:length CARD32:gc INT16:xOrigin INT16:yOrigin
+REQUEST ListFontsWithInfo  CARD8:reqType BYTE:pad CARD16:length CARD16:maxNames CARD16:nbytes
+REQUEST GetMotionEvents  CARD8:reqType BYTE:pad CARD16:length CARD32:window CARD32:start CARD32:stop
+REQUEST Resource  CARD8:reqType BYTE:pad CARD16:length CARD32:id
+REQUEST StoreNamedColor  CARD8:reqType CARD8:flags CARD16:length CARD32:cmap CARD32:pixel CARD16:nbytes BYTE:pad1 BYTE:pad2
+REQUEST CopyPlane  CARD8:reqType BYTE:pad CARD16:length CARD32:srcDrawable CARD32:dstDrawable CARD32:gc INT16:srcX INT16:srcY INT16:dstX INT16:dstY CARD16:width CARD16:height CARD32:bitPlane
+REQUEST ListFonts  CARD8:reqType BYTE:pad CARD16:length CARD16:maxNames CARD16:nbytes
+REQUEST UngrabKey  CARD8:reqType CARD8:key CARD16:length CARD32:grabWindow CARD16:modifiers CARD16:pad
+REQUEST GetProperty  CARD8:reqType BOOL:delete CARD16:length CARD32:window CARD32:property CARD32:type CARD32:longOffset CARD32:longLength
+REQUEST RecolorCursor  CARD8:reqType BYTE:pad CARD16:length CARD32:cursor CARD16:foreRed CARD16:foreGreen CARD16:foreBlue CARD16:backRed CARD16:backGreen CARD16:backBlue
+REQUEST CreateCursor  CARD8:reqType BYTE:pad CARD16:length CARD32:cid CARD32:source CARD32:mask CARD16:foreRed CARD16:foreGreen CARD16:foreBlue CARD16:backRed CARD16:backGreen CARD16:backBlue CARD16:x CARD16:y
+REQUEST ChangeGC  CARD8:reqType BYTE:pad CARD16:length CARD32:gc CARD32:mask
+REQUEST CreateGC  CARD8:reqType BYTE:pad CARD16:length CARD32:gc CARD32:drawable CARD32:mask
+REQUEST SetInputFocus  CARD8:reqType CARD8:revertTo CARD16:length CARD32:focus CARD32:time
+REQUEST GrabKey  CARD8:reqType BOOL:ownerEvents CARD16:length CARD32:grabWindow CARD16:modifiers CARD8:key BYTE:pointerMode BYTE:keyboardMode BYTE:pad1 BYTE:pad2 BYTE:pad3
+REQUEST ListHosts  CARD8:reqType BYTE:pad CARD16:length
+REQUEST SetScreenSaver  CARD8:reqType BYTE:pad CARD16:length INT16:timeout INT16:interval BYTE:preferBlank BYTE:allowExpose CARD16:pad2
+REQUEST SetModifierMapping  CARD8:reqType CARD8:numKeyPerModifier CARD16:length
+REQUEST InternAtom  CARD8:reqType BOOL:onlyIfExists CARD16:length CARD16:nbytes CARD16:pad
+REQUEST SetCloseDownMode  CARD8:reqType BYTE:mode CARD16:length
+REQUEST GetKeyboardMapping  CARD8:reqType BYTE:pad CARD16:length CARD8:firstKeyCode CARD8:count CARD16:pad1
+REQUEST FreeColors  CARD8:reqType BYTE:pad CARD16:length CARD32:cmap CARD32:planeMask
+REQUEST CreateColormap  CARD8:reqType BYTE:alloc CARD16:length CARD32:mid CARD32:window CARD32:visual
+REQUEST PutImage  CARD8:reqType CARD8:format CARD16:length CARD32:drawable CARD32:gc CARD16:width CARD16:height INT16:dstX INT16:dstY CARD8:leftPad CARD8:depth CARD16:pad
+REQUEST ClearArea  CARD8:reqType BOOL:exposures CARD16:length CARD32:window INT16:x INT16:y CARD16:width CARD16:height
+REQUEST AllowEvents  CARD8:reqType CARD8:mode CARD16:length CARD32:time
+REQUEST SendEvent  CARD8:reqType BOOL:propagate CARD16:length CARD32:destination CARD32:eventMask 
+REPLY AllocColor  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:red CARD16:green CARD16:blue CARD16:pad2 CARD32:pixel CARD32:pad3 CARD32:pad4 CARD32:pad5
+REPLY ListProperties  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:nProperties CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY QueryTree  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD32:root CARD32:parent CARD16:nChildren CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5
+REPLY GetKeyboardControl  BYTE:type BOOL:globalAutoRepeat CARD16:sequenceNumber CARD32:length CARD32:ledMask CARD8:keyClickPercent CARD8:bellPercent CARD16:bellPitch CARD16:bellDuration CARD16:pad 
+REPLY SetPointerMapping  BYTE:type CARD8:success CARD16:sequenceNumber CARD32:length CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY SetMapping  BYTE:type CARD8:success CARD16:sequenceNumber CARD32:length CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY GetGeometry  BYTE:type CARD8:depth CARD16:sequenceNumber CARD32:length CARD32:root INT16:x INT16:y CARD16:width CARD16:height CARD16:borderWidth CARD16:pad1 CARD32:pad2 CARD32:pad3
+REPLY QueryPointer  BYTE:type BOOL:sameScreen CARD16:sequenceNumber CARD32:length CARD32:root CARD32:child INT16:rootX INT16:rootY INT16:winX INT16:winY CARD16:mask CARD16:pad1 CARD32:pad
+REPLY AllocNamedColor  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD32:pixel CARD16:exactRed CARD16:exactGreen CARD16:exactBlue CARD16:screenRed CARD16:screenGreen CARD16:screenBlue CARD32:pad2 CARD32:pad3
+REPLY GetImage  BYTE:type CARD8:depth CARD16:sequenceNumber CARD32:length CARD32:visual CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY QueryTextExtents  BYTE:type CARD8:drawDirection CARD16:sequenceNumber CARD32:length INT16:fontAscent INT16:fontDescent INT16:overallAscent INT16:overallDescent INT32:overallWidth INT32:overallLeft INT32:overallRight CARD32:pad
+REPLY GrabKeyboard  BYTE:type BYTE:status CARD16:sequenceNumber CARD32:length CARD32:pad1 CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6
+REPLY GetPointerControl  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:accelNumerator CARD16:accelDenominator CARD16:threshold CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6
+REPLY GetModifierMapping  BYTE:type CARD8:numKeyPerModifier CARD16:sequenceNumber CARD32:length CARD32:pad1 CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6
+REPLY ListExtensions  BYTE:type CARD8:nExtensions CARD16:sequenceNumber CARD32:length CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY QueryColors  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:nColors CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY TranslateCoords  BYTE:type BOOL:sameScreen CARD16:sequenceNumber CARD32:length CARD32:child INT16:dstX INT16:dstY CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5
+REPLY QueryExtension  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length BOOL:present CARD8:major_opcode CARD8:first_event CARD8:first_error CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY AllocColorPlanes  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:nPixels CARD16:pad2 CARD32:redMask CARD32:greenMask CARD32:blueMask CARD32:pad3 CARD32:pad4
+REPLY AllocColorCells  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:nPixels CARD16:nMasks CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY GetFontPath  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:nPaths CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY GetAtomName  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:nameLength CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY GetPointerMapping  BYTE:type CARD8:nElts CARD16:sequenceNumber CARD32:length CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY QueryBestSize  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:width CARD16:height CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY LookupColor  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:exactRed CARD16:exactGreen CARD16:exactBlue CARD16:screenRed CARD16:screenGreen CARD16:screenBlue CARD32:pad3 CARD32:pad4 CARD32:pad5
+REPLY QueryKeymap  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length
+REPLY GrabPointer  BYTE:type BYTE:status CARD16:sequenceNumber CARD32:length CARD32:pad1 CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6
+REPLY ListFontsWithInfo  BYTE:type CARD8:nameLength CARD16:sequenceNumber CARD32:length xCharInfo:minBounds CARD32:walign1 xCharInfo:maxBounds CARD32:walign2 CARD16:minCharOrByte2 CARD16:maxCharOrByte2 CARD16:defaultChar CARD16:nFontProps CARD8:drawDirection CARD8:minByte1 CARD8:maxByte1 BOOL:allCharsExist INT16:fontAscent INT16:fontDescent CARD32:nReplies
+REPLY QueryFont  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length xCharInfo:minBounds CARD32:walign1 xCharInfo:maxBounds CARD32:walign2 CARD16:minCharOrByte2 CARD16:maxCharOrByte2 CARD16:defaultChar CARD16:nFontProps CARD8:drawDirection CARD8:minByte1 CARD8:maxByte1 BOOL:allCharsExist INT16:fontAscent INT16:fontDescent CARD32:nCharInfos
+REPLY GetMotionEvents  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD32:nEvents CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6
+REPLY GetWindowAttributes  BYTE:type CARD8:backingStore CARD16:sequenceNumber CARD32:length CARD32:visualID CARD16:class CARD8:bitGravity CARD8:winGravity CARD32:backingBitPlanes CARD32:backingPixel BOOL:saveUnder BOOL:mapInstalled CARD8:mapState BOOL:override CARD32:colormap CARD32:allEventMasks CARD32:yourEventMask CARD16:doNotPropagateMask CARD16:pad
+REPLY GetScreenSaver  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:timeout CARD16:interval BOOL:preferBlanking BOOL:allowExposures CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6
+REPLY ListFonts  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:nFonts CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY GetProperty  BYTE:type CARD8:format CARD16:sequenceNumber CARD32:length CARD32:propertyType CARD32:bytesAfter CARD32:nItems CARD32:pad1 CARD32:pad2 CARD32:pad3
+REPLY Generic  BYTE:type BYTE:data1 CARD16:sequenceNumber CARD32:length CARD32:data00 CARD32:data01 CARD32:data02 CARD32:data03 CARD32:data04 CARD32:data05
+REPLY ListHosts  BYTE:type BOOL:enabled CARD16:sequenceNumber CARD32:length CARD16:nHosts CARD16:pad1 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY SetModifierMapping  BYTE:type CARD8:success CARD16:sequenceNumber CARD32:length CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY GetSelectionOwner  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD32:owner CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6
+REPLY InternAtom  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD32:atom CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6
+REPLY GetKeyboardMapping  BYTE:type CARD8:keySymsPerKeyCode CARD16:sequenceNumber CARD32:length CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY ListInstalledColormaps  BYTE:type BYTE:pad1 CARD16:sequenceNumber CARD32:length CARD16:nColormaps CARD16:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+REPLY GetInputFocus  BYTE:type CARD8:revertTo CARD16:sequenceNumber CARD32:length CARD32:focus CARD32:pad1 CARD32:pad2 CARD32:pad3 CARD32:pad4 CARD32:pad5
+STRUCT Depth  CARD8:depth CARD8:pad1 CARD16:nVisuals CARD32:pad2
+STRUCT WindowRoot  CARD32:windowId CARD32:defaultColormap CARD32:whitePixel CARD32:blackPixel CARD32:currentInputMask CARD16:pixWidth CARD16:pixHeight CARD16:mmWidth CARD16:mmHeight CARD16:minInstalledMaps CARD16:maxInstalledMaps CARD32:rootVisualID CARD8:backingStore BOOL:saveUnders CARD8:rootDepth CARD8:nDepths
+STRUCT TextElt  CARD8:len INT8:delta
+STRUCT rgb  CARD16:red CARD16:green CARD16:blue CARD16:pad
+STRUCT FontProp  CARD32:name CARD32:value
+STRUCT HostEntry  CARD8:family BYTE:pad CARD16:length
+STRUCT ConnSetupPrefix  CARD8:success BYTE:lengthReason CARD16:majorVersion CARD16:minorVersion CARD16:length
+STRUCT Arc  INT16:x INT16:y CARD16:width CARD16:height INT16:angle1 INT16:angle2
+STRUCT Point  INT16:x INT16:y
+STRUCT VisualType  CARD32:visualID CARD8:class CARD8:bitsPerRGB CARD16:colormapEntries CARD32:redMask CARD32:greenMask CARD32:blueMask CARD32:pad
+STRUCT Error  BYTE:type BYTE:errorCode CARD16:sequenceNumber CARD32:resourceID CARD16:minorCode CARD8:majorCode BYTE:pad1 CARD32:pad3 CARD32:pad4 CARD32:pad5 CARD32:pad6 CARD32:pad7
+STRUCT PixmapFormat  CARD8:depth CARD8:bitsPerPixel CARD8:scanLinePad CARD8:pad1 CARD32:pad2
+STRUCT CharInfo  INT16:leftSideBearing INT16:rightSideBearing INT16:characterWidth INT16:ascent INT16:descent CARD16:attributes
+STRUCT Segment  INT16:x1 INT16:y1 INT16:x2 INT16:y2
+STRUCT ColorItem  CARD32:pixel CARD16:red CARD16:green CARD16:blue CARD8:flags CARD8:pad
+STRUCT Timecoord  CARD32:time INT16:x INT16:y
+STRUCT ConnSetup  CARD32:release CARD32:ridBase CARD32:ridMask CARD32:motionBufferSize CARD16:nbytesVendor CARD16:maxRequestSize CARD8:numRoots CARD8:numFormats CARD8:imageByteOrder CARD8:bitmapBitOrder CARD8:bitmapScanlineUnit CARD8:bitmapScanlinePad CARD8:minKeyCode CARD8:maxKeyCode CARD32:pad2
+STRUCT Rectangle  INT16:x INT16:y CARD16:width CARD16:height
+STRUCT ConnClientPrefix  CARD8:byteOrder BYTE:pad CARD16:majorVersion CARD16:minorVersion CARD16:nbytesAuthProto CARD16:nbytesAuthString CARD16:pad2
+STRUCT KeymapEvent  BYTE:type BYTE:map[31]
