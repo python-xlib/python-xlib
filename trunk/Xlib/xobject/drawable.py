@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.12 2002-05-15 22:27:14 petli Exp $
+# $Id: drawable.py,v 1.13 2003-07-11 20:49:33 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -114,12 +114,12 @@ class Drawable(resource.Resource):
 			 points = points)
 
     def line(self, gc, x1, y1, x2, y2, onerror = None):
-	request.PolSegment(display = self.display,
-			   onerror = onerror,
-			   drawable = self.id,
-			   gc = gc,
-			   segments = [(x1, y1, x2, y2)])
-
+	request.PolySegment(display = self.display,
+			    onerror = onerror,
+			    drawable = self.id,
+			    gc = gc,
+			    segments = [(x1, y1, x2, y2)])
+	
     def poly_segment(self, gc, segments, onerror = None):
 	request.PolySegment(display = self.display,
 			    onerror = onerror,
