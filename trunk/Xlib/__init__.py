@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.8 2001-01-06 17:58:06 petli Exp $
+# $Id: __init__.py,v 1.9 2001-01-12 11:05:03 petli Exp $
 #
 # Xlib.__init__ -- glue for Xlib package
 #
@@ -18,6 +18,12 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import string
+
+__version__ = (0, 8)
+
+__version_string__ = string.join(map(str, __version__), '.')
+
 __all__ = [
     'X',
     'XK',
@@ -26,13 +32,8 @@ __all__ = [
     'Xutil',
     'display',
     'error',
-    'protocol',
     'rdb',
     # Explicitly exclude threaded, so that it isn't imported by
     #  from Xlib import *
-    'xobject',
     ]
-
-__version__ = (0, 7)
-
 

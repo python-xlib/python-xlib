@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.2 2000-09-06 01:51:34 petli Exp $
+# $Id: __init__.py,v 1.3 2001-01-12 11:05:03 petli Exp $
 #
 # Xlib.support.__init__ -- support code package
 #
@@ -21,4 +21,5 @@
 __all__ = [
     'lock',
     'connect'
+    # The platform specific modules should not be listed here
     ]
