@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.5 2000-09-22 11:37:51 petli Exp $
+# $Id: drawable.py,v 1.6 2000-12-21 12:23:07 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -21,7 +21,7 @@
 import string
 
 from Xlib import X, Xatom, Xutil
-from Xlib.protocol import request
+from Xlib.protocol import request, rq
 
 # Other X resource objects
 import resource
@@ -616,7 +616,7 @@ class Window(Drawable):
     def get_wm_protocols(self):
 	d = self.get_full_property(self.display.get_atom('WM_PROTOCOLS'), Xatom.ATOM)
 	if d is None or d.format != 32:
-	    return None
+	    return []
 	else:
 	    return d.value
 
@@ -630,7 +630,7 @@ class Window(Drawable):
 	d = self.get_full_property(self.display.get_atom('WM_COLORMAP_WINDOWS'),
 				   Xatom.WINDOW)
 	if d is None or d.format != 32:
-	    return None
+	    return []
 	else:
 	    cls = self.display.get_resource_class('window', Window)
 	    return map(lambda i, d = self.display, c = cls: c(d, i),
@@ -648,7 +648,67 @@ class Window(Drawable):
 	else:
 	    return d.value
 	
+    def set_wm_normal_hints(self, hints = {}, onerror = None, **keys):
+	self._set_struct_prop(Xatom.WM_NORMAL_HINTS, Xatom.WM_SIZE_HINTS,
+			      icccm.WMNormalHints, hints, keys, onerror)
+
+    def get_wm_normal_hints(self):
+	return self._get_struct_prop(Xatom.WM_NORMAL_HINTS, Xatom.WM_SIZE_HINTS,
+				     icccm.WMNormalHints)
+
+    def set_wm_hints(self, hints = {}, onerror = None, **keys):
+	self._set_struct_prop(Xatom.WM_HINTS, Xatom.WM_HINTS,
+			      icccm.WMHints, hints, keys, onerror)
+
+    def get_wm_hints(self):
+	return self._get_struct_prop(Xatom.WM_HINTS, Xatom.WM_HINTS,
+				     icccm.WMHints)
+
+    def set_wm_state(self, hints = {}, onerror = None, **keys):
+	atom = self.display.get_atom('WM_STATE')
+	self._set_struct_prop(atom, atom, icccm.WMState, hints, keys, onerror)
+
+    def get_wm_state(self):
+	atom = self.display.get_atom('WM_STATE')
+	return self._get_struct_prop(atom, atom, icccm.WMState)
+
+    def set_wm_icon_size(self, hints = {}, onerror = None, **keys):
+	self._set_struct_prop(Xatom.WM_ICON_SIZE, Xatom.WM_ICON_SIZE,
+			      icccm.WMIconSize, hints, keys, onerror)
+
+    def get_wm_icon_size(self):
+	return self._get_struct_prop(Xatom.WM_ICON_SIZE, Xatom.WM_ICON_SIZE,
+				     icccm.WMIconSize)
+
+    # Helper function for getting structured properties.
+    # pname and ptype are atoms, and pstruct is a Struct object.
+    # Returns a DictWrapper, or None
     
+    def _get_struct_prop(self, pname, ptype, pstruct):
+	r = self.get_property(pname, ptype, 0, pstruct.static_size / 4)
+	if r and r.format == 32:
+	    value = r.value.tostring()
+	    if len(value) == pstruct.static_size:
+		return pstruct.parse_binary(value, self.display)[0]
+
+	return None
+
+    # Helper function for setting structured properties.
+    # pname and ptype are atoms, and pstruct is a Struct object.
+    # hints is a mapping or a DictWrapper, keys is a mapping.  keys
+    # will be modified.  onerror is the error handler.
+
+    def _set_struct_prop(self, pname, ptype, pstruct, hints, keys, onerror):
+	if isinstance(hints, rq.DictWrapper):
+	    keys.update(hints._data)
+	else:
+	    keys.update(hints)
+
+	value = pstruct.build_from_args((), keys)
+
+	self.change_property(pname, ptype, 32, value, onerror = onerror)
+	
+	
 class Pixmap(Drawable):
     __pixmap__ = resource.Resource.__resource__
 

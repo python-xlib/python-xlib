@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.6 2000-12-01 10:18:10 petli Exp $
+# $Id: rq.py,v 1.7 2000-12-21 12:23:07 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -252,8 +252,9 @@ Format = FormatField
 
     
 class ValueField(Field):
-    def __init__(self, name):
+    def __init__(self, name, default = None):
 	self.name = name
+	self.default = default
 
     def get_name(self):
 	return self.name
@@ -264,7 +265,10 @@ class ValueField(Field):
 	    val = self.check_value(val)
 	    return self.pack_value(val)
 	except KeyError:
-	    raise TypeError('missing argument for field "%s"' % self.name)
+	    if self.default is None:
+		raise TypeError('missing argument for field "%s"' % self.name)
+
+	    return self.pack_value(self.default)
 
     def check_value(self, val):
 	return val
@@ -302,8 +306,8 @@ class Resource(Card32):
     cast_function = '__resource__'
     class_name = 'resource'
 
-    def __init__(self, name, codes = ()):
-	Card32.__init__(self, name)
+    def __init__(self, name, codes = (), default = None):
+	Card32.__init__(self, name, default)
 	self.codes = codes
     
     def check_value(self, value):
@@ -365,8 +369,8 @@ class Bool(ValueField):
 class Set(ValueField):
     structvalues = 1
 
-    def __init__(self, name, size, values):
-	ValueField.__init__(self, name)
+    def __init__(self, name, size, values, default = None):
+	ValueField.__init__(self, name, default)
 	self.structcode = unsigned_codes[size]
 	self.values = values
 
@@ -545,8 +549,8 @@ class FixedList(List):
 class Object(ValueField):
     structcode = None
 
-    def __init__(self, name, type):
-	ValueField.__init__(self, name)
+    def __init__(self, name, type, default = None):
+	ValueField.__init__(self, name, default)
 	self.type = type
 	self.structcode = self.type.structcode
 	self.structvalues = self.type.structvalues
@@ -974,6 +978,8 @@ class Struct:
 	    return self.build_from_args(value, {})
 	elif type(value) is types.DictionaryType:
 	    return self.build_from_args((), value)
+	elif isinstance(value, DictWrapper):
+	    return self.build_from_args((), value._data)
 	else:
 	    raise BadDataError('%s is not a tuple or a list' % (value))
 	
@@ -1118,11 +1124,23 @@ class GetAttrData:
 
 class DictWrapper(GetAttrData):
     def __init__(self, dict):
-	self._data = dict
+	self.__dict__['_data'] = dict
 
     def __getitem__(self, key):
 	return self._data[key]
 
+    def __setitem__(self, key, value):
+	self._data[key] = value
+
+    def __delitem__(self, key):
+	del self._data[key]
+	
+    def __setattr__(self, key, value):
+	self._data[key] = value
+
+    def __delattr__(self, key):
+	del self._data[key]
+    
     def __str__(self):
 	return str(self._data)
     

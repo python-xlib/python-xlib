@@ -1,4 +1,16 @@
 
+* Version 0.5
+
+** Functions implemented to get and set all ICCCM WM properties on
+Window objects.
+
+** Two utils for debugging X traffic implemented.
+utils/tcpbug.py forwards a TCP connection and outputs the
+communication between the client and the server.  This output can then
+be fed into utils/parsexbug.py, which will output all requests,
+responses, errors and events in a readable format.
+
+
 * Version 0.4  4 Oct 2000
 
 ** Thread support completed, but not really stresstested yet.

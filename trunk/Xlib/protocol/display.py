@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.7 2000-09-22 11:37:51 petli Exp $
+# $Id: display.py,v 1.8 2000-12-21 12:23:07 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -124,6 +124,12 @@ class Display:
     #
     # Public interface
     #
+
+    def get_display_name(self):
+	return self.display_name
+    
+    def get_default_screen(self):
+	return self.default_screen
     
     def fileno(self):
 	self.check_for_error()
