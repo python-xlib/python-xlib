@@ -1,12 +1,14 @@
 
 			 The Python X Library
 
-		      Version 0.11, 23 Dec 2001
-
-
 *** Copyright
 
-Copyright (C) 2000-2002  Peter Liljenberg
+The main part of the code is
+
+    Copyright (C) 2000-2002  Peter Liljenberg
+
+Some code is copyrighted to their contributors, this is indicated at
+the top of the source files.
 
 The Python X Library is released under GPL, see the file COPYING for
 details.

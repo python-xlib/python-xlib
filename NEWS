@@ -2,7 +2,21 @@
 
 		      NEWS for Python X Library
 
-* Version 0.11  23 Feb 2001
+* Version 0.12a  24 Mar 2002
+
+This is an alpha release to allow people to start messing with the
+following new feature:
+
+** SHAPE extension
+
+Jeffrey Boser contributed a SHAPE extension module, allowing Python
+Xlib programs to use shaped windows.  Take a look at
+examples/shapewin.py for ideas on how to use it.  For more information
+on shaped windows, see
+http://ftp.x.org/pub/R6.6/xc/doc/hardcopy/Xext/shape.PS.gz
+
+
+* Version 0.11  23 Feb 2002
 
 ** Regression tests for the protocol definition
 
