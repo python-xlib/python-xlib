@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.5 2000-09-06 01:51:34 petli Exp $
+# $Id: rq.py,v 1.6 2000-12-01 10:18:10 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -654,6 +654,7 @@ class ValueList(Field):
     def __init__(self, name, mask, pad, *fields):
 	self.name = name
 	self.maskcode = '=%s%dx' % (unsigned_codes[mask], pad)
+	self.maskcodelen = struct.calcsize(self.maskcode)
 	self.fields = []
 	
 	flag = 1
@@ -684,7 +685,30 @@ class ValueList(Field):
 
 	return struct.pack(self.maskcode, mask) + data
 
+    def parse_binary_value(self, data, display, length, format):
+	r = {}
+	
+	mask = int(struct.unpack(self.maskcode, data[:self.maskcodelen])[0])
+	data = data[self.maskcodelen:]
 
+	for field, flag in self.fields:
+	    if mask & flag:
+		if field.structcode:
+		    vals = struct.unpack(field.structcode,
+					 data[:struct.calcsize(field.structcode)])
+		    if field.structvalues == 1:
+			vals = field.parse_value(vals[0], display)
+		    else:
+			vals = field.parse_value(vals, display)
+		else:
+		    vals, d = field.parse_binary_value(data[:4], display, None, None)
+		    
+		r[field.get_name()] = vals
+		data = data[4:]
+
+	return DictWrapper(r), data
+		
+	
 class KeyboardMapping(ValueField):
     structcode = None
 
@@ -1056,7 +1080,25 @@ class TextElements8(ValueField):
 	dlen = len(data)
 	return data + '\0' * ((4 - dlen % 4) % 4)
 
+    def parse_binary_value(self, data, display, length, format):
+	values = []
+	while 1:
+	    d = data[:2]
+	    if len(d) != 2:
+		break
+	    
+	    if ord(data[0]) == 255:
+		values.append(struct.unpack('>L', data[1:5])[0])
+		data = data[5:]
 
+	    else:
+		v, data = self.string_textitem.parse_binary(data, display)
+		values.append(v)
+
+	return v, ''
+			      
+		
+	
 class TextElements16(ValueField):
     string_textitem = Struct( LengthOf('string', 1),
 			      Int8('delta'),
