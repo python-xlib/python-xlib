@@ -72,6 +72,3 @@ XK_Greek_chi = 0x7f7
 XK_Greek_psi = 0x7f8
 XK_Greek_omega = 0x7f9
 XK_Greek_switch = 0xFF7E
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

@@ -55,6 +55,3 @@ XK_rcaron = 0x1f8
 XK_uring = 0x1f9
 XK_tcedilla = 0x1fe
 XK_abovedot = 0x1ff
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

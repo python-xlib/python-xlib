@@ -82,6 +82,3 @@ XK_Thai_lekhok = 0xdf6
 XK_Thai_lekchet = 0xdf7
 XK_Thai_lekpaet = 0xdf8
 XK_Thai_lekkao = 0xdf9
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

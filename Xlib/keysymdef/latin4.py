@@ -34,6 +34,3 @@ XK_kcedilla = 0x3f3
 XK_uogonek = 0x3f9
 XK_utilde = 0x3fd
 XK_umacron = 0x3fe
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

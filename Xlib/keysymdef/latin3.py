@@ -20,6 +20,3 @@ XK_gabovedot = 0x2f5
 XK_gcircumflex = 0x2f8
 XK_ubreve = 0x2fd
 XK_scircumflex = 0x2fe
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

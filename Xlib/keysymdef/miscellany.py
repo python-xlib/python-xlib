@@ -167,7 +167,3 @@ XK_Super_L = 0xFFEB
 XK_Super_R = 0xFFEC
 XK_Hyper_L = 0xFFED
 XK_Hyper_R = 0xFFEE
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)
-
