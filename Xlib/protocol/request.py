@@ -1,8 +1,8 @@
-# $Id: request.py,v 1.7 2001-11-30 16:10:13 petli Exp $
+# $Id: request.py,v 1.8 2001-12-16 14:23:38 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
-#    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000-2001 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -1042,7 +1042,7 @@ class PolyFillArc(rq.Request):
 class PutImage(rq.Request):
     _request = rq.Struct(
 	rq.Opcode(72),
-	rq.Card8(''),
+        rq.Set('format', 1, (X.XYBitmap, X.XYPixmap, X.ZPixmap)),
 	rq.RequestLength(),
 	rq.Drawable('drawable'),
 	rq.GC('gc'),
@@ -1053,7 +1053,7 @@ class PutImage(rq.Request):
 	rq.Card8('left_pad'),
 	rq.Card8('depth'),
 	rq.Pad(2),
-	rq.List('data', rq.Card8Obj),
+        rq.String8('data'),
 	)    
 
 class GetImage(rq.ReplyRequest):
@@ -1076,7 +1076,7 @@ class GetImage(rq.ReplyRequest):
 	rq.Pad(4),
 	rq.Card32('visual'),
 	rq.Pad(20),
-	rq.List('data', rq.Card8Obj),
+        rq.String8('data'),
 	)
     
 class PolyText8(rq.Request):
