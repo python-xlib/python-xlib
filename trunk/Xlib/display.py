@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.11 2000-12-22 13:23:34 petli Exp $
+# $Id: display.py,v 1.12 2001-01-08 12:03:39 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -269,7 +269,7 @@ class Display:
     
     def refresh_keyboard_mapping(self, evt):
 	if isinstance(evt, event.MappingNotify):
-	    self._update_keymap(self, evt.first_keycode, evt.count)
+	    self._update_keymap(evt.first_keycode, evt.count)
 	else:
 	    raise TypeError('expected a MappingNotify event')
 	
