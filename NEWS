@@ -20,9 +20,9 @@ thicker.
 
 The Drawable methods put_image() and get_image() have been
 implemented, but handling image data is still up to the user.  There
-is however, thanks to INSERT_NAME_HERE, a trivial method
-put_pil_image() that will work on some combinations of image and
-drawable depth.  It's not perfect, but it's a start.
+is however, thanks to Ilpo Nyyssönen, a trivial method put_pil_image()
+that will work on some combinations of image and drawable depth.  It's
+not perfect, but it's a start.
 
 
 * Version 0.9  4 Dec 2001
