@@ -886,7 +886,7 @@ class CmpArray:
 rq.array = CmpArray
 
 def tohex(bin):
-    bin = string.join(map(lambda c: '\x%02x' % ord(c), bin), '')
+    bin = string.join(map(lambda c: '\\x%02x' % ord(c), bin), '')
 
     bins = []
     for i in range(0, len(bin), 16):
