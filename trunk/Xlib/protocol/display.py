@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.13 2001-07-25 18:48:25 petli Exp $
+# $Id: display.py,v 1.14 2001-12-04 11:41:01 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -119,7 +119,7 @@ class Display:
 
 	# Set up remaining info
 	self.info = r
-	self.default_screen = max(self.default_screen, len(self.info.roots) - 1)
+	self.default_screen = min(self.default_screen, len(self.info.roots) - 1)
 
 	
     #
