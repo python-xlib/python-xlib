@@ -1,8 +1,8 @@
 #!/usr/bin/python
 #
-# $Id: draw.py,v 1.3 2000-08-08 09:47:47 petli Exp $
+# $Id: draw-proto.py,v 1.1 2000-08-08 09:47:47 petli Exp $
 #
-# examples/draw.py -- high-level xlib test application.
+# examples/draw.py -- protocol test application.
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
@@ -27,7 +27,9 @@ import os
 # Change path so we find Xlib
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
-from Xlib import X, display
+from Xlib import X
+from Xlib.protocol import display
+from Xlib.protocol.request import *
 
 # Application window (only one)
 class Window:
@@ -36,33 +38,44 @@ class Window:
 	self.objects = []
 
 	# Find which screen to open the window on
-	self.screen = self.d.screen()
-	
-	self.window = self.screen.root.create_window(
-	    50, 50, 300, 200, 2,
-	    self.screen.root_depth,
-	    X.InputOutput,
-	    X.CopyFromParent,
+	self.screen = self.d.info.roots[self.d.default_screen]
 
-	    # special attribute values
-	    background_pixel = self.screen.white_pixel,
-	    event_mask = (X.ExposureMask |
-			  X.StructureNotifyMask |
-			  X.ButtonPressMask |
-			  X.ButtonReleaseMask |
-			  X.Button1MotionMask),
-	    colormap = X.CopyFromParent,
-	    )
-	    
-	self.gc = self.window.create_gc(
-	    foreground = self.screen.black_pixel,
-	    background = self.screen.white_pixel,
-	    )
+	# Allocate ids to the window and gc
+	self.window = self.d.allocate_resource_id()
+	self.gc = self.d.allocate_resource_id()
+
+	# Create a window
+	CreateWindow(self.d, None,
+		     self.screen.root_depth,
+		     self.window,
+		     self.screen.root,
+		     50, 50, 300, 200, 2,
+		     X.InputOutput,
+		     X.CopyFromParent,
+
+		     # special attribute values
+		     background_pixel = self.screen.white_pixel,
+		     event_mask = (X.ExposureMask |
+				   X.StructureNotifyMask |
+				   X.ButtonPressMask |
+				   X.ButtonReleaseMask |
+				   X.Button1MotionMask),
+		     colormap = X.CopyFromParent)
+
+	# Create a gc for drawing
+	CreateGC(self.d, None,
+		 self.gc,
+		 self.window,
+
+		 # special attribute values
+		 foreground = self.screen.black_pixel,
+		 background = self.screen.white_pixel)
 
 	# Map the window, making it visible
-	self.window.map()
+	MapWindow(self.d, None, self.window)
 
     # Main loop, handling events
+    
     def loop(self):
 	current = None
 	while 1:
@@ -114,9 +127,12 @@ class Movement:
 	# Find all the mouse coordinates since the
 	# last event received
 	
-	events = self.win.window.get_motion_events(self.time, ev.time)
+	r = GetMotionEvents(self.win.d,
+			    window = self.win.window,
+			    start = self.time,
+			    stop = ev.time)
 
-	if not events:
+	if not r.events:
 	    return
 
 	# Record the previous last coordinate, and append
@@ -127,9 +143,11 @@ class Movement:
 	# Discard the first coordinate if that is identical to
 	# the last recorded coordinate
 
-	pos = events[0]
+	pos = r.events[0]
 	if (pos.x, pos.y) == self.lines[-1]:
-	    events = events[1:]
+	    events = r.events[1:]
+	else:
+	    events = r.events
 
 	# Append all coordinates
 	for pos in events:
@@ -154,9 +172,11 @@ class Movement:
 	    self.lines.append((ev.event_x, ev.event_y))
 	
 	# Draw a line between the new coordinates
-	self.win.window.poly_line(self.win.gc,
-				  X.CoordModeOrigin,
-				  self.lines[firstline:])
+	PolyLine(self.win.d, None,
+		 X.CoordModeOrigin,
+		 self.win.window,
+		 self.win.gc,
+		 self.lines[firstline:])
 
 	self.time = ev.time
 
@@ -179,9 +199,11 @@ class Movement:
 	    self.first.draw()
 	    if self.last:
 		# Redraw all the lines
-		self.win.window.poly_line(self.win.gc,
-					  X.CoordModeOrigin,
-					  self.lines)
+		PolyLine(self.win.d, None,
+			 X.CoordModeOrigin,
+			 self.win.window,
+			 self.win.gc,
+			 self.lines)
 		self.last.draw()
 		
 	
@@ -195,12 +217,15 @@ class Romboid:
 
     def draw(self):
 	# Draw the segments of the romboid
-	self.win.window.poly_line(self.win.gc, X.CoordModePrevious,
-				  [(self.x, self.y - 5),
-				   (5, 5),
-				   (-5, 5),
-				   (-5, -5),
-				   (5, -5)])
+	PolyLine(self.win.d, None,
+		 X.CoordModePrevious,
+		 self.win.window,
+		 self.win.gc,
+		 [(self.x, self.y - 5),
+		  (5, 5),
+		  (-5, 5),
+		  (-5, -5),
+		  (5, -5)])
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.1 2000-08-07 10:30:20 petli Exp $
+# $Id: drawable.py,v 1.2 2000-08-08 09:47:46 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -25,7 +25,7 @@ from Xlib.protocol import request
 import resource
 import colormap
 import cursor
-import gc
+import fontable
 
 class Drawable(resource.Resource):
     __drawable__ = resource.Resource.__resource__
@@ -52,7 +52,7 @@ class Drawable(resource.Resource):
 			 drawable = self.id,
 			 attrs = keys)
 
-	return gc.GC(self.display, cid, owner = 1)
+	return fontable.GC(self.display, cid, owner = 1)
     
     def copy_area(self, gc, src_drawable, src_x, src_y, width, height, dst_x, dst_y):
 	request.CopyArea(display = self.display,
@@ -68,17 +68,17 @@ class Drawable(resource.Resource):
 
     def copy_plane(self, gc, src_drawable, src_x, src_y, width, height,
 		   dst_x, dst_y, bit_plane):
-	request.CopyArea(display = self.display,
-			 src_drawable = src_drawable,
-			 dst_drawable = self.id,
-			 gc = gc,
-			 src_x = src_x,
-			 src_y = src_y,
-			 dst_x = dst_x,
-			 dst_y = dst_y,
-			 width = width,
-			 height = height,
-			 bit_plane = bit_plane)
+	request.CopyPlane(display = self.display,
+			  src_drawable = src_drawable,
+			  dst_drawable = self.id,
+			  gc = gc,
+			  src_x = src_x,
+			  src_y = src_y,
+			  dst_x = dst_x,
+			  dst_y = dst_y,
+			  width = width,
+			  height = height,
+			  bit_plane = bit_plane)
 
     def poly_point(self, gc, coord_mode, points):
 	request.PolyPoint(display = self.display,
@@ -213,10 +213,8 @@ class Window(Drawable):
     def destroy(self):
 	request.DestroyWindow(display = self.display,
 			      window = self.id)
-	if self.owner:
-	    self.display.free_resource_id(self.id)
-	    self.id = None
-	    self.owner = 0
+
+	self.display.free_resource_id(self.id)
 
     def destroy_sub_windows(self):
 	request.DestroySubWindows(display = self.display,
@@ -240,7 +238,7 @@ class Window(Drawable):
 			  window = self.id)
 
     def map_sub_windows(self):
-	request.MapSubWindows(display = self.display,
+	request.MapSubwindows(display = self.display,
 			      window = self.id)
 
     def unmap(self):
@@ -248,7 +246,7 @@ class Window(Drawable):
 			    window = self.id)
     
     def unmap_sub_windows(self):
-	request.UnmapSubWindows(display = self.display,
+	request.UnmapSubwindows(display = self.display,
 				window = self.id)
 
     def configure(self, **keys):
@@ -338,15 +336,15 @@ class Window(Drawable):
 		    pointer_mode, keyboard_mode,
 		    confine_to, cursor):
 	
-	request.GrabPointer(display = self.display,
-			    owner_events = owner_events,
-			    grab_window = self.id,
-			    event_mask = event_mask,
-			    pointer_mode = pointer_mode,
-			    keyboard_mode = keyboard_mode,
-			    confine_to = confine_to,
-			    button = button,
-			    modifiers = modifiers)
+	request.GrabButton(display = self.display,
+			   owner_events = owner_events,
+			   grab_window = self.id,
+			   event_mask = event_mask,
+			   pointer_mode = pointer_mode,
+			   keyboard_mode = keyboard_mode,
+			   confine_to = confine_to,
+			   button = button,
+			   modifiers = modifiers)
 
     def ungrab_button(self, button, modifiers):
 	request.UngrabButton(display = self.display,
@@ -398,7 +396,6 @@ class Window(Drawable):
 				       src_x = src_x,
 				       src_y = src_y)
 
-    ### FIXME: should exist as Display method to, for relative warps
     def warp_pointer(self, x, y, src_window = 0, src_x = 0, src_y = 0,
 		     src_width = 0, src_height = 0):
 
@@ -412,7 +409,6 @@ class Window(Drawable):
 			    dst_x = x,
 			    dst_y = y)
 
-    ### FIXME: as Display method too
     def set_input_focus(self, revert_to, time):
 	request.SetInputFocus(display = self.display,
 			      revert_to = revert_to,
@@ -454,10 +450,8 @@ class Pixmap(Drawable):
     def free(self):
 	request.FreePixmap(display = self.display,
 			   pixmap = self.id)
-	if self.owner:
-	    self.display.free_resource_id(self.id)
-	    self.id = None
-	    self.owner = 0
+
+	self.display.free_resource_id(self.id)
 
     def create_cursor(self, mask,
 		      (fore_red, fore_green, fore_blue),

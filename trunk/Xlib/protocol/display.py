@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.2 2000-08-07 10:30:19 petli Exp $
+# $Id: display.py,v 1.3 2000-08-08 09:47:45 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -215,21 +215,20 @@ class Display:
     def free_resource_id(self, rid):
 	"""d.free_resource_id(rid)
 
-	Free resource id RID.
-
-	Raises ResourceIDError if RID is not allocated.
+	Free resource id RID.  Attempts to free a resource id which
+	isn't allocated by us are ignored.
 	"""
 
 	i = rid & self.info.resource_id_mask
 
 	# Attempting to free a resource id outside our range
 	if rid - i != self.info.resource_id_base:
-	    raise error.ResourceIDError('resource id 0x%08x is not in our range' % rid)
+	    return None
 	
 	try:
 	    del self.resource_ids[i]
 	except KeyError:
-	    raise error.ResourceIDError('resouce id 0x%08x is not allocated' % rid)
+	    pass
 
     
 

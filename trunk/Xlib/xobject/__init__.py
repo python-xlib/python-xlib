@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.1 2000-08-02 09:39:24 petli Exp $
+# $Id: __init__.py,v 1.2 2000-08-08 09:47:46 petli Exp $
 #
 # Xlib.xobject.__init__ -- glue for Xlib.xobject package
 #
@@ -19,7 +19,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 __all__ = [
+    'colormap',
+    'cursor',
+    'drawable',
     'font',
     'gc',
-    'window',
+    'resource',
     ]

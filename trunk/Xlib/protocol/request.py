@@ -1,4 +1,4 @@
-# $Id: request.py,v 1.2 2000-08-07 10:30:19 petli Exp $
+# $Id: request.py,v 1.3 2000-08-08 09:47:46 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
@@ -485,7 +485,14 @@ class UngrabKey(rq.Request):
 class AllowEvents(rq.Request):
     _request = rq.Struct(
 	rq.Opcode(35),
-	rq.Card8('mode'),
+	rq.Set('mode', 1, (X.AsyncPointer,
+			   X.SyncPointer,
+			   X.ReplayPointer,
+			   X.AsyncKeyboard,
+			   X.SyncKeyboard,
+			   X.ReplayKeyboard,
+			   X.AsyncBoth,
+			   X.SyncBoth)),
 	rq.RequestLength(),
 	rq.Card32('time'),
 	)
@@ -648,7 +655,7 @@ class QueryFont(rq.ReplyRequest):
 	rq.Opcode(47),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Font('font')
+	rq.Fontable('font')
 	)
 
     _reply = rq.Struct(
@@ -679,7 +686,7 @@ class QueryTextExtents(rq.ReplyRequest):
 	rq.Opcode(48),
 	rq.OddLength('string'),
 	rq.RequestLength(),
-	rq.Font('font'),
+	rq.Fontable('font'),
 	rq.String16('string'),
 	)
 

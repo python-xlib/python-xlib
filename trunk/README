@@ -1,12 +1,12 @@
 
 			 The Python X Library
 
-		       Version 0.1, 21 Jul 2000
+		       Version 0.2, 8 Aug 2000
 
 
 *** Copyright
 
-The Python X Library is released under GPL, see file COPYING for
+The Python X Library is released under GPL, see the file COPYING for
 details.
 
 
@@ -20,6 +20,9 @@ Make sure that that directory exists before copying.
 
 Alternatively, you can run programs from the distribution directory,
 or changing the module path in programs.
+
+There are a simple example program, implemented twice using both the
+high-level interface and the low-level protocol.
 
 
 *** Introduction
@@ -40,10 +43,10 @@ library:
 
  * Integration:  The library can make use of the wonderful object
    system in Python, providing an easy-to-use class hierarchy.
- 
- * Portability:  The library will be usable on any computer which have
-   Python installed.  A C interface could be problematic to port to
-   non-Unix systems, such as MS Windows or OpenVMS.
+
+ * Portability: The library will be usable on (almost) any computer
+   which have Python installed.  A C interface could be problematic to
+   port to non-Unix systems, such as MS Windows or OpenVMS.
 
  * Maintainability:  It is much easier to develop and debug native
    Python modules than modules written in C.
@@ -51,36 +54,21 @@ library:
 
 *** Project status
 
-Currently only the basic protocol interface is implemented.  This
-includes the network communication code for TCP/IP and Unix sockets
-and definitions of all requests, events and errors in X11R6.
+The low-level protocol and a rudimentary object oriented interface is
+complete, implementing client-side X11R6.  This should be usable for
+writing applications.  It runs at least on Linux using XFree86 as the
+server, but should run on most Unices at least.
 
-Client programs can be written using this, but that is quite awkward
-(see examples/draw.py for a simple application).
+There are most likely bugs, as only a rather small subset of all the
+requests and methods have been tested.  The code is released anyway to
+let other interested Python hackers have a look (and hopefully help
+out with debugging and coding :).
 
-There aren't any documentation for this yet except of the code and the
-example program.
+There aren't any documentation for this yet except of the code, the
+example programs and the standard X11 documentation.
 
-There are probably bugs.  The code handling network traffic and
-packing/unpacking requests, events and errors have been well
-tested and seems correct, but there is probably a few errors in the
-definition of the requests and the events, as not all of these have
-been tested yet.
-
-The next step, except for further testing and documentation, is to
-write the real client interface.  This will consist of classes
-representing windows, fonts, graphic contexts, etc, which wraps the
-basic protocol code in higher-level methods.
-
-Somewhere threading support should be added.  Currently the code is
-only thread safe if only one of the threads use the library.
-
-When all that is done, we will have a complete and usable X library.
-Although not very usable yet, the code is released anyway to let
-interested Python hackers have a peek.  Please report or fix any bugs
-you find, or get in contact if you want to help with the development
-in any way.
-
+See the file TODO for a detailed list of what is missing,
+approximately ordered by importance.
 
 
 *** Contact information
@@ -88,7 +76,8 @@ in any way.
 Mailing list: <python-xlib@ctrl-c.liu.se>
 
 To subscribe, send a message to <python-xlib-request@ctrl-c.liu.se>
-with the body "SUBSCRIBE".
+with the body "SUBSCRIBE".  The subject line is ignored, and can be
+blank. 
 
 
 Author email: Peter Liljenberg <petli@ctrl-c.liu.se>
@@ -96,4 +85,3 @@ Author email: Peter Liljenberg <petli@ctrl-c.liu.se>
 
 There isn't any real web page yet, although new versions can be
 downloaded from http://www.cendio.se/~petli/python-xlib/.
-
