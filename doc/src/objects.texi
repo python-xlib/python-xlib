@@ -465,8 +465,7 @@ Card16('height'),
 
 @code{Window} objects have additional objects, see @ref{Resource} and @ref{Drawable}.
 
-@defmethod Window create_window ( x, y, width, height, border_width, depth,
-window_class =  X.CopyFromParent,
+@defmethod Window create_window ( x, y, width, height, border_width, depth, window_class =  X.CopyFromParent,
 visual = X.CopyFromParent,
 **keys )
 Returns Window
@@ -567,8 +566,7 @@ Returns List('atoms', Card32Obj),
 @defmethod Window send_event ( event, event_mask = 0, propagate = 0, onerror = None )
 @end defmethod
 
-@defmethod Window grab_pointer ( owner_events, event_mask, pointer_mode, keyboard_mode,
-confine_to, cursor, time )
+@defmethod Window grab_pointer ( owner_events, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, time )
 Returns Card8('status'),
 @end defmethod
 
