@@ -1,7 +1,7 @@
 
 			 The Python X Library
 
-		       Version 0.3, 22 Aug 2000
+		       Version 0.4, 4 Oct 2000
 
 
 *** Copyright
@@ -68,8 +68,8 @@ requests and methods have been tested.  The code is released anyway to
 let other interested Python hackers have a look (and hopefully help
 out with debugging and coding :).
 
-There aren't any documentation for this yet except of the code, the
-example programs and the standard X11 documentation.
+There are some documentation now, but it doesn't cover any methods
+yet.
 
 See the file TODO for a detailed list of what is missing,
 approximately ordered by importance.
