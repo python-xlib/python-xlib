@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.3 2000-08-08 09:47:45 petli Exp $
+# $Id: display.py,v 1.4 2000-08-08 09:55:18 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -69,7 +69,7 @@ class Display:
     ###
 
     def screen(self, sno = None):
-	if sno is None
+	if sno is None:
 	    return self.display.info.roots[self.display.default_screen]
 	else:
 	    return self.display.info.roots[sno]
