@@ -1,3 +1,23 @@
+2001-01-04    <petli@cendio.se>
+
+	* rq.py: The fix for 64-bit platforms didn't work, and close
+	scrutiny of structmodule.c shows why: it turns out that '='
+	translates into '<' or '>', the one the platform would use.  This
+	means B is one byte, H is two and L is four, and no extra
+	alignment, always.  '@', which is the default, selects native
+	number of bytes, which on Alpha means that 'L' is eight bytes.
+
+	Now the code goes to pains to ensure that '=' encoding is always
+	used, so _now_ it should work on all platforms.  Ahem.
+	
+
+2000-12-29    <petli@cendio.se>
+
+	* rq.py: Optimizations:
+	  + replace calls to Field.get_name() with access to attribute
+	    name. 
+	    (Struct.build_from_args): 
+
 Fri Dec 29 17:05:02 2000  Peter Liljenberg  <petli@cendio.se>
 
 	* rq.py: Alpha forces us to probe how many bytes each struct code

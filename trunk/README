@@ -1,13 +1,21 @@
 
 			 The Python X Library
 
-		       Version 0.4, 4 Oct 2000
+		       Version 0.7, 6 Jan 2000
 
 
 *** Copyright
 
+Copyright (C) 2000,2001  Peter Liljenberg
+
 The Python X Library is released under GPL, see the file COPYING for
 details.
+
+
+*** Requirements
+
+The Python X Library requires Python 1.5.2 or newer, though it hasn't
+been tested with any newer Python versions yet.
 
 
 *** Installation
@@ -34,12 +42,11 @@ and the newer plxlib) which were interfaces to the C Xlib.
 
 This is possible to do since X client programs communicate with the X
 server via the X protocol.  The communication takes place over TCP/IP,
-Unix sockets, DECnet or any other suitable streaming network protocol.
-The C Xlib is merely an interface to this protocol, providing
-functions suited for a C environment.
+Unix sockets, DECnet or any other streaming network protocol.  The C
+Xlib is merely an interface to this protocol, providing functions
+suitable for a C environment.
 
-There are three advantages of choosing to implement a pure Python
-library:
+There are three advantages of implementing a pure Python library:
 
  * Integration:  The library can make use of the wonderful object
    system in Python, providing an easy-to-use class hierarchy.
@@ -54,22 +61,21 @@ library:
 
 *** Project status
 
-The low-level protocol and a rudimentary object oriented interface is
-complete, implementing client-side X11R6.  This should be usable for
-writing applications.  It runs at least on Linux using XFree86 as the
-server, but should run on most Unices.
+The low-level protocol is complete, implementing client-side X11R6.
+The high-level object oriented interface is also fully functional.
+It is possible to write client applications with the library.
+Currently, the only real application using Python Xlib is the window
+manager PLWM, starting with version 2.0.  
 
-A resource database has been implemented and there is a framework for
-adding X extension code.  Currently only the XTEST extension has been
-implemented.  
+There is a resource database implementation, ICCCM support and a
+framework for adding X extension code.  Currently only the XTEST
+extension has been implemented.
 
-There are most likely bugs, as only a rather small subset of all the
-requests and methods have been tested.  The code is released anyway to
-let other interested Python hackers have a look (and hopefully help
-out with debugging and coding :).
+There are most likely still bugs, although a large part of the library
+has been exercised now and seems to work just fine.
 
-There are some documentation now, but it doesn't cover any methods
-yet.
+There are some documentation, but it doesn't cover the object oriented
+interface methods yet.
 
 See the file TODO for a detailed list of what is missing,
 approximately ordered by importance.
@@ -81,7 +87,7 @@ Author email: Peter Liljenberg <petli@ctrl-c.liu.se>
 
 The Python X Library is a SourceForged project.  The project page is
 http://sourgeforge.net/projects/python-xlib/.  Source is available
-from that page as real releases and from the CVS tree.
+from that page as tar.gz-releases and from the CVS tree.
 
 There isn't any real web page yet, only a derivative of this file.  It
 is located at http://python-xlib.sourceforge.net/.

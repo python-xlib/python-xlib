@@ -1,8 +1,8 @@
-# $Id: display.py,v 1.9 2000-12-22 13:23:34 petli Exp $
+# $Id: display.py,v 1.10 2001-01-06 17:58:06 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
-#    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000,2001 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -659,7 +659,7 @@ class Display:
 	estruct = self.error_classes.get(code, error.XError)
 	
 	e = estruct(self, self.data_recv[:32])
-	self.data_recv = self.data_recv[32:]
+	self.data_recv = buffer(self.data_recv, 32)
 
 	# print 'recv Error:', e
 
@@ -713,7 +713,7 @@ class Display:
 	req._parse_response(self.data_recv[:self.request_length])
 	# print 'recv Request:', req
 	
-	self.data_recv = self.data_recv[self.request_length:]
+	self.data_recv = buffer(self.data_recv, self.request_length)
 	self.request_length = 0
 
 
@@ -735,7 +735,7 @@ class Display:
 	estruct = self.event_classes.get(etype, event.AnyEvent)
 
 	e = estruct(display = self, binarydata = self.data_recv[:32])
-	self.data_recv = self.data_recv[32:]
+	self.data_recv = buffer(self.data_recv, 32)
 
 	# Drop all requests having an error handler,
 	# but which obviously succeded
@@ -953,7 +953,7 @@ class ConnectionSetupRequest(rq.GetAttrData):
     
 			       
     def __init__(self, display, *args, **keys):
-	self._binary = self._request.build_from_args(args, keys)
+	self._binary = apply(self._request.to_binary, args, keys)
 	self._data = None
 
 	# Don't bother about locking, since no other threads have
