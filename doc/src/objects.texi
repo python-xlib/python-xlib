@@ -142,7 +142,7 @@ extensions dynamically added by the library will not be available.
 Return the information about screen number @var{sno}, or the default
 screen if @var{sno} is @code{None}.
 
-The reply object has the following attributes:
+The return object has the following attributes:
 
 @table @code
 

@@ -1,5 +1,5 @@
 @c The Python X Library -- error handling
-@c $Id: errors.texi,v 1.2 2002-07-15 21:43:50 petli Exp $
+@c $Id: errors.texi,v 1.3 2002-09-12 19:49:10 petli Exp $
 @c
 @c Copyright 2000 Peter Liljenberg
 @c
@@ -102,8 +102,8 @@ X11R6 request, but will be interesting for extension requests
 
 @code{error.CatchError} is an object which can be used as an error
 handler.  It collects an error matching any of the specified types,
-which can be retrieved later.  If several errors occures, only the last
-is remembered.
+which can be retrieved later.  If several errors occur, only the last
+one is remembered.
 
 
 @deffn Class CatchError ( *errors )

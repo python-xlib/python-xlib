@@ -970,7 +970,7 @@ A string of exactly 28 characters.
 @node Sending Events
 @section Sending Events
 
-Clients can send events to each others.  Most often these are
+Clients can send events to each other.  Most often these are
 general-purpose @code{ClientMessage} events, but any event type can be
 sent.
 
