@@ -3,5 +3,14 @@
 info:
 	(cd ..; make info)
 
+ps:
+	(cd ..; make ps)
+
+html:
+	(cd ..; make html)
+
+all:
+	(cd ..; make all)
+
 clean:
 	(cd ..; make clean)

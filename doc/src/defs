@@ -1,6 +1,6 @@
 # Definitions for documentation makefiles
 #
-# $Id: defs,v 1.1 2000-09-22 11:37:51 petli Exp $
+# $Id: defs,v 1.2 2001-11-30 10:38:06 petli Exp $
 
 SRCDIR = ../src
 
@@ -8,6 +8,7 @@ TOPSRC = $(SRCDIR)/python-xlib.texi
 
 SRCS = $(TOPSRC) \
      $(SRCDIR)/concepts.texi $(SRCDIR)/package.texi \
-     $(SRCDIR)/connect.texi $(SRCDIR)/errors.texi $(SRCDIR)/events.texi
+     $(SRCDIR)/connect.texi $(SRCDIR)/errors.texi \
+     $(SRCDIR)/events.texi $(SRCDIR)/objects.texi
 
      

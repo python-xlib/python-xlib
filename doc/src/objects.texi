@@ -465,9 +465,7 @@ Card16('height'),
 
 @code{Window} objects have additional objects, see @ref{Resource} and @ref{Drawable}.
 
-@defmethod Window create_window ( x, y, width, height, border_width, depth, window_class =  X.CopyFromParent,
-visual = X.CopyFromParent,
-**keys )
+@defmethod Window create_window ( x, y, width, height, border_width, depth, window_class =  X.CopyFromParent, visual = X.CopyFromParent, **keys )
 Returns Window
 @end defmethod
 
@@ -821,6 +819,6 @@ Int32('overall_right'),
 @defmethod Font close ( onerror = None )
 @end defmethod
 
-@defmethod Font create_glyph_cursor ( mask, source_char, mask_char, (fore_red, fore_green, fore_blue), (back_red, back_green, back_blue) ) 
+@defmethod Font create_glyph_cursor ( mask, source_char, mask_char, (fore_red, fore_green, fore_blue), (back_red, back_green, back_blue) )
 Returns Cursor.
 @end defmethod
