@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.7 2000-12-21 12:23:07 petli Exp $
+# $Id: rq.py,v 1.8 2000-12-22 13:23:34 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -623,6 +623,9 @@ class PropertyData(ValueField):
 	    dlen = vlen / size
 	
 	else:
+	    if type(val) is types.TupleType:
+		val = list(val)
+		
 	    size = fmt / 8
 	    data =  array.array(unsigned_codes[size], val).tostring()
 	    dlen = len(val)

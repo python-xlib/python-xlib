@@ -1,4 +1,4 @@
-# $Id: colormap.py,v 1.4 2000-09-22 11:37:51 petli Exp $
+# $Id: colormap.py,v 1.5 2000-12-22 13:23:34 petli Exp $
 #
 # Xlib.xobject.colormap -- colormap object
 #
@@ -18,9 +18,21 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+from Xlib import error
 from Xlib.protocol import request
 
 import resource
+
+import re
+import string
+
+rgb_res = [
+    re.compile(r'\Argb:([0-9a-fA-F]{1,4})/([0-9a-fA-F]{1,4})/([0-9a-fA-F]{1,4})\Z'),
+    re.compile(r'\A#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])\Z'),
+    re.compile(r'\A#([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F])\Z'),
+    re.compile(r'\A#([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])\Z'),
+    re.compile(r'\A#([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])([0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F])\Z'),
+    ]
 
 class Colormap(resource.Resource):
     __colormap__ = resource.Resource.__resource__
@@ -59,6 +71,20 @@ class Colormap(resource.Resource):
 				  blue = blue)
 
     def alloc_named_color(self, name):
+	for r in rgb_res:
+	    m = r.match(name)
+	    if m:
+		rs = m.group(1)
+		r = string.atoi(rs + '0' * (4 - len(rs)), 16)
+
+		gs = m.group(2)
+		g = string.atoi(gs + '0' * (4 - len(gs)), 16)
+
+		bs = m.group(3)
+		b = string.atoi(bs + '0' * (4 - len(bs)), 16)
+
+		return self.alloc_color(r, g, b)
+	
 	try:
 	    return request.AllocNamedColor(display = self.display,
 					   cmap = self.id,

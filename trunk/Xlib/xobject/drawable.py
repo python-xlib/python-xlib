@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.6 2000-12-21 12:23:07 petli Exp $
+# $Id: drawable.py,v 1.7 2000-12-22 13:23:34 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -200,6 +200,15 @@ class Drawable(resource.Resource):
     def get_image(self):
 	pass
 
+    def draw_text(self, gc, x, y, text, onerror = None):
+	request.PolyText8(display = self.display,
+			  onerror = onerror,
+			  drawable = self.id,
+			  gc = gc,
+			  x = x,
+			  y = y,
+			  items = [text])
+
     def poly_text(self, gc, x, y, items, onerror = None):
 	request.PolyText8(display = self.display,
 			  onerror = onerror,
@@ -297,7 +306,7 @@ class Window(Drawable):
 			      mode = mode,
 			      window = self.id)
 
-    def reparent_window(self, parent, x, y, onerror = None):
+    def reparent(self, parent, x, y, onerror = None):
 	request.ReparentWindow(display = self.display,
 			       onerror = onerror,
 			       window = self.id,

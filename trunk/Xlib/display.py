@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.10 2000-12-21 12:23:07 petli Exp $
+# $Id: display.py,v 1.11 2000-12-22 13:23:34 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -24,10 +24,11 @@ import new
 # Xlib modules
 import error
 import ext
+import X
 
 # Xlib.protocol modules
 import protocol.display
-from protocol import request
+from protocol import request, event
 
 # Xlib.xobjects modules
 import xobject.resource
@@ -69,15 +70,22 @@ class _BaseDisplay(protocol.display.Display):
     def get_atom(self, atomname):
 	if not self._atom_cache.has_key(atomname):
 	    r = request.InternAtom(display = self, name = atomname, only_if_exists = 0)
-	    self._atom_cache[atom] = r.atom
+	    self._atom_cache[atomname] = r.atom
 	    
-	return self._atom_cache[atom]
+	return self._atom_cache[atomname]
 
 	
 class Display:
     def __init__(self, display = None):
 	self.display = _BaseDisplay(display)
 
+	# Create the keymap cache
+	self._keymap_codes = [()] * 256
+	self._keymap_syms = {}
+	self._update_keymap(self.display.info.min_keycode,
+			    (self.display.info.max_keycode
+			     - self.display.info.min_keycode + 1))
+	
 	# Find all supported extensions
 	self.extensions = []
 	self.class_extension_dicts = {}
@@ -125,6 +133,9 @@ class Display:
 
     def close(self):
 	self.display.close()
+
+    def set_error_handler(self, handler):
+	self.display.set_error_handler(handler)
 
     def flush(self):
 	self.display.flush()
@@ -234,7 +245,74 @@ class Display:
 	
 	self.display.add_extension_error(code, err)
 
+    ###
+    ### keymap cache implementation
+    ###
 
+    def keycode_to_keysym(self, keycode, index):
+	try:
+	    return self._keymap_codes[keycode][index]
+	except IndexError:
+	    return X.NoSymbol
+
+    def keysym_to_keycode(self, keysym):
+	try:
+	    return self._keymap_syms[keysym][0][1]
+	except (KeyError, IndexError):
+	    return 0
+
+    def keysym_to_keycodes(self, keysym):
+	try:
+	    return map(lambda x: x[1], self._keymap_syms[keysym])
+	except KeyError:
+	    return []
+    
+    def refresh_keyboard_mapping(self, evt):
+	if isinstance(evt, event.MappingNotify):
+	    self._update_keymap(self, evt.first_keycode, evt.count)
+	else:
+	    raise TypeError('expected a MappingNotify event')
+	
+    def _update_keymap(self, first_keycode, count):
+	"""Internal function, called to refresh the keymap cache.
+	"""
+
+	# Delete all sym->code maps for the changed codes
+	
+	lastcode = first_keycode + count
+	for keysym, code in self._keymap_syms.items():
+	    if code >= first_keycode and code < lastcode:
+		symcodes = self._keymap_syms[keysym]
+		i = 0
+		while i < len(symcodes):
+		    if symcodes[i][1] == code:
+			del symcodes[i]
+		    else:
+			i = i + 1
+
+		
+	keysyms = self.get_keyboard_mapping(first_keycode, count)
+
+	# Replace code->sym map with the new map
+	self._keymap_codes[first_keycode:lastcode] = keysyms
+
+	# Update sym->code map
+	i = first_keycode
+	for syms in keysyms:
+	    j = 0
+	    for sym in syms:
+		if sym != X.NoSymbol:
+		    if self._keymap_syms.has_key(sym):
+			symcodes = self._keymap_syms[sym]
+			symcodes.append(j, i)
+			symcodes.sort()
+		    else:
+			self._keymap_syms[sym] = [(j, i)]
+			
+		j = j + 1
+	    i = i + 1
+
+	
     ###
     ### X requests
     ###

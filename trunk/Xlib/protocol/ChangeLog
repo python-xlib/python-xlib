@@ -1,0 +1,21 @@
+2000-12-21    <petli@cendio.se>
+
+	* request.py (SetClipRectangles): Fixed typo (attribute was
+	"rectangels"). 
+
+2000-12-20    <petli@cendio.se>
+
+	* rq.py (DictWrapper.__setitem__),
+	(DictWrapper.__delitem__),
+	(DictWrapper.__setattr__), 
+	(DictWrapper.__delattr__): 
+	Add a few methods to the DictWrapper, to make sure that even if
+	attributes are changed, all attributes can be found in the _data
+	mapping.
+
+	(ValueField.__init__): 
+	(Object.__init__): 
+	(ValueField.pack_value): 
+	(Set.__init__): 
+	Added a default parameter, so that structure elements with a
+	default value can be omitted when calling build_from_args.
