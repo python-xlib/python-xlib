@@ -48,6 +48,3 @@ XK_Arabic_kasra = 0x5f0
 XK_Arabic_shadda = 0x5f1
 XK_Arabic_sukun = 0x5f2
 XK_Arabic_switch = 0xFF7E
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

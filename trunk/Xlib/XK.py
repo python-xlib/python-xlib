@@ -1,4 +1,4 @@
-# $Id: XK.py,v 1.4 2001-01-19 18:59:37 petli Exp $
+# $Id: XK.py,v 1.5 2005-02-06 02:32:34 calroc99 Exp $
 #
 # Xlib.XK -- X keysym defs
 #
@@ -21,25 +21,34 @@
 from X import NoSymbol
 
 def string_to_keysym(str):
+    '''Given the name of a keysym as a string, return its numeric code.
+    Don't include the 'XK_' prefix. Just use the base, i.e. 'Delete'
+    instead of 'XK_Delete'.'''
     return globals().get('XK_' + str, NoSymbol)
 
 def load_keysym_group(group):
+    '''Given a group name such as 'latin1' or 'katakana' load the keysyms
+    defined in module 'Xlib.keysymdef.group-name' into this XK module.'''
     if '.' in group:
 	raise ValueError('invalid keysym group name: %s' % group)
 
-    # Try to import the corresponding package.  This will
-    # finally result in the package calling _load_keysyms_into_XK
-    __import__('Xlib.keysymdef.%s' % group, globals(), locals())
+    G = globals() #Get a reference to XK.__dict__ a.k.a. globals
+
+    #Import just the keysyms module.
+    mod = __import__('Xlib.keysymdef.%s' % group, G, locals(), [group])
+
+    #Extract names of just the keysyms.
+    keysyms = [n for n in dir(mod) if n[:3] == 'XK_']
+
+    #Copy the named keysyms into XK.__dict__
+    for keysym in keysyms:
+        ## k = mod.__dict__[keysym]; assert k == int(k) #probably too much.
+        G[keysym] = mod.__dict__[keysym]
 
 def _load_keysyms_into_XK(mod):
-    # I reckon that this is the fastest way to import all
-    # keysyms into this modules global dict.
-    # To have some kind of security, check that we're only
-    # loading something out of Xlib.keysymdef
-
-    if mod[:15] ==  'Xlib.keysymdef.':
-	exec 'from %s import *' % mod in globals()
-
+    '''keysym definition modules need no longer call Xlib.XK._load_keysyms_into_XK().
+    You should remove any calls to that function from your keysym modules.'''
+    pass
 
 # Always import miscellany and latin1 keysyms
 import Xlib.keysymdef.miscellany

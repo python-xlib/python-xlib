@@ -98,6 +98,3 @@ XK_Pointer_EnableKeys = 0xFEF9
 XK_Pointer_Accelerate = 0xFEFA
 XK_Pointer_DfltBtnNext = 0xFEFB
 XK_Pointer_DfltBtnPrev = 0xFEFC
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

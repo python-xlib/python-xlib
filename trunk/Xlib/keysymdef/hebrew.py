@@ -38,6 +38,3 @@ XK_hebrew_shin = 0xcf9
 XK_hebrew_taw = 0xcfa
 XK_hebrew_taf = 0xcfa
 XK_Hebrew_switch = 0xFF7E
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

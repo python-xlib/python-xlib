@@ -28,6 +28,3 @@ XK_3270_ExSelect = 0xFD1B
 XK_3270_CursorSelect = 0xFD1C
 XK_3270_PrintScreen = 0xFD1D
 XK_3270_Enter = 0xFD1E
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

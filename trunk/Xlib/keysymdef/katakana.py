@@ -68,6 +68,3 @@ XK_kana_N = 0x4dd
 XK_voicedsound = 0x4de
 XK_semivoicedsound = 0x4df
 XK_kana_switch = 0xFF7E
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

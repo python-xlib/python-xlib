@@ -81,6 +81,3 @@ XK_caret = 0xafc
 XK_singlelowquotemark = 0xafd
 XK_doublelowquotemark = 0xafe
 XK_cursor = 0xaff
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

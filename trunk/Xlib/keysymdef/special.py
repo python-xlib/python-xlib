@@ -22,6 +22,3 @@ XK_rightt = 0x9f5
 XK_bott = 0x9f6
 XK_topt = 0x9f7
 XK_vertbar = 0x9f8
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

@@ -193,6 +193,3 @@ XK_udiaeresis = 0x0fc
 XK_yacute = 0x0fd
 XK_thorn = 0x0fe
 XK_ydiaeresis = 0x0ff
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

@@ -105,6 +105,3 @@ XK_Cyrillic_E = 0x6fc
 XK_Cyrillic_SHCHA = 0x6fd
 XK_Cyrillic_CHE = 0x6fe
 XK_Cyrillic_HARDSIGN = 0x6ff
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

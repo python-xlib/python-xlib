@@ -105,6 +105,3 @@ XK_Hangul_J_PanSios = 0xef8
 XK_Hangul_J_KkogjiDalrinIeung = 0xef9
 XK_Hangul_J_YeorinHieuh = 0xefa
 XK_Korean_Won = 0xeff
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

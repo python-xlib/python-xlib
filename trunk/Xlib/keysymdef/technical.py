@@ -47,6 +47,3 @@ XK_leftarrow = 0x8fb
 XK_uparrow = 0x8fc
 XK_rightarrow = 0x8fd
 XK_downarrow = 0x8fe
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)

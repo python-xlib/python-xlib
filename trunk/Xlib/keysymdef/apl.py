@@ -17,6 +17,3 @@ XK_rightshoe = 0xbd8
 XK_leftshoe = 0xbda
 XK_lefttack = 0xbdc
 XK_righttack = 0xbfc
-
-from Xlib.XK import _load_keysyms_into_XK
-_load_keysyms_into_XK(__name__)
