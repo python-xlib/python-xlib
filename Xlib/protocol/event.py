@@ -1,4 +1,4 @@
-# $Id: event.py,v 1.3 2000-09-06 01:51:34 petli Exp $
+# $Id: event.py,v 1.4 2001-01-18 13:11:05 petli Exp $
 #
 # Xlib.protocol.event -- definitions of core events
 #
@@ -122,7 +122,7 @@ class Expose(rq.Event):
 			 rq.Pad(14),
 			 )
 
-class GraphicsExposure(rq.Event):
+class GraphicsExpose(rq.Event):
     _code = X.GraphicsExpose
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
@@ -138,7 +138,7 @@ class GraphicsExposure(rq.Event):
 			 rq.Pad(11),
 			 )
 
-class NoExposure(rq.Event):
+class NoExpose(rq.Event):
     _code = X.NoExpose
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
@@ -149,7 +149,7 @@ class NoExposure(rq.Event):
 			 rq.Pad(21),
 			 )
 
-class Visibility(rq.Event):
+class VisibilityNotify(rq.Event):
     _code = X.VisibilityNotify
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
@@ -217,7 +217,7 @@ class MapRequest(rq.Event):
 			 rq.Pad(20),
 			 )
 
-class Reparent(rq.Event):
+class ReparentNotify(rq.Event):
     _code = X.ReparentNotify
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
@@ -265,7 +265,7 @@ class ConfigureRequest(rq.Event):
 			 rq.Pad(4),
 			 )
 
-class Gravity(rq.Event):
+class GravityNotify(rq.Event):
     _code = X.GravityNotify
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
@@ -288,7 +288,7 @@ class ResizeRequest(rq.Event):
 			 rq.Pad(20),
 			 )
 
-class Circulate(rq.Event):
+class CirculateNotify(rq.Event):
     _code = X.CirculateNotify
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
@@ -312,7 +312,7 @@ class CirculateRequest(rq.Event):
 			 rq.Pad(15),
 			 )
 
-class Property(rq.Event):
+class PropertyNotify(rq.Event):
     _code = X.PropertyNotify
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
@@ -362,7 +362,7 @@ class SelectionNotify(rq.Event):
 			 rq.Pad(8),
 			 )
 
-class Colormap(rq.Event):
+class ColormapNotify(rq.Event):
     _code = X.ColormapNotify
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
@@ -414,26 +414,26 @@ event_class = {
     X.FocusOut:		FocusOut,
     X.KeymapNotify:	KeymapNotify,
     X.Expose:		Expose,
-    X.GraphicsExpose:	GraphicsExposure,
-    X.NoExpose:		NoExposure,
-    X.VisibilityNotify:	Visibility,
+    X.GraphicsExpose:	GraphicsExpose,
+    X.NoExpose:		NoExpose,
+    X.VisibilityNotify:	VisibilityNotify,
     X.CreateNotify:	CreateNotify,
     X.DestroyNotify:	DestroyNotify,
     X.UnmapNotify:	UnmapNotify,
     X.MapNotify:	MapNotify,
     X.MapRequest:	MapRequest,
-    X.ReparentNotify:	Reparent,
+    X.ReparentNotify:	ReparentNotify,
     X.ConfigureNotify:	ConfigureNotify,
     X.ConfigureRequest:	ConfigureRequest,
-    X.GravityNotify:	Gravity,
+    X.GravityNotify:	GravityNotify,
     X.ResizeRequest:	ResizeRequest,
-    X.CirculateNotify:	Circulate,
+    X.CirculateNotify:	CirculateNotify,
     X.CirculateRequest:	CirculateRequest,
-    X.PropertyNotify:	Property,
+    X.PropertyNotify:	PropertyNotify,
     X.SelectionClear:	SelectionClear,
     X.SelectionRequest:	SelectionRequest,
     X.SelectionNotify:	SelectionNotify,
-    X.ColormapNotify:	Colormap,
+    X.ColormapNotify:	ColormapNotify,
     X.ClientMessage:	ClientMessage,
     X.MappingNotify:	MappingNotify,
     }

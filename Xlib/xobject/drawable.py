@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.8 2001-01-06 17:58:06 petli Exp $
+# $Id: drawable.py,v 1.9 2001-01-18 13:11:05 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -420,7 +420,7 @@ class Window(Drawable):
 				 property = property,
 				 time = time)
 
-    def send_event(self, event, propagate = 0, event_mask = 0, onerror = None):
+    def send_event(self, event, event_mask = 0, propagate = 0, onerror = None):
 	request.SendEvent(display = self.display,
 			  onerror = onerror,
 			  propagate = propagate,
