@@ -1,4 +1,4 @@
-# $Id: request.py,v 1.5 2000-11-30 10:13:52 petli Exp $
+# $Id: request.py,v 1.6 2000-12-22 13:23:34 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
@@ -898,7 +898,7 @@ class SetClipRectangles(rq.Request):
 	rq.GC('gc'),
 	rq.Int16('x_origin'),
 	rq.Int16('y_origin'),
-	rq.List('rectangels', structs.Rectangle),
+	rq.List('rectangles', structs.Rectangle),
 	)    
 
 class FreeGC(rq.Request):

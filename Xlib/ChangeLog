@@ -1,0 +1,24 @@
+2000-12-22    <petli@cendio.se>
+
+	* display.py (Display.keycode_to_keysym): 
+	(Display.keysym_to_keycode): 
+	(Display.keysym_to_keycodes): 
+	(Display.refresh_keyboard_mapping): 
+	(Display._update_keymap):
+	Added keymap cache implementation.
+
+2000-12-21    <petli@cendio.se>
+
+	* xobject/colormap.py (Colormap.alloc_named_color): Extended to
+	handle #000000 style color specifications.
+
+	* xobject/drawable.py (Window.reparent): Renamed from
+	reparent_window. 
+
+	* display.py (Display.set_error_handler): Added.
+
+2000-12-20    <petli@cendio.se>
+
+	* display.py (_BaseDisplay):
+	Implement a cache of atom names.
+

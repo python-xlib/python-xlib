@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.8 2000-12-21 12:23:07 petli Exp $
+# $Id: display.py,v 1.9 2000-12-22 13:23:34 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -189,6 +189,10 @@ class Display:
     def pending_events(self):
 	self.check_for_error()
 
+	# Make a send_and_recv pass, receiving any events
+	self.send_recv_lock.acquire()
+	self.send_and_recv(recv = 1)
+	
 	# Lock the queue, get the event count, and unlock again.
 	self.event_queue_write_lock.acquire()
 	count = len(self.event_queue)
@@ -325,15 +329,15 @@ class Display:
 	self.socket_error_lock.release()
 	
 	
-    def send_and_recv(self, flush = None, event = None, request = None):
-	"""send_and_recv(flush = None, event = None, request = None)
+    def send_and_recv(self, flush = None, event = None, request = None, recv = None):
+	"""send_and_recv(flush = None, event = None, request = None, recv = None)
 
 	Perform I/O, or wait for some other thread to do it for us.
 
 	send_recv_lock MUST be LOCKED when send_and_recv is called.
 	It will be UNLOCKED at return.
 
-	Exactly one of the parameters flush, event and request must
+	Exactly or one of the parameters flush, event, request and recv must
 	be set to control the return condition.
 
 	To attempt to send all requests in the queue, flush should
@@ -346,6 +350,8 @@ class Display:
 	or a response), request should be set the that request's
 	serial number.
 
+	To just read any pending data from the server, recv should be true.
+	
 	It is not guaranteed that the return condition has been
 	fulfilled when the function returns, so the caller has to loop
 	until it is finished.
@@ -358,7 +364,7 @@ class Display:
 	#  If waiting for an event we want to recv
 	
 	if (((flush or request is not None) and self.send_active)
-	    or (event and self.recv_active)):
+	    or ((event or recv) and self.recv_active)):
 
 	    # Signal that we are waiting for something.  These locks
 	    # together with the *_waiting variables are used as
@@ -391,7 +397,7 @@ class Display:
 	    # Return immediately if flushing, even if that
 	    # might mean that not necessarily all requests
 	    # have been sent.
-	    if flush:
+	    if flush or recv:
 		return
 
 	    # Wait for something to happen, as the wait locks are
@@ -477,8 +483,16 @@ class Display:
 		    writeset = [self.socket]
 		else:
 		    writeset = []
+
+		# Timeout immediately if we're only checking for
+		# something to read, otherwise block
+
+		if recv:
+		    timeout = 0
+		else:
+		    timeout = None
 		    
-		rs, ws, es = select.select([self.socket], writeset, [])
+		rs, ws, es = select.select([self.socket], writeset, [], timeout)
 
 	    # Ignore errors caused by a signal recieved while blocking.
 	    # All other errors are re-raised.
@@ -508,7 +522,7 @@ class Display:
 	    # There is data to read
 	    gotreq = 0
 	    if rs:
-
+		
 		# We're the recieving thread, parse the data
 		if recieving:
 		    try:
@@ -556,6 +570,10 @@ class Display:
 	    if request is not None and gotreq:
 		break
 
+	    # Always break if we just want to recieve as much as possible
+	    if recv:
+		break
+	    
 	    # Else there's may still data which must be sent, or
 	    # we haven't got the data we waited for.  Lock and loop
 	    

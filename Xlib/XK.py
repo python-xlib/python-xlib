@@ -1,4 +1,4 @@
-# $Id: XK.py,v 1.2 2000-08-22 14:06:22 petli Exp $
+# $Id: XK.py,v 1.3 2000-12-22 13:23:34 petli Exp $
 #
 # Xlib.XK -- X keysym defs
 #
@@ -17,6 +17,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+def string_to_keysym(str):
+    from X import NoSymbol
+    return globals().get('XK_' + str, NoSymbol)
 
 XK_BackSpace = 0xFF08
 XK_Tab = 0xFF09
