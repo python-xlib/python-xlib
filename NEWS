@@ -1,0 +1,14 @@
+
+* Version 0.4  4 Oct 2000
+
+** Thread support completed, but not really stresstested yet.
+
+** A framework for handling different platforms has been implemented,
+together with generic Unix code and some simple VMS code.
+
+** Some documentation has been written.
+
+** The usual bunch of bugfixes.
+
+
+

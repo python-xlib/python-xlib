@@ -24,7 +24,10 @@
 
 *** Miscellaneous
 
-* Documentation.
+* The tread support and the protocol engine needs to be stress
+  tested.  They _seem_ to work, but that's no guarantee.
+
+* Much more documentation.
 
 * Test suite: a test suite which exercises the entire library would
   definitely be a nice thing to have.

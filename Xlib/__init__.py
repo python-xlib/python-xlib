@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.4 2000-08-22 14:06:22 petli Exp $
+# $Id: __init__.py,v 1.5 2000-10-04 08:15:57 petli Exp $
 #
 # Xlib.__init__ -- glue for Xlib package
 #
@@ -27,8 +27,11 @@ __all__ = [
     'display',
     'error',
     'protocol',
+    'rdb',
+    # Explicitly exclude threaded, so that it isn't imported by
+    #  from Xlib import *
     'xobject',
     ]
 
-__version__ = (0, 3)
+__version__ = (0, 4)
 
