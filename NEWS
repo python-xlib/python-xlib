@@ -1,5 +1,5 @@
 
-* Version 0.5
+* Version 0.5  28 Dec 2000
 
 ** Functions implemented to get and set all ICCCM WM properties on
 Window objects.
