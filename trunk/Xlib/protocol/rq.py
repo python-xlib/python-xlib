@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.12 2001-12-14 17:03:10 petli Exp $
+# $Id: rq.py,v 1.13 2002-02-12 10:11:11 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -24,7 +24,7 @@ import sys
 import traceback
 import struct
 import string
-import array
+from array import array
 import types
 import new
 
@@ -52,7 +52,7 @@ array_unsigned_codes = { }
 struct_to_array_codes = { }
 
 for c in 'bhil':
-    size = array.array(c).itemsize
+    size = array(c).itemsize
 
     array_unsigned_codes[size] = string.upper(c)
     try:
@@ -151,6 +151,12 @@ class Opcode(ConstantField):
     structcode = 'B'
     structvalues = 1
 
+class ReplyCode(ConstantField):
+    structcode = 'B'
+    structvalues = 1
+
+    def __init__(self):
+	self.value = 1
     
 class LengthField(Field):
     """A LengthField stores the length of some other Field whose size
@@ -188,6 +194,13 @@ class RequestLength(TotalLengthField):
     def calc_length(self, length):
 	return length / 4
 
+class ReplyLength(TotalLengthField):
+    structcode = 'L'
+    structvalues = 1
+
+    def calc_length(self, length):
+	return (length - 32) / 4
+
 
 class LengthOf(LengthField):
     def __init__(self, name, size):
@@ -205,7 +218,13 @@ class OddLength(LengthField):
     def calc_length(self, length):
 	return length % 2
 
+    def parse_value(self, value, display):
+	if value == 0:
+	    return 'even'
+	else:
+	    return 'odd'
 
+	
 class FormatField(Field):
     """A FormatField encodes the format of some other field, in a manner
     similar to LengthFields.
@@ -369,6 +388,9 @@ class String8(ValueField):
 	    return val, slen, None
 
     def parse_binary_value(self, data, display, length, format):
+	if length is None:
+	    return str(data), ''
+	
 	if self.pad:
 	    slen = length + ((4 - length % 4) % 4)
 	else:
@@ -399,12 +421,17 @@ class String16(ValueField):
 	return apply(struct.pack, ('>' + 'H' * slen, ) + tuple(val)) + pad, slen, None
 
     def parse_binary_value(self, data, display, length, format):
+	if length == 'odd':
+	    length = len(data) / 2 - 1
+	elif length == 'even':
+	    length = len(data) / 2
+	    
 	if self.pad:
 	    slen = length + (length % 2)
 	else:
 	    slen = length
 	    
-	return struct.unpack('>' + 'H' * length, data[:length * 2]), buffer(data, slen)
+	return struct.unpack('>' + 'H' * length, data[:length * 2]), buffer(data, slen * 2)
 
 
 
@@ -481,7 +508,7 @@ class List(ValueField):
     def pack_value(self, val):
 	# Single-char values, we'll assume that means integer lists.
 	if self.type.structcode and len(self.type.structcode) == 1:
-	    data = array.array(struct_to_array_codes[self.type.structcode],
+	    data = array(struct_to_array_codes[self.type.structcode],
 			       val).tostring()
 	else:
 	    data = []
@@ -548,7 +575,29 @@ class Object(ValueField):
 	    return struct.pack('=' + self.type.structcode, val), None, None
 	else:
 	    return self.type.pack_value(val)
-    
+
+    def check_value(self, val):
+	if self.type.structcode is None:
+	    return val
+	
+	if type(val) is types.TupleType:
+	    return val
+	
+	if type(val) is types.DictType:
+	    data = val
+	elif isinstance(val, DictWrapper):
+	    data = val._data
+	else:
+	    raise TypeError('Object value must be tuple, dictionary or DictWrapper: %s' % val)
+
+	vals = []
+	for f in self.type.fields:
+	    if f.name:
+		vals.append(data[f.name])
+
+	return vals
+
+	
 class PropertyData(ValueField):
     structcode = None
 
@@ -566,11 +615,11 @@ class PropertyData(ValueField):
 	    data = buffer(data, length + ((4 - length % 4) % 4))
 
 	elif format == 16:
-	    ret = (16, array.array(array_unsigned_codes[2], str(data[:2 * length])))
+	    ret = (16, array(array_unsigned_codes[2], str(data[:2 * length])))
 	    data = buffer(data, 2 * (length + length % 2))
 
 	elif format == 32:
-	    ret = (32, array.array(array_unsigned_codes[4], str(data[:4 * length])))
+	    ret = (32, array(array_unsigned_codes[4], str(data[:4 * length])))
 	    data = buffer(data, 4 * length)
 
 	return ret, data
@@ -597,7 +646,7 @@ class PropertyData(ValueField):
 		val = list(val)
 		
 	    size = fmt / 8
-	    data =  array.array(array_unsigned_codes[size], val).tostring()
+	    data =  array(array_unsigned_codes[size], val).tostring()
 	    dlen = len(val)
 
 	dl = len(data)
@@ -695,9 +744,9 @@ class KeyboardMapping(ValueField):
 	if length is None:
 	    dlen = len(data)
 	else:
-	    dlen = length * format
-	    
-	a = array.array(array_unsigned_codes[4], str(data[:dlen]))
+	    dlen = 4 * length * format
+
+	a = array(array_unsigned_codes[4], str(data[:dlen]))
 
 	ret = []
 	for i in range(0, len(a), format):
@@ -710,7 +759,7 @@ class KeyboardMapping(ValueField):
 	for v in value:
 	    keycodes = max(keycodes, len(v))
 
-	a = array.array(array_unsigned_codes[4])
+	a = array(array_unsigned_codes[4])
 	
 	for v in value:
 	    for k in v:
@@ -725,7 +774,7 @@ class ModifierMapping(ValueField):
     structcode = None
 
     def parse_binary_value(self, data, display, length, format):
-	a = array.array(array_unsigned_codes[1], str(data[:8 * format]))
+	a = array(array_unsigned_codes[1], str(data[:8 * format]))
 
 	ret = []
 	for i in range(0, 8):
@@ -741,7 +790,7 @@ class ModifierMapping(ValueField):
 	for v in value:
 	    keycodes = max(keycodes, len(v))
 
-	a = array.array(array_unsigned_codes[1])
+	a = array(array_unsigned_codes[1])
 	
 	for v in value:
 	    for k in v:
@@ -761,7 +810,11 @@ class EventField(ValueField):
 	return value._binary, None, None
 
     def parse_binary_value(self, data, display, length, format):
-	raise RuntimeError('Implement me!!!')
+	import event
+
+	estruct = display.event_classes.get(ord(data[0]) & 0x7f, event.AnyEvent)
+
+	return estruct(display = display, binarydata = data[:32]), buffer(data, 32)
     
     
 #
@@ -969,8 +1022,8 @@ class Struct:
 		# which are appended to pack_args
 		else:
 		    a = []
-		    for i in range(f.structvalues):
-			a.append('_%s_%d' % (f.name, i))
+		    for j in range(f.structvalues):
+			a.append('_%s_%d' % (f.name, j))
 
 		    if f.check_value is not None:
 			code = code + ('  %s = self.static_fields[%d].check_value(%s)\n'
@@ -1018,6 +1071,8 @@ class Struct:
 	# Add function header
 	code = 'def to_binary(self, %s):\n' % string.join(args, ', ') + code
 
+	# self._pack_code = code
+	
 	# print
 	# print code
 	# print
@@ -1166,8 +1221,13 @@ class Struct:
 	    # when treating varfields.
 	    
 	    elif isinstance(f, LengthField):
-		lengths[f.name] = 'val[%d]' % vno
-	    
+		if f.parse_value is None:
+		    lengths[f.name] = 'val[%d]' % vno
+		else:
+		    lengths[f.name] = ('self.static_fields[%d].'
+				       'parse_value(val[%d], display)'
+				       % (fno, vno))
+		    
 	    elif isinstance(f, FormatField):
 		formats[f.name] = 'val[%d]' % vno
 
@@ -1236,8 +1296,15 @@ class TextElements8(ValueField):
 	    # A tuple, it should be (delta, string)
 	    # Encode it as one or more textitems
 	    
-	    if type(v) is types.TupleType:
-		delta, str = v
+	    if type(v) in (types.TupleType, types.DictType) or \
+	       isinstance(v, DictWrapper):
+
+		if type(v) is types.TupleType:
+		    delta, str = v
+		else:
+		    delta = v['delta']
+		    str = v['string']
+		
 		while delta or str:
 		    args['delta'] = delta 
 		    args['string'] = str[:254]
@@ -1262,23 +1329,28 @@ class TextElements8(ValueField):
     def parse_binary_value(self, data, display, length, format):
 	values = []
 	while 1:
-	    d = data[:2]
-	    if len(d) != 2:
+	    if len(data) < 2:
 		break
-	    
+
+	    # font change
 	    if ord(data[0]) == 255:
 		values.append(struct.unpack('>L', str(data[1:5]))[0])
 		data = buffer(data, 5)
 
+	    # skip null strings
+	    elif ord(data[0]) == 0 and ord(data[1]) == 0:
+		data = buffer(data, 2)
+
+	    # string with delta
 	    else:
 		v, data = self.string_textitem.parse_binary(data, display)
 		values.append(v)
 
-	return v, ''
+	return values, ''
 			      
 		
 	
-class TextElements16(ValueField):
+class TextElements16(TextElements8):
     string_textitem = Struct( LengthOf('string', 1),
 			      Int8('delta'),
 			      String16('string', pad = 0) )
@@ -1319,7 +1391,14 @@ class DictWrapper(GetAttrData):
     
     def __repr__(self):
 	return '%s(%s)' % (self.__class__, repr(self._data))
-    
+
+    def __cmp__(self, other):
+	if isinstance(other, DictWrapper):
+	    return cmp(self._data, other._data)
+	else:
+	    return cmp(self._data, other)
+	    
+		      
 class Request:
     def __init__(self, display, onerror = None, *args, **keys):
 	self._errorhandler = onerror
@@ -1399,11 +1478,28 @@ class Event(GetAttrData):
 	    keys['sequence_number'] = 0
 	    
 	    self._binary = apply(self._fields.to_binary, (), keys)
+
+	    keys['send_event'] = 0
 	    self._data = keys
 	    
     def __repr__(self):
-	return '<%s data = %s>' % (self.__class__, self._data)
-    
+	kwlist = []
+	for kw, val in self._data.items():
+	    if kw == 'send_event':
+		continue
+	    if kw == 'type' and self._data['send_event']:
+		val = val | 0x80
+	    kwlist.append('%s = %s' % (kw, repr(val)))
+
+	kws = string.join(kwlist, ', ')
+	return '%s(%s)' % (self.__class__, kws)
+
+    def __cmp__(self, other):
+	if isinstance(other, Event):
+	    return cmp(self._data, other._data)
+	else:
+	    return cmp(self._data, other)
+
 
 def call_error_handler(handler, error, request):
     try:

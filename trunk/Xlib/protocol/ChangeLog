@@ -1,3 +1,32 @@
+2002-02-11  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
+
+	* request.py (GetWindowAttributes): Rename class to win_class. 
+	(AllocColorPlanes): Fix Pad(4) to Pad(8) in reply.
+
+	* rq.py (ReplyLength): Add a reply length field, for completeness
+	and easier unit test generation.
+
+2002-02-10  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
+
+	* rq.py (DictWrapper.__cmp__): Let DictWrapper compare with plain
+	dictionaries. 
+	(Event.__init__): Set send_event to 0 when creating new events
+	objects, and allow events to be compared.
+
+	(Struct.parse_binary): Allow LengthFields to have a parse_value method.
+	(OddLength.parse_value): Decode field.
+	(String16.parse_binary_value): Handle OddLength fields.
+
+	(TextElements8.parse_binary_value): Bugfix: return values instead
+	of v.
+	(String8.parse_binary_value): Parse String8 with no LengthOf
+	field. 
+
+2002-02-09  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
+
+	* rq.py (TextElements16): Bugfix: inherit TextElements8 instead of
+	TextElements16.  Found while preparing unit tests, whee.
+
 2002-01-14  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
 
 	* display.py (Display.parse_event_response): Fix bug reported by

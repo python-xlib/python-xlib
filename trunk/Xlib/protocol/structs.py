@@ -1,4 +1,4 @@
-# $Id: structs.py,v 1.2 2000-08-07 10:30:20 petli Exp $
+# $Id: structs.py,v 1.3 2002-02-12 10:11:11 petli Exp $
 #
 # Xlib.protocol.structs -- some common request structures
 #
@@ -79,7 +79,7 @@ def GCValues(arg):
 			 rq.Int16('clip_x_origin'),
 			 rq.Int16('clip_y_origin'),
 			 rq.Pixmap('clip_mask'),
-			 rq.Card16('dash-offset'),
+			 rq.Card16('dash_offset'),
 			 rq.Card8('dashes'),
 			 rq.Set('arc_mode', 1, (X.ArcChord, X.ArcPieSlice))
 			 )

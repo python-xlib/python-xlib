@@ -1,4 +1,4 @@
-# $Id: request.py,v 1.8 2001-12-16 14:23:38 petli Exp $
+# $Id: request.py,v 1.9 2002-02-12 10:11:11 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
@@ -62,12 +62,12 @@ class GetWindowAttributes(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('backing_store'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),	
+	rq.ReplyLength(),	
 	rq.Card32('visual'),
-	rq.Card16('class'),
+	rq.Card16('win_class'),
 	rq.Card8('bit_gravity'),
 	rq.Card8('win_gravity'),
 	rq.Card32('backing_bit_planes'),
@@ -186,10 +186,10 @@ class GetGeometry(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct (
-	rq.Pad(1),
+	rq.ReplyCode(),
 	rq.Card8('depth'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.Window('root'),
 	rq.Int16('x'),
 	rq.Int16('y'),
@@ -208,9 +208,10 @@ class QueryTree(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.Window('root'),
 	rq.Window('parent', (X.NONE, )),
 	rq.LengthOf('children', 2),
@@ -229,9 +230,10 @@ class InternAtom(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4), 
+	rq.ReplyLength(), 
 	rq.Card32('atom'),
 	rq.Pad(20),
 	)
@@ -246,9 +248,10 @@ class GetAtomName(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.LengthOf('name', 2),
 	rq.Pad(22),
 	rq.String8('name'),
@@ -290,10 +293,10 @@ class GetProperty(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Format('value', 1),
 	rq.Card16('sequence_number'),
-	rq.Pad(4), 
+	rq.ReplyLength(), 
 	rq.Card32('property_type'),
 	rq.Card32('bytes_after'),
 	rq.LengthOf('value', 4),
@@ -310,9 +313,10 @@ class ListProperties(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('atoms', 2),
 	rq.Pad(22),
 	rq.List('atoms', rq.Card32Obj),
@@ -337,9 +341,10 @@ class GetSelectionOwner(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Window('owner', (X.NONE, )),
 	rq.Pad(20),
 	)
@@ -381,10 +386,11 @@ class GrabPointer(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('status'),
 	rq.Card16('sequence_number'),
-	rq.Pad(28),  
+	rq.ReplyLength(),
+	rq.Pad(24),  
 	)
     
 class UngrabPointer(rq.Request):
@@ -445,10 +451,11 @@ class GrabKeyboard(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('status'),
 	rq.Card16('sequence_number'),
-	rq.Pad(28),  
+	rq.ReplyLength(),
+	rq.Pad(24),  
 	)
 
 class UngrabKeyboard(rq.Request):
@@ -520,10 +527,10 @@ class QueryPointer(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('same_screen'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Window('root'),
 	rq.Window('child', (X.NONE, )),
 	rq.Int16('root_x'),
@@ -545,9 +552,10 @@ class GetMotionEvents(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('events', 4),
 	rq.Pad(20),
 	rq.List('events', structs.TimeCoord),
@@ -565,10 +573,10 @@ class TranslateCoords(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('same_screen'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4), 
+	rq.ReplyLength(), 
 	rq.Window('child', (X.NONE, )),
 	rq.Int16('x'),
 	rq.Int16('y'),
@@ -608,10 +616,10 @@ class GetInputFocus(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('revert_to'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Window('focus', (X.NONE, X.PointerRoot)),
 	rq.Pad(20),
 	)
@@ -624,9 +632,10 @@ class QueryKeymap(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.FixedList('map', 32, rq.Card8Obj),
 	)
     
@@ -659,9 +668,10 @@ class QueryFont(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Object('min_bounds', structs.CharInfo),
 	rq.Pad(4),
 	rq.Object('max_bounds', structs.CharInfo),
@@ -691,10 +701,10 @@ class QueryTextExtents(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('draw_direction'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Int16('font_ascent'),
 	rq.Int16('font_descent'),
 	rq.Int16('overall_ascent'),
@@ -716,9 +726,10 @@ class ListFonts(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('fonts', 2),
 	rq.Pad(22),
 	rq.List('fonts', rq.Str),
@@ -736,28 +747,28 @@ class ListFontsWithInfo(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	    rq.Pad(1),  
-	    rq.LengthOf('name', 1),  
-	    rq.Card16('sequence_number'),
-	    rq.Pad(4),  
-	    rq.Object('min_bounds', structs.CharInfo),
-	    rq.Pad(4),
-	    rq.Object('max_bounds', structs.CharInfo),
-	    rq.Pad(4),
-	    rq.Card16('min_char_or_byte2'),
-	    rq.Card16('max_char_or_byte2'),
-	    rq.Card16('default_char'),
-	    rq.LengthOf('properties', 2),  
-	    rq.Card8('draw_direction'),
-	    rq.Card8('min_byte1'),
-	    rq.Card8('max_byte1'),
-	    rq.Card8('all_chars_exist'),
-	    rq.Int16('font_ascent'),
-	    rq.Int16('font_descent'),
-	    rq.Card32('replies_hint'),
-	    rq.List('properties', structs.FontProp),
-	    rq.String8('name'),
-	    )
+	rq.ReplyCode(),  
+	rq.LengthOf('name', 1),  
+	rq.Card16('sequence_number'),
+	rq.ReplyLength(),  
+	rq.Object('min_bounds', structs.CharInfo),
+	rq.Pad(4),
+	rq.Object('max_bounds', structs.CharInfo),
+	rq.Pad(4),
+	rq.Card16('min_char_or_byte2'),
+	rq.Card16('max_char_or_byte2'),
+	rq.Card16('default_char'),
+	rq.LengthOf('properties', 2),  
+	rq.Card8('draw_direction'),
+	rq.Card8('min_byte1'),
+	rq.Card8('max_byte1'),
+	rq.Card8('all_chars_exist'),
+	rq.Int16('font_ascent'),
+	rq.Int16('font_descent'),
+	rq.Card32('replies_hint'),
+	rq.List('properties', structs.FontProp),
+	rq.String8('name'),
+	)
 
 
     # Somebody must have smoked some really wicked weed when they
@@ -823,9 +834,10 @@ class GetFontPath(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('paths', 2),
 	rq.Pad(22),
 	rq.List('paths', rq.Str),
@@ -1070,10 +1082,10 @@ class GetImage(rq.ReplyRequest):
 	)    
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('depth'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.Card32('visual'),
 	rq.Pad(20),
         rq.String8('data'),
@@ -1179,9 +1191,10 @@ class ListInstalledColormaps(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('cmaps', 2),
 	rq.Pad(22),
 	rq.List('cmaps', rq.ColormapObj),
@@ -1200,9 +1213,10 @@ class AllocColor(rq.ReplyRequest):
 	)    
 
     _reply = rq.Struct(
-	rq.Pad(2), 
+	rq.ReplyCode(),
+	rq.Pad(1), 
 	rq.Card16('sequence_number'),
-	rq.Pad(4),   
+	rq.ReplyLength(),   
 	rq.Card16('red'),
 	rq.Card16('green'),
 	rq.Card16('blue'),
@@ -1223,9 +1237,10 @@ class AllocNamedColor(rq.ReplyRequest):
 	)    
 
     _reply = rq.Struct(
-	rq.Pad(2),
+	rq.ReplyCode(),
+	rq.Pad(1),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Card32('pixel'),
 	rq.Card16('exact_red'),
 	rq.Card16('exact_green'),
@@ -1247,9 +1262,10 @@ class AllocColorCells(rq.ReplyRequest):
 	)    
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('pixels', 2),
 	rq.LengthOf('masks', 2),
 	rq.Pad(20),
@@ -1270,15 +1286,16 @@ class AllocColorPlanes(rq.ReplyRequest):
 	)    
 
     _reply = rq.Struct(
-	rq.Pad(2), 
+	rq.ReplyCode(),
+	rq.Pad(1), 
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('pixels', 2),
 	rq.Pad(2),
 	rq.Card32('red_mask'),
 	rq.Card32('green_mask'),
 	rq.Card32('blue_mask'),
-	rq.Pad(4),
+	rq.Pad(8),
 	rq.List('pixels', rq.Card32Obj),
 	)
     
@@ -1323,9 +1340,10 @@ class QueryColors(rq.ReplyRequest):
 	)    
 
     _reply = rq.Struct(
-	rq.Pad(2), 
+	rq.ReplyCode(),
+	rq.Pad(1), 
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('colors', 2),
 	rq.Pad(22),
 	rq.List('colors', structs.RGB),
@@ -1343,9 +1361,10 @@ class LookupColor(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Card16('exact_red'),
 	rq.Card16('exact_green'),
 	rq.Card16('exact_blue'),
@@ -1425,9 +1444,10 @@ class QueryBestSize(rq.ReplyRequest):
 	)    
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Card16('width'),
 	rq.Card16('height'),
 	rq.Pad(20),
@@ -1444,9 +1464,10 @@ class QueryExtension(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4), 
+	rq.ReplyLength(), 
 	rq.Card8('present'),
 	rq.Card8('major_opcode'),
 	rq.Card8('first_event'),
@@ -1462,10 +1483,11 @@ class ListExtensions(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.LengthOf('names', 1),
 	rq.Card16('sequence_number'),
-	rq.Pad(28),
+	rq.ReplyLength(),
+	rq.Pad(24),
 	rq.List('names', rq.Str),
 	)
     
@@ -1491,10 +1513,11 @@ class GetKeyboardMapping(rq.ReplyRequest):
 	)    
 
     _reply = rq.Struct(
-	rq.Pad(1),
+	rq.ReplyCode(),
 	rq.Format('keysyms', 1),
 	rq.Card16('sequence_number'),
-	rq.Pad(28),
+	rq.ReplyLength(),
+	rq.Pad(24),
 	rq.KeyboardMapping('keysyms'),
 	)
     
@@ -1526,10 +1549,10 @@ class GetKeyboardControl(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('global_auto_repeat'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Card32('led_mask'),
 	rq.Card8('key_click_percent'),
 	rq.Card8('bell_percent'),
@@ -1566,9 +1589,10 @@ class GetPointerControl(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Card16('accel_num'),
 	rq.Card16('accel_denom'),
 	rq.Card16('threshold'),
@@ -1599,9 +1623,10 @@ class GetScreenSaver(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(2),  
+	rq.ReplyCode(),
+	rq.Pad(1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(4),  
+	rq.ReplyLength(),  
 	rq.Card16('timeout'),
 	rq.Card16('interval'),
 	rq.Card8('prefer_blanking'),
@@ -1628,10 +1653,10 @@ class ListHosts(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.Card8('mode'),
 	rq.Card16('sequence_number'),
-	rq.Pad(4),
+	rq.ReplyLength(),
 	rq.LengthOf('hosts', 2),
 	rq.Pad(22),
 	rq.List('hosts', structs.Host),
@@ -1686,10 +1711,11 @@ class SetPointerMapping(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),
+	rq.ReplyCode(),
 	rq.Card8('status'),
 	rq.Card16('sequence_number'),
-	rq.Pad(28),
+	rq.ReplyLength(),
+	rq.Pad(24),
 	)
     
 class GetPointerMapping(rq.ReplyRequest):
@@ -1700,10 +1726,11 @@ class GetPointerMapping(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),  
+	rq.ReplyCode(),  
 	rq.LengthOf('map', 1),  
 	rq.Card16('sequence_number'),
-	rq.Pad(28),
+	rq.ReplyLength(),
+	rq.Pad(24),
 	rq.List('map', rq.Card8Obj),
 	)
     
@@ -1716,10 +1743,11 @@ class SetModifierMapping(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),
+	rq.ReplyCode(),
 	rq.Card8('status'),
 	rq.Card16('sequence_number'),
-	rq.Pad(28),
+	rq.ReplyLength(),
+	rq.Pad(24),
 	)
     
 class GetModifierMapping(rq.ReplyRequest):
@@ -1730,10 +1758,11 @@ class GetModifierMapping(rq.ReplyRequest):
 	)
 
     _reply = rq.Struct(
-	rq.Pad(1),
+	rq.ReplyCode(),
 	rq.Format('keycodes', 1),
 	rq.Card16('sequence_number'),
-	rq.Pad(28),
+	rq.ReplyLength(),
+	rq.Pad(24),
 	rq.ModifierMapping('keycodes')
 	)
     
