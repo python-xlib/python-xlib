@@ -1,0 +1,89 @@
+
+			 The Python X Library
+
+		       Version 0.1, 21 Jul 2000
+
+
+*** Copyright
+
+The Python X Library is released under GPL, see file COPYING for
+details.
+
+
+*** Installation
+
+Just copy the Xlib directory to some place in the module path.  E.g.:
+     
+   cp -r Xlib /usr/lib/python1.5/site-packages/
+  
+Make sure that that directory exists before copying.
+
+Alternatively, you can run programs from the distribution directory,
+or changing the module path in programs.
+
+
+*** Introduction
+
+The Python X Library is intended to be a fully functional X client
+library for Python programs.  It is written entirely in Python, in
+contrast to earlier X libraries for Python (the ancient X extension
+and the newer plxlib) which were interfaces to the C Xlib.
+
+This is possible to do since X client programs communicate with the X
+server via the X protocol.  The communication takes place over TCP/IP,
+Unix sockets, DECnet or any other suitable streaming network protocol.
+The C Xlib is merely an interface to this protocol, providing
+functions suited for a C environment.
+
+There are three advantages of choosing to implement a pure Python
+library:
+
+ * Integration:  The library can make use of the wonderful object
+   system in Python, providing an easy-to-use class hierarchy.
+ 
+ * Portability:  The library will be usable on any computer which have
+   Python installed.  A C interface could be problematic to port to
+   non-Unix systems, such as MS Windows or OpenVMS.
+
+ * Maintainability:  It is much easier to develop and debug native
+   Python modules than modules written in C.
+
+
+*** Project status
+
+Currently only the basic protocol interface is implemented.  This
+includes the network communication code for TCP/IP and Unix sockets
+and definitions of all requests, events and errors in X11R6.
+
+Client programs can be written using this, but that is quite awkward
+(see examples/draw.py for a simple application).
+
+There aren't any documentation for this yet except of the code and the
+example program.
+
+There are probably bugs.  The code handling network traffic and
+packing/unpacking requests, events and errors have been well
+tested and seems correct, but there is probably a few errors in the
+definition of the requests and the events, as not all of these have
+been tested yet.
+
+The next step, except for further testing and documentation, is to
+write the real client interface.  This will consist of classes
+representing windows, fonts, graphic contexts, etc, which wraps the
+basic protocol code in higher-level methods.
+
+Somewhere threading support should be added.  Currently the code is
+only thread safe if only one of the threads use the library.
+
+When all that is done, we will have a complete and usable X library.
+Although not very usable yet, the code is released anyway to let
+interested Python hackers have a peek.  Please report or fix any bugs
+you find, or get in contact if you want to help with the development
+in any way.
+
+
+*** Contact information
+
+Author email: Peter Liljenberg <petli@ctrl-c.liu.se>
+
+There isn't any web page yet.
