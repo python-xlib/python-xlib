@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.10 2001-01-06 17:58:06 petli Exp $
+# $Id: display.py,v 1.11 2001-01-08 15:28:37 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -22,6 +22,7 @@
 import sys
 import select
 import struct
+import errno
 
 # Xlib modules
 from Xlib import error
