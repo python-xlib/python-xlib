@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.3 2000-08-14 10:51:37 petli Exp $
+# $Id: rq.py,v 1.4 2000-08-21 10:03:46 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -1092,12 +1092,14 @@ class Request:
 	self._errorhandler = onerror
 	self._binary = self._request.build_from_args(args, keys)
 	self._serial = None
-	display.send_request(self, not not onerror)
+	display.send_request(self, onerror is not None)
 
     def _set_error(self, error):
-	if self._errorhandler:
-	    call_error_handler(self._errorhandler, error, self)
-	
+	if self._errorhandler is not None:
+	    return call_error_handler(self._errorhandler, error, self)
+	else:
+	    return 0
+    
 class ReplyRequest(GetAttrData):
     def __init__(self, display, defer = 0, *args, **keys):
 	self._display = display
@@ -1141,7 +1143,8 @@ class ReplyRequest(GetAttrData):
 	self._response_lock.acquire()
 	self._error = error
 	self._response_lock.release()
-	
+	return 1
+    
     def __repr__(self):
 	return '<%s serial = %s, data = %s, error = %s>' % (self.__class__, self._serial, self._data, self._error)
     
@@ -1167,8 +1170,8 @@ class Event(GetAttrData):
 
 def call_error_handler(handler, error, request):
     try:
-	handler(error, request)
+	return handler(error, request)
     except:
 	sys.stderr.write('Exception raised by error handler.\n')
 	traceback.print_exc()
-	
+	return 0

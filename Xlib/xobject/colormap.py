@@ -1,4 +1,4 @@
-# $Id: colormap.py,v 1.2 2000-08-08 09:47:46 petli Exp $
+# $Id: colormap.py,v 1.3 2000-08-21 10:03:46 petli Exp $
 #
 # Xlib.xobject.colormap -- colormap object
 #
@@ -25,8 +25,9 @@ import resource
 class Colormap(resource.Resource):
     __colormap__ = resource.Resource.__resource__
 
-    def free(self):
+    def free(self, onerror = None):
 	request.FreeColormap(display = self.display,
+			     onerror = onerror,
 			     cmap = self.id)
 
 	self.display.free_resource_id(self.id)
@@ -39,12 +40,14 @@ class Colormap(resource.Resource):
 
 	return Colormap(self.display, mid, owner = 1)
 
-    def install_colormap(self):
+    def install_colormap(self, onerror = None):
 	request.InstallColormap(display = self.display,
+				onerror = onerror,
 				cmap = self.id)
 
-    def uninstall_colormap(self):
+    def uninstall_colormap(self, onerror = None):
 	request.UninstallColormap(display = self.display,
+				  onerror = onerror,
 				  cmap = self.id)
 
     def alloc_color(self, red, green, blue):
@@ -55,9 +58,12 @@ class Colormap(resource.Resource):
 				  blue = blue)
 
     def alloc_named_color(self, name):
-	return request.AllocNamedColor(display = self.display,
-				       cmap = self.id,
-				       name = name)
+	try:
+	    return request.AllocNamedColor(display = self.display,
+					   cmap = self.id,
+					   name = name)
+	except error.BadName:
+	    return None
 
     def alloc_color_cells(self, contiguous, colors, planes):
 	return request.AllocColorCells(display = self.display,
@@ -75,19 +81,22 @@ class Colormap(resource.Resource):
 					green = green,
 					blue = blue)
 
-    def free_colors(self, pixels, plane_mask):
+    def free_colors(self, pixels, plane_mask, onerror = None):
 	request.FreeColors(display = self.display,
+			   onerror = onerror,
 			   cmap = self.id,
 			   plane_mask = plane_mask,
 			   pixels = pixels)
 
-    def store_colors(self, items):
+    def store_colors(self, items, onerror = None):
 	request.StoreColors(display = self.display,
+			    onerror = onerror,
 			    cmap = self.id,
 			    items = items)
     
-    def store_named_color(self, name, pixel, flags):
+    def store_named_color(self, name, pixel, flags, onerror = None):
 	request.StoreNamedColor(display = self.display,
+				onerror = onerror,
 				flags = flags,
 				cmap = self.id,
 				pixel = pixel,

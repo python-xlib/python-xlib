@@ -1,4 +1,4 @@
-# $Id: request.py,v 1.3 2000-08-08 09:47:46 petli Exp $
+# $Id: request.py,v 1.4 2000-08-21 10:03:46 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
@@ -773,15 +773,21 @@ class ListFontsWithInfo(rq.ReplyRequest):
 
     # Bastards.
 
+    def __init__(self, *args, **keys):
+	self._fonts = []
+	apply(ReplyRequest.__init__, (self, ) + args, keys)
+
     def _parse_response(self, data):
-	if self._data is None:
-	    self._data = []
-	    
+	
 	if ord(data[1]) == 0:
+	    self._response_lock.acquire()
+	    self._data = self._fonts
+	    del self._fonts
+	    self._response_lock.release()
 	    return
 
 	r, d = self._reply.parse_binary(data)
-	self._data.append(r)
+	self._fonts.append(r)
 
 	self._display.sent_requests.insert(0, self)
 
@@ -1695,7 +1701,7 @@ class GetPointerMapping(rq.ReplyRequest):
 
     _reply = rq.Struct(
 	rq.Pad(1),  
-	rq.Card8('map'),  
+	rq.LengthOf('map', 1),  
 	rq.Card16('sequence_number'),
 	rq.Pad(28),
 	rq.List('map', rq.Card8Obj),

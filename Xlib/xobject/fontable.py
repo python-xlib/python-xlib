@@ -1,4 +1,4 @@
-# $Id: fontable.py,v 1.1 2000-08-08 09:47:47 petli Exp $
+# $Id: fontable.py,v 1.2 2000-08-21 10:03:46 petli Exp $
 #
 # Xlib.xobject.fontable -- fontable objects (GC, font)
 #
@@ -39,32 +39,38 @@ class Fontable(resource.Resource):
 class GC(Fontable):
     __gc__ = resource.Resource.__resource__
 
-    def change(self, **keys):
+    def change(self, onerror = None, **keys):
 	request.ChangeGC(display = self.display,
+			 onerror = onerror,
+			 gc = self.id,
 			 attrs = keys)
 
 
-    def copy(self, src_gc, mask):
+    def copy(self, src_gc, mask, onerror = None):
 	request.CopyGC(display = self.display,
+		       onerror = onerror,
 		       src_gc = src_gc,
 		       dst_gc = self.id,
 		       mask = mask)
 
-    def set_dashes(self, offset, dashes):
+    def set_dashes(self, offset, dashes, onerror = None):
 	request.SetDashes(display = self.display,
+			  onerror = onerror,
 			  gc = self.id,
 			  dash_offset = offset,
 			  dashes = dashes)
 
-    def set_clip_rectangles(self, x_origin, y_origin, rectangles, ordering):
+    def set_clip_rectangles(self, x_origin, y_origin, rectangles, ordering, onerror = None):
 	request.SetClipRectangles(display = self.display,
+				  onerror = onerror,
 				  ordering = ordering,
 				  gc = self.id,
 				  x_origin = x_origin,
 				  y_origin = y_origin,
 				  rectangles = rectangles)
-    def free(self):
+    def free(self, onerror = None):
 	request.FreeGC(display = self.display,
+		       onerror = onerror,
 		       gc = self.id)
 
 	self.display.free_resource_id(self.id)
@@ -74,8 +80,9 @@ class GC(Fontable):
 class Font(Fontable):
     __font__ = resource.Resource.__resource__
 
-    def close(self):
+    def close(self, onerror = None):
 	request.CloseFont(display = self.display,
+			  onerror = onerror,
 			  font = self.id)
 	self.display.free_resource_id(self.id)
 
