@@ -567,8 +567,7 @@ Returns List('atoms', Card32Obj),
 @defmethod Window send_event ( event, event_mask = 0, propagate = 0, onerror = None )
 @end defmethod
 
-@defmethod Window grab_pointer ( owner_events, event_mask,
-pointer_mode, keyboard_mode,
+@defmethod Window grab_pointer ( owner_events, event_mask, pointer_mode, keyboard_mode,
 confine_to, cursor, time )
 Returns Card8('status'),
 @end defmethod
