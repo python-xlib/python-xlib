@@ -1,0 +1,14 @@
+#!/bin/sh
+if [ "$1" = "remove" -o "$1" = "upgrade" ]; then
+  install-info --quiet --remove /usr/share/info/python-xlib.info
+fi
+
+NAME=python-xlib
+
+dpkg --listfiles $NAME |
+        awk '$0~/\.py$/ {print $0"c\n" $0"o"}' |
+        xargs rm -f >&2
+
+if [ \( "$1" = "upgrade" -o "$1" = "remove" \) -a -L /usr/doc/python-xlib ]; then
+	rm -f /usr/doc/python-xlib
+fi

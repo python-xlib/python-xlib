@@ -1,0 +1,20 @@
+#!/bin/sh
+if [ "$1" = "configure" -o "$1" = "upgrade" ]; then
+  install-info --section "Development" "Development" --quiet /usr/share/info/python-xlib.info
+fi
+
+if [ "$1" = "configure" ]; then
+	if [ -d /usr/doc -a ! -e /usr/doc/python-xlib -a -d /usr/share/doc/python-xlib ]; then
+		ln -sf ../share/doc/python-xlib /usr/doc/python-xlib
+	fi
+fi
+
+NAME=python-xlib
+case "$1" in
+        configure|abort-upgrade|abort-remove|abort-deconfigure)
+		dpkg --listfiles $NAME | grep '\.py$' | \
+		     xargs -n 1 /usr/bin/python -c 'import py_compile,sys;py_compile.compile(sys.argv[1])'
+		dpkg --listfiles $NAME | grep '\.py$' | \
+		     xargs -n 1 /usr/bin/python -O -c 'import py_compile,sys;py_compile.compile(sys.argv[1])'
+        ;;
+esac

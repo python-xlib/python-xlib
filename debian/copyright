@@ -1,0 +1,13 @@
+This package was debianized by Moshe Zadka <moshez@debian.org> on
+sun, 15 Jul 2001 13:03:04 +0300.
+
+It was downloaded from http://python-xlib.sf.net
+
+Upstream Author(s): Peter Liljenberg
+
+Copyright:
+
+Copyright (C) 2000,2001  Peter Liljenberg
+
+The Python X Library is released under GPL, see the file COPYING for
+details.

@@ -1,0 +1,67 @@
+#!/usr/bin/make -f
+#-*- makefile -*-
+# Made with the aid of dh_make, by Craig Small
+# Sample debian/rules that uses debhelper. GNU copyright 1997 by Joey Hess.
+# Some lines taken from debmake, by Christoph Lameter.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This is the debhelper compatability version to use.
+export DH_COMPAT=1
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp install-stamp
+
+	# Add here commands to clean up after the build process.
+	dh_clean
+
+install: install-stamp
+install-stamp: build-stamp
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+
+	# Add here commands to install the package into debian/tmp.
+	cp -r Xlib debian/tmp/usr/lib/python1.5/site-packages/
+	cp README NEWS TODO debian/tmp/usr/share/doc/python-xlib
+	cp doc/html/*.html debian/tmp/usr/share/doc/python-xlib/html
+	cp doc/info/*.info debian/tmp/usr/share/info
+	gzip -9 debian/tmp/usr/share/info/python-xlib.info
+	cp examples/*.py debian/tmp/usr/share/doc/python-xlib/examples
+	cp debian/copyright debian/tmp/usr/share/doc/python-xlib/
+
+	touch install-stamp
+
+binary-arch: build install
+# We have nothing to do by default.
+
+binary-indep: build install
+#	dh_testversion
+	dh_testdir
+	dh_testroot
+	dh_link
+	dh_strip
+	dh_installchangelogs
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+source diff:                                                                  
+	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
