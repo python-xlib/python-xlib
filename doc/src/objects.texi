@@ -38,61 +38,259 @@ parameter, which can be used to specify an error handler.
 Display information retrieval methods:
 
 @defmethod Display get_display_name ( )
+
+Returns the name used to connect to the server, either provided when
+creating the @code{Display} object, or fetched from the environmental
+variable @code{$DISPLAY}.
+
 @end defmethod
 
+
 @defmethod Display fileno ( )
+
+Returns the file descriptor number of the underlying socket.  This
+method is provided to allow @code{Display} objects to be passed
+@code{select.select()}.
+
 @end defmethod
 
 @defmethod Display close ( )
+
+Close the display, freeing the resources that it holds.
+
 @end defmethod
 
 @defmethod Display set_error_handler ( handler )
+
+Set the default error handler which will be called for all unhandled
+errors.  @var{handler} should take two arguments as a normal request
+error handler, but the second argument (the request) will be None.
+
+@xref{Error Handling}.
+
 @end defmethod
 
+
 @defmethod Display flush ( )
+
+Flush the request queue, building and sending the queued requests.  This
+can be necessary in applications that never wait for events, and in
+threaded applications.
+
 @end defmethod
 
 @defmethod Display sync ( )
+
+Flush the queue and wait until the server has processed all the queued
+requests.  Use this e.g. when it is important that errors caused by a
+certain request is trapped.
+
 @end defmethod
 
+
 @defmethod Display next_event ( )
+
+Return the next event.  If there are no events queued, it will block
+until the next event is fetched from the server.
+
 @end defmethod
 
 @defmethod Display pending_events ( )
+
+Return the number of events queued, i.e. the number of times that
+@code{Display.next_event()} can be called without blocking.
+
 @end defmethod
+
 
 @defmethod Display has_extension ( extension )
+
+Check if both the server and the client library support the X extension
+named @var{extension}.
+
 @end defmethod
+
 
 @defmethod Display create_resource_object ( type, id )
+
+Create a resource object of @var{type} for the integer @var{id}.
+@var{type} should be one of the following strings:
+
+@table @code
+@item resource
+@itemx drawable
+@itemx window
+@itemx pixmap
+@itemx fontable
+@itemx font
+@itemx gc
+@itemx colormap
+@itemx cursor
+
+@end table
+
+This function can be used when a resource ID has been fetched e.g. from
+an resource or a command line argument.  Resource objects should never
+be created by instantiating the appropriate class directly, since any X
+extensions dynamically added by the library will not be available.
+
 @end defmethod
+
 
 @defmethod Display screen ( sno = None )
+
+Return the information about screen number @var{sno}, or the default
+screen if @var{sno} is @code{None}.
+
+The reply object has the following attributes:
+
+@table @code
+
+@item root
+The screen root window.
+
+@item default_colormap
+The default colormap for the root window and its children.
+
+@item white_pixel
+@itemx black_pixel
+The pixel values for white and black, respectively, in the default
+colormap.
+
+@item current_input_mask
+The event mask of the root window at the time the connection was set up.
+
+@item width_in_pixels
+@itemx height_in_pixels
+The size of the root window in pixels, i.e. the size of the entire screen.
+
+@item width_in_mms
+@itemx height_in_mms
+The physical size of the screen, in millimeters.
+
+@item min_installed_maps
+@itemx max_installed_maps
+The minimum and maximum number of colormaps that can be installed at the
+same time.
+
+@item root_visual
+The visual type of the root window.
+
+@item backing_store
+Whether the screen supports backing store, one of the values
+@code{X.WhenMapped}, @code{X.NotUseful}, or @code{X.Always}.
+
+@item save_unders
+True if the screen supports save unders.
+
+@item root_depth
+The depth of the root window.
+
+@item allowed_depths
+
+A list of the pixmap and windows depths that this screen supports.  The
+list items have the following attributes:
+
+@table @code
+@item depth
+This depth is supported by the screen.
+
+@item visuals
+A list of visual types that is valid for this depth.  If this list is
+empty, this depth is only valid for pixmaps and not for windows.  The
+list items have the following attributes:
+
+@table @code
+@item visual_id
+The ID of this visual.
+
+@item visual_class
+One of @code{X.StaticGrey}, @code{X.StaticColor}, @code{X.TrueColor},
+@code{X.GrayScale}, @code{X.PseudoColor}, or @code{X.DirectColor}.
+
+@item bits_per_rgb_value
+The number of bits used to represent an entire RGB-value, allowing a
+total of @code{2^bits_per_rgb_value} distinct colors.
+
+@item colormap_entries
+The number of free entries in a newly created colormap.
+
+@item red_mask
+@itemx blue_mask
+@itemx green_mask
+
+Bitmasks selecting the three color components from the entire RGB value.
+
+@end table
+
+@end table
+
+@end table
+
 @end defmethod
 
+
 @defmethod Display screen_count ( )
+
+Return the total number of screens on the display.
+
 @end defmethod
 
 @defmethod Display get_default_screen ( )
+
+Return the number of the default screen, extracted from the display
+name.
+
 @end defmethod
 
+
 @defmethod Display keycode_to_keysym ( keycode, index )
+
+Convert a @var{keycode} to a keysym, looking in entry @var{index}.
+Normally index 0 is unshifted, 1 is shifted, 2 is alt grid, and 3 is
+shift+alt grid.  If that key entry is not bound, @code{X.NoSymbol} is
+returned.
+
 @end defmethod
 
 @defmethod Display keysym_to_keycode ( keysym )
+
+Look up the primary keycode that is bound to @var{keysym}.  If several
+keycodes are found, the one with the lowest index and lowest code is
+returned.  If @var{keysym} is not bound to any key, 0 is returned.
+
 @end defmethod
 
 @defmethod Display keysym_to_keycodes ( keysym )
+
+Look up all the keycodes that is bound to @code{keysym}.  A list of
+tuples @code{(keycode, index)} is returned, sorted primarily on the
+lowest index and secondarily on the lowest keycode.
+
 @end defmethod
 
 @defmethod Display refresh_keyboard_mapping ( evt )
+
+This method should be called once when a @code{MappingNotify} event is
+received, to update the keymap cache.  @var{evt} should be the event
+object.
+
 @end defmethod
 
 @defmethod Display lookup_string ( keysym )
+
+Attempt to convert @var{keysym} into a single character or a string.  If
+no translation is found, @code{None} is returned.
+
 @end defmethod
 
 @defmethod Display rebind_string ( keysym, newstring )
+
+Set the string representation of @code{keysym} to @code{newstring}, so
+that it will be returned by @code{Display.lookup_string()}.
+
 @end defmethod
+
 
 X requests methods:
 
