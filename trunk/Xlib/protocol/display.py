@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.17 2002-02-25 11:09:23 petli Exp $
+# $Id: display.py,v 1.18 2002-07-15 21:43:50 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -886,7 +886,7 @@ PixmapFormat = rq.Struct( rq.Card8('depth'),
 			  )
 
 VisualType = rq.Struct ( rq.Card32('visual_id'),
-			 rq.Card8('class'),
+			 rq.Card8('visual_class'),
 			 rq.Card8('bits_per_rgb_value'),
 			 rq.Card16('colormap_entries'),
 			 rq.Card32('red_mask'),
