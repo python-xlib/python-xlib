@@ -1,4 +1,4 @@
-# $Id: error.py,v 1.1 2000-07-21 09:54:49 petli Exp $
+# $Id: error.py,v 1.2 2000-08-02 09:39:24 petli Exp $
 #
 # Xlib.error -- basic error classes
 #
@@ -53,7 +53,11 @@ class ConnectionClosedError(Exception):
 
     def __str__(self):
 	return 'Display connection closed by %s' % self.whom
-	
+
+
+class ResourceIDError(Exception): pass
+
+    
 class XError(rq.GetAttrData, Exception):
     _fields = rq.Struct( rq.Card8('type'),  # Always 0
 			 rq.Card8('code'),
