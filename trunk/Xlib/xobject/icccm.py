@@ -1,4 +1,4 @@
-# $Id: icccm.py,v 1.3 2002-06-24 20:05:33 petli Exp $
+# $Id: icccm.py,v 1.4 2002-06-24 20:18:17 petli Exp $
 #
 # Xlib.xobject.icccm -- ICCCM structures 
 #
@@ -42,7 +42,7 @@ WMHints = rq.Struct( rq.Card32('flags'),
 		     rq.Card32('input', default = 0),
 		     rq.Set('initial_state', 4,
 			    # withdrawn is totally bogus according to
-			    # ICCCM, but some window managers seems to
+			    # ICCCM, but some window managers seem to
 			    # use this value to identify dockapps.
 			    # Oh well.
 			    ( Xutil.WithdrawnState,
