@@ -1,0 +1,829 @@
+
+@node X Objects
+@chapter X Objects
+
+All X operations are performed by invoking object methods.
+
+The objects and their methods are listed in the following nodes, however
+with no detailed explanations.  The reader are referred to other sources
+of X documentation for details, e.g. the X protocol specification, the C
+Xlib documentation or man pages.  A vast collection of X documentation
+links can be found at @uref{http://www.rahul.net/kenton/xsites.html}.
+
+Methods returning a single value will return that directly.  Otherwise,
+an object containing attributes for each of the result values is
+returned.
+
+Methods returning some value will raise an exception on error.  Methods
+which does not return any value have instead an @code{on_error}
+parameter, which can be used to specify an error handler.
+
+@menu
+* Display::       Methods on Display objects.
+* Resource::      Methods common to all the following resource objects.
+* Colormap::      Methods on Colormap objects. 
+* Cursor::        Methods on Cursor objects.
+* Drawable::      Methods common to Window and Pixmap objects.
+* Window::        Methods on Window objects.
+* Pixmap::        Methods on Pixmap objects.
+* Fontable::      Methods common to GC and Font objects.
+* GC::            Methods on GC objects.
+* Font::          Methods on Font objects.
+@end menu
+
+
+@node Display
+@section Display
+
+Display information retrieval methods:
+
+@defmethod Display get_display_name ( )
+@end defmethod
+
+@defmethod Display fileno ( )
+@end defmethod
+
+@defmethod Display close ( )
+@end defmethod
+
+@defmethod Display set_error_handler ( handler )
+@end defmethod
+
+@defmethod Display flush ( )
+@end defmethod
+
+@defmethod Display sync ( )
+@end defmethod
+
+@defmethod Display next_event ( )
+@end defmethod
+
+@defmethod Display pending_events ( )
+@end defmethod
+
+@defmethod Display has_extension ( extension )
+@end defmethod
+
+@defmethod Display create_resource_object ( type, id )
+@end defmethod
+
+@defmethod Display screen ( sno = None )
+@end defmethod
+
+@defmethod Display screen_count ( )
+@end defmethod
+
+@defmethod Display get_default_screen ( )
+@end defmethod
+
+@defmethod Display keycode_to_keysym ( keycode, index )
+@end defmethod
+
+@defmethod Display keysym_to_keycode ( keysym )
+@end defmethod
+
+@defmethod Display keysym_to_keycodes ( keysym )
+@end defmethod
+
+@defmethod Display refresh_keyboard_mapping ( evt )
+@end defmethod
+
+@defmethod Display lookup_string ( keysym )
+@end defmethod
+
+@defmethod Display rebind_string ( keysym, newstring )
+@end defmethod
+
+X requests methods:
+
+@defmethod Display intern_atom ( name, only_if_exists = 0 )
+Returns Card32(atom)
+@end defmethod
+
+@defmethod Display get_atom_name ( atom )
+Returns String(name)
+@end defmethod
+
+@defmethod Display get_selection_owner ( selection )
+Returns Window(owner, (X.NONE, ))
+@end defmethod
+
+@defmethod Display send_event ( destination, event, event_mask = 0, propagate = 0, onerror = None )
+@end defmethod
+
+@defmethod Display ungrab_pointer ( time, onerror = None )
+@end defmethod
+
+@defmethod Display change_active_pointer_grab ( event_mask, cursor, time, onerror = None )
+@end defmethod
+
+@defmethod Display ungrab_keyboard ( time, onerror = None )
+@end defmethod
+
+@defmethod Display allow_events ( mode, time, onerror = None )
+@end defmethod
+
+@defmethod Display grab_server ( onerror = None )
+@end defmethod
+
+@defmethod Display ungrab_server ( onerror = None )
+@end defmethod
+
+@defmethod Display warp_pointer ( x, y, src_window = 0, src_x = 0, src_y = 0, src_width = 0, src_height = 0, onerror = None )
+@end defmethod
+
+@defmethod Display set_input_focus ( focus, revert_to, time, onerror = None )
+@end defmethod
+
+@defmethod Display get_input_focus ( )
+Returns Card8('revert_to'), Window('focus', (X.NONE, X.PointerRoot))
+@end defmethod
+
+@defmethod Display query_keymap ( )
+Returns FixedList('map', 32, Card8Obj)
+@end defmethod
+
+@defmethod Display open_font ( name )
+Returns Font or None.
+@end defmethod
+
+@defmethod Display list_fonts ( pattern, max_names )
+Returns List('fonts', Str)
+@end defmethod
+
+@defmethod Display list_fonts_with_info ( pattern, max_names )
+Returns a list of 
+Object('min_bounds', structs.CharInfo),
+Object('max_bounds', structs.CharInfo),
+Card16('min_char_or_byte2'),
+Card16('max_char_or_byte2'),
+Card16('default_char'),
+Card8('draw_direction'),
+Card8('min_byte1'),
+Card8('max_byte1'),
+Card8('all_chars_exist'),
+Int16('font_ascent'),
+Int16('font_descent'),
+Card32('replies_hint'),
+List('properties', structs.FontProp),
+String8('name'),
+@end defmethod
+
+@defmethod Display set_font_path ( path, onerror = None )
+@end defmethod
+
+@defmethod Display get_font_path ( )
+Returns List('paths', Str)
+@end defmethod
+
+@defmethod Display query_extension ( name )
+Returns None, or  Card8('major_opcode'),
+Card8('first_event'),
+Card8('first_error'),
+@end defmethod
+
+@defmethod Display list_extensions ( )
+Returns List('names', Str)
+@end defmethod
+
+@defmethod Display change_keyboard_mapping ( first_keycode, keysyms, onerror = None )
+@end defmethod
+
+@defmethod Display get_keyboard_mapping ( first_keycode, count )
+Returns KeyboardMapping('keysyms'),
+@end defmethod
+
+@defmethod Display change_keyboard_control ( onerror = None, **keys )
+@end defmethod
+
+@defmethod Display get_keyboard_control ( )
+@end defmethod
+
+@defmethod Display bell ( percent = 0, onerror = None )
+@end defmethod
+
+@defmethod Display change_pointer_control ( accel = None, threshold = None, onerror = None )
+@var{accel} should be @code{None} or @code{(num, denum)}.
+@end defmethod
+
+@defmethod Display get_pointer_control ( )
+Returns
+Card16('accel_num'),
+Card16('accel_denom'),
+Card16('threshold'),
+@end defmethod
+
+@defmethod Display set_screen_saver ( timeout, interval, prefer_blank, allow_exposures, onerror = None )
+@end defmethod
+
+@defmethod Display get_screen_saver ( )
+Returns
+Card16('timeout'),
+Card16('interval'),
+Card8('prefer_blanking'),
+Card8('allow_exposures'),
+
+@end defmethod
+
+@defmethod Display change_hosts ( mode, host_family, host, onerror = None )
+@end defmethod
+
+@defmethod Display list_hosts ( )
+Returns
+Card8('mode'),
+List('hosts', structs.Host),
+@end defmethod
+
+@defmethod Display set_access_control ( mode, onerror = None )
+@end defmethod
+
+@defmethod Display set_close_down_mode ( mode, onerror = None )
+@end defmethod
+
+@defmethod Display force_screen_saver ( mode, onerror = None )
+@end defmethod
+
+@defmethod Display set_pointer_mapping ( map )
+Returns Card8('status'),
+@end defmethod
+
+@defmethod Display get_pointer_mapping ( )
+Returns List('map', Card8Obj),
+@end defmethod
+
+@defmethod Display set_modifier_mapping ( keycodes )
+Returns Card8('status'),
+@end defmethod
+
+@defmethod Display get_modifier_mapping ( )
+Returns ModifierMapping('keycodes')
+@end defmethod
+
+@defmethod Display no_operation ( onerror = None )
+@end defmethod
+
+
+@node Resource
+@section Resource
+
+All resource objects can be compared and hashed, so they can be used as
+mapping indices.  They also have this method:
+
+@defmethod Resource kill_client ( onerror = None )
+@end defmethod
+
+
+@node Colormap
+@section Colormap
+
+@xref{Resource}, for additional methods on @code{Colormap} objects.
+
+@defmethod Colormap free ( onerror = None )
+@end defmethod
+
+@defmethod Colormap copy_colormap_and_free ( scr_cmap )
+Returns Colormap.
+@end defmethod
+
+@defmethod Colormap install_colormap ( onerror = None )
+@end defmethod
+
+@defmethod Colormap uninstall_colormap ( onerror = None )
+@end defmethod
+
+@defmethod Colormap alloc_color ( red, green, blue )
+@end defmethod
+
+@defmethod Colormap alloc_named_color ( name )
+Returns None or  Card32('pixel'),
+Card16('exact_red'),
+Card16('exact_green'),
+Card16('exact_blue'),
+Card16('screen_red'),
+Card16('screen_green'),
+Card16('screen_blue'),
+@end defmethod
+
+@defmethod Colormap alloc_color_cells ( contiguous, colors, planes )
+Returns  List('pixels', Card32Obj),
+List('masks', Card32Obj),
+@end defmethod
+
+@defmethod Colormap alloc_color_planes ( contiguous, colors, red, green, blue )
+Returns  Card32('red_mask'),
+Card32('green_mask'),
+Card32('blue_mask'),
+List('pixels', Card32Obj),
+@end defmethod
+
+@defmethod Colormap free_colors ( pixels, plane_mask, onerror = None )
+@end defmethod
+
+@defmethod Colormap store_colors ( items, onerror = None )
+@end defmethod
+
+@defmethod Colormap store_named_color ( name, pixel, flags, onerror = None )
+@end defmethod
+
+@defmethod Colormap query_colors ( pixels )
+Returns List('colors', structs.RGB),
+@end defmethod
+
+@defmethod Colormap lookup_color ( name )
+Returns  Card16('exact_red'),
+Card16('exact_green'),
+Card16('exact_blue'),
+Card16('screen_red'),
+Card16('screen_green'),
+Card16('screen_blue'),
+@end defmethod
+
+
+@node Cursor
+@section Cursor
+
+@xref{Resource}, for additional methods on @code{Cursor} objects.
+
+@defmethod Cursor free ( onerror = None )
+@end defmethod
+
+@defmethod Cursor recolor ( (fore_red, fore_green, fore_blue), (back_red, back_green, back_blue), onerror = None )
+@end defmethod
+
+
+@node Drawable
+@section Drawable
+
+@code{Drawable} is a base class of @code{Window} and @code{Pixmap}
+objects.  @xref{Window}, and @ref{Pixmap}.
+
+@xref{Resource}, for additional methods.
+
+@defmethod Drawable get_geometry ( )
+Returns
+Window('root'),
+Int16('x'),
+Int16('y'),
+Card16('width'),
+Card16('height'),
+Card16('border_width'),
+@end defmethod
+
+@defmethod Drawable create_pixmap ( width, height, depth )
+Returns Pixmap.
+@end defmethod
+
+@defmethod Drawable create_gc ( **keys )
+Returns GC.
+@end defmethod
+
+@defmethod Drawable copy_area ( gc, src_drawable, src_x, src_y, width, height, dst_x, dst_y, onerror = None )
+@end defmethod
+
+@defmethod Drawable copy_plane ( gc, src_drawable, src_x, src_y, width, height, dst_x, dst_y, bit_plane, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_point ( gc, coord_mode, points, onerror = None )
+@end defmethod
+request.PolyPoint(display = self.display,
+onerror = onerror,
+coord_mode = coord_mode,
+drawable = self.id,
+gc = gc,
+points = points)
+
+@defmethod Drawable point ( gc, x, y, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_line ( gc, coord_mode, points, onerror = None )
+@end defmethod
+
+@defmethod Drawable line ( gc, x1, y1, x2, y2, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_segment ( gc, segments, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_rectangle ( gc, rectangles, onerror = None )
+@end defmethod
+
+@defmethod Drawable rectangle ( gc, x, y, width, height, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_arc ( gc, arcs, onerror = None )
+@end defmethod
+
+@defmethod Drawable arc ( gc,  x, y, width, height, angle1, angle2, onerror = None )
+@end defmethod
+
+@defmethod Drawable fill_poly ( gc, shape, coord_mode, points, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_fill_rectangle ( gc, rectangles, onerror = None )
+@end defmethod
+
+@defmethod Drawable fill_rectangle ( gc, x, y, width, height, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_fill_arc ( gc, arcs, onerror = None )
+@end defmethod
+
+@defmethod Drawable fill_arc ( gc,  x, y, width, height, angle1, angle2, onerror = None )
+@end defmethod
+
+@defmethod Drawable put_image ( )
+Not implemented yet.
+@end defmethod
+
+@defmethod Drawable get_image ( )
+Not implemented yet.
+@end defmethod
+
+@defmethod Drawable draw_text ( gc, x, y, text, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_text ( gc, x, y, items, onerror = None )
+@end defmethod
+
+@defmethod Drawable poly_text_16 ( gc, x, y, items, onerror = None )
+@end defmethod
+
+@defmethod Drawable image_text ( gc, x, y, string, onerror = None )
+@end defmethod
+
+@defmethod Drawable image_text_16 ( gc, x, y, string, onerror = None )
+@end defmethod
+
+@defmethod Drawable query_best_size ( item_class, width, height )
+Returns
+Card16('width'),
+Card16('height'),
+@end defmethod
+
+@node Window
+@section Window
+
+@code{Window} objects have additional objects, see @ref{Resource} and @ref{Drawable}.
+
+@defmethod Window create_window ( x, y, width, height, border_width, depth,
+window_class =  X.CopyFromParent,
+visual = X.CopyFromParent,
+**keys )
+Returns Window
+@end defmethod
+
+@defmethod Window change_attributes ( onerror = None, **keys )
+@end defmethod
+
+
+@defmethod Window get_attributes ( )
+Returns
+Card8('backing_store'),
+Card32('visual'),
+Card16('class'),
+Card8('bit_gravity'),
+Card8('win_gravity'),
+Card32('backing_bit_planes'),
+Card32('backing_pixel'),
+Card8('save_under'),
+Card8('map_is_installed'),
+Card8('map_state'),
+Card8('override_redirect'),
+Colormap('colormap', (X.NONE, )),
+Card32('all_event_masks'),
+Card32('your_event_mask'),
+Card16('do_not_propagate_mask'),
+@end defmethod
+
+@defmethod Window destroy ( onerror = None )
+@end defmethod
+
+@defmethod Window destroy_sub_windows ( onerror = None )
+@end defmethod
+
+@defmethod Window change_save_set ( mode, onerror = None )
+@end defmethod
+
+@defmethod Window reparent ( parent, x, y, onerror = None )
+@end defmethod
+
+@defmethod Window map ( onerror = None )
+@end defmethod
+
+@defmethod Window map_sub_windows ( onerror = None )
+@end defmethod
+
+@defmethod Window unmap ( onerror = None )
+@end defmethod
+
+@defmethod Window unmap_sub_windows ( onerror = None )
+@end defmethod
+
+@defmethod Window configure ( onerror = None, **keys )
+@end defmethod
+
+@defmethod Window circulate ( direction, onerror = None )
+@end defmethod
+
+@defmethod Window query_tree ( )
+Returns
+Window('root'),
+Window('parent', (X.NONE, )),
+List('children', WindowObj),
+@end defmethod
+
+@defmethod Window change_property ( property, type, format, data, mode = X.PropModeReplace, onerror = None )
+@end defmethod
+
+@defmethod Window delete_property ( property, onerror = None )
+@end defmethod
+
+@defmethod Window get_property ( property, type, offset, length, delete = 0 )
+Returns None or 
+Card32('property_type'),
+Card8('format'),
+PropertyData('value'),
+Card32('bytes_after'),
+@end defmethod
+
+@defmethod Window get_full_property ( property, type, sizehint = 10 )
+Returns None or 
+Card32('property_type'),
+Card8('format'),
+PropertyData('value'),
+Card32('bytes_after'),
+@end defmethod
+
+@defmethod Window list_properties ( )
+Returns List('atoms', Card32Obj),
+@end defmethod
+
+@defmethod Window set_selection_owner ( selection, time, onerror = None )
+@end defmethod
+
+@defmethod Window convert_selection ( selection, target, property, time, onerror = None )
+@end defmethod
+
+@defmethod Window send_event ( event, event_mask = 0, propagate = 0, onerror = None )
+@end defmethod
+
+@defmethod Window grab_pointer ( owner_events, event_mask,
+pointer_mode, keyboard_mode,
+confine_to, cursor, time )
+Returns Card8('status'),
+@end defmethod
+
+@defmethod Window grab_button ( button, modifiers, owner_events, event_mask, pointer_mode, keyboard_mode, confine_to, cursor, onerror = None )
+@end defmethod
+
+@defmethod Window ungrab_button ( button, modifiers, onerror = None )
+@end defmethod
+
+@defmethod Window grab_keyboard ( owner_events, pointer_mode, keyboard_mode, time )
+Returns Card8('status'),
+@end defmethod
+
+@defmethod Window grab_key ( key, modifiers, owner_events, pointer_mode, keyboard_mode, onerror = None )
+@end defmethod
+
+@defmethod Window ungrab_key ( key, modifiers, onerror = None )
+@end defmethod
+
+@defmethod Window query_pointer ( )
+Returns
+Card8('same_screen'),
+Window('root'),
+Window('child', (X.NONE, )),
+Int16('root_x'),
+Int16('root_y'),
+Int16('win_x'),
+Int16('win_y'),
+Card16('mask'),
+@end defmethod
+
+@defmethod Window get_motion_events ( start, stop )
+Returns List('events', structs.TimeCoord),
+@end defmethod
+
+@defmethod Window translate_coords ( src_window, src_x, src_y )
+Returns
+Window('child', (X.NONE, )),
+Int16('x'),
+Int16('y'),
+@end defmethod
+
+@defmethod Window warp_pointer ( x, y, src_window = 0, src_x = 0, src_y = 0, src_width = 0, src_height = 0, onerror = None )
+@end defmethod
+
+@defmethod Window set_input_focus ( revert_to, time, onerror = None )
+@end defmethod
+
+@defmethod Window clear_area ( x = 0, y = 0, width = 0, height = 0, exposures = 0, onerror = None )
+@end defmethod
+
+@defmethod Window create_colormap ( visual, alloc )
+Returns Colormap.
+@end defmethod
+
+@defmethod Window list_installed_colormaps ( )
+Returns List('cmaps', ColormapObj),
+@end defmethod
+
+@defmethod Window rotate_properties ( properties, delta, onerror = None )
+@end defmethod
+
+@defmethod Window set_wm_name ( name, onerror = None )
+@end defmethod
+
+@defmethod Window get_wm_name ( )
+Returns None or string.
+@end defmethod
+
+@defmethod Window set_wm_icon_name ( name, onerror = None )
+@end defmethod
+
+@defmethod Window get_wm_icon_name ( )
+Returns None or string.
+@end defmethod
+
+@defmethod Window set_wm_class ( inst, cls, onerror = None )
+@end defmethod
+
+@defmethod Window get_wm_class ( )
+Returns None or (isntance, class)
+@end defmethod
+
+@defmethod Window set_wm_transient_for ( window, onerror = None )
+@end defmethod
+
+@defmethod Window get_wm_transient_for ( )
+Returns None or Window.
+@end defmethod
+
+
+@defmethod Window set_wm_protocols ( protocols, onerror = None )
+@end defmethod
+
+@defmethod Window get_wm_protocols ( )
+Returns list of atoms.
+@end defmethod
+
+@defmethod Window set_wm_colormap_windows ( windows, onerror = None )
+@end defmethod
+
+@defmethod Window get_wm_colormap_windows ( )
+Returns list of Windows.
+@end defmethod
+
+
+@defmethod Window set_wm_client_machine ( name, onerror = None )
+@end defmethod
+
+@defmethod Window get_wm_client_machine ( )
+Returns None or string.
+@end defmethod
+
+@defmethod Window set_wm_normal_hints ( hints = {}, onerror = None, **keys )
+@end defmethod
+
+@defmethod Window get_wm_normal_hints ( )
+Returns  Card32('flags'),
+Int32('min_width', default = 0),
+Int32('min_height', default = 0),
+Int32('max_width', default = 0),
+Int32('max_height', default = 0),
+Int32('width_inc', default = 0),
+Int32('height_inc', default = 0),
+Object('min_aspect', Aspect, default = (0, 0)),
+Object('max_aspect', Aspect, default = (0, 0)),
+Int32('base_width', default = 0),
+Int32('base_height', default = 0),
+Int32('win_gravity', default = 0),
+@end defmethod
+
+@defmethod Window set_wm_hints ( hints = {}, onerror = None, **keys )
+@end defmethod
+
+@defmethod Window get_wm_hints ( )
+Returns Card32('flags'),
+Card32('input', default = 0),
+Set('initial_state', 4,
+( Xutil.NormalState, Xutil.IconicState ),
+default = Xutil.NormalState),
+Pixmap('icon_pixmap', default = 0),
+Window('icon_window', default = 0),
+Int32('icon_x', default = 0),
+Int32('icon_y', default = 0),
+Pixmap('icon_mask', default = 0),
+Window('window_group', default = 0),
+@end defmethod
+
+@defmethod Window set_wm_state ( hints = {}, onerror = None, **keys )
+@end defmethod
+
+@defmethod Window get_wm_state ( )
+Returns  Set('state', 4,
+( Xutil.WithdrawnState,
+Xutil.NormalState,
+Xutil.IconicState )),
+Window('icon', ( X.NONE, )),
+@end defmethod
+
+@defmethod Window set_wm_icon_size ( hints = {}, onerror = None, **keys )
+@end defmethod
+
+@defmethod Window get_wm_icon_size ( )
+Returns Card32('min_width'),
+Card32('min_height'),
+Card32('max_width'),
+Card32('max_height'),
+Card32('width_inc'),
+Card32('height_inc'),
+@end defmethod
+
+
+@node Pixmap
+@section Pixmap
+
+@code{Pixmap} objects have additional objects, see @ref{Resource} and
+@ref{Drawable}.
+
+@defmethod Pixmap free ( onerror = None )
+@end defmethod
+
+@defmethod Pixmap create_cursor ( mask, (fore_red, fore_green, fore_blue), (back_red, back_green, back_blue), x, y )
+Returns Cursor.
+@end defmethod
+
+
+@node Fontable
+@section Fontable
+
+@code{Fontable} is a base class of @code{GC} and @code{Font}
+objects.  @xref{GC}, and @ref{Font}.
+
+@xref{Resource}, for additional methods.
+
+@defmethod Fontable query ( )
+Returns
+Object('min_bounds', structs.CharInfo),
+Object('max_bounds', structs.CharInfo),
+Card16('min_char_or_byte2'),
+Card16('max_char_or_byte2'),
+Card16('default_char'),
+Card8('draw_direction'),
+Card8('min_byte1,'),
+Card8('max_byte1,'),
+Card8('all_chars_exist'),
+Int16('font_ascent'),
+Int16('font_descent'),
+List('properties', structs.FontProp),
+List('char_infos', structs.CharInfo),
+@end defmethod
+
+@defmethod Fontable query_text_extents ( string )
+Returns
+Card8('draw_direction'),
+Int16('font_ascent'),
+Int16('font_descent'),
+Int16('overall_ascent'),
+Int16('overall_descent'),
+Int32('overall_width'),
+Int32('overall_left'),
+Int32('overall_right'),
+@end defmethod
+
+
+@node GC
+@section GC 
+
+@code{GC} objects have additional objects, see @ref{Resource} and
+@ref{Fontable}. 
+
+@defmethod GC change ( onerror = None, **keys )
+@end defmethod
+
+@defmethod GC copy ( src_gc, mask, onerror = None )
+@end defmethod
+
+@defmethod GC set_dashes ( offset, dashes, onerror = None )
+@end defmethod
+
+@defmethod GC set_clip_rectangles ( x_origin, y_origin, rectangles, ordering, onerror = None )
+@end defmethod
+
+@defmethod GC free ( onerror = None )
+@end defmethod
+
+@node Font
+@section Font
+
+@code{Font} objects have additional objects, see @ref{Resource} and
+@ref{Fontable}. 
+
+@defmethod Font close ( onerror = None )
+@end defmethod
+
+@defmethod Font create_glyph_cursor ( mask, source_char, mask_char, (fore_red, fore_green, fore_blue), (back_red, back_green, back_blue) ) 
+Returns Cursor.
+@end defmethod
