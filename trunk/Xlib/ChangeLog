@@ -1,3 +1,9 @@
+2001-01-16    <petli@cendio.se>
+
+	* xobject/drawable.py (Window.send_event): 
+	* display.py (Display.send_event): Changed the order of the
+	event_mask and propagate arguments.
+
 2001-01-10    <petli@cendio.se>
 
 	* display.py (Display._update_keymap): The first half of the

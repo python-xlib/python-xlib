@@ -1,3 +1,8 @@
+2001-01-16    <petli@cendio.se>
+
+	* event.py: Changed some class names so that they correspond
+	exactly to the event type constants.
+
 Tue Jan  9 10:03:25 2001  Peter Liljenberg  <petli@cendio.se>
 
 	* display.py (Display.send_request): Fixed a call to append() with

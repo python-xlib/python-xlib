@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.14 2001-01-11 15:13:05 petli Exp $
+# $Id: display.py,v 1.15 2001-01-18 13:11:04 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -343,7 +343,7 @@ class Display:
 				      selection = selection)
 	return r.owner
 
-    def send_event(self, destination, event, propagate = 0, event_mask = 0,
+    def send_event(self, destination, event, event_mask = 0, propagate = 0, 
 		   onerror = None):
 
 	request.SendEvent(display = self.display,
