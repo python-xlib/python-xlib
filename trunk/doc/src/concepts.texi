@@ -1,5 +1,5 @@
 @c The Python X Library -- concepts
-@c $Id: concepts.texi,v 1.1 2000-09-06 01:47:19 petli Exp $
+@c $Id: concepts.texi,v 1.2 2001-11-30 09:38:20 petli Exp $
 @c
 @c Copyright 2000 Peter Liljenberg
 @c
@@ -9,5 +9,5 @@
 
 Here you might find an intruduction to X concepts sometime in the
 future.  For now, I just refer to the introduction parts of the standard
-X documentation.
-
+X documentation.  A vast collection of X documentation links can be
+found at @uref{http://www.rahul.net/kenton/xsites.html}.
