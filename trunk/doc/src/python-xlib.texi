@@ -1,6 +1,6 @@
 \input texinfo   @c -*-texinfo-*-
 @c
-@c $Id: python-xlib.texi,v 1.1 2000-09-06 01:47:19 petli Exp $
+@c $Id: python-xlib.texi,v 1.2 2000-09-22 11:37:51 petli Exp $
 @c
 @c %**start of header
 @setfilename python-xlib.info
@@ -74,7 +74,7 @@ translation approved by the Free Software Foundation.
 @contents
 
 @node Top
-@top
+@top Introduction
 
 The Python X Library is a complete library for writing X Windows client
 applications in Python.  It implements the entire X11R6 protocol and
@@ -100,6 +100,7 @@ background applications such as window managers.
 * Error Handling::        Handling X errors.
 * Event Handling::        Handling X events.
 * Xlib and Threads::      Using the Python Xlib in threaded applications.
+* Asynchronicity::        The asynchronous nature of X.
 * X Objects::             X objects and their operations.
 * Extensions::            Various X protocol extensions.
 @end menu
@@ -108,5 +109,6 @@ background applications such as window managers.
 @include package.texi
 @include connect.texi
 @include errors.texi
- 
+@include events.texi
+
 @bye
