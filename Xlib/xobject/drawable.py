@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.3 2000-08-21 10:03:46 petli Exp $
+# $Id: drawable.py,v 1.4 2000-08-22 13:53:02 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -333,14 +333,16 @@ class Window(Drawable):
 				 window = self.id)
 
 
-    def change_property(self, property, type, data, mode = X.PropModeReplace, onerror = None):
+    def change_property(self, property, type, format, data,
+			mode = X.PropModeReplace, onerror = None):
+	
 	request.ChangeProperty(display = self.display,
 			       onerror = onerror,
 			       mode = mode,
 			       window = self.id,
 			       property = property,
 			       type = type,
-			       data = data)
+			       data = (format, data))
 
     def delete_property(self, property, onerror = None):
 	request.DeleteProperty(display = self.display,
@@ -358,10 +360,27 @@ class Window(Drawable):
 				long_length = length)
 
 	if r.property_type:
+	    fmt, value = r.value
+	    r.format = fmt
+	    r.value = value
 	    return r
 	else:
 	    return None
 
+    def get_full_property(self, property, type, sizehint = 10):
+	prop = self.get_property(property, type, 0, sizehint)
+	if prop:
+	    val = prop.value
+	    if prop.bytes_after:
+		prop = self.get_property(property, type, sizehint,
+					 prop.bytes_after / 4 + 1)
+		val = val + prop.value
+
+	    prop.value = val
+	    return prop
+	else:
+	    return None
+    
     def list_properties(self):
 	r = request.ListProperties(display = self.display,
 				   window = self.id)

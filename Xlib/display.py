@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.5 2000-08-21 10:03:45 petli Exp $
+# $Id: display.py,v 1.6 2000-08-22 13:53:02 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -116,6 +116,10 @@ class Display:
     def pending_events(self):
 	return self.display.pending_events()
 
+
+    def create_resource_object(self, type, id):
+	return self.display.resource_classes[type](self.display, id)
+    
     ###
     ### display information retrieval
     ###
