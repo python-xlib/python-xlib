@@ -1,12 +1,12 @@
 
 			 The Python X Library
 
-		      Version 0.10, 16 Dec 2001
+		      Version 0.11, 23 Dec 2001
 
 
 *** Copyright
 
-Copyright (C) 2000,2001  Peter Liljenberg
+Copyright (C) 2000-2002  Peter Liljenberg
 
 The Python X Library is released under GPL, see the file COPYING for
 details.
@@ -78,8 +78,9 @@ There is a resource database implementation, ICCCM support and a
 framework for adding X extension code.  Currently only the XTEST
 extension has been implemented.
 
-There are most likely still bugs, although a large part of the library
-has been exercised now and seems to work just fine.
+There are most likely still bugs, but the library is at least stable
+enough to run PLWM.  A continously bigger part of the library is
+covered by regression tests, improving stability.
 
 The documentation is still quite rudimentary, but should be of some
 help for people programming with the Xlib.  X beginners should first

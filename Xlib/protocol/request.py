@@ -1,8 +1,8 @@
-# $Id: request.py,v 1.9 2002-02-12 10:11:11 petli Exp $
+# $Id: request.py,v 1.10 2002-02-25 11:09:23 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
-#    Copyright (C) 2000-2001 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

@@ -1,8 +1,8 @@
-# $Id: display.py,v 1.16 2002-01-14 16:50:22 petli Exp $
+# $Id: display.py,v 1.17 2002-02-25 11:09:23 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
-#    Copyright (C) 2000,2001 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by

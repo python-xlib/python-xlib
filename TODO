@@ -18,7 +18,8 @@
 *** Miscellaneous
 
 * Faster, faster!  The protocol engine isn't very fast, despite the
-  optimizations in version 0.7.
+  optimizations in version 0.7.  I've started on this, but it is a big
+  job. 
 
 * The tread support and the protocol engine needs to be stress
   tested.  They _seem_ to work, but that's no guarantee.
@@ -26,13 +27,15 @@
 * Much more documentation.
 
 * Test suite: a test suite which exercises the entire library would
-  definitely be a nice thing to have.
+  definitely be a nice thing to have.  A start has been made for this,
+  testing the protocol definitions.
 
 * Porting: the library should be runnable wherever there is a Python
   interpreter (with the necessary IPC support, that is.)  
 
 * Widget set: a Python-optimized widget set using the X library would
-  be really cute.
+  be really cute.  The AnyGUI project could be a good front-end to
+  use.
 
 * Server-side support: while we're at it, why not extend the library
   to provide at least the server-side parsing of the X protocol?  It
