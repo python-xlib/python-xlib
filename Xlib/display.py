@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.1 2000-08-02 09:39:24 petli Exp $
+# $Id: display.py,v 1.2 2000-08-07 10:30:19 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -26,12 +26,29 @@ import error
 import protocol.display
 from protocol import request
 
+# Xlib.xoobjects modules
+import xobject.resource
+import xobject.drawable
+import xobject.font
+import xobject.gc
+import xobject.colormap
+import xobject.cursor
+
+class _BaseDisplay(protocol.display.Display):
+    resource_classes = {
+	'resource': xobject.resource.Resource,
+	'drawable': xobject.drawable.Drawable,
+	'window': xobject.drawable.Window,
+	'pixmap': xobject.drawable.Pixmap,
+	'font': xobject.font.Font,
+	'gc': xobject.gc.GC,
+	'colormap': xobject.colormap.Colormap,
+	'cursor': xobject.cursor.Cursor,
+	}
 
 class Display:
     def __init__(self, display = None):
-	self.display = protocol.display.Display(display)
-	self.resource_ids = {}
-	self.last_resource_id = 0
+	self.display = _BaseDisplay(display)
 
     def fileno(self):
 	return self.display.fileno()
@@ -39,7 +56,15 @@ class Display:
     def close(self):
 	self.display.close()
 
+    def flush(self):
+	self.display.flush()
 
+    def next_event(self):
+	self.display.next_event()
+
+    def pending_events(self):
+	self.display.pending_events()
+				
     ###
     ### X requests
     ###
@@ -59,47 +84,3 @@ class Display:
 	request.Bell(display = self.display,
 		     percent = percent)
 	
-    ###
-    ### Private interface
-    ###
-	
-    def allocate_resource_id(self):
-	"""id = d.allocate_resource_id()
-
-	Allocate a new X resource id number ID.
-
-	Raises ResourceIDError if there are no free resource ids.
-	"""
-
-	i = self.last_resource_id
-	while self.resource_ids.has_key(i):
-	    i = i + 1
-	    if i > self.display.info.resource_id_mask:
-		i = 0
-	    if i == self.last_resource_id:
-		raise error.ResourceIDError('out of resource ids')
-
-	self.resource_ids[i] = None
-	self.last_resource_id = i
-	return self.info.resource_id_base | i
-
-    def free_resource_id(self, rid):
-	"""d.free_resource_id(rid)
-
-	Free resource id RID.
-
-	Raises ResourceIDError if RID is not allocated.
-	"""
-
-	i = rid & self.display.info.resource_id_mask
-
-	# Attempting to free a resource id outside our range
-	if rid - i != self.display.info.resource_id_base:
-	    raise error.ResourceIDError('resource id 0x%08x is not in our range' % rid)
-	
-	try:
-	    del self.resource_ids[i]
-	except KeyError:
-	    raise error.ResourceIDError('resouce id 0x%08x is not allocated' % rid)
-
-    

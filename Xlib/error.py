@@ -1,4 +1,4 @@
-# $Id: error.py,v 1.2 2000-08-02 09:39:24 petli Exp $
+# $Id: error.py,v 1.3 2000-08-07 10:30:19 petli Exp $
 #
 # Xlib.error -- basic error classes
 #
@@ -62,14 +62,14 @@ class XError(rq.GetAttrData, Exception):
     _fields = rq.Struct( rq.Card8('type'),  # Always 0
 			 rq.Card8('code'),
 			 rq.Card16('sequence_number'),
-			 rq.Card32('resource_id'),
+			 rq.Resource('resource_id'),
 			 rq.Card16('minor_opcode'),
 			 rq.Card8('major_opcode'),
 			 rq.Pad(21)
 			 )
 
-    def __init__(self, data):
-	self._data, data = self._fields.parse_binary(data, rawdict = 1)
+    def __init__(self, display, data):
+	self._data, data = self._fields.parse_binary(data, display, rawdict = 1)
 	
     def __str__(self):
 	s = []

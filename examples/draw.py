@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# $Id: draw.py,v 1.1 2000-07-21 09:54:49 petli Exp $
+# $Id: draw.py,v 1.2 2000-08-07 10:30:20 petli Exp $
 #
 # examples/draw.py -- protocol test application.
 #
@@ -40,9 +40,9 @@ class Window:
 	# Find which screen to open the window on
 	self.screen = self.d.info.roots[self.d.default_screen]
 
-	# Allocate ids manually to the window and gc
-	self.window = self.d.info.resource_id_base
-	self.gc = self.d.info.resource_id_base + 1
+	# Allocate ids to the window and gc
+	self.window = self.d.allocate_resource_id()
+	self.gc = self.d.allocate_resource_id()
 
 	# Create a window
 	CreateWindow(self.d, None,

@@ -1,4 +1,4 @@
-# $Id: X.py,v 1.1 2000-07-21 09:54:48 petli Exp $
+# $Id: X.py,v 1.2 2000-08-07 10:30:19 petli Exp $
 #
 # Xlib.X -- basic X constants
 #
@@ -18,6 +18,8 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+# Avoid overwriting None if doing "from Xlib.X import *"
+NONE                = 0
 
 ParentRelative      = 1  # background pixmap in CreateWindow
                          # and ChangeWindowAttributes 

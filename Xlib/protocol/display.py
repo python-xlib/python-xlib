@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.1 2000-07-21 09:54:49 petli Exp $
+# $Id: display.py,v 1.2 2000-08-07 10:30:19 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -39,6 +39,8 @@ import event
 display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 
 class Display:
+    resource_classes = {}
+    
     def __init__(self, display = None):
 	# Use $DISPLAY if display isn't provided
 	if display is None:
@@ -136,10 +138,14 @@ class Display:
 	# Did connection fail?
 	if r.status != 1:
 	    raise error.DisplayConnectionError(self.display_name, r.reason)
-	
+
+	# Set up remaining info structures
 	self.info = r
 
 	self.default_screen = max(self.default_screen, len(self.info.roots) - 1)
+
+	self.resource_ids = {}
+	self.last_resource_id = 0
 
 	
     #
@@ -185,7 +191,57 @@ class Display:
     def set_error_handler(self, handler):
 	self.error_handler = handler
 
+
+    def allocate_resource_id(self):
+	"""id = d.allocate_resource_id()
+
+	Allocate a new X resource id number ID.
+
+	Raises ResourceIDError if there are no free resource ids.
+	"""
+
+	i = self.last_resource_id
+	while self.resource_ids.has_key(i):
+	    i = i + 1
+	    if i > self.info.resource_id_mask:
+		i = 0
+	    if i == self.last_resource_id:
+		raise error.ResourceIDError('out of resource ids')
+
+	self.resource_ids[i] = None
+	self.last_resource_id = i
+	return self.info.resource_id_base | i
+
+    def free_resource_id(self, rid):
+	"""d.free_resource_id(rid)
+
+	Free resource id RID.
+
+	Raises ResourceIDError if RID is not allocated.
+	"""
+
+	i = rid & self.info.resource_id_mask
+
+	# Attempting to free a resource id outside our range
+	if rid - i != self.info.resource_id_base:
+	    raise error.ResourceIDError('resource id 0x%08x is not in our range' % rid)
 	
+	try:
+	    del self.resource_ids[i]
+	except KeyError:
+	    raise error.ResourceIDError('resouce id 0x%08x is not allocated' % rid)
+
+    
+
+    def get_resource_class(self, class_name):
+	"""class = d.get_resource_class(class_name)
+
+	Return the class to be used for X resource objects of type
+	CLASS_NAME, or None if no such class is set.
+	"""
+
+	return self.resource_classes.get(class_name, None)
+    
     #
     # Private functions
     #
@@ -369,7 +425,7 @@ class Display:
 	# Fetch error class
 	estruct = error.xerror_class.get(code, error.XError)
 	
-	e = estruct(self.data_recv[:32])
+	e = estruct(self, self.data_recv[:32])
 	self.data_recv = self.data_recv[32:]
 
 	# print 'recv Error:', e
@@ -418,7 +474,7 @@ class Display:
     def parse_event_response(self, etype):
 	estruct = event.event_class.get(etype, event.AnyEvent)
 
-	e = estruct(binarydata = self.data_recv[:32])
+	e = estruct(display = self, binarydata = self.data_recv[:32])
 	self.data_recv = self.data_recv[32:]
 
 	# Drop all requests having an error handler,
@@ -521,7 +577,7 @@ class Display:
 		# Else connection succeeded, parse the reply
 		else:
 		    x, d = r._success_reply.parse_binary(self.data_recv[:alen],
-							 rawdict = 1)
+							 self, rawdict = 1)
 		    r._data.update(x)
 
 		del self.sent_requests[0]
@@ -536,7 +592,7 @@ class Display:
 		    return 0
 
 		r._data, d = r._reply.parse_binary(self.data_recv[:8],
-						   rawdict = 1)
+						   self, rawdict = 1)
 		self.data_recv = self.data_recv[8:]
 
 		# Loop around to see if we have got the additional data
@@ -566,8 +622,8 @@ Depth = rq.Struct( rq.Card8('depth'),
 		   rq.List('visuals', VisualType)
 		   )
 
-Screen = rq.Struct( rq.Card32('root'),
-		    rq.Card32('default_colormap'),
+Screen = rq.Struct( rq.Window('root'),
+		    rq.Colormap('default_colormap'),
 		    rq.Card32('white_pixel'),
 		    rq.Card32('black_pixel'),
 		    rq.Card32('current_input_mask'),
