@@ -1,4 +1,4 @@
-# $Id: event.py,v 1.2 2000-08-07 10:30:19 petli Exp $
+# $Id: event.py,v 1.3 2000-09-06 01:51:34 petli Exp $
 #
 # Xlib.protocol.event -- definitions of core events
 #
@@ -41,7 +41,7 @@ class KeyButtonPointer(rq.Event):
 			 rq.Card16('sequence_number'),
 			 rq.Card32('time'),
 			 rq.Window('root'),
-			 rq.Window('event'),
+			 rq.Window('window'),
 			 rq.Window('child', (X.NONE, )),
 			 rq.Int16('root_x'),
 			 rq.Int16('root_y'),
@@ -74,7 +74,7 @@ class EnterLeave(rq.Event):
 			 rq.Card16('sequence_number'),
 			 rq.Card32('time'),
 			 rq.Window('root'),
-			 rq.Window('event'),
+			 rq.Window('window'),
 			 rq.Window('child', (X.NONE, )),
 			 rq.Int16('root_x'),
 			 rq.Int16('root_y'),
@@ -143,7 +143,7 @@ class NoExposure(rq.Event):
     _fields = rq.Struct( rq.Card8('type'),
 			 rq.Pad(1),
 			 rq.Card16('sequence_number'),
-			 rq.Drawable('drawable'),
+			 rq.Drawable('window'),
 			 rq.Card16('minor_event'),
 			 rq.Card8('major_event'),
 			 rq.Pad(21),

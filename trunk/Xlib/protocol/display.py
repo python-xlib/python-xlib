@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.5 2000-08-21 10:03:45 petli Exp $
+# $Id: display.py,v 1.6 2000-09-06 01:51:34 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -20,25 +20,17 @@
 
 # Standard modules
 import sys
-import os
 import select
-import string
 import struct
-import socket
-import re
-import fcntl
-import FCNTL
 
 # Xlib modules
 from Xlib import error
 
-from Xlib.support import lock
+from Xlib.support import lock, connect
 
 # Xlib.protocol modules
 import rq
 import event
-
-display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 
 class Display:
     resource_classes = {}
@@ -47,67 +39,14 @@ class Display:
     event_classes = event.event_class.copy()
     
     def __init__(self, display = None):
-	# Use $DISPLAY if display isn't provided
-	if display is None:
-	    display = os.environ.get('DISPLAY', '')
+	name, host, displayno, screenno = connect.get_display(display)
 
-	m = display_re.match(display)
-	if not m:
-	    raise error.DisplayNameError(display)
+	self.display_name = name
+	self.default_screen = screenno
 
-	self.display_name = display
-	host = m.group(1)
-	dno = int(m.group(2))
-	screen = m.group(4)
-	if screen:
-	    self.default_screen = int(screen)
-	else:
-	    self.default_screen = 0
+	self.socket = connect.get_socket(name, host, displayno)
 
-	try:
-	    # If hostname (or IP) is provided, use TCP socket
-	    if host:
-		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.socket.connect((host, 6000 + dno))
-
-	    # Else use Unix socket
-	    else:
-		self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-		self.socket.connect('/tmp/.X11-unix/X%d' % dno)
-	except socket.error, val:
-	    raise error.DisplayConnectionError(display, str(val))
-
-	# Make sure that the connection isn't inherited in child processes
-	fcntl.fcntl(self.socket.fileno(), FCNTL.F_SETFD, FCNTL.FD_CLOEXEC)
-
-	# Find authorization cookie
-	authorization = ('', '')
-	try:
-	    # We could parse .Xauthority, but xauth is simpler
-	    # although more inefficient
-	    data = os.popen('xauth list %s 2>/dev/null' % self.display_name).read()
-
-	    # If there's a cookie, it is of the format
-	    #      DISPLAY SCHEME COOKIE
-	    # We're interested in the two last parts for the
-	    # connection establishment
-	    lines = string.split(data, '\n')
-	    if len(lines) >= 1:
-		parts = string.split(lines[0], None, 2)
-		if len(parts) == 3:
-		    scheme = parts[1]
-		    hexauth = parts[2]
-		    auth = ''
-		    
-		    # Translate hexcode into binary
-		    for i in range(0, len(hexauth), 2):
-			auth = auth + chr(string.atoi(hexauth[i:i+2], 16))
-			
-		    authorization = (scheme, auth)
-		    
-	except os.error:
-	    pass
-	
+	auth_name, auth_data = connect.get_auth(name, host, displayno)
 
 	# Internal structures for communication, grouped
 	# by their function and locks
@@ -130,7 +69,9 @@ class Display:
 	# Send-and-recieve loop, see function send_and_recive
 	# for a detailed explanation
 	self.send_recv_lock = lock.allocate_lock()
-	self.send_recv_active = 0
+	self.send_active = 0
+	self.recv_active = 0
+	
 	self.event_waiting = 0
 	self.event_wait_lock = lock.allocate_lock()
 	self.request_waiting = 0
@@ -168,8 +109,8 @@ class Display:
 				   byte_order = order,
 				   protocol_major = 11,
 				   protocol_minor = 0,
-				   auth_prot_name = authorization[0],
-				   auth_prot_data = authorization[1])
+				   auth_prot_name = auth_name,
+				   auth_prot_data = auth_data)
 
 	# Did connection fail?
 	if r.status != 1:
@@ -403,9 +344,15 @@ class Display:
 	fulfilled when the function returns, so the caller has to loop
 	until it is finished.
 	"""
+
+	# We go to sleep if there is already a thread doing what we
+	# want to do:
 	
-	# There is an active send_and_recieve, go to sleep
-	if self.send_recv_active:
+	#  If flushing or waiting for a request we want to send
+	#  If waiting for an event we want to recv
+	
+	if (((flush or request is not None) and self.send_active)
+	    or (event and self.recv_active)):
 
 	    # Signal that we are waiting for something.  These locks
 	    # together with the *_waiting variables are used as
@@ -460,36 +407,51 @@ class Display:
 	    return
 
 
-	# We're the only active send_and_recv, so perform
-	# all our needed network stuff.
+	# There's no thread doing what we need to do.  Find out exactly
+	# what to do
+
+	# There must always be some thread recieving data, but it must not
+	# necessarily be us
 	
-	# Tell other threads that we are active, and lock
-	# all wait locks to give later threads something to
-	# hand on.  
-
-	self.send_recv_active = 1
-
-	# Finally release send_recv and start doing some useful work
-	self.send_recv_lock.release()
+	if not self.recv_active:
+	    recieving = 1
+	    self.recv_active = 1
+	else:
+	    recieving = 0
 
 	flush_bytes = None
+	sending = 0
 	
 	# Loop, recieving and sending data.
 	while 1:
 
-	    # Turn all requests on request queue into binary form
-	    # and append them to self.data_send
-	
-	    self.request_queue_lock.acquire()
-	    
-	    for req, wait in self.request_queue:
-		self.data_send = self.data_send + req._binary
-		if wait:
-		    self.sent_requests.append(req)
+	    # We might want to start sending data
+	    if sending or not self.send_active:
 
-	    del self.request_queue[:]
-	    
-	    self.request_queue_lock.release()
+		# Turn all requests on request queue into binary form
+		# and append them to self.data_send
+
+		self.request_queue_lock.acquire()
+		for req, wait in self.request_queue:
+		    self.data_send = self.data_send + req._binary
+		    if wait:
+			self.sent_requests.append(req)
+
+		del self.request_queue[:]
+		self.request_queue_lock.release()
+
+		# If there now is data to send, mark us as senders
+
+		if self.data_send:
+		    self.send_active = 1
+		    sending = 1
+		else:
+		    self.send_active = 0
+		    sending = 0
+		    
+	    # We've done all setup, so release the lock and start waiting
+	    # for the network to fire up
+	    self.send_recv_lock.release()
 
 	    # If we're flushing, figure out how many bytes we
 	    # have to send so that we're not caught in an interminable
@@ -497,14 +459,19 @@ class Display:
 	    if flush and flush_bytes is None:
 		flush_bytes = self.data_sent_bytes + len(self.data_send)
 	    
-	    # Wait for socket to be ready for sending data (if any)
-	    # and recieving data (always).
-	    if self.data_send:
-		writeset = [self.socket]
-	    else:
-		writeset = []
 
 	    try:
+		# We're only checking for the socket to be writable
+		# if we're the sending thread.  We always check for it
+		# to become readable: either we are the recieving thread
+		# and should take care of the data, or the recieving thread
+		# might finish recieving after having read the data
+		
+		if sending:
+		    writeset = [self.socket]
+		else:
+		    writeset = []
+		    
 		rs, ws, es = select.select([self.socket], writeset, [])
 
 	    # Ignore errors caused by a signal recieved while blocking.
@@ -512,7 +479,13 @@ class Display:
 	    except select.error, err:
 		if err[0] != errno.EINTR:
 		    raise err
+
+		# We must lock send_and_recv before we can loop to
+		# the start of the loop
+
+		self.send_recv_lock.acquire()
 		continue
+
 
 	    # Socket is ready for sending data, send as much as possible.
 	    if ws:
@@ -526,23 +499,39 @@ class Display:
 		self.data_sent_bytes = self.data_sent_bytes + i
 
 
-	    # There is data to read.  Do so and parse recieved data.
+	    # There is data to read
 	    gotreq = 0
 	    if rs:
-		try:
-		    recv = self.socket.recv(2048)
-		except socket.error, err:
-		    self.close_internal('server: %s' % err[1])
-		    raise self.socket_error
 
-		if not recv:
-		    # Clear up, set a connection closed indicator and raise it
-		    self.close_internal('server')
-		    raise self.socket_error
+		# We're the recieving thread, parse the data
+		if recieving:
+		    try:
+			recv = self.socket.recv(2048)
+		    except socket.error, err:
+			self.close_internal('server: %s' % err[1])
+			raise self.socket_error
+
+		    if not recv:
+			# Clear up, set a connection closed indicator and raise it
+			self.close_internal('server')
+			raise self.socket_error
+
+		    self.data_recv = self.data_recv + recv
+		    gotreq = self.parse_response(request)
+
+		# Otherwise return, allowing the calling thread to figure
+		# out if it has got the data it needs
+		else:
+		    # We must be a sending thread if we're here, so reset
+		    # that indicator.
+		    self.send_recv_lock.acquire()
+		    self.send_active = 0
+		    self.send_recv_lock.release()
+
+		    # And return to the caller
+		    return
 		
-		self.data_recv = self.data_recv + recv
-		gotreq = self.parse_response(request)
-		
+		    
 	    # There are three different end of send-recv-loop conditions.
 	    # However, we don't leave the loop immediately, instead we
 	    # try to send and recieve any data that might be left.  We
@@ -561,8 +550,10 @@ class Display:
 	    if request is not None and gotreq:
 		break
 
-	    # Else there's still data which must be sent,
-	    # so loop around to another blocking select
+	    # Else there's may still data which must be sent, or
+	    # we haven't got the data we waited for.  Lock and loop
+	    
+	    self.send_recv_lock.acquire()
 
 
 	# We have accomplished the callers request.
@@ -570,7 +561,11 @@ class Display:
 	# and wake up all waiting thread
 	
 	self.send_recv_lock.acquire()
-	self.send_recv_active = 0
+
+	if sending:
+	    self.send_active = 0
+	if recieving:
+	    self.recv_active = 0
 
 	if self.event_waiting:
 	    self.event_waiting = 0

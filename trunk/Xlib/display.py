@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.7 2000-08-22 14:06:22 petli Exp $
+# $Id: display.py,v 1.8 2000-09-06 01:51:34 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -314,7 +314,7 @@ class Display:
 	    self.display.free_resource_id(fid)
 	    return None
 	else:
-	    return fontable.Font(self.display, fid, owner = 1)
+	    return xobject.fontable.Font(self.display, fid, owner = 1)
 
     def list_fonts(self, pattern, max_names):
 	r = request.ListFonts(display = self.display,
