@@ -1,5 +1,5 @@
 @c The Python X Library -- package layout
-@c $Id: package.texi,v 1.1 2000-09-06 01:47:19 petli Exp $
+@c $Id: package.texi,v 1.2 2002-09-12 19:49:10 petli Exp $
 @c
 @c Copyright 2000 Peter Liljenberg
 @c
@@ -7,7 +7,7 @@
 @node Package Layout
 @chapter Package Layout
 
-The Python X Library is distrubuted as a Python package, named
+The Python X Library is distributed as a Python package, named
 @code{Xlib}.  It contains a number of modules providing the main
 library interface:
 
