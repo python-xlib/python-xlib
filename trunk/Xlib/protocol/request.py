@@ -1,4 +1,4 @@
-# $Id: request.py,v 1.11 2002-05-15 22:27:14 petli Exp $
+# $Id: request.py,v 1.12 2002-07-16 20:48:59 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
@@ -1559,7 +1559,7 @@ class GetKeyboardControl(rq.ReplyRequest):
 	rq.Card16('bell_pitch'),
 	rq.Card16('bell_duration'),
 	rq.Pad(2),
-	rq.List('auto_repeats', rq.Card32Obj),  
+	rq.FixedList('auto_repeats', 32, rq.Card8Obj),  
 	)
     
 class Bell(rq.Request):
