@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.12 2001-01-08 12:03:39 petli Exp $
+# $Id: display.py,v 1.13 2001-01-09 12:05:06 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -304,7 +304,7 @@ class Display:
 		if sym != X.NoSymbol:
 		    if self._keymap_syms.has_key(sym):
 			symcodes = self._keymap_syms[sym]
-			symcodes.append(j, i)
+			symcodes.append((j, i))
 			symcodes.sort()
 		    else:
 			self._keymap_syms[sym] = [(j, i)]
