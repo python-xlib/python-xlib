@@ -6,7 +6,8 @@ global-include .cvsignore
 recursive-include doc Makefile
 include doc/src/*.texi
 include doc/info/python-xlib.info
-include doc/html/index.html doc/html/python-xlib_toc.html doc/html/python-xlib_*.html
+include doc/html/index.html doc/html/python-xlib_toc.html
+include doc/html/python-xlib_*.html doc/html/texi2html
 include doc/ps/python-xlib.ps
 
 include utils/tcpbug.py utils/parsexbug.py

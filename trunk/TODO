@@ -1,11 +1,4 @@
 
-*** Necessary for complete X11R6 implementation
-
-* Bitmap support: Drawable.GetImage and Drawable.PutImage must be
-  implemented, possibly with support of special fields and optional
-  hooks to PIL.
-
-
 *** To be a real C Xlib replacement
 
 * High-level functions: currently, there are mostly methods which
@@ -36,8 +29,7 @@
   definitely be a nice thing to have.
 
 * Porting: the library should be runnable wherever there is a Python
-  interpreter (with the necessary IPC support, that is.)  Major
-  porting targets are Windows and OpenVMS.
+  interpreter (with the necessary IPC support, that is.)  
 
 * Widget set: a Python-optimized widget set using the X library would
   be really cute.

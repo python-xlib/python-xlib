@@ -2,6 +2,29 @@
 
 		      NEWS for Python X Library
 
+* Version 0.10  16 Dec 2001
+
+** Event bugfix
+
+The xlib failed to parse the type code of events sent from other
+clients using SendEvent.  This has been fixed, adding the field
+`send_event' to all event objects.
+
+** Event documentation
+
+The section "Event Types" in the manual has been written, detailing
+all event types in the core protocol.  The manual is now ten pages
+thicker.
+
+** Basic support for GetImage/PutImage
+
+The Drawable methods put_image() and get_image() have been
+implemented, but handling image data is still up to the user.  There
+is however, thanks to INSERT_NAME_HERE, a trivial method
+put_pil_image() that will work on some combinations of image and
+drawable depth.  It's not perfect, but it's a start.
+
+
 * Version 0.9  4 Dec 2001
 
 ** Documentation improved

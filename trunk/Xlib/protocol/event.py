@@ -1,4 +1,4 @@
-# $Id: event.py,v 1.4 2001-01-18 13:11:05 petli Exp $
+# $Id: event.py,v 1.5 2001-12-16 14:23:38 petli Exp $
 #
 # Xlib.protocol.event -- definitions of core events
 #
@@ -295,7 +295,7 @@ class CirculateNotify(rq.Event):
 			 rq.Card16('sequence_number'),
 			 rq.Window('event'),
 			 rq.Window('window'),
-			 rq.Window('parent'),
+			 rq.Pad(4),
 			 rq.Card8('place'),
 			 rq.Pad(15),
 			 )
