@@ -1,0 +1,67 @@
+
+*** Necessary for complete X11R6 implementation
+
+* Bitmap support: Drawable.GetImage and Drawable.PutImage must be
+  implemented, possibly with support of special fields and optional
+  hooks to PIL.
+
+
+*** Frameworks
+
+* Multi-platform: the X library should be portable to other operating
+  systems than Unix (it might even only work with XFree86 if the
+  display is ":0" right now).  There are two things which might be OS
+  specific: finding out and parsing the display name for establishing
+  a connection, and finding authoritative data.
+
+* Thread support: Currently, it would suffice to make the lowlevel
+  Xlib.protocol.display.Display thread-safe, as no parts of the
+  high-level interface modify shared data.  This should be done in
+  such a way that one can still use the library without the thread
+  support, for systems where the thread module is missing.
+
+* Extensions:  There should be hooks for adding requests, events,
+  errors and high-level methods for X extensions.  Preferably,
+  Xlib.display.Display would itself find all extensions supported by
+  the server and install corresponding code automatically.
+
+
+*** To be a real C Xlib replacement
+
+* High-level functions: currently, there are only methods which
+  directly correspond to X requests.  Perhaps there should be some
+  simpler functions (e.g. Window.resize_window() in addition to
+  Window.configure(), Drawable.rectangle() in addition to
+  Drawable.poly_rectangle(), etc), and possibly also compound
+  functions (e.g. create_pixmap_from_image() which would load an image
+  file and create a pixmap of it).
+
+* Events: advanced event queue handling, e.g. filtering out events,
+  only process events for a certain window, etc.
+
+* Extensions: as many extensions as possible should be implemented,
+  using the yet-to-be-written framework.
+
+* Resource database: an implementation of the Xlib resource database
+  must be implemented.
+
+
+*** Miscellaneous
+
+* Documentation.
+
+* Test suite: a test suite which exercises the entire library would
+  definitely be a nice thing to have.
+
+* Porting: the library should be runnable wherever there is a Python
+  interpreter (with the necessary IPC support, that is.)  Major
+  porting targets are Windows and OpenVMS.
+
+* Widget set: a Python-optimized widget set using the X library would
+  be really cute.
+
+* Server-side support: while we're at it, why not extend the library
+  to provide at least the server-side parsing of the X protocol?  It
+  could be usable for writing X proxies, or for that matter, a
+  complete X server in Python (this might be a little too spaced-out,
+  though...)
