@@ -1,4 +1,4 @@
-# $Id: xauth.py,v 1.1 2003-01-29 23:53:31 petli Exp $
+# $Id: xauth.py,v 1.2 2003-06-08 23:21:53 petli Exp $
 #
 # Xlib.xauth -- ~/.Xauthority access 
 #
@@ -35,7 +35,7 @@ class Xauthority:
 
 	if filename is None:
 	    try:
-		filename = os.path.join(os.environ['HOME'], '/.Xauthority')
+		filename = os.path.join(os.environ['HOME'], '.Xauthority')
 	    except KeyError:
 		raise error.XauthError(
 		    '$HOME not set, cannot find ~/.Xauthority')

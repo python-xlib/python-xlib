@@ -1,4 +1,4 @@
-# $Id: unix_connect.py,v 1.3 2003-01-29 23:53:37 petli Exp $
+# $Id: unix_connect.py,v 1.4 2003-06-08 23:21:53 petli Exp $
 #
 # Xlib.support.unix_connect -- Unix-type display connection functions
 #
@@ -90,7 +90,7 @@ def new_get_auth(sock, dname, host, dno):
 	family = xauth.FamilyInternet
 
 	# Convert the prettyprinted IP number into 4-octet string.
-	# Sometimes these modules are to smart...
+	# Sometimes these modules are too damn smart...
 	octets = string.split(sock.getpeername()[0], '.')
 	addr = string.join(map(lambda x: chr(int(x)), octets), '')
     else:
@@ -98,10 +98,21 @@ def new_get_auth(sock, dname, host, dno):
 	addr = socket.gethostname()
 
     au = xauth.Xauthority()
-    try:
-	return au.get_best_auth(family, addr, dno)
-    except error.XNoAuthError:
-	return '', ''
+    while 1:
+	try:
+	    return au.get_best_auth(family, addr, dno)
+	except error.XNoAuthError:
+	    pass
+
+	# We need to do this to handle ssh's X forwarding.  It sets
+	# $DISPLAY to localhost:10, but stores the xauth cookie as if
+	# DISPLAY was :10.  Hence, if localhost and not found, try
+	# again as a Unix socket.
+	if family == xauth.FamilyInternet and addr == '\x7f\x00\x00\x01':
+	    family = xauth.FamilyLocal
+	    addr = socket.gethostname()
+	else:
+	    return '', ''
 	
     
 def old_get_auth(sock, dname, host, dno):
@@ -135,4 +146,4 @@ def old_get_auth(sock, dname, host, dno):
 
     return auth_name, auth_data
     
-get_auth = old_get_auth
+get_auth = new_get_auth
