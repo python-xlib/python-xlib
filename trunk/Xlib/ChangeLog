@@ -1,3 +1,8 @@
+Tue Jan  9 13:03:19 2001  Peter Liljenberg  <petli@cendio.se>
+
+	* display.py (Display._update_keymap): Fixed call to append with
+ 	1.5.2 semantics, broke in newer Pythons.
+	
 2000-12-22    <petli@cendio.se>
 
 	* display.py (Display.keycode_to_keysym): 
