@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.4 2000-08-22 13:53:02 petli Exp $
+# $Id: drawable.py,v 1.5 2000-09-22 11:37:51 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -18,7 +18,9 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from Xlib import X
+import string
+
+from Xlib import X, Xatom, Xutil
 from Xlib.protocol import request
 
 # Other X resource objects
@@ -26,6 +28,9 @@ import resource
 import colormap
 import cursor
 import fontable
+
+# Inter-client communication conventions
+import icccm
 
 class Drawable(resource.Resource):
     __drawable__ = resource.Resource.__resource__
@@ -43,7 +48,8 @@ class Drawable(resource.Resource):
 			     width = width,
 			     height = height)
 	
-	return Pixmap(self.display, pid, owner = 1)
+	cls = self.display.get_resource_class('pixmap', Pixmap)
+	return cls(self.display, pid, owner = 1)
 
     def create_gc(self, **keys):
 	cid = self.display.allocate_resource_id()
@@ -52,7 +58,8 @@ class Drawable(resource.Resource):
 			 drawable = self.id,
 			 attrs = keys)
 
-	return fontable.GC(self.display, cid, owner = 1)
+	cls = self.display.get_resource_class('gc', fontable.GC)
+	return cls(self.display, cid, owner = 1)
     
     def copy_area(self, gc, src_drawable, src_x, src_y, width, height, dst_x, dst_y, onerror = None):
 	request.CopyArea(display = self.display,
@@ -257,7 +264,9 @@ class Window(Drawable):
 			     window_class = window_class,
 			     visual = visual,
 			     attrs = keys)
-	return Window(self.display, wid, owner = 1)
+
+	cls = self.display.get_resource_class('window', Window)
+	return cls(self.display, wid, owner = 1)
 
     def change_attributes(self, onerror = None, **keys):
 	request.ChangeWindowAttributes(display = self.display,
@@ -531,7 +540,8 @@ class Window(Drawable):
 			       mid = mid,
 			       window = self.id,
 			       visual = visual)
-	return colormap.Colormap(self.display, mid, owner = 1)
+	cls = self.display.get_resource_class('colormap', colormap.Colormap)
+	return cls(self.display, mid, owner = 1)
 
     def list_installed_colormaps(self):
 	r = request.ListInstalledColormaps(display = self.display,
@@ -545,6 +555,100 @@ class Window(Drawable):
 				 delta = delta,
 				 properties = properties)
 
+    def set_wm_name(self, name, onerror = None):
+	self.change_property(Xatom.WM_NAME, Xatom.STRING, 8, name,
+			     onerror = onerror)
+
+    def get_wm_name(self):
+	d = self.get_full_property(Xatom.WM_NAME, Xatom.STRING)
+	if d is None or d.format != 8:
+	    return None
+	else:
+	    return d.value
+
+    def set_wm_icon_name(self, name, onerror = None):
+	self.change_property(Xatom.WM_ICON_NAME, Xatom.STRING, 8, name,
+			     onerror = onerror)
+
+    def get_wm_icon_name(self):
+	d = self.get_full_property(Xatom.WM_ICON_NAME, Xatom.STRING)
+	if d is None or d.format != 8:
+	    return None
+	else:
+	    return d.value
+
+
+    def set_wm_class(self, inst, cls, onerror = None):
+	self.change_property(Xatom.WM_CLASS, Xatom.STRING, 8,
+			     '%s\0%s\0' % (inst, cls),
+			     onerror = onerror)
+
+    def get_wm_class(self):
+	d = self.get_full_property(Xatom.WM_CLASS, Xatom.STRING)
+	if d is None or d.format != 8:
+	    return None
+	else:
+	    parts = string.split(d.value, '\0')
+	    if len(parts) < 2:
+		return None
+	    else:
+		return parts[0], parts[1]
+
+    def set_wm_transient_for(self, window, onerror = None):
+	self.change_property(Xatom.WM_TRANSIENT_FOR, Xatom.WINDOW,
+			     32, window.id,
+			     onerror = onerror)
+
+    def get_wm_transient_for(self):
+	d = self.get_property(Xatom.WM_TRANSIENT_FOR, Xatom.WINDOW, 0, 1)
+	if d is None or d.format != 32 or len(d.value) < 1:
+	    return None
+	else:
+	    cls = self.display.get_resource_class('window', Window)
+	    return cls(self.display, d.value[0])
+
+
+    def set_wm_protocols(self, protocols, onerror = None):
+	self.change_property(self.display.get_atom('WM_PROTOCOLS'),
+			     Xatom.ATOM, 32, protocols,
+			     onerror = onerror)
+
+    def get_wm_protocols(self):
+	d = self.get_full_property(self.display.get_atom('WM_PROTOCOLS'), Xatom.ATOM)
+	if d is None or d.format != 32:
+	    return None
+	else:
+	    return d.value
+
+    def set_wm_colormap_windows(self, windows, onerror = None):
+	self.change_property(self.display.get_atom('WM_COLORMAP_WINDOWS'),
+			     Xatom.WINDOW, 32,
+			     map(lambda w: w.id, windows),
+			     onerror = onerror)
+
+    def get_wm_colormap_windows(self):
+	d = self.get_full_property(self.display.get_atom('WM_COLORMAP_WINDOWS'),
+				   Xatom.WINDOW)
+	if d is None or d.format != 32:
+	    return None
+	else:
+	    cls = self.display.get_resource_class('window', Window)
+	    return map(lambda i, d = self.display, c = cls: c(d, i),
+		       d.value)
+	
+
+    def set_wm_client_machine(self, name, onerror = None):
+	self.change_property(Xatom.WM_CLIENT_MACHINE, Xatom.STRING, 8, name,
+			     onerror = onerror)
+	
+    def get_wm_client_machine(self):
+	d = self.get_full_property(Xatom.WM_CLIENT_MACHINE, Xatom.STRING)
+	if d is None or d.format != 8:
+	    return None
+	else:
+	    return d.value
+	
+    
 class Pixmap(Drawable):
     __pixmap__ = resource.Resource.__resource__
 
@@ -572,7 +676,8 @@ class Pixmap(Drawable):
 			     back_blue = back_blue,
 			     x = x,
 			     y = y)
-	return cursor.Cursor(self.display, cid, owner = 1)
+	cls = self.display.get_resource_class('cursor', cursor.Cursor)
+	return cls(self.display, cid, owner = 1)
 
     
     

@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.8 2000-09-06 01:51:34 petli Exp $
+# $Id: display.py,v 1.9 2000-09-22 11:37:51 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -265,12 +265,12 @@ class Display:
 			    time = time)
 
     def grab_server(self, onerror = None):
-	request.GrabServer(display = self.display)
-	onerror = onerror,
+	request.GrabServer(display = self.display,
+			   onerror = onerror)
 
     def ungrab_server(self, onerror = None):
-	request.UngrabServer(display = self.display)
-	onerror = onerror,
+	request.UngrabServer(display = self.display,
+			     onerror = onerror)
 
     def warp_pointer(self, x, y, src_window = 0, src_x = 0, src_y = 0,
 		     src_width = 0, src_height = 0, onerror = None):
@@ -314,7 +314,8 @@ class Display:
 	    self.display.free_resource_id(fid)
 	    return None
 	else:
-	    return xobject.fontable.Font(self.display, fid, owner = 1)
+	    cls = self.display.get_resource_class('font', xobject.fontable.Font)
+	    return cls(self.display, fid, owner = 1)
 
     def list_fonts(self, pattern, max_names):
 	r = request.ListFonts(display = self.display,

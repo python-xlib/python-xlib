@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.6 2000-09-06 01:51:34 petli Exp $
+# $Id: display.py,v 1.7 2000-09-22 11:37:51 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -251,14 +251,14 @@ class Display:
 
     
 
-    def get_resource_class(self, class_name):
-	"""class = d.get_resource_class(class_name)
+    def get_resource_class(self, class_name, default = None):
+	"""class = d.get_resource_class(class_name, default = None)
 
 	Return the class to be used for X resource objects of type
-	CLASS_NAME, or None if no such class is set.
+	CLASS_NAME, or DEFAULT if no such class is set.
 	"""
 
-	return self.resource_classes.get(class_name, None)
+	return self.resource_classes.get(class_name, default)
 
     def set_extension_major(self, extname, major):
 	self.extension_major_opcodes[extname] = major

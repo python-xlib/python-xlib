@@ -1,4 +1,4 @@
-# $Id: fontable.py,v 1.2 2000-08-21 10:03:46 petli Exp $
+# $Id: fontable.py,v 1.3 2000-09-22 11:37:51 petli Exp $
 #
 # Xlib.xobject.fontable -- fontable objects (GC, font)
 #
@@ -104,6 +104,7 @@ class Font(Fontable):
 				  back_green = back_green,
 				  back_blue = back_blue)
 
-	return cursor.Cursor(self.display, cid, owner = 1)
+	cls = self.display.get_resource_class('cursor', cursor.Cursor)
+	return cls(self.display, cid, owner = 1)
 	
 			     

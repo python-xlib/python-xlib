@@ -6,25 +6,6 @@
   hooks to PIL.
 
 
-*** Frameworks
-
-* Multi-platform: the X library should be portable to other operating
-  systems than Unix (it might even only work with XFree86 if the
-  display is ":0" right now).  There are two things which might be OS
-  specific: finding out and parsing the display name for establishing
-  a connection, and finding authoritative data.
-
-* Thread support: Currently, it would suffice to make the lowlevel
-  Xlib.protocol.display.Display thread-safe, as no parts of the
-  high-level interface modify shared data.  This should be done in
-  such a way that one can still use the library without the thread
-  support, for systems where the thread module is missing.
-
-  An attempt has been made, but it is not entirely correct.  However,
-  the framework is there.
-
-
-
 *** To be a real C Xlib replacement
 
 * High-level functions: currently, there are only methods which

@@ -1,4 +1,4 @@
-# $Id: colormap.py,v 1.3 2000-08-21 10:03:46 petli Exp $
+# $Id: colormap.py,v 1.4 2000-09-22 11:37:51 petli Exp $
 #
 # Xlib.xobject.colormap -- colormap object
 #
@@ -38,7 +38,8 @@ class Colormap(resource.Resource):
 				    mid = mid,
 				    src_cmap = src_cmap)
 
-	return Colormap(self.display, mid, owner = 1)
+	cls = self.display.get_resource_class('colormap', Colormap)
+	return cls(self.display, mid, owner = 1)
 
     def install_colormap(self, onerror = None):
 	request.InstallColormap(display = self.display,
