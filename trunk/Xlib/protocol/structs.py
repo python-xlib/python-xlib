@@ -1,4 +1,4 @@
-# $Id: structs.py,v 1.1 2000-07-21 09:54:49 petli Exp $
+# $Id: structs.py,v 1.2 2000-08-07 10:30:20 petli Exp $
 #
 # Xlib.protocol.structs -- some common request structures
 #
@@ -26,9 +26,9 @@ import rq
 
 def WindowValues(arg):
     return rq.ValueList( arg, 4, 0,
-			 rq.Card32('background_pixmap'),
+			 rq.Pixmap('background_pixmap'),
 			 rq.Card32('background_pixel'),
-			 rq.Card32('border_pixmap'),
+			 rq.Pixmap('border_pixmap'),
 			 rq.Card32('border_pixel'),
 			 rq.Gravity('bit_gravity'),
 			 rq.Gravity('win_gravity'),
@@ -40,8 +40,8 @@ def WindowValues(arg):
 			 rq.Bool('save_under'),
 			 rq.Card32('event_mask'),
 			 rq.Card32('do_not_propagate_mask'),
-			 rq.Card32('colormap'),
-			 rq.Card32('cursor'),
+			 rq.Colormap('colormap'),
+			 rq.Cursor('cursor'),
 			 )
 
 def GCValues(arg):
@@ -68,17 +68,17 @@ def GCValues(arg):
 				 X.FillStippled, X.FillOpaqueStippled)),
 			 rq.Set('fill_rule', 1,
 				(X.EvenOddRule, X.WindingRule)),
-			 rq.Card32('tile'),
-			 rq.Card32('stipple'),
+			 rq.Pixmap('tile'),
+			 rq.Pixmap('stipple'),
 			 rq.Int16('tile_stipple_x_origin'),
 			 rq.Int16('tile_stipple_y_origin'),
-			 rq.Card32('font'),
+			 rq.Font('font'),
 			 rq.Set('subwindow_mode', 1,
 				(X.ClipByChildren, X.IncludeInferiors)),
 			 rq.Bool('graphics_exposures'),
 			 rq.Int16('clip_x_origin'),
 			 rq.Int16('clip_y_origin'),
-			 rq.Card32('clip_mask'),
+			 rq.Pixmap('clip_mask'),
 			 rq.Card16('dash-offset'),
 			 rq.Card8('dashes'),
 			 rq.Set('arc_mode', 1, (X.ArcChord, X.ArcPieSlice))

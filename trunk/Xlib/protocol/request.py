@@ -1,4 +1,4 @@
-# $Id: request.py,v 1.1 2000-07-21 09:54:49 petli Exp $
+# $Id: request.py,v 1.2 2000-08-07 10:30:19 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
@@ -32,14 +32,14 @@ class CreateWindow(rq.Request):
 	rq.Opcode(1),
 	rq.Card8('depth'),
 	rq.RequestLength(),
-	rq.Card32('wid'),
-	rq.Card32('parent'),
+	rq.Window('wid'),
+	rq.Window('parent'),
 	rq.Int16('x'),
 	rq.Int16('y'),
 	rq.Card16('width'),
 	rq.Card16('height'),
 	rq.Card16('border_width'),  
-	rq.Set('class', 2, (X.CopyFromParent, X.InputOutput, X.InputOnly)),
+	rq.Set('window_class', 2, (X.CopyFromParent, X.InputOutput, X.InputOnly)),
 	rq.Card32('visual'),
 	structs.WindowValues('attrs'),
 	)
@@ -49,7 +49,7 @@ class ChangeWindowAttributes(rq.Request):
 	rq.Opcode(2),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	structs.WindowValues('attrs'),
 	)
 
@@ -58,7 +58,7 @@ class GetWindowAttributes(rq.ReplyRequest):
 	rq.Opcode(3),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
     _reply = rq.Struct(
@@ -76,7 +76,7 @@ class GetWindowAttributes(rq.ReplyRequest):
 	rq.Card8('map_is_installed'),
 	rq.Card8('map_state'),
 	rq.Card8('override_redirect'),
-	rq.Card32('colormap'),
+	rq.Colormap('colormap', (X.NONE, )),
 	rq.Card32('all_event_masks'),
 	rq.Card32('your_event_mask'),
 	rq.Card16('do_not_propagate_mask'),
@@ -88,7 +88,7 @@ class DestroyWindow(rq.Request):
 	rq.Opcode(4),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
 class DestroySubWindows(rq.Request):
@@ -96,7 +96,7 @@ class DestroySubWindows(rq.Request):
 	rq.Opcode(5),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
     
 class ChangeSaveSet(rq.Request):
@@ -104,7 +104,7 @@ class ChangeSaveSet(rq.Request):
 	rq.Opcode(6),
 	rq.Set('mode', 1, (X.SetModeInsert, X.SetModeDelete)),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	)
 
 class ReparentWindow(rq.Request):
@@ -112,8 +112,8 @@ class ReparentWindow(rq.Request):
 	rq.Opcode(7),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window'),
-	rq.Card32('parent'),
+	rq.Window('window'),
+	rq.Window('parent'),
 	rq.Int16('x'),
 	rq.Int16('y'),
 	)
@@ -123,7 +123,7 @@ class MapWindow(rq.Request):
 	rq.Opcode(8),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
 class MapSubwindows(rq.Request):
@@ -131,7 +131,7 @@ class MapSubwindows(rq.Request):
 	rq.Opcode(9),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
 class UnmapWindow(rq.Request):
@@ -139,7 +139,7 @@ class UnmapWindow(rq.Request):
 	rq.Opcode(10),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
 class UnmapSubwindows(rq.Request):
@@ -147,7 +147,7 @@ class UnmapSubwindows(rq.Request):
 	rq.Opcode(11),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
 class ConfigureWindow(rq.Request):
@@ -155,14 +155,14 @@ class ConfigureWindow(rq.Request):
 	rq.Opcode(12),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	rq.ValueList( 'attrs', 2, 2,
 		      rq.Int16('x'),
 		      rq.Int16('y'),
 		      rq.Card16('width'),
 		      rq.Card16('height'),
 		      rq.Int16('border_width'),
-		      rq.Card32('sibling'),
+		      rq.Window('sibling'),
 		      rq.Set('stack_mode', 1,
 			     (X.Above, X.Below, X.TopIf,
 			      X.BottomIf, X.Opposite))
@@ -174,7 +174,7 @@ class CirculateWindow(rq.Request):
 	rq.Opcode(13),
 	rq.Set('direction', 1, (X.RaiseLowest, X.LowerHighest)),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	)
 
 class GetGeometry(rq.ReplyRequest):
@@ -182,7 +182,7 @@ class GetGeometry(rq.ReplyRequest):
 	rq.Opcode(14),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable')
+	rq.Drawable('drawable')
 	)
 
     _reply = rq.Struct (
@@ -190,7 +190,7 @@ class GetGeometry(rq.ReplyRequest):
 	rq.Card8('depth'),
 	rq.Card16('sequence_number'),
 	rq.Pad(4),
-	rq.Card32('root'),
+	rq.Window('root'),
 	rq.Int16('x'),
 	rq.Int16('y'),
 	rq.Card16('width'),
@@ -204,18 +204,18 @@ class QueryTree(rq.ReplyRequest):
 	rq.Opcode(15),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
     _reply = rq.Struct(
 	rq.Pad(2),  
 	rq.Card16('sequence_number'),
 	rq.Pad(4),
-	rq.Card32('root'),
-	rq.Card32('parent'),
+	rq.Window('root'),
+	rq.Window('parent', (X.NONE, )),
 	rq.LengthOf('children', 2),
 	rq.Pad(14),
-	rq.List('children', rq.Card32Obj),
+	rq.List('children', rq.WindowObj),
 	)
 
 class InternAtom(rq.ReplyRequest):
@@ -259,7 +259,7 @@ class ChangeProperty(rq.Request):
 	rq.Opcode(18),
 	rq.Set('mode', 1, (X.PropModeReplace, X.PropModePrepend, X.PropModeAppend)),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	rq.Card32('property'),
 	rq.Card32('type'),
 	rq.Format('data', 1),
@@ -273,7 +273,7 @@ class DeleteProperty(rq.Request):
 	rq.Opcode(19),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	rq.Card32('property'),
 	)
 
@@ -282,7 +282,7 @@ class GetProperty(rq.ReplyRequest):
 	rq.Opcode(20),
 	rq.Bool('delete'),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	rq.Card32('property'),
 	rq.Card32('type'),
 	rq.Card32('long_offset'),
@@ -306,7 +306,7 @@ class ListProperties(rq.ReplyRequest):
 	rq.Opcode(21),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
     _reply = rq.Struct(
@@ -323,7 +323,7 @@ class SetSelectionOwner(rq.Request):
 	rq.Opcode(22),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	rq.Card32('selection'),
 	rq.Card32('time'),
 	)
@@ -340,7 +340,7 @@ class GetSelectionOwner(rq.ReplyRequest):
 	rq.Pad(2),  
 	rq.Card16('sequence_number'),
 	rq.Pad(4),  
-	rq.Card32('owner'),
+	rq.Window('owner', (X.NONE, )),
 	rq.Pad(20),
 	)
     
@@ -349,7 +349,7 @@ class ConvertSelection(rq.Request):
 	rq.Opcode(24),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('requestor'),
+	rq.Window('requestor'),
 	rq.Card32('selection'),
 	rq.Card32('target'),
 	rq.Card32('property'),
@@ -361,7 +361,7 @@ class SendEvent(rq.Request):
 	rq.Opcode(25),
 	rq.Bool('propagate'),
 	rq.RequestLength(),
-	rq.Card32('destination'),
+	rq.Window('destination'),
 	rq.Card32('event_mask'),
 	rq.EventField('event'),
 	)
@@ -371,12 +371,12 @@ class GrabPointer(rq.ReplyRequest):
 	rq.Opcode(26),
 	rq.Bool('owner_events'),
 	rq.RequestLength(),
-	rq.Card32('grab_window'),
+	rq.Window('grab_window'),
 	rq.Card16('event_mask'),
 	rq.Set('pointer_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
 	rq.Set('keyboard_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
-	rq.Card32('confine_to'),
-	rq.Card32('cursor'),
+	rq.Window('confine_to'),
+	rq.Cursor('cursor'),
 	rq.Card32('time'),
 	)
 
@@ -400,12 +400,12 @@ class GrabButton(rq.Request):
 	rq.Opcode(28),
 	rq.Bool('owner_events'),
 	rq.RequestLength(),
-	rq.Card32('grab_window'),
+	rq.Window('grab_window'),
 	rq.Card16('event_mask'),
 	rq.Set('pointer_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
 	rq.Set('keyboard_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
-	rq.Card32('confine_to'),
-	rq.Card32('cursor'),
+	rq.Window('confine_to'),
+	rq.Cursor('cursor'),
 	rq.Card8('button'),
 	rq.Pad(1),
 	rq.Card16('modifiers'),
@@ -416,7 +416,7 @@ class UngrabButton(rq.Request):
 	rq.Opcode(29),
 	rq.Card8('button'),
 	rq.RequestLength(),
-	rq.Card32('grab_window'),
+	rq.Window('grab_window'),
 	rq.Card16('modifiers'),
 	rq.Pad(2),
 	)
@@ -426,7 +426,7 @@ class ChangeActivePointerGrab(rq.Request):
 	rq.Opcode(30),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cursor'),
+	rq.Cursor('cursor'),
 	rq.Card32('time'),
 	rq.Card16('event_mask'),
 	rq.Pad(2),
@@ -437,7 +437,7 @@ class GrabKeyboard(rq.ReplyRequest):
 	rq.Opcode(31),
 	rq.Bool('owner_events'),
 	rq.RequestLength(),
-	rq.Card32('grab_window'),
+	rq.Window('grab_window'),
 	rq.Card32('time'),
 	rq.Set('pointer_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
 	rq.Set('keyboard_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
@@ -464,7 +464,7 @@ class GrabKey(rq.Request):
 	rq.Opcode(33),
 	rq.Bool('owner_events'),
 	rq.RequestLength(),
-	rq.Card32('grab_window'),
+	rq.Window('grab_window'),
 	rq.Card16('modifiers'),
 	rq.Card8('key'),
 	rq.Set('pointer_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
@@ -477,7 +477,7 @@ class UngrabKey(rq.Request):
 	rq.Opcode(34),
 	rq.Card8('key'),
 	rq.RequestLength(),
-	rq.Card32('grab_window'),
+	rq.Window('grab_window'),
 	rq.Card16('modifiers'),
 	rq.Pad(2),
 	)
@@ -509,7 +509,7 @@ class QueryPointer(rq.ReplyRequest):
 	rq.Opcode(38),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
     _reply = rq.Struct(
@@ -517,8 +517,8 @@ class QueryPointer(rq.ReplyRequest):
 	rq.Card8('same_screen'),
 	rq.Card16('sequence_number'),
 	rq.Pad(4),  
-	rq.Card32('root'),
-	rq.Card32('child'),
+	rq.Window('root'),
+	rq.Window('child', (X.NONE, )),
 	rq.Int16('root_x'),
 	rq.Int16('root_y'),
 	rq.Int16('win_x'),
@@ -532,7 +532,7 @@ class GetMotionEvents(rq.ReplyRequest):
 	rq.Opcode(39),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	rq.Card32('start'),
 	rq.Card32('stop'),
 	)
@@ -551,8 +551,8 @@ class TranslateCoords(rq.ReplyRequest):
 	rq.Opcode(40),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('src_wid'),
-	rq.Card32('dst_wid'),
+	rq.Window('src_wid'),
+	rq.Window('dst_wid'),
 	rq.Int16('src_x'),
 	rq.Int16('src_y'),
 	)
@@ -562,9 +562,9 @@ class TranslateCoords(rq.ReplyRequest):
 	rq.Card8('same_screen'),
 	rq.Card16('sequence_number'),
 	rq.Pad(4), 
-	rq.Card32('child'),
-	rq.Int16('dst_x'),
-	rq.Int16('dst_y'),
+	rq.Window('child', (X.NONE, )),
+	rq.Int16('x'),
+	rq.Int16('y'),
 	rq.Pad(16),
 	)
     
@@ -573,8 +573,8 @@ class WarpPointer(rq.Request):
 	rq.Opcode(41),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('src_window'),
-	rq.Card32('dst_window'),
+	rq.Window('src_window'),
+	rq.Window('dst_window'),
 	rq.Int16('src_x'),
 	rq.Int16('src_y'),
 	rq.Card16('src_width'),
@@ -589,7 +589,7 @@ class SetInputFocus(rq.Request):
 	rq.Set('revert_to', 1, (X.RevertToNone, X.RevertToPointerRoot,
 				X.RevertToParent)),
 	rq.RequestLength(),
-	rq.Card32('focus'),
+	rq.Window('focus'),
 	rq.Card32('time'),
 	)
 
@@ -605,7 +605,7 @@ class GetInputFocus(rq.ReplyRequest):
 	rq.Card8('revert_to'),
 	rq.Card16('sequence_number'),
 	rq.Pad(4),  
-	rq.Card32('focus'),
+	rq.Window('focus', (X.NONE, X.PointerRoot)),
 	rq.Pad(20),
 	)
     
@@ -629,7 +629,7 @@ class OpenFont(rq.Request):
 	rq.Opcode(45),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('fid'),
+	rq.Font('fid'),
 	rq.LengthOf('name', 2),
 	rq.Pad(2),
 	rq.String8('name'),
@@ -640,7 +640,7 @@ class CloseFont(rq.Request):
 	rq.Opcode(46),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('font')
+	rq.Font('font')
 	)
 
 class QueryFont(rq.ReplyRequest):
@@ -648,7 +648,7 @@ class QueryFont(rq.ReplyRequest):
 	rq.Opcode(47),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('font')
+	rq.Font('font')
 	)
 
     _reply = rq.Struct(
@@ -679,7 +679,7 @@ class QueryTextExtents(rq.ReplyRequest):
 	rq.Opcode(48),
 	rq.OddLength('string'),
 	rq.RequestLength(),
-	rq.Card32('font'),
+	rq.Font('font'),
 	rq.String16('string'),
 	)
 
@@ -807,7 +807,6 @@ class GetFontPath(rq.ReplyRequest):
 	rq.Opcode(52),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
 	)
 
     _reply = rq.Struct(
@@ -824,8 +823,8 @@ class CreatePixmap(rq.Request):
 	rq.Opcode(53),
 	rq.Card8('depth'),
 	rq.RequestLength(),
-	rq.Card32('pid'),
-	rq.Card32('drawable'),
+	rq.Pixmap('pid'),
+	rq.Drawable('drawable'),
 	rq.Card16('width'),
 	rq.Card16('height'),
 	)
@@ -835,7 +834,7 @@ class FreePixmap(rq.Request):
 	rq.Opcode(54),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('pixmap')
+	rq.Pixmap('pixmap')
 	)
 
 class CreateGC(rq.Request):
@@ -843,8 +842,8 @@ class CreateGC(rq.Request):
 	rq.Opcode(55),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cid'),
-	rq.Card32('drawable'),
+	rq.GC('cid'),
+	rq.Drawable('drawable'),
 	structs.GCValues('attrs'),
 	)
 
@@ -853,7 +852,7 @@ class ChangeGC(rq.Request):
 	rq.Opcode(56),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('gc'),
+	rq.GC('gc'),
 	structs.GCValues('attrs'),
 	)    
 
@@ -862,8 +861,8 @@ class CopyGC(rq.Request):
 	rq.Opcode(57),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('src_gc'),
-	rq.Card32('dst_gc'),
+	rq.GC('src_gc'),
+	rq.GC('dst_gc'),
 	rq.Card32('mask'),
 	)    
 
@@ -872,7 +871,7 @@ class SetDashes(rq.Request):
 	rq.Opcode(58),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('gc'),
+	rq.GC('gc'),
 	rq.Card16('dash_offset'),
 	rq.LengthOf('dashes', 2),
 	rq.List('dashes', rq.Card8Obj),
@@ -883,7 +882,7 @@ class SetClipRectangles(rq.Request):
 	rq.Opcode(59),
 	rq.Set('ordering', 1, (X.Unsorted, X.YSorted, X.YXSorted, X.YXBanded)),
 	rq.RequestLength(),
-	rq.Card32('gc'),
+	rq.GC('gc'),
 	rq.Int16('x_origin'),
 	rq.Int16('y_origin'),
 	rq.List('rectangels', structs.Rectangle),
@@ -894,7 +893,7 @@ class FreeGC(rq.Request):
 	rq.Opcode(60),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('gc')
+	rq.GC('gc')
 	)
 
 class ClearArea(rq.Request):
@@ -902,7 +901,7 @@ class ClearArea(rq.Request):
 	rq.Opcode(61),
 	rq.Bool('exposures'),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	rq.Int16('x'),
 	rq.Int16('y'),
 	rq.Card16('width'),
@@ -914,9 +913,9 @@ class CopyArea(rq.Request):
 	rq.Opcode(62),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('src_drawable'),
-	rq.Card32('dst_drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('src_drawable'),
+	rq.Drawable('dst_drawable'),
+	rq.GC('gc'),
 	rq.Int16('src_x'),
 	rq.Int16('src_y'),
 	rq.Int16('dst_x'),
@@ -930,9 +929,9 @@ class CopyPlane(rq.Request):
 	rq.Opcode(63),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('src_drawable'),
-	rq.Card32('dst_drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('src_drawable'),
+	rq.Drawable('dst_drawable'),
+	rq.GC('gc'),
 	rq.Int16('src_x'),
 	rq.Int16('src_y'),
 	rq.Int16('dst_x'),
@@ -947,8 +946,8 @@ class PolyPoint(rq.Request):
 	rq.Opcode(64),
 	rq.Set('coord_mode', 1, (X.CoordModeOrigin, X.CoordModePrevious)),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.List('points', structs.Point),
 	)    
 
@@ -957,8 +956,8 @@ class PolyLine(rq.Request):
 	rq.Opcode(65),
 	rq.Set('coord_mode', 1, (X.CoordModeOrigin, X.CoordModePrevious)),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.List('points', structs.Point),
 	)    
 
@@ -968,8 +967,8 @@ class PolySegment(rq.Request):
 	rq.Opcode(66),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.List('segments', structs.Segment),
 	)
 
@@ -979,8 +978,8 @@ class PolyRectangle(rq.Request):
 	rq.Opcode(67),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.List('rectangles', structs.Rectangle),
 	)    
 
@@ -989,8 +988,8 @@ class PolyArc(rq.Request):
 	rq.Opcode(68),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.List('arcs', structs.Arc),
 	)    
 
@@ -999,8 +998,8 @@ class FillPoly(rq.Request):
 	rq.Opcode(69),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.Set('shape', 1, (X.Complex, X.Nonconvex, X.Convex)),
 	rq.Set('coord_mode', 1, (X.CoordModeOrigin, X.CoordModePrevious)),
 	rq.Pad(2),
@@ -1012,8 +1011,8 @@ class PolyFillRectangle(rq.Request):
 	rq.Opcode(70),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.List('rectangles', structs.Rectangle),
 	)    
 
@@ -1022,8 +1021,8 @@ class PolyFillArc(rq.Request):
 	rq.Opcode(71),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.List('arcs', structs.Arc),
 	)    
 
@@ -1032,8 +1031,8 @@ class PutImage(rq.Request):
 	rq.Opcode(72),
 	rq.Card8(''),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.Card16('width'),
 	rq.Card16('height'),
 	rq.Int16('dst_x'),
@@ -1049,7 +1048,7 @@ class GetImage(rq.ReplyRequest):
 	rq.Opcode(73),
 	rq.Set('format', 1, (X.XYPixmap, X.ZPixmap)),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
+	rq.Drawable('drawable'),
 	rq.Int16('x'),
 	rq.Int16('y'),
 	rq.Card16('width'),
@@ -1072,8 +1071,8 @@ class PolyText8(rq.Request):
 	rq.Opcode(74),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.Int16('x'),
 	rq.Int16('y'),
 	rq.TextElements8('items'),
@@ -1084,8 +1083,8 @@ class PolyText16(rq.Request):
 	rq.Opcode(75),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.Int16('x'),
 	rq.Int16('y'),		
 	rq.TextElements16('items'),
@@ -1096,8 +1095,8 @@ class ImageText8(rq.Request):
 	rq.Opcode(76),
 	rq.LengthOf('string', 1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.Int16('x'),
 	rq.Int16('y'),
 	rq.String8('string'),
@@ -1108,8 +1107,8 @@ class ImageText16(rq.Request):
 	rq.Opcode(77),
 	rq.LengthOf('string', 1),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
-	rq.Card32('gc'),
+	rq.Drawable('drawable'),
+	rq.GC('gc'),
 	rq.Int16('x'),
 	rq.Int16('y'),
 	rq.String16('string'),
@@ -1120,8 +1119,8 @@ class CreateColormap(rq.Request):
 	rq.Opcode(78),
 	rq.Set('alloc', 1, (X.AllocNone, X.AllocAll)),
 	rq.RequestLength(),
-	rq.Card32('mid'),
-	rq.Card32('window'),
+	rq.Colormap('mid'),
+	rq.Window('window'),
 	rq.Card32('visual'),
 	)    
 
@@ -1130,7 +1129,7 @@ class FreeColormap(rq.Request):
 	rq.Opcode(79),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cmap')
+	rq.Colormap('cmap')
 	)
 
 class CopyColormapAndFree(rq.Request):
@@ -1138,8 +1137,8 @@ class CopyColormapAndFree(rq.Request):
 	rq.Opcode(80),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('mid'),
-	rq.Card32('src_cmap'),
+	rq.Colormap('mid'),
+	rq.Colormap('src_cmap'),
 	)    
 
 class InstallColormap(rq.Request):
@@ -1147,7 +1146,7 @@ class InstallColormap(rq.Request):
 	rq.Opcode(81),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('colormap')
+	rq.Colormap('cmap')
 	)
 
 class UninstallColormap(rq.Request):
@@ -1155,7 +1154,7 @@ class UninstallColormap(rq.Request):
 	rq.Opcode(82),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cmap')
+	rq.Colormap('cmap')
 	)
 
 class ListInstalledColormaps(rq.ReplyRequest):
@@ -1163,7 +1162,7 @@ class ListInstalledColormaps(rq.ReplyRequest):
 	rq.Opcode(83),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window')
+	rq.Window('window')
 	)
 
     _reply = rq.Struct(
@@ -1172,7 +1171,7 @@ class ListInstalledColormaps(rq.ReplyRequest):
 	rq.Pad(4),
 	rq.LengthOf('cmaps', 2),
 	rq.Pad(22),
-	rq.List('cmaps', rq.Card32Obj),
+	rq.List('cmaps', rq.ColormapObj),
 	)
     
 class AllocColor(rq.ReplyRequest):
@@ -1180,7 +1179,7 @@ class AllocColor(rq.ReplyRequest):
 	rq.Opcode(84),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.Card16('red'),
 	rq.Card16('green'),
 	rq.Card16('blue'),
@@ -1204,7 +1203,7 @@ class AllocNamedColor(rq.ReplyRequest):
 	rq.Opcode(85),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.LengthOf('name', 2),  
 	rq.Pad(2),
 	rq.String8('name'),
@@ -1229,7 +1228,7 @@ class AllocColorCells(rq.ReplyRequest):
 	rq.Opcode(86),
 	rq.Bool('contiguous'),
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.Card16('colors'),
 	rq.Card16('planes'),
 	)    
@@ -1250,7 +1249,7 @@ class AllocColorPlanes(rq.ReplyRequest):
 	rq.Opcode(87),
 	rq.Bool('contiguous'),
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.Card16('colors'),
 	rq.Card16('red'),
 	rq.Card16('green'),
@@ -1264,6 +1263,8 @@ class AllocColorPlanes(rq.ReplyRequest):
 	rq.LengthOf('pixels', 2),
 	rq.Pad(2),
 	rq.Card32('red_mask'),
+	rq.Card32('green_mask'),
+	rq.Card32('blue_mask'),
 	rq.Pad(4),
 	rq.List('pixels', rq.Card32Obj),
 	)
@@ -1273,7 +1274,7 @@ class FreeColors(rq.Request):
 	rq.Opcode(88),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.Card32('plane_mask'),
 	rq.List('pixels', rq.Card32Obj),
 	)    
@@ -1283,7 +1284,7 @@ class StoreColors(rq.Request):
 	rq.Opcode(89),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.List('items', structs.ColorItem),
 	)    
 
@@ -1292,7 +1293,7 @@ class StoreNamedColor(rq.Request):
 	rq.Opcode(90),
 	rq.Card8('flags'),   
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.Card32('pixel'),
 	rq.LengthOf('name', 2),
 	rq.Pad(2),
@@ -1304,7 +1305,7 @@ class QueryColors(rq.ReplyRequest):
 	rq.Opcode(91),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.List('pixels', rq.Card32Obj),
 	)    
 
@@ -1322,7 +1323,7 @@ class LookupColor(rq.ReplyRequest):
 	rq.Opcode(92),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cmap'),
+	rq.Colormap('cmap'),
 	rq.LengthOf('name', 2),  
 	rq.Pad(2),
 	rq.String8('name'),
@@ -1347,9 +1348,9 @@ class CreateCursor(rq.Request):
 	rq.Opcode(93),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cid'),
-	rq.Card32('source'),
-	rq.Card32('mask'),
+	rq.Cursor('cid'),
+	rq.Pixmap('source'),
+	rq.Pixmap('mask'),
 	rq.Card16('fore_red'),
 	rq.Card16('fore_green'),
 	rq.Card16('fore_blue'),
@@ -1365,9 +1366,9 @@ class CreateGlyphCursor(rq.Request):
 	rq.Opcode(94),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cid'),
-	rq.Card32('source'),
-	rq.Card32('mask'),
+	rq.Cursor('cid'),
+	rq.Font('source'),
+	rq.Font('mask'),
 	rq.Card16('source_char'),
 	rq.Card16('mask_char'),
 	rq.Card16('fore_red'),
@@ -1383,7 +1384,7 @@ class FreeCursor(rq.Request):
 	rq.Opcode(95),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cursor')
+	rq.Cursor('cursor')
 	)
 
 class RecolorCursor(rq.Request):
@@ -1391,7 +1392,7 @@ class RecolorCursor(rq.Request):
 	rq.Opcode(96),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('cursor'),
+	rq.Cursor('cursor'),
 	rq.Card16('fore_red'),
 	rq.Card16('fore_green'),
 	rq.Card16('fore_blue'),
@@ -1403,9 +1404,9 @@ class RecolorCursor(rq.Request):
 class QueryBestSize(rq.ReplyRequest):
     _request = rq.Struct(
 	rq.Opcode(97),
-	rq.Set('class', 1, (X.CursorShape, X.TileShape, X.StippleShape)),
+	rq.Set('item_class', 1, (X.CursorShape, X.TileShape, X.StippleShape)),
 	rq.RequestLength(),
-	rq.Card32('drawable'),
+	rq.Drawable('drawable'),
 	rq.Card16('width'),
 	rq.Card16('height'),
 	)    
@@ -1642,7 +1643,7 @@ class KillClient(rq.Request):
 	rq.Opcode(113),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('resource')
+	rq.Resource('resource')
 	)
 
 class RotateProperties(rq.Request):
@@ -1650,7 +1651,7 @@ class RotateProperties(rq.Request):
 	rq.Opcode(114),
 	rq.Pad(1),
 	rq.RequestLength(),
-	rq.Card32('window'),
+	rq.Window('window'),
 	rq.LengthOf('properties', 2),
 	rq.Int16('delta'),
 	rq.List('properties', rq.Card32Obj),
