@@ -1,11 +1,11 @@
-# Generated from gen/genprottest.py
+#!/usr/bin/env python
 
 import sys, os
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 import string
 import unittest
-from Xlib.protocol import request, rq
+from Xlib.protocol import request, rq, event
 import Xlib.protocol.event
 
 import struct
@@ -52,6 +52,7 @@ class DummyDisplay:
     event_classes = Xlib.protocol.event.event_class
 dummy_display = DummyDisplay()
 
+
 def check_endian():
     if struct.unpack('BB', struct.pack('H', 0x0100))[0] != 1:
         sys.stderr.write('Big-endian tests, skipping on this system.\n')
@@ -62,30 +63,30 @@ def check_endian():
 class TestCreateWindow(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'height': 51338,
-            'window_class': 1,
-            'border_width': 57105,
-            'visual': 752631105,
-            'x': -2545,
-            'y': -14158,
-            'parent': 1434984674,
-            'attrs': {'backing_pixel': 306331523, 'cursor': 1515266104, 'background_pixmap': 1333812131, 'border_pixmap': 1586014551, 'backing_planes': 2030508603, 'win_gravity': 2, 'backing_store': 1, 'event_mask': 576213620, 'save_under': 1, 'background_pixel': 1563170937, 'colormap': 996932493, 'border_pixel': 936741754, 'bit_gravity': 2, 'do_not_propagate_mask': 746538325, 'override_redirect': 1},
-            'wid': 1011816541,
-            'depth': 168,
-            'width': 50328,
+            'height': 8017,
+            'window_class': 0,
+            'border_width': 26096,
+            'visual': 27534831,
+            'x': -28091,
+            'y': -29791,
+            'parent': 1931287363,
+            'attrs': {'backing_pixel': 1636335129, 'cursor': 1539745537, 'background_pixmap': 1319334920, 'border_pixmap': 865648768, 'backing_planes': 88009460, 'win_gravity': 0, 'backing_store': 0, 'event_mask': 1604514590, 'save_under': 0, 'background_pixel': 215391800, 'colormap': 2039891007, 'border_pixel': 910242230, 'bit_gravity': 1, 'do_not_propagate_mask': 1541988605, 'override_redirect': 0},
+            'wid': 1518857223,
+            'depth': 213,
+            'width': 15396,
             }
-        self.req_bin_0 = '\x01\xa8\x00\x17' '\x3c\x4f\x18\x5d' \
-            '\x55\x88\x20\xe2' '\xf6\x0f\xc8\xb2' \
-            '\xc4\x98\xc8\x8a' '\xdf\x11\x00\x01' \
-            '\x2c\xdc\x3d\x41' '\x00\x00\x7f\xff' \
-            '\x4f\x80\x5b\xa3' '\x5d\x2c\x18\x79' \
-            '\x5e\x88\xa9\x57' '\x37\xd5\x8b\x7a' \
-            '\x02\x00\x00\x00' '\x02\x00\x00\x00' \
-            '\x01\x00\x00\x00' '\x79\x07\x1a\x3b' \
-            '\x12\x42\x3f\x83' '\x01\x00\x00\x00' \
-            '\x01\x00\x00\x00' '\x22\x58\x52\x74' \
-            '\x2c\x7f\x45\x55' '\x3b\x6b\xfb\x8d' \
-            '\x5a\x51\x20\x38'
+        self.req_bin_0 = '\x01\xd5\x00\x17' '\x5a\x87\xec\x07' \
+            '\x73\x1d\x1b\x43' '\x92\x45\x8b\xa1' \
+            '\x3c\x24\x1f\x51' '\x65\xf0\x00\x00' \
+            '\x01\xa4\x25\xef' '\x00\x00\x7f\xff' \
+            '\x4e\xa3\x74\x08' '\x0c\xd6\x9e\x38' \
+            '\x33\x98\xc0\x80' '\x36\x41\x31\xb6' \
+            '\x01\x00\x00\x00' '\x00\x00\x00\x00' \
+            '\x00\x00\x00\x00' '\x05\x3e\xea\xf4' \
+            '\x61\x88\x7e\x19' '\x00\x00\x00\x00' \
+            '\x00\x00\x00\x00' '\x5f\xa2\xf3\x1e' \
+            '\x5b\xe8\xe0\xfd' '\x79\x96\x44\x3f' \
+            '\x5b\xc6\xa7\x01'
 
 
     def testPackRequest0(self):
@@ -110,18 +111,18 @@ class TestCreateWindow(unittest.TestCase):
 class TestChangeWindowAttributes(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 900699353,
-            'attrs': {'backing_pixel': 1025011957, 'cursor': 376028564, 'background_pixmap': 1825900315, 'border_pixmap': 1764328047, 'backing_planes': 1530715389, 'win_gravity': 9, 'backing_store': 0, 'event_mask': 1385455374, 'save_under': 1, 'background_pixel': 441245965, 'colormap': 409081122, 'border_pixel': 1870963440, 'bit_gravity': 6, 'do_not_propagate_mask': 1963538952, 'override_redirect': 1},
+            'window': 493630976,
+            'attrs': {'backing_pixel': 1526297547, 'cursor': 1900655715, 'background_pixmap': 1900827120, 'border_pixmap': 1555500281, 'backing_planes': 1744890268, 'win_gravity': 3, 'backing_store': 2, 'event_mask': 901533631, 'save_under': 0, 'background_pixel': 1743143905, 'colormap': 684397188, 'border_pixel': 1616380377, 'bit_gravity': 5, 'do_not_propagate_mask': 648986533, 'override_redirect': 1},
             }
-        self.req_bin_0 = '\x02\x00\x00\x12' '\x35\xaf\x94\xd9' \
-            '\x00\x00\x7f\xff' '\x6c\xd5\x07\x1b' \
-            '\x1a\x4c\xe1\x0d' '\x69\x29\x82\x6f' \
-            '\x6f\x84\xa2\xf0' '\x06\x00\x00\x00' \
-            '\x09\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x5b\x3c\xdc\xfd' '\x3d\x18\x70\xf5' \
-            '\x01\x00\x00\x00' '\x01\x00\x00\x00' \
-            '\x52\x94\x5f\x0e' '\x75\x09\x3a\x08' \
-            '\x18\x62\x15\x22' '\x16\x69\xbd\x94'
+        self.req_bin_0 = '\x02\x00\x00\x12' '\x1d\x6c\x36\x00' \
+            '\x00\x00\x7f\xff' '\x71\x4c\x51\xf0' \
+            '\x67\xe6\x43\xe1' '\x5c\xb7\x0c\xf9' \
+            '\x60\x58\x01\xd9' '\x05\x00\x00\x00' \
+            '\x03\x00\x00\x00' '\x02\x00\x00\x00' \
+            '\x68\x00\xe9\x9c' '\x5a\xf9\x73\xcb' \
+            '\x01\x00\x00\x00' '\x00\x00\x00\x00' \
+            '\x35\xbc\x4f\xbf' '\x26\xae\xbf\xa5' \
+            '\x28\xcb\x12\x84' '\x71\x49\xb4\x63'
 
 
     def testPackRequest0(self):
@@ -146,34 +147,34 @@ class TestChangeWindowAttributes(unittest.TestCase):
 class TestGetWindowAttributes(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 802445789,
+            'window': 2129386044,
             }
-        self.req_bin_0 = '\x03\x00\x00\x02' '\x2f\xd4\x59\xdd'
+        self.req_bin_0 = '\x03\x00\x00\x02' '\x7e\xeb\xda\x3c'
 
         self.reply_args_0 = {
-            'sequence_number': 24431,
-            'backing_pixel': 443696070,
-            'your_event_mask': 1330874192,
-            'map_is_installed': 0,
-            'visual': 1141631654,
-            'backing_bit_planes': 21271777,
-            'backing_store': 212,
-            'win_class': 4961,
-            'map_state': 161,
+            'sequence_number': 684,
+            'backing_pixel': 1215988101,
+            'your_event_mask': 635227602,
+            'map_is_installed': 1,
+            'visual': 1721640481,
+            'backing_bit_planes': 206375047,
+            'backing_store': 171,
+            'win_class': 17392,
+            'map_state': 146,
             'save_under': 0,
-            'all_event_masks': 1205017274,
-            'colormap': 1039354343,
-            'win_gravity': 215,
-            'bit_gravity': 179,
-            'do_not_propagate_mask': 44926,
+            'all_event_masks': 906761091,
+            'colormap': 627072806,
+            'win_gravity': 219,
+            'bit_gravity': 207,
+            'do_not_propagate_mask': 34958,
             'override_redirect': 1,
             }
-        self.reply_bin_0 = '\x01\xd4\x5f\x6f' '\x00\x00\x00\x03' \
-            '\x44\x0b\xea\xa6' '\x13\x61\xb3\xd7' \
-            '\x01\x44\x94\xe1' '\x1a\x72\x43\xc6' \
-            '\x00\x00\xa1\x01' '\x3d\xf3\x49\xe7' \
-            '\x47\xd3\x1a\xba' '\x4f\x53\x87\x50' \
-            '\xaf\x7e\x00\x00'
+        self.reply_bin_0 = '\x01\xab\x02\xac' '\x00\x00\x00\x03' \
+            '\x66\x9e\x26\x21' '\x43\xf0\xcf\xdb' \
+            '\x0c\x4d\x08\x87' '\x48\x7a\x81\x85' \
+            '\x00\x01\x92\x01' '\x25\x60\x5f\x26' \
+            '\x36\x0c\x13\x83' '\x25\xdc\xcd\xd2' \
+            '\x88\x8e\x00\x00'
 
 
     def testPackRequest0(self):
@@ -216,9 +217,9 @@ class TestGetWindowAttributes(unittest.TestCase):
 class TestDestroyWindow(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1032398604,
+            'window': 1632489677,
             }
-        self.req_bin_0 = '\x04\x00\x00\x02' '\x3d\x89\x27\x0c'
+        self.req_bin_0 = '\x04\x00\x00\x02' '\x61\x4d\xd0\xcd'
 
 
     def testPackRequest0(self):
@@ -243,9 +244,9 @@ class TestDestroyWindow(unittest.TestCase):
 class TestDestroySubWindows(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1885148304,
+            'window': 826551555,
             }
-        self.req_bin_0 = '\x05\x00\x00\x02' '\x70\x5d\x14\x90'
+        self.req_bin_0 = '\x05\x00\x00\x02' '\x31\x44\x2d\x03'
 
 
     def testPackRequest0(self):
@@ -270,10 +271,10 @@ class TestDestroySubWindows(unittest.TestCase):
 class TestChangeSaveSet(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1755736476,
-            'mode': 0,
+            'window': 1134467028,
+            'mode': 1,
             }
-        self.req_bin_0 = '\x06\x00\x00\x02' '\x68\xa6\x69\x9c'
+        self.req_bin_0 = '\x06\x01\x00\x02' '\x43\x9e\x97\xd4'
 
 
     def testPackRequest0(self):
@@ -298,13 +299,13 @@ class TestChangeSaveSet(unittest.TestCase):
 class TestReparentWindow(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'parent': 492772504,
-            'window': 331868391,
-            'x': -1279,
-            'y': -24108,
+            'parent': 646041806,
+            'window': 1176456834,
+            'x': -7243,
+            'y': -14560,
             }
-        self.req_bin_0 = '\x07\x00\x00\x04' '\x13\xc7\xe8\xe7' \
-            '\x1d\x5f\x1c\x98' '\xfb\x01\xa1\xd4'
+        self.req_bin_0 = '\x07\x00\x00\x04' '\x46\x1f\x4e\x82' \
+            '\x26\x81\xd0\xce' '\xe3\xb5\xc7\x20'
 
 
     def testPackRequest0(self):
@@ -329,9 +330,9 @@ class TestReparentWindow(unittest.TestCase):
 class TestMapWindow(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1867478418,
+            'window': 625741822,
             }
-        self.req_bin_0 = '\x08\x00\x00\x02' '\x6f\x4f\x75\x92'
+        self.req_bin_0 = '\x08\x00\x00\x02' '\x25\x4c\x0f\xfe'
 
 
     def testPackRequest0(self):
@@ -356,9 +357,9 @@ class TestMapWindow(unittest.TestCase):
 class TestMapSubwindows(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 2146520940,
+            'window': 1721765455,
             }
-        self.req_bin_0 = '\x09\x00\x00\x02' '\x7f\xf1\x4f\x6c'
+        self.req_bin_0 = '\x09\x00\x00\x02' '\x66\xa0\x0e\x4f'
 
 
     def testPackRequest0(self):
@@ -383,9 +384,9 @@ class TestMapSubwindows(unittest.TestCase):
 class TestUnmapWindow(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1541697409,
+            'window': 31438060,
             }
-        self.req_bin_0 = '\x0a\x00\x00\x02' '\x5b\xe4\x6f\x81'
+        self.req_bin_0 = '\x0a\x00\x00\x02' '\x01\xdf\xb4\xec'
 
 
     def testPackRequest0(self):
@@ -410,9 +411,9 @@ class TestUnmapWindow(unittest.TestCase):
 class TestUnmapSubwindows(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1117951845,
+            'window': 677486736,
             }
-        self.req_bin_0 = '\x0b\x00\x00\x02' '\x42\xa2\x97\x65'
+        self.req_bin_0 = '\x0b\x00\x00\x02' '\x28\x61\xa0\x90'
 
 
     def testPackRequest0(self):
@@ -437,14 +438,14 @@ class TestUnmapSubwindows(unittest.TestCase):
 class TestConfigureWindow(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1266259436,
-            'attrs': {'height': 46201, 'stack_mode': 3, 'border_width': -22847, 'width': 49410, 'x': -4914, 'y': -29358, 'sibling': 1025509288},
+            'window': 885962653,
+            'attrs': {'height': 62873, 'stack_mode': 0, 'border_width': -10216, 'width': 52140, 'x': -10545, 'y': -2207, 'sibling': 71494572},
             }
-        self.req_bin_0 = '\x0c\x00\x00\x0a' '\x4b\x79\x95\xec' \
-            '\x00\x7f\x00\x00' '\xec\xce\x00\x00' \
-            '\x8d\x52\x00\x00' '\xc1\x02\x00\x00' \
-            '\xb4\x79\x00\x00' '\xa6\xc1\x00\x00' \
-            '\x3d\x20\x07\xa8' '\x03\x00\x00\x00'
+        self.req_bin_0 = '\x0c\x00\x00\x0a' '\x34\xce\xb7\x9d' \
+            '\x00\x7f\x00\x00' '\xd6\xcf\x00\x00' \
+            '\xf7\x61\x00\x00' '\xcb\xac\x00\x00' \
+            '\xf5\x99\x00\x00' '\xd8\x18\x00\x00' \
+            '\x04\x42\xeb\xac' '\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -469,10 +470,10 @@ class TestConfigureWindow(unittest.TestCase):
 class TestCirculateWindow(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 2133193809,
-            'direction': 0,
+            'window': 77364842,
+            'direction': 1,
             }
-        self.req_bin_0 = '\x0d\x00\x00\x02' '\x7f\x25\xf4\x51'
+        self.req_bin_0 = '\x0d\x01\x00\x02' '\x04\x9c\x7e\x6a'
 
 
     def testPackRequest0(self):
@@ -497,23 +498,23 @@ class TestCirculateWindow(unittest.TestCase):
 class TestGetGeometry(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'drawable': 696248119,
+            'drawable': 977796786,
             }
-        self.req_bin_0 = '\x0e\x00\x00\x02' '\x29\x7f\xe7\x37'
+        self.req_bin_0 = '\x0e\x00\x00\x02' '\x3a\x47\xfe\xb2'
 
         self.reply_args_0 = {
-            'height': 56899,
-            'sequence_number': 2462,
-            'root': 952445564,
-            'border_width': 22864,
-            'x': -32041,
-            'y': -2637,
-            'depth': 164,
-            'width': 46912,
+            'height': 45221,
+            'sequence_number': 9202,
+            'root': 759718037,
+            'border_width': 33359,
+            'x': -12419,
+            'y': -3489,
+            'depth': 148,
+            'width': 38496,
             }
-        self.reply_bin_0 = '\x01\xa4\x09\x9e' '\x00\x00\x00\x00' \
-            '\x38\xc5\x2a\x7c' '\x82\xd7\xf5\xb3' \
-            '\xb7\x40\xde\x43' '\x59\x50\x00\x00' \
+        self.reply_bin_0 = '\x01\x94\x23\xf2' '\x00\x00\x00\x00' \
+            '\x2d\x48\x60\x95' '\xcf\x7d\xf2\x5f' \
+            '\x96\x60\xb0\xa5' '\x82\x4f\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -557,24 +558,24 @@ class TestGetGeometry(unittest.TestCase):
 class TestQueryTree(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 926736833,
+            'window': 49429933,
             }
-        self.req_bin_0 = '\x0f\x00\x00\x02' '\x37\x3c\xe1\xc1'
+        self.req_bin_0 = '\x0f\x00\x00\x02' '\x02\xf2\x3d\xad'
 
         self.reply_args_0 = {
-            'sequence_number': 28744,
-            'children': [905163556, 1981308517, 1963355964, 2114530966, 460310351, 1897180607, 679524415],
-            'root': 777151598,
-            'parent': 505482186,
+            'sequence_number': 13932,
+            'children': [1284111955, 1535789363, 997347451, 1390691755, 1415925637, 1112347998, 1171156860],
+            'root': 1242921847,
+            'parent': 1785248681,
             }
-        self.reply_bin_0 = '\x01\x00\x70\x48' '\x00\x00\x00\x07' \
-            '\x2e\x52\x64\x6e' '\x1e\x21\x0b\xca' \
+        self.reply_bin_0 = '\x01\x00\x36\x6c' '\x00\x00\x00\x07' \
+            '\x4a\x15\x7b\x77' '\x6a\x68\xbb\xa9' \
             '\x00\x07\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x35\xf3\xb3\x24' '\x76\x18\x5e\x65' \
-            '\x75\x06\x6f\x3c' '\x7e\x09\x2e\x96' \
-            '\x1b\x6f\xc7\x4f' '\x71\x14\xad\xbf' \
-            '\x28\x80\xb8\x3f'
+            '\x4c\x89\xfe\x53' '\x5b\x8a\x49\x33' \
+            '\x3b\x72\x50\x7b' '\x52\xe4\x45\xab' \
+            '\x54\x65\x4f\x85' '\x42\x4d\x15\x5e' \
+            '\x45\xce\x6f\x7c'
 
 
     def testPackRequest0(self):
@@ -625,11 +626,11 @@ class TestInternAtom(unittest.TestCase):
             '\x6f\x70\x00\x00'
 
         self.reply_args_0 = {
-            'atom': 2065326993,
-            'sequence_number': 22018,
+            'atom': 794539351,
+            'sequence_number': 16414,
             }
-        self.reply_bin_0 = '\x01\x00\x56\x02' '\x00\x00\x00\x00' \
-            '\x7b\x1a\x63\x91' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\x00\x40\x1e' '\x00\x00\x00\x00' \
+            '\x2f\x5b\xb5\x57' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -674,15 +675,15 @@ class TestInternAtom(unittest.TestCase):
 class TestGetAtomName(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'atom': 452215613,
+            'atom': 316187350,
             }
-        self.req_bin_0 = '\x11\x00\x00\x02' '\x1a\xf4\x43\x3d'
+        self.req_bin_0 = '\x11\x00\x00\x02' '\x12\xd8\xa2\xd6'
 
         self.reply_args_0 = {
-            'sequence_number': 55994,
+            'sequence_number': 40025,
             'name': 'WM_CLASS',
             }
-        self.reply_bin_0 = '\x01\x00\xda\xba' '\x00\x00\x00\x02' \
+        self.reply_bin_0 = '\x01\x00\x9c\x59' '\x00\x00\x00\x02' \
             '\x00\x08\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
@@ -729,95 +730,95 @@ class TestGetAtomName(unittest.TestCase):
 class TestChangeProperty(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'mode': 1,
+            'mode': 2,
             'data': (8, ''),
-            'property': 1037137716,
-            'window': 1579797457,
-            'type': 1100848920,
+            'property': 82619519,
+            'window': 1936652744,
+            'type': 1591525581,
             }
-        self.req_bin_0 = '\x12\x01\x00\x06' '\x5e\x29\xcb\xd1' \
-            '\x3d\xd1\x77\x34' '\x41\x9d\x9f\x18' \
+        self.req_bin_0 = '\x12\x02\x00\x06' '\x73\x6e\xf9\xc8' \
+            '\x04\xec\xac\x7f' '\x5e\xdc\xc0\xcd' \
             '\x08\x00\x00\x00' '\x00\x00\x00\x00'
 
         self.req_args_1 = {
             'mode': 0,
             'data': (8, 'foo'),
-            'property': 1826307390,
-            'window': 1095034524,
-            'type': 1843579373,
+            'property': 803154106,
+            'window': 981881030,
+            'type': 1935232599,
             }
-        self.req_bin_1 = '\x12\x00\x00\x07' '\x41\x44\xe6\x9c' \
-            '\x6c\xdb\x3d\x3e' '\x6d\xe2\xc9\xed' \
+        self.req_bin_1 = '\x12\x00\x00\x07' '\x3a\x86\x50\xc6' \
+            '\x2f\xdf\x28\xba' '\x73\x59\x4e\x57' \
             '\x08\x00\x00\x00' '\x00\x00\x00\x03' \
             '\x66\x6f\x6f\x00'
 
         self.req_args_2 = {
-            'mode': 2,
+            'mode': 1,
             'data': (8, 'zoom'),
-            'property': 182591666,
-            'window': 1793889783,
-            'type': 283681296,
+            'property': 1831275700,
+            'window': 1853431204,
+            'type': 799075221,
             }
-        self.req_bin_2 = '\x12\x02\x00\x07' '\x6a\xec\x95\xf7' \
-            '\x0a\xe2\x20\xb2' '\x10\xe8\xa2\x10' \
+        self.req_bin_2 = '\x12\x01\x00\x07' '\x6e\x79\x1d\xa4' \
+            '\x6d\x27\x0c\xb4' '\x2f\xa0\xeb\x95' \
             '\x08\x00\x00\x00' '\x00\x00\x00\x04' \
             '\x7a\x6f\x6f\x6d'
 
         self.req_args_3 = {
-            'mode': 2,
+            'mode': 1,
             'data': (16, []),
-            'property': 1444352960,
-            'window': 1084189409,
-            'type': 454569933,
+            'property': 1432188130,
+            'window': 486904700,
+            'type': 816234557,
             }
-        self.req_bin_3 = '\x12\x02\x00\x06' '\x40\x9f\x6a\xe1' \
-            '\x56\x17\x13\xc0' '\x1b\x18\x2f\xcd' \
+        self.req_bin_3 = '\x12\x01\x00\x06' '\x1d\x05\x93\x7c' \
+            '\x55\x5d\x74\xe2' '\x30\xa6\xc0\x3d' \
             '\x10\x00\x00\x00' '\x00\x00\x00\x00'
 
         self.req_args_4 = {
             'mode': 0,
             'data': (16, [1, 2, 3]),
-            'property': 2145146806,
-            'window': 1444199760,
-            'type': 397338770,
+            'property': 371065440,
+            'window': 74539077,
+            'type': 881569585,
             }
-        self.req_bin_4 = '\x12\x00\x00\x08' '\x56\x14\xbd\x50' \
-            '\x7f\xdc\x57\xb6' '\x17\xae\xe8\x92' \
+        self.req_bin_4 = '\x12\x00\x00\x08' '\x04\x71\x60\x45' \
+            '\x16\x1e\x02\x60' '\x34\x8b\xaf\x31' \
             '\x10\x00\x00\x00' '\x00\x00\x00\x03' \
             '\x00\x01\x00\x02' '\x00\x03\x00\x00'
 
         self.req_args_5 = {
-            'mode': 2,
+            'mode': 0,
             'data': (16, [1, 2, 3, 4]),
-            'property': 1581561698,
-            'window': 682054712,
-            'type': 955890910,
+            'property': 504204653,
+            'window': 1773466214,
+            'type': 891164184,
             }
-        self.req_bin_5 = '\x12\x02\x00\x08' '\x28\xa7\x54\x38' \
-            '\x5e\x44\xb7\x62' '\x38\xf9\xbc\xde' \
+        self.req_bin_5 = '\x12\x00\x00\x08' '\x69\xb4\xf2\x66' \
+            '\x1e\x0d\x8d\x6d' '\x35\x1e\x16\x18' \
             '\x10\x00\x00\x00' '\x00\x00\x00\x04' \
             '\x00\x01\x00\x02' '\x00\x03\x00\x04'
 
         self.req_args_6 = {
             'mode': 0,
             'data': (32, []),
-            'property': 2123317134,
-            'window': 881316175,
-            'type': 1430614889,
+            'property': 27953905,
+            'window': 1297035056,
+            'type': 1459050202,
             }
-        self.req_bin_6 = '\x12\x00\x00\x06' '\x34\x87\xd1\x4f' \
-            '\x7e\x8f\x3f\x8e' '\x55\x45\x73\x69' \
+        self.req_bin_6 = '\x12\x00\x00\x06' '\x4d\x4f\x2f\x30' \
+            '\x01\xaa\x8a\xf1' '\x56\xf7\x56\xda' \
             '\x20\x00\x00\x00' '\x00\x00\x00\x00'
 
         self.req_args_7 = {
-            'mode': 1,
+            'mode': 0,
             'data': (32, [1, 2, 3]),
-            'property': 973487784,
-            'window': 1673574881,
-            'type': 1949457396,
+            'property': 1741278545,
+            'window': 1158053012,
+            'type': 733433491,
             }
-        self.req_bin_7 = '\x12\x01\x00\x09' '\x63\xc0\xb9\xe1' \
-            '\x3a\x06\x3e\xa8' '\x74\x32\x5b\xf4' \
+        self.req_bin_7 = '\x12\x00\x00\x09' '\x45\x06\x7c\x94' \
+            '\x67\xc9\xcd\x51' '\x2b\xb7\x4e\x93' \
             '\x20\x00\x00\x00' '\x00\x00\x00\x03' \
             '\x00\x00\x00\x01' '\x00\x00\x00\x02' \
             '\x00\x00\x00\x03'
@@ -971,11 +972,11 @@ class TestChangeProperty(unittest.TestCase):
 class TestDeleteProperty(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'property': 248805346,
-            'window': 163983810,
+            'property': 1994510403,
+            'window': 466309545,
             }
-        self.req_bin_0 = '\x13\x00\x00\x03' '\x09\xc6\x31\xc2' \
-            '\x0e\xd4\x77\xe2'
+        self.req_bin_0 = '\x13\x00\x00\x03' '\x1b\xcb\x51\xa9' \
+            '\x76\xe1\xd0\x43'
 
 
     def testPackRequest0(self):
@@ -1000,106 +1001,106 @@ class TestDeleteProperty(unittest.TestCase):
 class TestGetProperty(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'delete': 1,
-            'long_offset': 1019840159,
-            'type': 537212214,
-            'property': 1073732159,
-            'window': 613204515,
-            'long_length': 822862740,
+            'delete': 0,
+            'long_offset': 1283540610,
+            'type': 485645138,
+            'property': 1402311712,
+            'window': 791763871,
+            'long_length': 534564962,
             }
-        self.req_bin_0 = '\x14\x01\x00\x06' '\x24\x8c\xc2\x23' \
-            '\x3f\xff\xda\x3f' '\x20\x05\x35\x36' \
-            '\x3c\xc9\x86\x9f' '\x31\x0b\xe3\x94'
+        self.req_bin_0 = '\x14\x00\x00\x06' '\x2f\x31\x5b\x9f' \
+            '\x53\x95\x94\x20' '\x1c\xf2\x5b\x52' \
+            '\x4c\x81\x46\x82' '\x1f\xdc\xd0\x62'
 
         self.reply_args_0 = {
             'value': (8, ''),
-            'sequence_number': 1789,
-            'property_type': 152803832,
-            'bytes_after': 548296802,
+            'sequence_number': 27146,
+            'property_type': 884105478,
+            'bytes_after': 85920624,
             }
-        self.reply_bin_0 = '\x01\x08\x06\xfd' '\x00\x00\x00\x00' \
-            '\x09\x1b\x99\xf8' '\x20\xae\x58\x62' \
+        self.reply_bin_0 = '\x01\x08\x6a\x0a' '\x00\x00\x00\x00' \
+            '\x34\xb2\x61\x06' '\x05\x1f\x0b\x70' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
         self.reply_args_1 = {
             'value': (8, 'foo'),
-            'sequence_number': 59751,
-            'property_type': 1209491492,
-            'bytes_after': 212145538,
+            'sequence_number': 28401,
+            'property_type': 380401845,
+            'bytes_after': 1645202351,
             }
-        self.reply_bin_1 = '\x01\x08\xe9\x67' '\x00\x00\x00\x01' \
-            '\x48\x17\x60\x24' '\x0c\xa5\x15\x82' \
+        self.reply_bin_1 = '\x01\x08\x6e\xf1' '\x00\x00\x00\x01' \
+            '\x16\xac\x78\xb5' '\x62\x0f\xcb\xaf' \
             '\x00\x00\x00\x03' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x66\x6f\x6f\x00'
 
         self.reply_args_2 = {
             'value': (8, 'zoom'),
-            'sequence_number': 15933,
-            'property_type': 942383785,
-            'bytes_after': 1723485239,
+            'sequence_number': 50575,
+            'property_type': 435515687,
+            'bytes_after': 911516252,
             }
-        self.reply_bin_2 = '\x01\x08\x3e\x3d' '\x00\x00\x00\x01' \
-            '\x38\x2b\xa2\xa9' '\x66\xba\x4c\x37' \
+        self.reply_bin_2 = '\x01\x08\xc5\x8f' '\x00\x00\x00\x01' \
+            '\x19\xf5\x71\x27' '\x36\x54\xa2\x5c' \
             '\x00\x00\x00\x04' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x7a\x6f\x6f\x6d'
 
         self.reply_args_3 = {
             'value': (16, []),
-            'sequence_number': 57250,
-            'property_type': 808142608,
-            'bytes_after': 586346923,
+            'sequence_number': 19997,
+            'property_type': 1790987501,
+            'bytes_after': 1155806822,
             }
-        self.reply_bin_3 = '\x01\x10\xdf\xa2' '\x00\x00\x00\x00' \
-            '\x30\x2b\x47\x10' '\x22\xf2\xf1\xab' \
+        self.reply_bin_3 = '\x01\x10\x4e\x1d' '\x00\x00\x00\x00' \
+            '\x6a\xc0\x4c\xed' '\x44\xe4\x36\x66' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
         self.reply_args_4 = {
             'value': (16, [1, 2, 3]),
-            'sequence_number': 23088,
-            'property_type': 772905710,
-            'bytes_after': 1245363938,
+            'sequence_number': 17501,
+            'property_type': 577570483,
+            'bytes_after': 1781252251,
             }
-        self.reply_bin_4 = '\x01\x10\x5a\x30' '\x00\x00\x00\x02' \
-            '\x2e\x11\x9a\xee' '\x4a\x3a\xbe\xe2' \
+        self.reply_bin_4 = '\x01\x10\x44\x5d' '\x00\x00\x00\x02' \
+            '\x22\x6d\x06\xb3' '\x6a\x2b\xc0\x9b' \
             '\x00\x00\x00\x03' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x01\x00\x02' '\x00\x03\x00\x00'
 
         self.reply_args_5 = {
             'value': (16, [1, 2, 3, 4]),
-            'sequence_number': 17427,
-            'property_type': 1247474802,
-            'bytes_after': 1700932739,
+            'sequence_number': 63601,
+            'property_type': 1342924557,
+            'bytes_after': 1300307621,
             }
-        self.reply_bin_5 = '\x01\x10\x44\x13' '\x00\x00\x00\x02' \
-            '\x4a\x5a\xf4\x72' '\x65\x62\x2c\x83' \
+        self.reply_bin_5 = '\x01\x10\xf8\x71' '\x00\x00\x00\x02' \
+            '\x50\x0b\x67\x0d' '\x4d\x81\x1e\xa5' \
             '\x00\x00\x00\x04' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x01\x00\x02' '\x00\x03\x00\x04'
 
         self.reply_args_6 = {
             'value': (32, []),
-            'sequence_number': 37330,
-            'property_type': 1806138978,
-            'bytes_after': 1076250502,
+            'sequence_number': 50241,
+            'property_type': 1454033561,
+            'bytes_after': 1795857659,
             }
-        self.reply_bin_6 = '\x01\x20\x91\xd2' '\x00\x00\x00\x00' \
-            '\x6b\xa7\x7e\x62' '\x40\x26\x47\x86' \
+        self.reply_bin_6 = '\x01\x20\xc4\x41' '\x00\x00\x00\x00' \
+            '\x56\xaa\xca\x99' '\x6b\x0a\x9c\xfb' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
         self.reply_args_7 = {
             'value': (32, [1, 2, 3]),
-            'sequence_number': 53218,
-            'property_type': 992987434,
-            'bytes_after': 2074141973,
+            'sequence_number': 45389,
+            'property_type': 231398758,
+            'bytes_after': 420608897,
             }
-        self.reply_bin_7 = '\x01\x20\xcf\xe2' '\x00\x00\x00\x03' \
-            '\x3b\x2f\xc9\x2a' '\x7b\xa0\xe5\x15' \
+        self.reply_bin_7 = '\x01\x20\xb1\x4d' '\x00\x00\x00\x03' \
+            '\x0d\xca\xdd\x66' '\x19\x11\xfb\x81' \
             '\x00\x00\x00\x03' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x01' '\x00\x00\x00\x02' \
@@ -1272,30 +1273,30 @@ class TestGetProperty(unittest.TestCase):
 class TestListProperties(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1964015558,
+            'window': 341494173,
             }
-        self.req_bin_0 = '\x15\x00\x00\x02' '\x75\x10\x7f\xc6'
+        self.req_bin_0 = '\x15\x00\x00\x02' '\x14\x5a\xc9\x9d'
 
         self.reply_args_0 = {
-            'atoms': [1448505190, 476170857, 1313060969, 86239836, 1127972202, 1511570929, 47083026, 1642958244, 222290678, 616254102, 681054438, 1175305449, 934061085, 1091424709, 142977025, 1606118685, 443665559, 601648607, 1247949855, 48593928, 483888993, 440980669, 1007774206],
-            'sequence_number': 1423,
+            'atoms': [1617001909, 966627805, 408888265, 2125379596, 336611549, 1299489908, 1153481135, 1085240351, 1922638622, 685228525, 914772856, 716185178, 301566504, 1129819135, 1664787249, 2052336342, 664569412, 194232880, 1711457295, 754508835, 842780763, 542652673, 1217861008],
+            'sequence_number': 7569,
             }
-        self.reply_bin_0 = '\x01\x00\x05\x8f' '\x00\x00\x00\x17' \
+        self.reply_bin_0 = '\x01\x00\x1d\x91' '\x00\x00\x00\x17' \
             '\x00\x17\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x56\x56\x6f\x66' '\x1c\x61\xca\x69' \
-            '\x4e\x43\xb8\x69' '\x05\x23\xea\x5c' \
-            '\x43\x3b\x7d\x6a' '\x5a\x18\xbd\xf1' \
-            '\x02\xce\x6e\x12' '\x61\xed\x8d\xa4' \
-            '\x0d\x3f\xe2\xf6' '\x24\xbb\x4a\x96' \
-            '\x28\x98\x10\xe6' '\x46\x0d\xbc\xe9' \
-            '\x37\xac\xa4\x1d' '\x41\x0d\xd1\xc5' \
-            '\x08\x85\xa8\x01' '\x5f\xbb\x6d\x1d' \
-            '\x1a\x71\xcc\x97' '\x23\xdc\x6d\xdf' \
-            '\x4a\x62\x34\x1f' '\x02\xe5\x7c\x08' \
-            '\x1c\xd7\x8f\x61' '\x1a\x48\xd4\xbd' \
-            '\x3c\x11\x69\xfe'
+            '\x60\x61\x7d\xb5' '\x39\x9d\x91\xdd' \
+            '\x18\x5f\x23\xc9' '\x7e\xae\xb8\x0c' \
+            '\x14\x10\x48\xdd' '\x4d\x74\xa4\x74' \
+            '\x44\xc0\xb9\xaf' '\x40\xaf\x74\x1f' \
+            '\x72\x99\x23\x1e' '\x28\xd7\xc1\xed' \
+            '\x36\x86\x53\x78' '\x2a\xb0\x1e\x5a' \
+            '\x11\xf9\x8a\x28' '\x43\x57\xab\xff' \
+            '\x63\x3a\xa3\x31' '\x7a\x54\x2a\xd6' \
+            '\x27\x9c\x86\x44' '\x0b\x93\xc2\x30' \
+            '\x66\x02\xc4\x0f' '\x2c\xf8\xe4\x23' \
+            '\x32\x3b\xd0\x5b' '\x20\x58\x39\x01' \
+            '\x48\x97\x15\x90'
 
 
     def testPackRequest0(self):
@@ -1338,12 +1339,12 @@ class TestListProperties(unittest.TestCase):
 class TestSetSelectionOwner(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'selection': 40873095,
-            'window': 801285939,
-            'time': 1156133883,
+            'selection': 1027330706,
+            'window': 704808783,
+            'time': 902673423,
             }
-        self.req_bin_0 = '\x16\x00\x00\x04' '\x2f\xc2\xa7\x33' \
-            '\x02\x6f\xac\x87' '\x44\xe9\x33\xfb'
+        self.req_bin_0 = '\x16\x00\x00\x04' '\x2a\x02\x87\x4f' \
+            '\x3d\x3b\xd2\x92' '\x35\xcd\xb4\x0f'
 
 
     def testPackRequest0(self):
@@ -1368,16 +1369,16 @@ class TestSetSelectionOwner(unittest.TestCase):
 class TestGetSelectionOwner(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'selection': 1432924899,
+            'selection': 645944405,
             }
-        self.req_bin_0 = '\x17\x00\x00\x02' '\x55\x68\xb2\xe3'
+        self.req_bin_0 = '\x17\x00\x00\x02' '\x26\x80\x54\x55'
 
         self.reply_args_0 = {
-            'sequence_number': 5826,
-            'owner': 1171450638,
+            'sequence_number': 1155,
+            'owner': 1352532776,
             }
-        self.reply_bin_0 = '\x01\x00\x16\xc2' '\x00\x00\x00\x00' \
-            '\x45\xd2\xeb\x0e' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\x00\x04\x83' '\x00\x00\x00\x00' \
+            '\x50\x9e\x03\x28' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -1422,15 +1423,15 @@ class TestGetSelectionOwner(unittest.TestCase):
 class TestConvertSelection(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'property': 1836047090,
-            'time': 2128742728,
-            'target': 1971925603,
-            'selection': 278928673,
-            'requestor': 1784331242,
+            'property': 2021418962,
+            'time': 1724767916,
+            'target': 2069704072,
+            'selection': 1440635975,
+            'requestor': 271146474,
             }
-        self.req_bin_0 = '\x18\x00\x00\x06' '\x6a\x5a\xbb\xea' \
-            '\x10\xa0\x1d\x21' '\x75\x89\x32\x63' \
-            '\x6d\x6f\xda\xf2' '\x7e\xe2\x09\x48'
+        self.req_bin_0 = '\x18\x00\x00\x06' '\x10\x29\x5d\xea' \
+            '\x55\xde\x5c\x47' '\x7b\x5d\x2d\x88' \
+            '\x78\x7c\x67\xd2' '\x66\xcd\xde\xac'
 
 
     def testPackRequest0(self):
@@ -1455,15 +1456,15 @@ class TestConvertSelection(unittest.TestCase):
 class TestSendEvent(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'event': Xlib.protocol.event.Expose(height = 15231, sequence_number = 0, type = 12, x = 64311, y = 34568, window = 71584977, width = 52927, count = 39405),
+            'event': Xlib.protocol.event.Expose(height = 6296, sequence_number = 0, type = 12, x = 5357, y = 17190, window = 207976521, width = 31176, count = 17217),
             'propagate': 0,
-            'destination': 1327311518,
-            'event_mask': 96477203,
+            'destination': 193753361,
+            'event_mask': 1487265129,
             }
-        self.req_bin_0 = '\x19\x00\x00\x0b' '\x4f\x1d\x2a\x9e' \
-            '\x05\xc0\x20\x13' '\x0c\x00\x00\x00' \
-            '\x04\x44\x4c\xd1' '\xfb\x37\x87\x08' \
-            '\xce\xbf\x3b\x7f' '\x99\xed\x00\x00' \
+        self.req_bin_0 = '\x19\x00\x00\x0b' '\x0b\x8c\x71\x11' \
+            '\x58\xa5\xdd\x69' '\x0c\x00\x00\x00' \
+            '\x0c\x65\x78\x49' '\x14\xed\x43\x26' \
+            '\x79\xc8\x18\x98' '\x43\x41\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00'
 
@@ -1490,24 +1491,24 @@ class TestSendEvent(unittest.TestCase):
 class TestGrabPointer(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'owner_events': 0,
-            'grab_window': 607755184,
-            'confine_to': 1395242985,
-            'event_mask': 33902,
+            'owner_events': 1,
+            'grab_window': 1960374026,
+            'confine_to': 1443156680,
+            'event_mask': 8447,
             'pointer_mode': 1,
-            'time': 2111367756,
-            'keyboard_mode': 0,
-            'cursor': 1984189421,
+            'time': 404826547,
+            'keyboard_mode': 1,
+            'cursor': 791268577,
             }
-        self.req_bin_0 = '\x1a\x00\x00\x06' '\x24\x39\x9b\xb0' \
-            '\x84\x6e\x01\x00' '\x53\x29\xb7\xe9' \
-            '\x76\x44\x53\xed' '\x7d\xd8\xea\x4c'
+        self.req_bin_0 = '\x1a\x01\x00\x06' '\x74\xd8\xef\x0a' \
+            '\x20\xff\x01\x01' '\x56\x04\xd2\xc8' \
+            '\x2f\x29\xcc\xe1' '\x18\x21\x29\xb3'
 
         self.reply_args_0 = {
-            'sequence_number': 63225,
-            'status': 217,
+            'sequence_number': 53605,
+            'status': 241,
             }
-        self.reply_bin_0 = '\x01\xd9\xf6\xf9' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\xf1\xd1\x65' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
@@ -1553,9 +1554,9 @@ class TestGrabPointer(unittest.TestCase):
 class TestUngrabPointer(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'time': 165427532,
+            'time': 1988722845,
             }
-        self.req_bin_0 = '\x1b\x00\x00\x02' '\x09\xdc\x39\x4c'
+        self.req_bin_0 = '\x1b\x00\x00\x02' '\x76\x89\x80\x9d'
 
 
     def testPackRequest0(self):
@@ -1580,19 +1581,19 @@ class TestUngrabPointer(unittest.TestCase):
 class TestGrabButton(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'owner_events': 0,
-            'grab_window': 1656778032,
-            'confine_to': 1852999245,
-            'event_mask': 7760,
+            'owner_events': 1,
+            'grab_window': 849162323,
+            'confine_to': 1710457950,
+            'event_mask': 1098,
             'pointer_mode': 1,
-            'modifiers': 56764,
-            'button': 212,
+            'modifiers': 27305,
+            'button': 222,
             'keyboard_mode': 1,
-            'cursor': 499754188,
+            'cursor': 1192326105,
             }
-        self.req_bin_0 = '\x1c\x00\x00\x06' '\x62\xc0\x6d\x30' \
-            '\x1e\x50\x01\x01' '\x6e\x72\x86\x4d' \
-            '\x1d\xc9\xa4\xcc' '\xd4\x00\xdd\xbc'
+        self.req_bin_0 = '\x1c\x01\x00\x06' '\x32\x9d\x30\x53' \
+            '\x04\x4a\x01\x01' '\x65\xf3\x84\x5e' \
+            '\x47\x11\x73\xd9' '\xde\x00\x6a\xa9'
 
 
     def testPackRequest0(self):
@@ -1617,12 +1618,12 @@ class TestGrabButton(unittest.TestCase):
 class TestUngrabButton(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'grab_window': 1047705334,
-            'button': 251,
-            'modifiers': 35716,
+            'grab_window': 88688623,
+            'button': 228,
+            'modifiers': 54310,
             }
-        self.req_bin_0 = '\x1d\xfb\x00\x03' '\x3e\x72\xb6\xf6' \
-            '\x8b\x84\x00\x00'
+        self.req_bin_0 = '\x1d\xe4\x00\x03' '\x05\x49\x47\xef' \
+            '\xd4\x26\x00\x00'
 
 
     def testPackRequest0(self):
@@ -1647,12 +1648,12 @@ class TestUngrabButton(unittest.TestCase):
 class TestChangeActivePointerGrab(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'time': 2114321987,
-            'event_mask': 39111,
-            'cursor': 1289913603,
+            'time': 980556286,
+            'event_mask': 16740,
+            'cursor': 170697366,
             }
-        self.req_bin_0 = '\x1e\x00\x00\x04' '\x4c\xe2\x85\x03' \
-            '\x7e\x05\xfe\x43' '\x98\xc7\x00\x00'
+        self.req_bin_0 = '\x1e\x00\x00\x04' '\x0a\x2c\xa2\x96' \
+            '\x3a\x72\x19\xfe' '\x41\x64\x00\x00'
 
 
     def testPackRequest0(self):
@@ -1677,20 +1678,20 @@ class TestChangeActivePointerGrab(unittest.TestCase):
 class TestGrabKeyboard(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'owner_events': 0,
-            'grab_window': 371263215,
-            'time': 729368827,
+            'owner_events': 1,
+            'grab_window': 1936508551,
+            'time': 631287008,
             'pointer_mode': 0,
-            'keyboard_mode': 1,
+            'keyboard_mode': 0,
             }
-        self.req_bin_0 = '\x1f\x00\x00\x04' '\x16\x21\x06\xef' \
-            '\x2b\x79\x48\xfb' '\x00\x01\x00\x00'
+        self.req_bin_0 = '\x1f\x01\x00\x04' '\x73\x6c\xc6\x87' \
+            '\x25\xa0\xac\xe0' '\x00\x00\x00\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 20466,
-            'status': 198,
+            'sequence_number': 17578,
+            'status': 136,
             }
-        self.reply_bin_0 = '\x01\xc6\x4f\xf2' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\x88\x44\xaa' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
@@ -1736,9 +1737,9 @@ class TestGrabKeyboard(unittest.TestCase):
 class TestUngrabKeyboard(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'time': 1130279738,
+            'time': 1440514801,
             }
-        self.req_bin_0 = '\x20\x00\x00\x02' '\x43\x5e\xb3\x3a'
+        self.req_bin_0 = '\x20\x00\x00\x02' '\x55\xdc\x82\xf1'
 
 
     def testPackRequest0(self):
@@ -1764,14 +1765,14 @@ class TestGrabKey(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
             'owner_events': 0,
-            'grab_window': 1229207347,
-            'pointer_mode': 1,
-            'keyboard_mode': 1,
-            'modifiers': 40890,
-            'key': 148,
+            'grab_window': 1287894516,
+            'pointer_mode': 0,
+            'keyboard_mode': 0,
+            'modifiers': 5159,
+            'key': 234,
             }
-        self.req_bin_0 = '\x21\x00\x00\x04' '\x49\x44\x37\x33' \
-            '\x9f\xba\x94\x01' '\x01\x00\x00\x00'
+        self.req_bin_0 = '\x21\x00\x00\x04' '\x4c\xc3\xb5\xf4' \
+            '\x14\x27\xea\x00' '\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -1796,12 +1797,12 @@ class TestGrabKey(unittest.TestCase):
 class TestUngrabKey(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'grab_window': 1205656398,
-            'key': 151,
-            'modifiers': 40447,
+            'grab_window': 1406098011,
+            'key': 186,
+            'modifiers': 943,
             }
-        self.req_bin_0 = '\x22\x97\x00\x03' '\x47\xdc\xdb\x4e' \
-            '\x9d\xff\x00\x00'
+        self.req_bin_0 = '\x22\xba\x00\x03' '\x53\xcf\x5a\x5b' \
+            '\x03\xaf\x00\x00'
 
 
     def testPackRequest0(self):
@@ -1826,10 +1827,10 @@ class TestUngrabKey(unittest.TestCase):
 class TestAllowEvents(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'time': 1640130566,
-            'mode': 5,
+            'time': 1018375987,
+            'mode': 0,
             }
-        self.req_bin_0 = '\x23\x05\x00\x02' '\x61\xc2\x68\x06'
+        self.req_bin_0 = '\x23\x00\x00\x02' '\x3c\xb3\x2f\x33'
 
 
     def testPackRequest0(self):
@@ -1906,25 +1907,25 @@ class TestUngrabServer(unittest.TestCase):
 class TestQueryPointer(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1222670706,
+            'window': 1326561993,
             }
-        self.req_bin_0 = '\x26\x00\x00\x02' '\x48\xe0\x79\x72'
+        self.req_bin_0 = '\x26\x00\x00\x02' '\x4f\x11\xba\xc9'
 
         self.reply_args_0 = {
-            'win_y': -26803,
+            'win_y': -32115,
             'same_screen': 0,
-            'sequence_number': 40848,
-            'root': 1255370704,
-            'root_x': -28425,
-            'root_y': -11688,
-            'mask': 41671,
-            'child': 1712001679,
-            'win_x': -12376,
+            'sequence_number': 37616,
+            'root': 491255377,
+            'root_x': -13798,
+            'root_y': -27508,
+            'mask': 7071,
+            'child': 1553693675,
+            'win_x': -19638,
             }
-        self.reply_bin_0 = '\x01\x00\x9f\x90' '\x00\x00\x00\x00' \
-            '\x4a\xd3\x6f\xd0' '\x66\x0b\x12\x8f' \
-            '\x90\xf7\xd2\x58' '\xcf\xa8\x97\x4d' \
-            '\xa2\xc7\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = '\x01\x00\x92\xf0' '\x00\x00\x00\x00' \
+            '\x1d\x47\xf6\x51' '\x5c\x9b\x7b\xeb' \
+            '\xca\x1a\x94\x8c' '\xb3\x4a\x82\x8d' \
+            '\x1b\x9f\x00\x00' '\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -1967,26 +1968,26 @@ class TestQueryPointer(unittest.TestCase):
 class TestGetMotionEvents(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 540661757,
-            'start': 2109370140,
-            'stop': 1637006627,
+            'window': 808316951,
+            'start': 1723735382,
+            'stop': 1217054863,
             }
-        self.req_bin_0 = '\x27\x00\x00\x04' '\x20\x39\xd7\xfd' \
-            '\x7d\xba\x6f\x1c' '\x61\x92\xbd\x23'
+        self.req_bin_0 = '\x27\x00\x00\x04' '\x30\x2d\xf0\x17' \
+            '\x66\xbe\x1d\x56' '\x48\x8a\xc8\x8f'
 
         self.reply_args_0 = {
-            'sequence_number': 8755,
-            'events': [{'time': 286903636, 'x': -27529, 'y': -12290}, {'time': 1306580447, 'x': -6191, 'y': -31441}, {'time': 1989739523, 'x': -23403, 'y': -11091}, {'time': 1563081363, 'x': -28619, 'y': -2487}, {'time': 1322577500, 'x': -21541, 'y': -15337}],
+            'sequence_number': 52617,
+            'events': [{'time': 645811678, 'x': -18081, 'y': -24568}, {'time': 829159667, 'x': -17903, 'y': -1674}, {'time': 1116921863, 'x': -29115, 'y': -9275}, {'time': 444509732, 'x': -29034, 'y': -3025}, {'time': 279123109, 'x': -10579, 'y': -24468}],
             }
-        self.reply_bin_0 = '\x01\x00\x22\x33' '\x00\x00\x00\x0a' \
+        self.reply_bin_0 = '\x01\x00\xcd\x89' '\x00\x00\x00\x0a' \
             '\x00\x00\x00\x05' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x11\x19\xcd\x54' '\x94\x77\xcf\xfe' \
-            '\x4d\xe0\xd5\xdf' '\xe7\xd1\x85\x2f' \
-            '\x76\x99\x04\x03' '\xa4\x95\xd4\xad' \
-            '\x5d\x2a\xba\x93' '\x90\x35\xf6\x49' \
-            '\x4e\xd4\xee\x5c' '\xab\xdb\xc4\x17'
+            '\x26\x7e\x4d\xde' '\xb9\x5f\xa0\x08' \
+            '\x31\x6b\xf8\xf3' '\xba\x11\xf9\x76' \
+            '\x42\x92\xe0\x07' '\x8e\x45\xdb\xc5' \
+            '\x1a\x7e\xae\x24' '\x8e\x96\xf4\x2f' \
+            '\x10\xa3\x14\xa5' '\xd6\xad\xa0\x6c'
 
 
     def testPackRequest0(self):
@@ -2029,23 +2030,23 @@ class TestGetMotionEvents(unittest.TestCase):
 class TestTranslateCoords(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'src_y': -30143,
-            'src_x': -18331,
-            'src_wid': 376276259,
-            'dst_wid': 253341128,
+            'src_y': -14604,
+            'src_x': -30988,
+            'src_wid': 1191300478,
+            'dst_wid': 1366635300,
             }
-        self.req_bin_0 = '\x28\x00\x00\x04' '\x16\x6d\x85\x23' \
-            '\x0f\x19\xad\xc8' '\xb8\x65\x8a\x41'
+        self.req_bin_0 = '\x28\x00\x00\x04' '\x47\x01\xcd\x7e' \
+            '\x51\x75\x33\x24' '\x86\xf4\xc6\xf4'
 
         self.reply_args_0 = {
-            'child': 431023944,
-            'same_screen': 1,
-            'sequence_number': 8040,
-            'x': -25540,
-            'y': -7648,
+            'child': 930603862,
+            'same_screen': 0,
+            'sequence_number': 22968,
+            'x': -30980,
+            'y': -12207,
             }
-        self.reply_bin_0 = '\x01\x01\x1f\x68' '\x00\x00\x00\x00' \
-            '\x19\xb0\xe7\x48' '\x9c\x3c\xe2\x20' \
+        self.reply_bin_0 = '\x01\x00\x59\xb8' '\x00\x00\x00\x00' \
+            '\x37\x77\xe3\x56' '\x86\xfc\xd0\x51' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -2090,18 +2091,18 @@ class TestTranslateCoords(unittest.TestCase):
 class TestWarpPointer(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'src_height': 53950,
-            'src_window': 249819173,
-            'dst_window': 1408887199,
-            'src_width': 37413,
-            'src_y': -28935,
-            'src_x': -2597,
-            'dst_x': -22353,
-            'dst_y': -2907,
+            'src_height': 60128,
+            'src_window': 290331047,
+            'dst_window': 1731920741,
+            'src_width': 11047,
+            'src_y': -27951,
+            'src_x': -18615,
+            'dst_x': -23496,
+            'dst_y': -7485,
             }
-        self.req_bin_0 = '\x29\x00\x00\x06' '\x0e\xe3\xf0\x25' \
-            '\x53\xf9\xe9\x9f' '\xf5\xdb\x8e\xf9' \
-            '\x92\x25\xd2\xbe' '\xa8\xaf\xf4\xa5'
+        self.req_bin_0 = '\x29\x00\x00\x06' '\x11\x4e\x19\xa7' \
+            '\x67\x3b\x03\x65' '\xb7\x49\x92\xd1' \
+            '\x2b\x27\xea\xe0' '\xa4\x38\xe2\xc3'
 
 
     def testPackRequest0(self):
@@ -2126,12 +2127,12 @@ class TestWarpPointer(unittest.TestCase):
 class TestSetInputFocus(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'revert_to': 0,
-            'time': 1024986488,
-            'focus': 140695377,
+            'revert_to': 2,
+            'time': 34713408,
+            'focus': 613012524,
             }
-        self.req_bin_0 = '\x2a\x00\x00\x03' '\x08\x62\xd7\x51' \
-            '\x3d\x18\x0d\x78'
+        self.req_bin_0 = '\x2a\x02\x00\x03' '\x24\x89\xd4\x2c' \
+            '\x02\x11\xaf\x40'
 
 
     def testPackRequest0(self):
@@ -2160,12 +2161,12 @@ class TestGetInputFocus(unittest.TestCase):
         self.req_bin_0 = '\x2b\x00\x00\x01'
 
         self.reply_args_0 = {
-            'revert_to': 221,
-            'sequence_number': 14149,
-            'focus': 1304519908,
+            'revert_to': 188,
+            'sequence_number': 55940,
+            'focus': 868028771,
             }
-        self.reply_bin_0 = '\x01\xdd\x37\x45' '\x00\x00\x00\x00' \
-            '\x4d\xc1\x64\xe4' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\xbc\xda\x84' '\x00\x00\x00\x00' \
+            '\x33\xbd\x11\x63' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -2214,14 +2215,14 @@ class TestQueryKeymap(unittest.TestCase):
         self.req_bin_0 = '\x2c\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 11636,
-            'map': [197, 252, 218, 253, 151, 253, 222, 169, 233, 128, 224, 204, 154, 181, 152, 255, 226, 140, 189, 128, 197, 244, 251, 221, 151, 138, 130, 182, 254, 162, 144, 197],
+            'sequence_number': 23745,
+            'map': [189, 133, 239, 131, 150, 128, 153, 220, 214, 234, 210, 156, 184, 153, 246, 187, 173, 177, 245, 162, 144, 142, 210, 190, 189, 129, 247, 170, 202, 231, 206, 186],
             }
-        self.reply_bin_0 = '\x01\x00\x2d\x74' '\x00\x00\x00\x02' \
-            '\xc5\xfc\xda\xfd' '\x97\xfd\xde\xa9' \
-            '\xe9\x80\xe0\xcc' '\x9a\xb5\x98\xff' \
-            '\xe2\x8c\xbd\x80' '\xc5\xf4\xfb\xdd' \
-            '\x97\x8a\x82\xb6' '\xfe\xa2\x90\xc5'
+        self.reply_bin_0 = '\x01\x00\x5c\xc1' '\x00\x00\x00\x02' \
+            '\xbd\x85\xef\x83' '\x96\x80\x99\xdc' \
+            '\xd6\xea\xd2\x9c' '\xb8\x99\xf6\xbb' \
+            '\xad\xb1\xf5\xa2' '\x90\x8e\xd2\xbe' \
+            '\xbd\x81\xf7\xaa' '\xca\xe7\xce\xba'
 
 
     def testPackRequest0(self):
@@ -2264,10 +2265,10 @@ class TestQueryKeymap(unittest.TestCase):
 class TestOpenFont(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'fid': 229736695,
+            'fid': 2075939773,
             'name': 'foofont',
             }
-        self.req_bin_0 = '\x2d\x00\x00\x05' '\x0d\xb1\x80\xf7' \
+        self.req_bin_0 = '\x2d\x00\x00\x05' '\x7b\xbc\x53\xbd' \
             '\x00\x07\x00\x00' '\x66\x6f\x6f\x66' \
             '\x6f\x6e\x74\x00'
 
@@ -2294,9 +2295,9 @@ class TestOpenFont(unittest.TestCase):
 class TestCloseFont(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'font': 566055567,
+            'font': 88898711,
             }
-        self.req_bin_0 = '\x2e\x00\x00\x02' '\x21\xbd\x52\x8f'
+        self.req_bin_0 = '\x2e\x00\x00\x02' '\x05\x4c\x7c\x97'
 
 
     def testPackRequest0(self):
@@ -2321,39 +2322,39 @@ class TestCloseFont(unittest.TestCase):
 class TestQueryFont(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'font': 1912111384,
+            'font': 716293692,
             }
-        self.req_bin_0 = '\x2f\x00\x00\x02' '\x71\xf8\x81\x18'
+        self.req_bin_0 = '\x2f\x00\x00\x02' '\x2a\xb1\xc6\x3c'
 
         self.reply_args_0 = {
-            'sequence_number': 12196,
-            'properties': [{'value': 1129396189, 'name': 1124333300}],
-            'min_byte1': 211,
-            'max_byte1': 209,
-            'char_infos': [{'descent': -30573, 'ascent': -15524, 'character_width': -16338, 'left_side_bearing': -13196, 'right_side_bearing': -20508, 'attributes': 12473}, {'descent': -550, 'ascent': -7909, 'character_width': -30130, 'left_side_bearing': -19839, 'right_side_bearing': -13225, 'attributes': 37544}, {'descent': -28260, 'ascent': -27136, 'character_width': -22577, 'left_side_bearing': -29461, 'right_side_bearing': -20564, 'attributes': 60557}],
-            'max_char_or_byte2': 60865,
-            'default_char': 45294,
-            'min_char_or_byte2': 21091,
-            'draw_direction': 167,
-            'min_bounds': {'descent': -9281, 'ascent': -2945, 'character_width': -21203, 'left_side_bearing': -7808, 'right_side_bearing': -16678, 'attributes': 60085},
+            'sequence_number': 50820,
+            'properties': [{'value': 713484825, 'name': 1692974835}],
+            'min_byte1': 218,
+            'max_byte1': 200,
+            'char_infos': [{'descent': -22353, 'ascent': -9095, 'character_width': -6458, 'left_side_bearing': -1262, 'right_side_bearing': -19985, 'attributes': 60178}, {'descent': -21211, 'ascent': -544, 'character_width': -23225, 'left_side_bearing': -30015, 'right_side_bearing': -26583, 'attributes': 20388}, {'descent': -10287, 'ascent': -8442, 'character_width': -12897, 'left_side_bearing': -19304, 'right_side_bearing': -24896, 'attributes': 52972}],
+            'max_char_or_byte2': 29619,
+            'default_char': 49313,
+            'min_char_or_byte2': 19883,
+            'draw_direction': 253,
+            'min_bounds': {'descent': -19681, 'ascent': -3713, 'character_width': -11983, 'left_side_bearing': -10184, 'right_side_bearing': -8954, 'attributes': 62773},
             'all_chars_exist': 1,
-            'font_ascent': -19929,
-            'font_descent': -20541,
-            'max_bounds': {'descent': -9632, 'ascent': -3680, 'character_width': -1632, 'left_side_bearing': -5741, 'right_side_bearing': -3544, 'attributes': 13262},
+            'font_ascent': -30023,
+            'font_descent': -18769,
+            'max_bounds': {'descent': -3417, 'ascent': -21488, 'character_width': -11884, 'left_side_bearing': -27819, 'right_side_bearing': -17428, 'attributes': 17493},
             }
-        self.reply_bin_0 = '\x01\x00\x2f\xa4' '\x00\x00\x00\x12' \
-            '\xe1\x80\xbe\xda' '\xad\x2d\xf4\x7f' \
-            '\xdb\xbf\xea\xb5' '\x00\x00\x00\x00' \
-            '\xe9\x93\xf2\x28' '\xf9\xa0\xf1\xa0' \
-            '\xda\x60\x33\xce' '\x00\x00\x00\x00' \
-            '\x52\x63\xed\xc1' '\xb0\xee\x00\x01' \
-            '\xa7\xd3\xd1\x01' '\xb2\x27\xaf\xc3' \
-            '\x00\x00\x00\x03' '\x43\x03\xf6\xf4' \
-            '\x43\x51\x37\xdd' '\xcc\x74\xaf\xe4' \
-            '\xc0\x2e\xc3\x5c' '\x88\x93\x30\xb9' \
-            '\xb2\x81\xcc\x57' '\x8a\x4e\xe1\x1b' \
-            '\xfd\xda\x92\xa8' '\x8c\xeb\xaf\xac' \
-            '\xa7\xcf\x96\x00' '\x91\x9c\xec\x8d'
+        self.reply_bin_0 = '\x01\x00\xc6\x84' '\x00\x00\x00\x12' \
+            '\xd8\x38\xdd\x06' '\xd1\x31\xf1\x7f' \
+            '\xb3\x1f\xf5\x35' '\x00\x00\x00\x00' \
+            '\x93\x55\xbb\xec' '\xd1\x94\xac\x10' \
+            '\xf2\xa7\x44\x55' '\x00\x00\x00\x00' \
+            '\x4d\xab\x73\xb3' '\xc0\xa1\x00\x01' \
+            '\xfd\xda\xc8\x01' '\x8a\xb9\xb6\xaf' \
+            '\x00\x00\x00\x03' '\x64\xe8\xbe\xf3' \
+            '\x2a\x86\xea\x19' '\xfb\x12\xb1\xef' \
+            '\xe6\xc6\xdc\x79' '\xa8\xaf\xeb\x12' \
+            '\x8a\xc1\x98\x29' '\xa5\x47\xfd\xe0' \
+            '\xad\x25\x4f\xa4' '\xb4\x98\x9e\xc0' \
+            '\xcd\x9f\xdf\x06' '\xd7\xd1\xce\xec'
 
 
     def testPackRequest0(self):
@@ -2396,27 +2397,27 @@ class TestQueryFont(unittest.TestCase):
 class TestQueryTextExtents(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'font': 792714047,
+            'font': 1817418879,
             'string': (102, 111, 111),
             }
-        self.req_bin_0 = '\x30\x01\x00\x04' '\x2f\x3f\xdb\x3f' \
+        self.req_bin_0 = '\x30\x01\x00\x04' '\x6c\x53\x9c\x7f' \
             '\x00\x66\x00\x6f' '\x00\x6f\x00\x00'
 
         self.reply_args_0 = {
-            'overall_width': -1876385586,
-            'draw_direction': 205,
-            'sequence_number': 15421,
-            'font_ascent': -2134,
-            'overall_ascent': -8363,
-            'overall_descent': -24649,
-            'overall_right': -2054818235,
-            'overall_left': -1218715126,
-            'font_descent': -15670,
+            'overall_width': -1268975420,
+            'draw_direction': 197,
+            'sequence_number': 53207,
+            'font_ascent': -20024,
+            'overall_ascent': -21313,
+            'overall_descent': -12047,
+            'overall_right': -478689925,
+            'overall_left': -1183220348,
+            'font_descent': -11736,
             }
-        self.reply_bin_0 = '\x01\xcd\x3c\x3d' '\x00\x00\x00\x00' \
-            '\xf7\xaa\xc2\xca' '\xdf\x55\x9f\xb7' \
-            '\x90\x28\xa0\xce' '\xb7\x5b\xe2\x0a' \
-            '\x85\x85\xf6\x45' '\x00\x00\x00\x00'
+        self.reply_bin_0 = '\x01\xc5\xcf\xd7' '\x00\x00\x00\x00' \
+            '\xb1\xc8\xd2\x28' '\xac\xbf\xd0\xf1' \
+            '\xb4\x5c\xf8\xc4' '\xb9\x79\x7d\x84' \
+            '\xe3\x77\xc5\x7b' '\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -2459,17 +2460,17 @@ class TestQueryTextExtents(unittest.TestCase):
 class TestListFonts(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'max_names': 41387,
+            'max_names': 43767,
             'pattern': 'bhazr',
             }
-        self.req_bin_0 = '\x31\x00\x00\x04' '\xa1\xab\x00\x05' \
+        self.req_bin_0 = '\x31\x00\x00\x04' '\xaa\xf7\x00\x05' \
             '\x62\x68\x61\x7a' '\x72\x00\x00\x00'
 
         self.reply_args_0 = {
             'fonts': ['fie', 'fuzzy', 'foozooom'],
-            'sequence_number': 57054,
+            'sequence_number': 43371,
             }
-        self.reply_bin_0 = '\x01\x00\xde\xde' '\x00\x00\x00\x05' \
+        self.reply_bin_0 = '\x01\x00\xa9\x6b' '\x00\x00\x00\x05' \
             '\x00\x03\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
@@ -2518,38 +2519,38 @@ class TestListFonts(unittest.TestCase):
 class TestListFontsWithInfo(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'max_names': 41728,
+            'max_names': 30605,
             'pattern': 'bhazr2',
             }
-        self.req_bin_0 = '\x32\x00\x00\x04' '\xa3\x00\x00\x06' \
+        self.req_bin_0 = '\x32\x00\x00\x04' '\x77\x8d\x00\x06' \
             '\x62\x68\x61\x7a' '\x72\x32\x00\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 24555,
-            'properties': [{'value': 1106326331, 'name': 473813079}],
-            'min_byte1': 201,
-            'max_byte1': 155,
-            'max_char_or_byte2': 13873,
-            'default_char': 62004,
-            'min_char_or_byte2': 6272,
-            'draw_direction': 171,
-            'replies_hint': 621118830,
-            'min_bounds': {'descent': -21827, 'ascent': -23224, 'character_width': -7769, 'left_side_bearing': -27599, 'right_side_bearing': -1822, 'attributes': 23072},
+            'sequence_number': 18397,
+            'properties': [{'value': 890678602, 'name': 1360918406}],
+            'min_byte1': 222,
+            'max_byte1': 203,
+            'max_char_or_byte2': 31725,
+            'default_char': 24807,
+            'min_char_or_byte2': 16168,
+            'draw_direction': 237,
+            'replies_hint': 1055777945,
+            'min_bounds': {'descent': -32699, 'ascent': -24692, 'character_width': -29002, 'left_side_bearing': -13863, 'right_side_bearing': -12569, 'attributes': 44827},
             'all_chars_exist': 0,
             'name': 'fontfont',
-            'font_ascent': -10158,
-            'font_descent': -29095,
-            'max_bounds': {'descent': -28370, 'ascent': -27525, 'character_width': -23263, 'left_side_bearing': -6635, 'right_side_bearing': -18842, 'attributes': 36200},
+            'font_ascent': -16158,
+            'font_descent': -16573,
+            'max_bounds': {'descent': -31395, 'ascent': -20537, 'character_width': -3642, 'left_side_bearing': -19158, 'right_side_bearing': -14776, 'attributes': 27483},
             }
-        self.reply_bin_0 = '\x01\x08\x5f\xeb' '\x00\x00\x00\x0b' \
-            '\x94\x31\xf8\xe2' '\xe1\xa7\xa5\x48' \
-            '\xaa\xbd\x5a\x20' '\x00\x00\x00\x00' \
-            '\xe6\x15\xb6\x66' '\xa5\x21\x94\x7b' \
-            '\x91\x2e\x8d\x68' '\x00\x00\x00\x00' \
-            '\x18\x80\x36\x31' '\xf2\x34\x00\x01' \
-            '\xab\xc9\x9b\x00' '\xd8\x52\x8e\x59' \
-            '\x25\x05\x85\x6e' '\x1c\x3d\xd0\x57' \
-            '\x41\xf1\x33\x3b' '\x66\x6f\x6e\x74' \
+        self.reply_bin_0 = '\x01\x08\x47\xdd' '\x00\x00\x00\x0b' \
+            '\xc9\xd9\xce\xe7' '\x8e\xb6\x9f\x8c' \
+            '\x80\x45\xaf\x1b' '\x00\x00\x00\x00' \
+            '\xb5\x2a\xc6\x48' '\xf1\xc6\xaf\xc7' \
+            '\x85\x5d\x6b\x5b' '\x00\x00\x00\x00' \
+            '\x3f\x28\x7b\xed' '\x60\xe7\x00\x01' \
+            '\xed\xde\xcb\x00' '\xc0\xe2\xbf\x43' \
+            '\x3e\xed\xe4\x99' '\x51\x1d\xf7\x86' \
+            '\x35\x16\xad\x4a' '\x66\x6f\x6e\x74' \
             '\x66\x6f\x6e\x74'
 
 
@@ -2649,10 +2650,10 @@ class TestGetFontPath(unittest.TestCase):
         self.req_bin_0 = '\x34\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 9811,
+            'sequence_number': 14600,
             'paths': ['path1', 'path2232'],
             }
-        self.reply_bin_0 = '\x01\x00\x26\x53' '\x00\x00\x00\x04' \
+        self.reply_bin_0 = '\x01\x00\x39\x08' '\x00\x00\x00\x04' \
             '\x00\x02\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
@@ -2660,10 +2661,10 @@ class TestGetFontPath(unittest.TestCase):
             '\x61\x74\x68\x32' '\x32\x33\x32\x00'
 
         self.reply_args_1 = {
-            'sequence_number': 7231,
+            'sequence_number': 45691,
             'paths': [],
             }
-        self.reply_bin_1 = '\x01\x00\x1c\x3f' '\x00\x00\x00\x00' \
+        self.reply_bin_1 = '\x01\x00\xb2\x7b' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
@@ -2727,14 +2728,14 @@ class TestGetFontPath(unittest.TestCase):
 class TestCreatePixmap(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'height': 36624,
-            'drawable': 270242365,
-            'pid': 451180827,
-            'depth': 152,
-            'width': 3842,
+            'height': 5554,
+            'drawable': 317771446,
+            'pid': 925741638,
+            'depth': 183,
+            'width': 21598,
             }
-        self.req_bin_0 = '\x35\x98\x00\x04' '\x1a\xe4\x79\x1b' \
-            '\x10\x1b\x92\x3d' '\x0f\x02\x8f\x10'
+        self.req_bin_0 = '\x35\xb7\x00\x04' '\x37\x2d\xb2\x46' \
+            '\x12\xf0\xce\xb6' '\x54\x5e\x15\xb2'
 
 
     def testPackRequest0(self):
@@ -2759,9 +2760,9 @@ class TestCreatePixmap(unittest.TestCase):
 class TestFreePixmap(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'pixmap': 1221352707,
+            'pixmap': 1023774795,
             }
-        self.req_bin_0 = '\x36\x00\x00\x02' '\x48\xcc\x5d\x03'
+        self.req_bin_0 = '\x36\x00\x00\x02' '\x3d\x05\x90\x4b'
 
 
     def testPackRequest0(self):
@@ -2786,23 +2787,23 @@ class TestFreePixmap(unittest.TestCase):
 class TestCreateGC(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cid': 431350032,
-            'drawable': 1505849341,
-            'attrs': {'dashes': 164, 'fill_rule': 0, 'clip_mask': 392680688, 'plane_mask': 413592852, 'line_style': 0, 'tile': 312785600, 'arc_mode': 0, 'clip_y_origin': -5469, 'dash_offset': 43610, 'line_width': 60228, 'background': 426077726, 'clip_x_origin': -15695, 'join_style': 0, 'graphics_exposures': 1, 'font': 308094811, 'tile_stipple_y_origin': -26131, 'stipple': 23285536, 'fill_style': 1, 'cap_style': 1, 'subwindow_mode': 0, 'tile_stipple_x_origin': -10377, 'foreground': 1713366794, 'function': 8},
+            'cid': 1381133851,
+            'drawable': 91017816,
+            'attrs': {'dashes': 219, 'fill_rule': 0, 'clip_mask': 861969422, 'plane_mask': 593066296, 'line_style': 2, 'tile': 1986771117, 'arc_mode': 0, 'clip_y_origin': -3660, 'dash_offset': 37616, 'line_width': 51683, 'background': 1292485193, 'clip_x_origin': -17653, 'join_style': 0, 'graphics_exposures': 0, 'font': 1609857894, 'tile_stipple_y_origin': -16927, 'stipple': 1272814461, 'fill_style': 3, 'cap_style': 1, 'subwindow_mode': 1, 'tile_stipple_x_origin': -212, 'foreground': 1790735461, 'function': 9},
             }
-        self.req_bin_0 = '\x37\x00\x00\x1b' '\x19\xb5\xe1\x10' \
-            '\x59\xc1\x6f\xfd' '\x00\x7f\xff\xff' \
-            '\x08\x00\x00\x00' '\x18\xa6\xed\x14' \
-            '\x66\x1f\xe7\x0a' '\x19\x65\x6e\x1e' \
-            '\xeb\x44\x00\x00' '\x00\x00\x00\x00' \
+        self.req_bin_0 = '\x37\x00\x00\x1b' '\x52\x52\x6e\x1b' \
+            '\x05\x6c\xd2\x58' '\x00\x7f\xff\xff' \
+            '\x09\x00\x00\x00' '\x23\x59\x79\x38' \
+            '\x6a\xbc\x74\x65' '\x4d\x09\xc2\x49' \
+            '\xc9\xe3\x00\x00' '\x02\x00\x00\x00' \
             '\x01\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x01\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x12\xa4\xba\xc0' '\x01\x63\x4f\x20' \
-            '\xd7\x77\x00\x00' '\x99\xed\x00\x00' \
-            '\x12\x5d\x27\x5b' '\x00\x00\x00\x00' \
-            '\x01\x00\x00\x00' '\xc2\xb1\x00\x00' \
-            '\xea\xa3\x00\x00' '\x17\x67\xd4\xf0' \
-            '\xaa\x5a\x00\x00' '\xa4\x00\x00\x00' \
+            '\x03\x00\x00\x00' '\x00\x00\x00\x00' \
+            '\x76\x6b\xb8\xad' '\x4b\xdd\x9b\x7d' \
+            '\xff\x2c\x00\x00' '\xbd\xe1\x00\x00' \
+            '\x5f\xf4\x7b\x66' '\x01\x00\x00\x00' \
+            '\x00\x00\x00\x00' '\xbb\x0b\x00\x00' \
+            '\xf1\xb4\x00\x00' '\x33\x60\x9c\x0e' \
+            '\x92\xf0\x00\x00' '\xdb\x00\x00\x00' \
             '\x00\x00\x00\x00'
 
 
@@ -2828,22 +2829,22 @@ class TestCreateGC(unittest.TestCase):
 class TestChangeGC(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'attrs': {'dashes': 140, 'fill_rule': 0, 'clip_mask': 1007716012, 'plane_mask': 1246436938, 'line_style': 1, 'tile': 443199796, 'arc_mode': 0, 'clip_y_origin': -6968, 'dash_offset': 49559, 'line_width': 53912, 'background': 803307323, 'clip_x_origin': -15640, 'join_style': 1, 'graphics_exposures': 1, 'font': 1111317074, 'tile_stipple_y_origin': -18330, 'stipple': 1157787422, 'fill_style': 0, 'cap_style': 1, 'subwindow_mode': 0, 'tile_stipple_x_origin': -15186, 'foreground': 1832956748, 'function': 0},
-            'gc': 260729442,
+            'attrs': {'dashes': 248, 'fill_rule': 1, 'clip_mask': 1387552951, 'plane_mask': 1431371572, 'line_style': 2, 'tile': 1552010050, 'arc_mode': 1, 'clip_y_origin': -22774, 'dash_offset': 40648, 'line_width': 41997, 'background': 1557535429, 'clip_x_origin': -8361, 'join_style': 0, 'graphics_exposures': 1, 'font': 1820226908, 'tile_stipple_y_origin': -5459, 'stipple': 967107010, 'fill_style': 2, 'cap_style': 2, 'subwindow_mode': 1, 'tile_stipple_x_origin': -12145, 'foreground': 677647350, 'function': 0},
+            'gc': 417521765,
             }
-        self.req_bin_0 = '\x38\x00\x00\x1a' '\x0f\x8a\x6a\x62' \
+        self.req_bin_0 = '\x38\x00\x00\x1a' '\x18\xe2\xe0\x65' \
             '\x00\x7f\xff\xff' '\x00\x00\x00\x00' \
-            '\x4a\x4b\x1e\x4a' '\x6d\x40\xb3\x4c' \
-            '\x2f\xe1\x7f\x3b' '\xd2\x98\x00\x00' \
+            '\x55\x50\xff\x34' '\x28\x64\x13\xf6' \
+            '\x5c\xd6\x1a\xc5' '\xa4\x0d\x00\x00' \
+            '\x02\x00\x00\x00' '\x02\x00\x00\x00' \
+            '\x00\x00\x00\x00' '\x02\x00\x00\x00' \
+            '\x01\x00\x00\x00' '\x5c\x81\xcb\x42' \
+            '\x39\xa4\xe1\xc2' '\xd0\x8f\x00\x00' \
+            '\xea\xad\x00\x00' '\x6c\x7e\x75\x5c' \
             '\x01\x00\x00\x00' '\x01\x00\x00\x00' \
-            '\x01\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x1a\x6a\xb1\x34' \
-            '\x45\x02\x6f\x1e' '\xc4\xae\x00\x00' \
-            '\xb8\x66\x00\x00' '\x42\x3d\x5a\x52' \
-            '\x00\x00\x00\x00' '\x01\x00\x00\x00' \
-            '\xc2\xe8\x00\x00' '\xe4\xc8\x00\x00' \
-            '\x3c\x10\x86\xac' '\xc1\x97\x00\x00' \
-            '\x8c\x00\x00\x00' '\x00\x00\x00\x00'
+            '\xdf\x57\x00\x00' '\xa7\x0a\x00\x00' \
+            '\x52\xb4\x60\xb7' '\x9e\xc8\x00\x00' \
+            '\xf8\x00\x00\x00' '\x01\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -2868,12 +2869,12 @@ class TestChangeGC(unittest.TestCase):
 class TestCopyGC(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'mask': 1744373936,
-            'src_gc': 955633145,
-            'dst_gc': 1205246689,
+            'mask': 90485554,
+            'src_gc': 255344098,
+            'dst_gc': 2070891280,
             }
-        self.req_bin_0 = '\x39\x00\x00\x04' '\x38\xf5\xcd\xf9' \
-            '\x47\xd6\x9a\xe1' '\x67\xf9\x08\xb0'
+        self.req_bin_0 = '\x39\x00\x00\x04' '\x0f\x38\x3d\xe2' \
+            '\x7b\x6f\x4b\x10' '\x05\x64\xb3\x32'
 
 
     def testPackRequest0(self):
@@ -2898,13 +2899,13 @@ class TestCopyGC(unittest.TestCase):
 class TestSetDashes(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'dashes': [253, 215, 146, 243, 200, 151, 179, 203, 169],
-            'dash_offset': 31429,
-            'gc': 2089880163,
+            'dashes': [129, 203, 216, 234, 219, 227, 217, 177, 225],
+            'dash_offset': 60834,
+            'gc': 1793434845,
             }
-        self.req_bin_0 = '\x3a\x00\x00\x06' '\x7c\x91\x0a\x63' \
-            '\x7a\xc5\x00\x09' '\xfd\xd7\x92\xf3' \
-            '\xc8\x97\xb3\xcb' '\xa9\x00\x00\x00'
+        self.req_bin_0 = '\x3a\x00\x00\x06' '\x6a\xe5\xa4\xdd' \
+            '\xed\xa2\x00\x09' '\x81\xcb\xd8\xea' \
+            '\xdb\xe3\xd9\xb1' '\xe1\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -2929,26 +2930,26 @@ class TestSetDashes(unittest.TestCase):
 class TestSetClipRectangles(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'rectangles': [{'height': 7420, 'x': -5698, 'width': 30606, 'y': -21373}, {'height': 37913, 'x': -21428, 'width': 36243, 'y': -22214}],
-            'gc': 2053582814,
-            'x_origin': -11698,
-            'y_origin': -19544,
-            'ordering': 0,
+            'rectangles': [{'height': 34898, 'x': -14844, 'width': 5118, 'y': -25063}, {'height': 13735, 'x': -23640, 'width': 17082, 'y': -16488}],
+            'gc': 1981622127,
+            'x_origin': -23730,
+            'y_origin': -3988,
+            'ordering': 2,
             }
-        self.req_bin_0 = '\x3b\x00\x00\x07' '\x7a\x67\x2f\xde' \
-            '\xd2\x4e\xb3\xa8' '\xe9\xbe\xac\x83' \
-            '\x77\x8e\x1c\xfc' '\xac\x4c\xa9\x3a' \
-            '\x8d\x93\x94\x19'
+        self.req_bin_0 = '\x3b\x02\x00\x07' '\x76\x1d\x27\x6f' \
+            '\xa3\x4e\xf0\x6c' '\xc6\x04\x9e\x19' \
+            '\x13\xfe\x88\x52' '\xa3\xa8\xbf\x98' \
+            '\x42\xba\x35\xa7'
 
         self.req_args_1 = {
             'rectangles': [],
-            'gc': 1509051871,
-            'x_origin': -24949,
-            'y_origin': -11342,
+            'gc': 191480574,
+            'x_origin': -298,
+            'y_origin': -27836,
             'ordering': 0,
             }
-        self.req_bin_1 = '\x3b\x00\x00\x03' '\x59\xf2\x4d\xdf' \
-            '\x9e\x8b\xd3\xb2'
+        self.req_bin_1 = '\x3b\x00\x00\x03' '\x0b\x69\xc2\xfe' \
+            '\xfe\xd6\x93\x44'
 
 
     def testPackRequest0(self):
@@ -2991,9 +2992,9 @@ class TestSetClipRectangles(unittest.TestCase):
 class TestFreeGC(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 487007211,
+            'gc': 2138728270,
             }
-        self.req_bin_0 = '\x3c\x00\x00\x02' '\x1d\x07\x23\xeb'
+        self.req_bin_0 = '\x3c\x00\x00\x02' '\x7f\x7a\x67\x4e'
 
 
     def testPackRequest0(self):
@@ -3019,14 +3020,14 @@ class TestClearArea(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
             'exposures': 0,
-            'height': 2760,
-            'width': 1333,
-            'window': 2113122571,
-            'x': -6834,
-            'y': -2057,
+            'height': 26634,
+            'width': 3904,
+            'window': 1135114634,
+            'x': -3311,
+            'y': -16106,
             }
-        self.req_bin_0 = '\x3d\x00\x00\x04' '\x7d\xf3\xb1\x0b' \
-            '\xe5\x4e\xf7\xf7' '\x05\x35\x0a\xc8'
+        self.req_bin_0 = '\x3d\x00\x00\x04' '\x43\xa8\x79\x8a' \
+            '\xf3\x11\xc1\x16' '\x0f\x40\x68\x0a'
 
 
     def testPackRequest0(self):
@@ -3051,20 +3052,20 @@ class TestClearArea(unittest.TestCase):
 class TestCopyArea(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'src_drawable': 208517129,
-            'dst_drawable': 1067145138,
-            'src_y': -20556,
-            'src_x': -15795,
-            'gc': 2138387869,
-            'width': 33113,
-            'height': 63378,
-            'dst_x': -11036,
-            'dst_y': -3319,
+            'src_drawable': 505249724,
+            'dst_drawable': 81122993,
+            'src_y': -30707,
+            'src_x': -9611,
+            'gc': 393558693,
+            'width': 12934,
+            'height': 15260,
+            'dst_x': -15969,
+            'dst_y': -13283,
             }
-        self.req_bin_0 = '\x3e\x00\x00\x07' '\x0c\x6d\xb8\x09' \
-            '\x3f\x9b\x57\xb2' '\x7f\x75\x35\x9d' \
-            '\xc2\x4d\xaf\xb4' '\xd4\xe4\xf3\x09' \
-            '\x81\x59\xf7\x92'
+        self.req_bin_0 = '\x3e\x00\x00\x07' '\x1e\x1d\x7f\xbc' \
+            '\x04\xd5\xd6\xb1' '\x17\x75\x3a\xa5' \
+            '\xda\x75\x88\x0d' '\xc1\x9f\xcc\x1d' \
+            '\x32\x86\x3b\x9c'
 
 
     def testPackRequest0(self):
@@ -3089,21 +3090,21 @@ class TestCopyArea(unittest.TestCase):
 class TestCopyPlane(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'src_drawable': 766965326,
-            'bit_plane': 435107973,
-            'dst_drawable': 1743049858,
-            'src_y': -17850,
-            'src_x': -31095,
-            'gc': 860038311,
-            'width': 55221,
-            'height': 12772,
-            'dst_x': -13088,
-            'dst_y': -18638,
+            'src_drawable': 420068101,
+            'bit_plane': 161794758,
+            'dst_drawable': 1367735048,
+            'src_y': -27619,
+            'src_x': -27049,
+            'gc': 1700053256,
+            'width': 43263,
+            'height': 25272,
+            'dst_x': -18193,
+            'dst_y': -31452,
             }
-        self.req_bin_0 = '\x3f\x00\x00\x08' '\x2d\xb6\xf6\x4e' \
-            '\x67\xe4\xd4\x82' '\x33\x43\x24\xa7' \
-            '\x86\x89\xba\x46' '\xcc\xe0\xb7\x32' \
-            '\xd7\xb5\x31\xe4' '\x19\xef\x38\x85'
+        self.req_bin_0 = '\x3f\x00\x00\x08' '\x19\x09\xbb\x05' \
+            '\x51\x85\xfb\x08' '\x65\x54\xc1\x08' \
+            '\x96\x57\x94\x1d' '\xb8\xef\x85\x24' \
+            '\xa8\xff\x62\xb8' '\x09\xa4\xca\xc6'
 
 
     def testPackRequest0(self):
@@ -3128,14 +3129,14 @@ class TestCopyPlane(unittest.TestCase):
 class TestPolyPoint(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 2041506750,
-            'points': [{'x': -11305, 'y': -16812}, {'x': -30688, 'y': -2971}, {'x': -2848, 'y': -679}],
-            'drawable': 533405691,
+            'gc': 1921455533,
+            'points': [{'x': -2137, 'y': -32465}, {'x': -17011, 'y': -16542}, {'x': -15858, 'y': -13944}],
+            'drawable': 653131111,
             'coord_mode': 1,
             }
-        self.req_bin_0 = '\x40\x01\x00\x06' '\x1f\xcb\x1f\xfb' \
-            '\x79\xae\xeb\xbe' '\xd3\xd7\xbe\x54' \
-            '\x88\x20\xf4\x65' '\xf4\xe0\xfd\x59'
+        self.req_bin_0 = '\x40\x01\x00\x06' '\x26\xed\xfd\x67' \
+            '\x72\x87\x15\xad' '\xf7\xa7\x81\x2f' \
+            '\xbd\x8d\xbf\x62' '\xc2\x0e\xc9\x88'
 
 
     def testPackRequest0(self):
@@ -3160,15 +3161,15 @@ class TestPolyPoint(unittest.TestCase):
 class TestPolyLine(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 392859086,
-            'points': [{'x': -23896, 'y': -22901}, {'x': -8082, 'y': -17426}, {'x': -17617, 'y': -5320}, {'x': -17476, 'y': -6655}, {'x': -8910, 'y': -20417}],
-            'drawable': 247659556,
-            'coord_mode': 0,
+            'gc': 1647920800,
+            'points': [{'x': -27888, 'y': -13284}, {'x': -15812, 'y': -30440}, {'x': -2832, 'y': -16757}, {'x': -32077, 'y': -25008}, {'x': -27895, 'y': -21204}],
+            'drawable': 539389233,
+            'coord_mode': 1,
             }
-        self.req_bin_0 = '\x41\x00\x00\x08' '\x0e\xc2\xfc\x24' \
-            '\x17\x6a\x8d\xce' '\xa2\xa8\xa6\x8b' \
-            '\xe0\x6e\xbb\xee' '\xbb\x2f\xeb\x38' \
-            '\xbb\xbc\xe6\x01' '\xdd\x32\xb0\x3f'
+        self.req_bin_0 = '\x41\x01\x00\x08' '\x20\x26\x6d\x31' \
+            '\x62\x39\x46\xa0' '\x93\x10\xcc\x1c' \
+            '\xc2\x3c\x89\x18' '\xf4\xf0\xbe\x8b' \
+            '\x82\xb3\x9e\x50' '\x93\x09\xad\x2c'
 
 
     def testPackRequest0(self):
@@ -3193,13 +3194,13 @@ class TestPolyLine(unittest.TestCase):
 class TestPolySegment(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'segments': [{'y1': -15864, 'y2': -21295, 'x1': -23568, 'x2': -28662}],
-            'drawable': 709545806,
-            'gc': 734581836,
+            'segments': [{'y1': -23343, 'y2': -2928, 'x1': -2667, 'x2': -27645}],
+            'drawable': 663896944,
+            'gc': 1675975833,
             }
-        self.req_bin_0 = '\x42\x00\x00\x05' '\x2a\x4a\xcf\x4e' \
-            '\x2b\xc8\xd4\x4c' '\xa3\xf0\xc2\x08' \
-            '\x90\x0a\xac\xd1'
+        self.req_bin_0 = '\x42\x00\x00\x05' '\x27\x92\x43\x70' \
+            '\x63\xe5\x5c\x99' '\xf5\x95\xa4\xd1' \
+            '\x94\x03\xf4\x90'
 
 
     def testPackRequest0(self):
@@ -3224,15 +3225,15 @@ class TestPolySegment(unittest.TestCase):
 class TestPolyRectangle(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'drawable': 504267751,
-            'gc': 770574683,
-            'rectangles': [{'height': 27448, 'x': -14654, 'width': 54969, 'y': -1957}, {'height': 43849, 'x': -19075, 'width': 5703, 'y': -20002}, {'height': 2592, 'x': -17337, 'width': 44348, 'y': -17534}],
+            'drawable': 1813268911,
+            'gc': 2137230781,
+            'rectangles': [{'height': 33055, 'x': -22476, 'width': 39441, 'y': -1428}, {'height': 60975, 'x': -28929, 'width': 61738, 'y': -10493}, {'height': 55557, 'x': -9635, 'width': 61503, 'y': -6789}],
             }
-        self.req_bin_0 = '\x43\x00\x00\x09' '\x1e\x0e\x83\xe7' \
-            '\x2d\xee\x09\x5b' '\xc6\xc2\xf8\x5b' \
-            '\xd6\xb9\x6b\x38' '\xb5\x7d\xb1\xde' \
-            '\x16\x47\xab\x49' '\xbc\x47\xbb\x82' \
-            '\xad\x3c\x0a\x20'
+        self.req_bin_0 = '\x43\x00\x00\x09' '\x6c\x14\x49\xaf' \
+            '\x7f\x63\x8d\xbd' '\xa8\x34\xfa\x6c' \
+            '\x9a\x11\x81\x1f' '\x8e\xff\xd7\x03' \
+            '\xf1\x2a\xee\x2f' '\xda\x5d\xe5\x7b' \
+            '\xf0\x3f\xd9\x05'
 
 
     def testPackRequest0(self):
@@ -3257,16 +3258,16 @@ class TestPolyRectangle(unittest.TestCase):
 class TestPolyArc(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'arcs': [{'height': 51321, 'angle1': -30816, 'x': -27485, 'angle2': -6827, 'width': 58130, 'y': -14699}, {'height': 16700, 'angle1': -27817, 'x': -26144, 'angle2': -4349, 'width': 6359, 'y': -12152}, {'height': 349, 'angle1': -30183, 'x': -26387, 'angle2': -3041, 'width': 41445, 'y': -7634}],
-            'drawable': 606957189,
-            'gc': 1539912993,
+            'arcs': [{'height': 35864, 'angle1': -27767, 'x': -25716, 'angle2': -15887, 'width': 13224, 'y': -6339}, {'height': 9681, 'angle1': -25365, 'x': -11301, 'angle2': -755, 'width': 18712, 'y': -18285}, {'height': 23986, 'angle1': -2451, 'x': -19871, 'angle2': -982, 'width': 45297, 'y': -23613}],
+            'drawable': 2136720622,
+            'gc': 507464865,
             }
-        self.req_bin_0 = '\x44\x00\x00\x0c' '\x24\x2d\x6e\x85' \
-            '\x5b\xc9\x35\x21' '\x94\xa3\xc6\x95' \
-            '\xe3\x12\xc8\x79' '\x87\xa0\xe5\x55' \
-            '\x99\xe0\xd0\x88' '\x18\xd7\x41\x3c' \
-            '\x93\x57\xef\x03' '\x98\xed\xe2\x2e' \
-            '\xa1\xe5\x01\x5d' '\x8a\x19\xf4\x1f'
+        self.req_bin_0 = '\x44\x00\x00\x0c' '\x7f\x5b\xc4\xee' \
+            '\x1e\x3f\x4c\xa1' '\x9b\x8c\xe7\x3d' \
+            '\x33\xa8\x8c\x18' '\x93\x89\xc1\xf1' \
+            '\xd3\xdb\xb8\x93' '\x49\x18\x25\xd1' \
+            '\x9c\xeb\xfd\x0d' '\xb2\x61\xa3\xc3' \
+            '\xb0\xf1\x5d\xb2' '\xf6\x6d\xfc\x2a'
 
 
     def testPackRequest0(self):
@@ -3291,16 +3292,16 @@ class TestPolyArc(unittest.TestCase):
 class TestFillPoly(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'shape': 0,
-            'gc': 648415515,
-            'points': [{'x': -1891, 'y': -12535}, {'x': -25824, 'y': -30616}, {'x': -25839, 'y': -18341}],
-            'drawable': 40637777,
-            'coord_mode': 0,
+            'shape': 2,
+            'gc': 1286424315,
+            'points': [{'x': -9202, 'y': -32639}, {'x': -31906, 'y': -4321}, {'x': -8888, 'y': -22009}],
+            'drawable': 1079742746,
+            'coord_mode': 1,
             }
-        self.req_bin_0 = '\x45\x00\x00\x07' '\x02\x6c\x15\x51' \
-            '\x26\xa6\x09\x1b' '\x00\x00\x00\x00' \
-            '\xf8\x9d\xcf\x09' '\x9b\x20\x88\x68' \
-            '\x9b\x11\xb8\x5b'
+        self.req_bin_0 = '\x45\x00\x00\x07' '\x40\x5b\x91\x1a' \
+            '\x4c\xad\x46\xfb' '\x02\x01\x00\x00' \
+            '\xdc\x0e\x80\x81' '\x83\x5e\xef\x1f' \
+            '\xdd\x48\xaa\x07'
 
 
     def testPackRequest0(self):
@@ -3325,14 +3326,14 @@ class TestFillPoly(unittest.TestCase):
 class TestPolyFillRectangle(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'drawable': 70167590,
-            'gc': 1715295825,
-            'rectangles': [{'height': 61907, 'x': -22214, 'width': 29984, 'y': -3052}, {'height': 42805, 'x': -30092, 'width': 18804, 'y': -27911}],
+            'drawable': 327943084,
+            'gc': 492302835,
+            'rectangles': [{'height': 16613, 'x': -3755, 'width': 27808, 'y': -2254}, {'height': 17046, 'x': -27231, 'width': 42106, 'y': -4518}],
             }
-        self.req_bin_0 = '\x46\x00\x00\x07' '\x04\x2e\xac\x26' \
-            '\x66\x3d\x56\x51' '\xa9\x3a\xf4\x14' \
-            '\x75\x20\xf1\xd3' '\x8a\x74\x92\xf9' \
-            '\x49\x74\xa7\x35'
+        self.req_bin_0 = '\x46\x00\x00\x07' '\x13\x8c\x03\xac' \
+            '\x1d\x57\xf1\xf3' '\xf1\x55\xf7\x32' \
+            '\x6c\xa0\x40\xe5' '\x95\xa1\xee\x5a' \
+            '\xa4\x7a\x42\x96'
 
 
     def testPackRequest0(self):
@@ -3357,13 +3358,13 @@ class TestPolyFillRectangle(unittest.TestCase):
 class TestPolyFillArc(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'arcs': [{'height': 29232, 'angle1': -3750, 'x': -2857, 'angle2': -3307, 'width': 38491, 'y': -27289}],
-            'drawable': 482415860,
-            'gc': 476082016,
+            'arcs': [{'height': 57042, 'angle1': -22158, 'x': -29483, 'angle2': -12271, 'width': 62469, 'y': -7823}],
+            'drawable': 1614203180,
+            'gc': 1530067949,
             }
-        self.req_bin_0 = '\x47\x00\x00\x06' '\x1c\xc1\x14\xf4' \
-            '\x1c\x60\x6f\x60' '\xf4\xd7\x95\x67' \
-            '\x96\x5b\x72\x30' '\xf1\x5a\xf3\x15'
+        self.req_bin_0 = '\x47\x00\x00\x06' '\x60\x36\xc9\x2c' \
+            '\x5b\x32\xfb\xed' '\x8c\xd5\xe1\x71' \
+            '\xf4\x05\xde\xd2' '\xa9\x72\xd0\x11'
 
 
     def testPackRequest0(self):
@@ -3388,20 +3389,20 @@ class TestPolyFillArc(unittest.TestCase):
 class TestPutImage(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'height': 11196,
+            'height': 35862,
             'data': 'bit map data',
-            'drawable': 1340290879,
-            'left_pad': 170,
-            'format': 2,
-            'dst_x': -11353,
-            'gc': 237898211,
-            'depth': 160,
-            'width': 42139,
-            'dst_y': -26494,
+            'drawable': 523720567,
+            'left_pad': 157,
+            'format': 1,
+            'dst_x': -19727,
+            'gc': 1395936690,
+            'depth': 158,
+            'width': 25645,
+            'dst_y': -8819,
             }
-        self.req_bin_0 = '\x48\x02\x00\x09' '\x4f\xe3\x37\x3f' \
-            '\x0e\x2e\x09\xe3' '\xa4\x9b\x2b\xbc' \
-            '\xd3\xa7\x98\x82' '\xaa\xa0\x00\x00' \
+        self.req_bin_0 = '\x48\x01\x00\x09' '\x1f\x37\x57\x77' \
+            '\x53\x34\x4d\xb2' '\x64\x2d\x8c\x16' \
+            '\xb2\xf1\xdd\x8d' '\x9d\x9e\x00\x00' \
             '\x62\x69\x74\x20' '\x6d\x61\x70\x20' \
             '\x64\x61\x74\x61'
 
@@ -3428,26 +3429,26 @@ class TestPutImage(unittest.TestCase):
 class TestGetImage(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'height': 56958,
-            'plane_mask': 2003492823,
-            'drawable': 1619440599,
-            'x': -15778,
-            'y': -20045,
+            'height': 52936,
+            'plane_mask': 26203517,
+            'drawable': 1218479570,
+            'x': -9746,
+            'y': -31384,
             'format': 2,
-            'width': 63114,
+            'width': 12151,
             }
-        self.req_bin_0 = '\x49\x02\x00\x05' '\x60\x86\xb3\xd7' \
-            '\xc2\x5e\xb1\xb3' '\xf6\x8a\xde\x7e' \
-            '\x77\x6a\xdf\xd7'
+        self.req_bin_0 = '\x49\x02\x00\x05' '\x48\xa0\x85\xd2' \
+            '\xd9\xee\x85\x68' '\x2f\x77\xce\xc8' \
+            '\x01\x8f\xd5\x7d'
 
         self.reply_args_0 = {
-            'sequence_number': 63877,
+            'sequence_number': 50329,
             'data': 'this is real ly imag e b-map',
-            'visual': 536760605,
-            'depth': 190,
+            'visual': 236013784,
+            'depth': 244,
             }
-        self.reply_bin_0 = '\x01\xbe\xf9\x85' '\x00\x00\x00\x07' \
-            '\x1f\xfe\x51\x1d' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\xf4\xc4\x99' '\x00\x00\x00\x07' \
+            '\x0e\x11\x48\xd8' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x74\x68\x69\x73' '\x20\x69\x73\x20' \
@@ -3496,14 +3497,14 @@ class TestGetImage(unittest.TestCase):
 class TestPolyText8(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 1799460488,
-            'x': -17910,
-            'drawable': 1708049506,
+            'gc': 1432094356,
+            'x': -23281,
+            'drawable': 1715483382,
             'items': [{'delta': 2, 'string': 'zoo'}, 16909060, {'delta': 0, 'string': 'ie'}],
-            'y': -18689,
+            'y': -13421,
             }
-        self.req_bin_0 = '\x4a\x00\x00\x08' '\x65\xce\xc4\x62' \
-            '\x6b\x41\x96\x88' '\xba\x0a\xb6\xff' \
+        self.req_bin_0 = '\x4a\x00\x00\x08' '\x66\x40\x32\xf6' \
+            '\x55\x5c\x06\x94' '\xa5\x0f\xcb\x93' \
             '\x03\x02\x7a\x6f' '\x6f\xff\x01\x02' \
             '\x03\x04\x02\x00' '\x69\x65\x00\x00'
 
@@ -3530,14 +3531,14 @@ class TestPolyText8(unittest.TestCase):
 class TestPolyText16(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 1459026804,
-            'x': -15550,
-            'drawable': 1562879126,
+            'gc': 1006078466,
+            'x': -7852,
+            'drawable': 1296382109,
             'items': [{'delta': 2, 'string': (4131, 18)}, 16909060],
-            'y': -25379,
+            'y': -32557,
             }
-        self.req_bin_0 = '\x4b\x00\x00\x07' '\x5d\x27\xa4\x96' \
-            '\x56\xf6\xfb\x74' '\xc3\x42\x9c\xdd' \
+        self.req_bin_0 = '\x4b\x00\x00\x07' '\x4d\x45\x38\x9d' \
+            '\x3b\xf7\x8a\x02' '\xe1\x54\x80\xd3' \
             '\x02\x02\x10\x23' '\x00\x12\xff\x01' \
             '\x02\x03\x04\x00'
 
@@ -3565,13 +3566,13 @@ class TestImageText8(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
             'string': 'showme',
-            'gc': 547609349,
-            'drawable': 1919096614,
-            'x': -6133,
-            'y': -12197,
+            'gc': 1921198827,
+            'drawable': 1995840673,
+            'x': -6872,
+            'y': -19083,
             }
-        self.req_bin_0 = '\x4c\x06\x00\x06' '\x72\x63\x17\x26' \
-            '\x20\xa3\xdb\x05' '\xe8\x0b\xd0\x5b' \
+        self.req_bin_0 = '\x4c\x06\x00\x06' '\x76\xf6\x1c\xa1' \
+            '\x72\x83\x2a\xeb' '\xe5\x28\xb5\x75' \
             '\x73\x68\x6f\x77' '\x6d\x65\x00\x00'
 
 
@@ -3598,13 +3599,13 @@ class TestImageText16(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
             'string': (115, 104, 111, 119, 109, 111, 114, 101),
-            'gc': 999969487,
-            'drawable': 409635149,
-            'x': -21868,
-            'y': -25321,
+            'gc': 1262368880,
+            'drawable': 978048831,
+            'x': -31198,
+            'y': -25974,
             }
-        self.req_bin_0 = '\x4d\x08\x00\x08' '\x18\x6a\x89\x4d' \
-            '\x3b\x9a\x52\xcf' '\xaa\x94\x9d\x17' \
+        self.req_bin_0 = '\x4d\x08\x00\x08' '\x3a\x4b\xd7\x3f' \
+            '\x4b\x3e\x38\x70' '\x86\x22\x9a\x8a' \
             '\x00\x73\x00\x68' '\x00\x6f\x00\x77' \
             '\x00\x6d\x00\x6f' '\x00\x72\x00\x65'
 
@@ -3631,13 +3632,13 @@ class TestImageText16(unittest.TestCase):
 class TestCreateColormap(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'mid': 1729503514,
-            'alloc': 1,
-            'visual': 234871847,
-            'window': 716379305,
+            'mid': 1450570079,
+            'alloc': 0,
+            'visual': 1606574442,
+            'window': 1005808268,
             }
-        self.req_bin_0 = '\x4e\x01\x00\x04' '\x67\x16\x21\x1a' \
-            '\x2a\xb3\x14\xa9' '\x0d\xff\xdc\x27'
+        self.req_bin_0 = '\x4e\x00\x00\x04' '\x56\x75\xf1\x5f' \
+            '\x3b\xf3\x6a\x8c' '\x5f\xc2\x61\x6a'
 
 
     def testPackRequest0(self):
@@ -3662,9 +3663,9 @@ class TestCreateColormap(unittest.TestCase):
 class TestFreeColormap(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 788546246,
+            'cmap': 766091652,
             }
-        self.req_bin_0 = '\x4f\x00\x00\x02' '\x2f\x00\x42\xc6'
+        self.req_bin_0 = '\x4f\x00\x00\x02' '\x2d\xa9\xa1\x84'
 
 
     def testPackRequest0(self):
@@ -3689,11 +3690,11 @@ class TestFreeColormap(unittest.TestCase):
 class TestCopyColormapAndFree(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'src_cmap': 304830797,
-            'mid': 1567568454,
+            'src_cmap': 324810306,
+            'mid': 1306938061,
             }
-        self.req_bin_0 = '\x50\x00\x00\x03' '\x5d\x6f\x32\x46' \
-            '\x12\x2b\x59\x4d'
+        self.req_bin_0 = '\x50\x00\x00\x03' '\x4d\xe6\x4a\xcd' \
+            '\x13\x5c\x36\x42'
 
 
     def testPackRequest0(self):
@@ -3718,9 +3719,9 @@ class TestCopyColormapAndFree(unittest.TestCase):
 class TestInstallColormap(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 1636570888,
+            'cmap': 198601885,
             }
-        self.req_bin_0 = '\x51\x00\x00\x02' '\x61\x8c\x17\x08'
+        self.req_bin_0 = '\x51\x00\x00\x02' '\x0b\xd6\x6c\x9d'
 
 
     def testPackRequest0(self):
@@ -3745,9 +3746,9 @@ class TestInstallColormap(unittest.TestCase):
 class TestUninstallColormap(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 12036730,
+            'cmap': 1136427824,
             }
-        self.req_bin_0 = '\x52\x00\x00\x02' '\x00\xb7\xaa\x7a'
+        self.req_bin_0 = '\x52\x00\x00\x02' '\x43\xbc\x83\x30'
 
 
     def testPackRequest0(self):
@@ -3772,19 +3773,19 @@ class TestUninstallColormap(unittest.TestCase):
 class TestListInstalledColormaps(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1917219171,
+            'window': 1557085787,
             }
-        self.req_bin_0 = '\x53\x00\x00\x02' '\x72\x46\x71\x63'
+        self.req_bin_0 = '\x53\x00\x00\x02' '\x5c\xcf\x3e\x5b'
 
         self.reply_args_0 = {
-            'cmaps': [1466686184, 742915485],
-            'sequence_number': 7840,
+            'cmaps': [1805181410, 1107704601],
+            'sequence_number': 36831,
             }
-        self.reply_bin_0 = '\x01\x00\x1e\xa0' '\x00\x00\x00\x02' \
+        self.reply_bin_0 = '\x01\x00\x8f\xdf' '\x00\x00\x00\x02' \
             '\x00\x02\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x57\x6b\xda\xe8' '\x2c\x47\xfd\x9d'
+            '\x6b\x98\xe1\xe2' '\x42\x06\x3b\x19'
 
 
     def testPackRequest0(self):
@@ -3827,24 +3828,24 @@ class TestListInstalledColormaps(unittest.TestCase):
 class TestAllocColor(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'red': 18180,
-            'green': 24249,
-            'cmap': 53391968,
-            'blue': 21979,
+            'red': 9657,
+            'green': 10463,
+            'cmap': 408147072,
+            'blue': 30726,
             }
-        self.req_bin_0 = '\x54\x00\x00\x04' '\x03\x2e\xb2\x60' \
-            '\x47\x04\x5e\xb9' '\x55\xdb\x00\x00'
+        self.req_bin_0 = '\x54\x00\x00\x04' '\x18\x53\xd4\x80' \
+            '\x25\xb9\x28\xdf' '\x78\x06\x00\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 23968,
-            'red': 59366,
-            'green': 34037,
-            'pixel': 1186630361,
-            'blue': 39251,
+            'sequence_number': 52356,
+            'red': 39559,
+            'green': 40934,
+            'pixel': 2067348738,
+            'blue': 4648,
             }
-        self.reply_bin_0 = '\x01\x00\x5d\xa0' '\x00\x00\x00\x00' \
-            '\xe7\xe6\x84\xf5' '\x99\x53\x00\x00' \
-            '\x46\xba\x8a\xd9' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\x00\xcc\x84' '\x00\x00\x00\x00' \
+            '\x9a\x87\x9f\xe6' '\x12\x28\x00\x00' \
+            '\x7b\x39\x3d\x02' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -3888,26 +3889,26 @@ class TestAllocColor(unittest.TestCase):
 class TestAllocNamedColor(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 1658370346,
+            'cmap': 1848064244,
             'name': 'octarin',
             }
-        self.req_bin_0 = '\x55\x00\x00\x05' '\x62\xd8\xb9\x2a' \
+        self.req_bin_0 = '\x55\x00\x00\x05' '\x6e\x27\x38\xf4' \
             '\x00\x07\x00\x00' '\x6f\x63\x74\x61' \
             '\x72\x69\x6e\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 56879,
-            'pixel': 386813293,
-            'screen_green': 16502,
-            'screen_red': 31884,
-            'exact_green': 2513,
-            'exact_blue': 20311,
-            'screen_blue': 52144,
-            'exact_red': 41402,
+            'sequence_number': 21996,
+            'pixel': 685646700,
+            'screen_green': 50142,
+            'screen_red': 7654,
+            'exact_green': 47364,
+            'exact_blue': 13721,
+            'screen_blue': 37864,
+            'exact_red': 53336,
             }
-        self.reply_bin_0 = '\x01\x00\xde\x2f' '\x00\x00\x00\x00' \
-            '\x17\x0e\x4d\x6d' '\xa1\xba\x09\xd1' \
-            '\x4f\x57\x7c\x8c' '\x40\x76\xcb\xb0' \
+        self.reply_bin_0 = '\x01\x00\x55\xec' '\x00\x00\x00\x00' \
+            '\x28\xde\x23\x6c' '\xd0\x58\xb9\x04' \
+            '\x35\x99\x1d\xe6' '\xc3\xde\x93\xe8' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -3951,40 +3952,40 @@ class TestAllocNamedColor(unittest.TestCase):
 class TestAllocColorCells(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'planes': 4288,
-            'colors': 42087,
-            'cmap': 1805186643,
+            'planes': 14211,
+            'colors': 39126,
+            'cmap': 728763056,
             'contiguous': 1,
             }
-        self.req_bin_0 = '\x56\x01\x00\x03' '\x6b\x98\xf6\x53' \
-            '\xa4\x67\x10\xc0'
+        self.req_bin_0 = '\x56\x01\x00\x03' '\x2b\x70\x0a\xb0' \
+            '\x98\xd6\x37\x83'
 
         self.reply_args_0 = {
-            'masks': [995762341, 1165266384, 1038525242],
-            'pixels': [1750540997, 2100042471, 1804383453, 606846337, 1596248709, 358596220, 1403039104, 1922778852, 698585220, 587929117, 308312801, 2026149752, 860491421, 1661962733, 556418112, 1557826064, 275411866],
-            'sequence_number': 14700,
+            'masks': [673189359, 613687858, 1253544771],
+            'pixels': [1055448762, 576649021, 957271074, 972492501, 478690059, 805915700, 1892175399, 1127310308, 51194806, 1175782781, 1279277951, 1620188879, 1498522893, 383804958, 1328220753, 1788528957, 1094969478],
+            'sequence_number': 57887,
             }
-        self.reply_bin_0 = '\x01\x00\x39\x6c' '\x00\x00\x00\x14' \
+        self.reply_bin_0 = '\x01\x00\xe2\x1f' '\x00\x00\x00\x14' \
             '\x00\x11\x00\x03' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x68\x57\x22\xc5' '\x7d\x2c\x1a\xe7' \
-            '\x6b\x8c\xb4\xdd' '\x24\x2b\xbd\x81' \
-            '\x5f\x24\xd2\x85' '\x15\x5f\xbe\x7c' \
-            '\x53\xa0\xad\x80' '\x72\x9b\x46\xe4' \
-            '\x29\xa3\x90\x84' '\x23\x0b\x16\x1d' \
-            '\x12\x60\x7a\xe1' '\x78\xc4\x97\x78' \
-            '\x33\x4a\x0e\x9d' '\x63\x0f\x89\xed' \
-            '\x21\x2a\x44\x40' '\x5c\xda\x8a\x10' \
-            '\x10\x6a\x73\x9a' '\x3b\x5a\x20\xa5' \
-            '\x45\x74\x8d\xd0' '\x3d\xe6\xa3\x3a'
+            '\x3e\xe8\xde\xba' '\x22\x5e\xf7\x3d' \
+            '\x39\x0e\xcc\x22' '\x39\xf7\x0e\xd5' \
+            '\x1c\x88\x3b\x0b' '\x30\x09\x4c\x34' \
+            '\x70\xc8\x4e\x27' '\x43\x31\x63\xe4' \
+            '\x03\x0d\x2b\xb6' '\x46\x15\x05\x7d' \
+            '\x4c\x40\x3b\x7f' '\x60\x92\x1e\xcf' \
+            '\x59\x51\xa5\x0d' '\x16\xe0\x66\x1e' \
+            '\x4f\x2b\x0a\x51' '\x6a\x9a\xc9\x3d' \
+            '\x41\x43\xe8\x86' '\x28\x20\x0d\xef' \
+            '\x24\x94\x22\x32' '\x4a\xb7\x93\x43'
 
         self.reply_args_1 = {
             'masks': [],
             'pixels': [],
-            'sequence_number': 38539,
+            'sequence_number': 8198,
             }
-        self.reply_bin_1 = '\x01\x00\x96\x8b' '\x00\x00\x00\x00' \
+        self.reply_bin_1 = '\x01\x00\x20\x06' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
@@ -4048,29 +4049,29 @@ class TestAllocColorCells(unittest.TestCase):
 class TestAllocColorPlanes(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'red': 13636,
-            'colors': 1878,
-            'green': 27505,
-            'cmap': 1517762159,
-            'contiguous': 1,
-            'blue': 371,
+            'red': 15067,
+            'colors': 29805,
+            'green': 9319,
+            'cmap': 759681180,
+            'contiguous': 0,
+            'blue': 48360,
             }
-        self.req_bin_0 = '\x57\x01\x00\x04' '\x5a\x77\x36\x6f' \
-            '\x07\x56\x35\x44' '\x6b\x71\x01\x73'
+        self.req_bin_0 = '\x57\x00\x00\x04' '\x2d\x47\xd0\x9c' \
+            '\x74\x6d\x3a\xdb' '\x24\x67\xbc\xe8'
 
         self.reply_args_0 = {
-            'green_mask': 1535062952,
-            'sequence_number': 12327,
-            'pixels': [1575345154, 670191425, 1417403688, 1954535300],
-            'blue_mask': 1283218011,
-            'red_mask': 981769758,
+            'green_mask': 1050073473,
+            'sequence_number': 4658,
+            'pixels': [1797267037, 949126831, 65155923, 889040943],
+            'blue_mask': 1049586870,
+            'red_mask': 373382478,
             }
-        self.reply_bin_0 = '\x01\x00\x30\x27' '\x00\x00\x00\x04' \
-            '\x00\x04\x00\x00' '\x3a\x84\x9e\x1e' \
-            '\x5b\x7f\x33\xa8' '\x4c\x7c\x5a\x5b' \
+        self.reply_bin_0 = '\x01\x00\x12\x32' '\x00\x00\x00\x04' \
+            '\x00\x04\x00\x00' '\x16\x41\x5d\x4e' \
+            '\x3e\x96\xd9\x81' '\x3e\x8f\x6c\xb6' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x5d\xe5\xdc\x02' '\x27\xf2\x4f\x41' \
-            '\x54\x7b\xdd\x28' '\x74\x7f\xd7\x84'
+            '\x6b\x20\x1e\x5d' '\x38\x92\x86\xaf' \
+            '\x03\xe2\x33\x53' '\x34\xfd\xb0\x2f'
 
 
     def testPackRequest0(self):
@@ -4113,20 +4114,20 @@ class TestAllocColorPlanes(unittest.TestCase):
 class TestFreeColors(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 1361401045,
-            'pixels': [459895467, 255031583, 234735044, 1996164499, 1204563412, 1507264268, 903054342, 1832829517, 932533094, 20664694, 386661577, 1559167857, 32537953, 368699232, 780563645, 910624209, 980312108],
-            'plane_mask': 938362004,
+            'cmap': 821125207,
+            'pixels': [1360557811, 1047698027, 1254627248, 1864953432, 227656240, 748997388, 1244873112, 1786862932, 1070459421, 413938130, 908103552, 438979061, 1836746946, 756977662, 2062476198, 1535191520, 1160725678],
+            'plane_mask': 1249725572,
             }
-        self.req_bin_0 = '\x58\x00\x00\x14' '\x51\x25\x54\xd5' \
-            '\x37\xee\x44\x94' '\x1b\x69\x72\xab' \
-            '\x0f\x33\x79\x1f' '\x0d\xfd\xc5\xc4' \
-            '\x76\xfb\x0d\x93' '\x47\xcc\x2d\xd4' \
-            '\x59\xd7\x07\x0c' '\x35\xd3\x84\x06' \
-            '\x6d\x3e\xc2\x4d' '\x37\x95\x53\x66' \
-            '\x01\x3b\x51\x76' '\x17\x0b\xfc\xc9' \
-            '\x5c\xef\x03\x71' '\x01\xf0\x7d\x61' \
-            '\x15\xf9\xe7\x60' '\x2e\x86\x74\xbd' \
-            '\x36\x47\x05\xd1' '\x3a\x6e\x60\x2c'
+        self.req_bin_0 = '\x58\x00\x00\x14' '\x30\xf1\x60\x57' \
+            '\x4a\x7d\x4c\x84' '\x51\x18\x76\xf3' \
+            '\x3e\x72\x9a\x6b' '\x4a\xc8\x17\xb0' \
+            '\x6f\x28\xee\x58' '\x0d\x91\xc2\x30' \
+            '\x2c\xa4\xcb\x0c' '\x4a\x33\x41\x98' \
+            '\x6a\x81\x5d\x54' '\x3f\xcd\xea\x1d' \
+            '\x18\xac\x31\xd2' '\x36\x20\x8f\x80' \
+            '\x1a\x2a\x49\xf5' '\x6d\x7a\x88\xc2' \
+            '\x2d\x1e\x8f\xfe' '\x7a\xee\xe3\xa6' \
+            '\x5b\x81\x29\xe0' '\x45\x2f\x44\xae'
 
 
     def testPackRequest0(self):
@@ -4151,16 +4152,16 @@ class TestFreeColors(unittest.TestCase):
 class TestStoreColors(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 2024580983,
-            'items': [{'red': 64927, 'pixel': 2001260878, 'green': 18106, 'flags': 181, 'blue': 36986}, {'red': 56638, 'pixel': 972179075, 'green': 46814, 'flags': 252, 'blue': 59107}, {'red': 59536, 'pixel': 1430255901, 'green': 17958, 'flags': 130, 'blue': 20978}, {'red': 28038, 'pixel': 1847071918, 'green': 42387, 'flags': 230, 'blue': 31866}],
+            'cmap': 1539899115,
+            'items': [{'red': 10509, 'pixel': 1785803906, 'green': 50424, 'flags': 203, 'blue': 19210}, {'red': 45218, 'pixel': 11405404, 'green': 28678, 'flags': 158, 'blue': 41097}, {'red': 61218, 'pixel': 420472179, 'green': 26907, 'flags': 158, 'blue': 60456}, {'red': 11565, 'pixel': 589230162, 'green': 48299, 'flags': 155, 'blue': 31325}],
             }
-        self.req_bin_0 = '\x59\x00\x00\x0e' '\x78\xac\xa7\x77' \
-            '\x77\x48\xd1\x4e' '\xfd\x9f\x46\xba' \
-            '\x90\x7a\xb5\x00' '\x39\xf2\x46\x83' \
-            '\xdd\x3e\xb6\xde' '\xe6\xe3\xfc\x00' \
-            '\x55\x3f\xf9\x1d' '\xe8\x90\x46\x26' \
-            '\x51\xf2\x82\x00' '\x6e\x18\x14\xae' \
-            '\x6d\x86\xa5\x93' '\x7c\x7a\xe6\x00'
+        self.req_bin_0 = '\x59\x00\x00\x0e' '\x5b\xc8\xfe\xeb' \
+            '\x6a\x71\x34\x82' '\x29\x0d\xc4\xf8' \
+            '\x4b\x0a\xcb\x00' '\x00\xae\x08\x5c' \
+            '\xb0\xa2\x70\x06' '\xa0\x89\x9e\x00' \
+            '\x19\x0f\xe5\x73' '\xef\x22\x69\x1b' \
+            '\xec\x28\x9e\x00' '\x23\x1e\xf0\x52' \
+            '\x2d\x2d\xbc\xab' '\x7a\x5d\x9b\x00'
 
 
     def testPackRequest0(self):
@@ -4186,12 +4187,12 @@ class TestStoreNamedColor(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
             'name': 'blue',
-            'flags': 150,
-            'cmap': 406354043,
-            'pixel': 1493370133,
+            'flags': 188,
+            'cmap': 1873267112,
+            'pixel': 1695496397,
             }
-        self.req_bin_0 = '\x5a\x96\x00\x05' '\x18\x38\x78\x7b' \
-            '\x59\x03\x05\x15' '\x00\x04\x00\x00' \
+        self.req_bin_0 = '\x5a\xbc\x00\x05' '\x6f\xa7\xc9\xa8' \
+            '\x65\x0f\x38\xcd' '\x00\x04\x00\x00' \
             '\x62\x6c\x75\x65'
 
 
@@ -4217,34 +4218,34 @@ class TestStoreNamedColor(unittest.TestCase):
 class TestQueryColors(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 1379497842,
-            'pixels': [1515137134, 106421195, 831443625, 1751128164, 1363099624, 542530423, 212873337, 944839923],
+            'cmap': 1831947624,
+            'pixels': [138560686, 90940250, 1773637147, 68450239, 632118774, 1583812645, 1410435764, 401211928],
             }
-        self.req_bin_0 = '\x5b\x00\x00\x0a' '\x52\x39\x77\x72' \
-            '\x5a\x4f\x28\x6e' '\x06\x57\xdb\xcb' \
-            '\x31\x8e\xd2\xa9' '\x68\x60\x18\x64' \
-            '\x51\x3f\x3f\xe8' '\x20\x56\x5b\x77' \
-            '\x0c\xb0\x30\x79' '\x38\x51\x1c\xf3'
+        self.req_bin_0 = '\x5b\x00\x00\x0a' '\x6d\x31\x4d\x68' \
+            '\x08\x42\x44\xae' '\x05\x6b\xa3\x5a' \
+            '\x69\xb7\x8e\x1b' '\x04\x14\x77\xbf' \
+            '\x25\xad\x5d\xf6' '\x5e\x67\x10\x25' \
+            '\x54\x11\x8a\xb4' '\x17\xea\x02\x18'
 
         self.reply_args_0 = {
-            'colors': [{'red': 54674, 'blue': 38519, 'green': 13643}, {'red': 51294, 'blue': 50831, 'green': 60614}, {'red': 29637, 'blue': 15980, 'green': 64789}, {'red': 44718, 'blue': 20802, 'green': 1652}, {'red': 58906, 'blue': 20706, 'green': 25237}],
-            'sequence_number': 6473,
+            'colors': [{'red': 30388, 'blue': 46627, 'green': 31051}, {'red': 28005, 'blue': 52416, 'green': 15684}, {'red': 19421, 'blue': 54971, 'green': 7252}, {'red': 54355, 'blue': 41386, 'green': 32974}, {'red': 2132, 'blue': 23156, 'green': 45302}],
+            'sequence_number': 21962,
             }
-        self.reply_bin_0 = '\x01\x00\x19\x49' '\x00\x00\x00\x0a' \
+        self.reply_bin_0 = '\x01\x00\x55\xca' '\x00\x00\x00\x0a' \
             '\x00\x05\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\xd5\x92\x35\x4b' '\x96\x77\x00\x00' \
-            '\xc8\x5e\xec\xc6' '\xc6\x8f\x00\x00' \
-            '\x73\xc5\xfd\x15' '\x3e\x6c\x00\x00' \
-            '\xae\xae\x06\x74' '\x51\x42\x00\x00' \
-            '\xe6\x1a\x62\x95' '\x50\xe2\x00\x00'
+            '\x76\xb4\x79\x4b' '\xb6\x23\x00\x00' \
+            '\x6d\x65\x3d\x44' '\xcc\xc0\x00\x00' \
+            '\x4b\xdd\x1c\x54' '\xd6\xbb\x00\x00' \
+            '\xd4\x53\x80\xce' '\xa1\xaa\x00\x00' \
+            '\x08\x54\xb0\xf6' '\x5a\x74\x00\x00'
 
         self.req_args_1 = {
-            'cmap': 802128808,
+            'cmap': 783333245,
             'pixels': [],
             }
-        self.req_bin_1 = '\x5b\x00\x00\x02' '\x2f\xcf\x83\xa8'
+        self.req_bin_1 = '\x5b\x00\x00\x02' '\x2e\xb0\xb7\x7d'
 
 
     def testPackRequest0(self):
@@ -4305,25 +4306,25 @@ class TestQueryColors(unittest.TestCase):
 class TestLookupColor(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 878745244,
+            'cmap': 1064138527,
             'name': 'octarin',
             }
-        self.req_bin_0 = '\x5c\x00\x00\x05' '\x34\x60\x96\x9c' \
+        self.req_bin_0 = '\x5c\x00\x00\x05' '\x3f\x6d\x77\x1f' \
             '\x00\x07\x00\x00' '\x6f\x63\x74\x61' \
             '\x72\x69\x6e\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 35336,
-            'screen_green': 21598,
-            'screen_red': 3096,
-            'exact_green': 23541,
-            'exact_blue': 30270,
-            'screen_blue': 8428,
-            'exact_red': 22200,
+            'sequence_number': 35560,
+            'screen_green': 22861,
+            'screen_red': 44460,
+            'exact_green': 34018,
+            'exact_blue': 21897,
+            'screen_blue': 24504,
+            'exact_red': 9744,
             }
-        self.reply_bin_0 = '\x01\x00\x8a\x08' '\x00\x00\x00\x00' \
-            '\x56\xb8\x5b\xf5' '\x76\x3e\x0c\x18' \
-            '\x54\x5e\x20\xec' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\x00\x8a\xe8' '\x00\x00\x00\x00' \
+            '\x26\x10\x84\xe2' '\x55\x89\xad\xac' \
+            '\x59\x4d\x5f\xb8' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
 
@@ -4367,22 +4368,22 @@ class TestLookupColor(unittest.TestCase):
 class TestCreateCursor(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'x': 15326,
-            'fore_red': 31462,
-            'back_green': 18359,
-            'mask': 87694263,
-            'back_blue': 18234,
-            'y': 6926,
-            'cid': 1580097391,
-            'fore_blue': 22121,
-            'fore_green': 61494,
-            'back_red': 41941,
-            'source': 172929735,
+            'x': 58979,
+            'fore_red': 24347,
+            'back_green': 21856,
+            'mask': 775908779,
+            'back_blue': 60412,
+            'y': 27460,
+            'cid': 1896951376,
+            'fore_blue': 4834,
+            'fore_green': 23033,
+            'back_red': 24893,
+            'source': 1081255796,
             }
-        self.req_bin_0 = '\x5d\x00\x00\x08' '\x5e\x2e\x5f\x6f' \
-            '\x0a\x4e\xb2\xc7' '\x05\x3a\x1b\xb7' \
-            '\x7a\xe6\xf0\x36' '\x56\x69\xa3\xd5' \
-            '\x47\xb7\x47\x3a' '\x3b\xde\x1b\x0e'
+        self.req_bin_0 = '\x5d\x00\x00\x08' '\x71\x11\x2e\x50' \
+            '\x40\x72\xa7\x74' '\x2e\x3f\x6d\xab' \
+            '\x5f\x1b\x59\xf9' '\x12\xe2\x61\x3d' \
+            '\x55\x60\xeb\xfc' '\xe6\x63\x6b\x44'
 
 
     def testPackRequest0(self):
@@ -4407,22 +4408,22 @@ class TestCreateCursor(unittest.TestCase):
 class TestCreateGlyphCursor(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'fore_red': 18582,
-            'source_char': 16884,
-            'mask': 808195000,
-            'back_blue': 27021,
-            'cid': 1184164101,
-            'mask_char': 18217,
-            'fore_blue': 9646,
-            'fore_green': 55721,
-            'back_red': 51228,
-            'source': 1672460383,
-            'back_green': 63449,
+            'fore_red': 64621,
+            'source_char': 24645,
+            'mask': 568167754,
+            'back_blue': 8168,
+            'cid': 77572484,
+            'mask_char': 49589,
+            'fore_blue': 5853,
+            'fore_green': 5595,
+            'back_red': 24854,
+            'source': 894416391,
+            'back_green': 59443,
             }
-        self.req_bin_0 = '\x5e\x00\x00\x08' '\x46\x94\xe9\x05' \
-            '\x63\xaf\xb8\x5f' '\x30\x2c\x13\xb8' \
-            '\x41\xf4\x47\x29' '\x48\x96\xd9\xa9' \
-            '\x25\xae\xc8\x1c' '\xf7\xd9\x69\x8d'
+        self.req_bin_0 = '\x5e\x00\x00\x08' '\x04\x9f\xa9\x84' \
+            '\x35\x4f\xb6\x07' '\x21\xdd\x8d\x4a' \
+            '\x60\x45\xc1\xb5' '\xfc\x6d\x15\xdb' \
+            '\x16\xdd\x61\x16' '\xe8\x33\x1f\xe8'
 
 
     def testPackRequest0(self):
@@ -4447,9 +4448,9 @@ class TestCreateGlyphCursor(unittest.TestCase):
 class TestFreeCursor(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'cursor': 465289524,
+            'cursor': 2026541541,
             }
-        self.req_bin_0 = '\x5f\x00\x00\x02' '\x1b\xbb\xc1\x34'
+        self.req_bin_0 = '\x5f\x00\x00\x02' '\x78\xca\x91\xe5'
 
 
     def testPackRequest0(self):
@@ -4474,17 +4475,17 @@ class TestFreeCursor(unittest.TestCase):
 class TestRecolorCursor(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'fore_red': 60989,
-            'fore_green': 47234,
-            'back_blue': 54690,
-            'back_green': 63372,
-            'fore_blue': 48257,
-            'back_red': 9508,
-            'cursor': 1717013045,
+            'fore_red': 49660,
+            'fore_green': 53605,
+            'back_blue': 6796,
+            'back_green': 20445,
+            'fore_blue': 9271,
+            'back_red': 17292,
+            'cursor': 2079143221,
             }
-        self.req_bin_0 = '\x60\x00\x00\x05' '\x66\x57\x8a\x35' \
-            '\xee\x3d\xb8\x82' '\xbc\x81\x25\x24' \
-            '\xf7\x8c\xd5\xa2'
+        self.req_bin_0 = '\x60\x00\x00\x05' '\x7b\xed\x35\x35' \
+            '\xc1\xfc\xd1\x65' '\x24\x37\x43\x8c' \
+            '\x4f\xdd\x1a\x8c'
 
 
     def testPackRequest0(self):
@@ -4509,21 +4510,21 @@ class TestRecolorCursor(unittest.TestCase):
 class TestQueryBestSize(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'height': 8495,
-            'drawable': 2083060371,
-            'item_class': 0,
-            'width': 41272,
+            'height': 48910,
+            'drawable': 273543467,
+            'item_class': 2,
+            'width': 61806,
             }
-        self.req_bin_0 = '\x61\x00\x00\x03' '\x7c\x28\xfa\x93' \
-            '\xa1\x38\x21\x2f'
+        self.req_bin_0 = '\x61\x02\x00\x03' '\x10\x4d\xf1\x2b' \
+            '\xf1\x6e\xbf\x0e'
 
         self.reply_args_0 = {
-            'height': 42322,
-            'sequence_number': 63634,
-            'width': 27087,
+            'height': 52435,
+            'sequence_number': 27523,
+            'width': 33996,
             }
-        self.reply_bin_0 = '\x01\x00\xf8\x92' '\x00\x00\x00\x00' \
-            '\x69\xcf\xa5\x52' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\x00\x6b\x83' '\x00\x00\x00\x00' \
+            '\x84\xcc\xcc\xd3' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -4574,14 +4575,14 @@ class TestQueryExtension(unittest.TestCase):
             '\x58\x54\x52\x41'
 
         self.reply_args_0 = {
-            'sequence_number': 43803,
-            'major_opcode': 230,
-            'first_error': 192,
-            'present': 0,
-            'first_event': 219,
+            'sequence_number': 61699,
+            'major_opcode': 145,
+            'first_error': 221,
+            'present': 1,
+            'first_event': 136,
             }
-        self.reply_bin_0 = '\x01\x00\xab\x1b' '\x00\x00\x00\x00' \
-            '\x00\xe6\xdb\xc0' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\x00\xf1\x03' '\x00\x00\x00\x00' \
+            '\x01\x91\x88\xdd' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -4630,10 +4631,10 @@ class TestListExtensions(unittest.TestCase):
         self.req_bin_0 = '\x63\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 29641,
+            'sequence_number': 22455,
             'names': ['XTRA', 'XTRA-II'],
             }
-        self.reply_bin_0 = '\x01\x02\x73\xc9' '\x00\x00\x00\x04' \
+        self.reply_bin_0 = '\x01\x02\x57\xb7' '\x00\x00\x00\x04' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
@@ -4681,40 +4682,40 @@ class TestListExtensions(unittest.TestCase):
 class TestChangeKeyboardMapping(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'keysyms': [[2117607436, 467309079, 951637417], [1748035130, 1785116728, 1406223554], [350360637, 554964940, 705336131], [708581333, 2054461448, 1969694568], [101711792, 1806426232, 2061067207], [511186478, 1268298777, 196212264], [1623788614, 1518106932, 1860284177], [791292459, 397649261, 2081069842], [1568812263, 916111961, 1966479230], [1410793049, 556805351, 1661200235], [1836056302, 1128453182, 275719419], [1898574429, 1241387471, 1313026433], [2098887485, 1034343335, 1147336301], [1715862832, 350006704, 1386515327], [694016697, 1652507597, 945839138], [1216184374, 104202693, 571574409], [1186199776, 26324546, 1174511598], [1973770769, 612359985, 60529583], [600750044, 116581100, 1105303584], [501860062, 703320686, 1504723950]],
-            'first_keycode': 134,
+            'keysyms': [[871050509, 46548, 351428718], [1678689598, 2088016698, 1574254797], [605897756, 59276201, 1938792631], [1550782822, 1049972288, 1666021165], [977908414, 1154765501, 787957326], [403606238, 1743574428, 1073307771], [215115121, 347950970, 694975710], [1266266951, 1236946779, 953826099], [469906703, 1822999228, 1297605989], [673576745, 287974090, 1245537298], [1673366984, 872060933, 215673318], [476025559, 128754980, 658291674], [40202845, 1432855550, 122370483], [392867898, 1421578349, 1499688650], [1593982516, 1904897842, 1172966297], [2090372535, 1186827688, 561721927], [1158349513, 1574654642, 611004388], [1090713564, 1431598823, 1169933730], [429965382, 1754948580, 1534203752], [510380465, 857291909, 954644015]],
+            'first_keycode': 177,
             }
-        self.req_bin_0 = '\x64\x14\x00\x3e' '\x86\x03\x00\x00' \
-            '\x7e\x38\x20\x0c' '\x1b\xda\x92\x17' \
-            '\x38\xb8\xd5\xa9' '\x68\x30\xe6\x3a' \
-            '\x6a\x66\xb8\x38' '\x53\xd1\x44\xc2' \
-            '\x14\xe2\x14\x3d' '\x21\x14\x17\xcc' \
-            '\x2a\x0a\x93\x43' '\x2a\x3c\x17\xd5' \
-            '\x7a\x74\x98\x08' '\x75\x67\x27\x68' \
-            '\x06\x0f\xff\xb0' '\x6b\xab\xe0\x78' \
-            '\x7a\xd9\x63\xc7' '\x1e\x78\x16\x2e' \
-            '\x4b\x98\xb4\x19' '\x0b\xb1\xf6\x28' \
-            '\x60\xc9\x0c\x46' '\x5a\x7c\x79\x34' \
-            '\x6e\xe1\xaf\x11' '\x2f\x2a\x2a\x2b' \
-            '\x17\xb3\xa5\x6d' '\x7c\x0a\x9b\x12' \
-            '\x5d\x82\x2c\xe7' '\x36\x9a\xc2\x59' \
-            '\x75\x36\x17\x7e' '\x54\x16\xfe\x59' \
-            '\x21\x30\x2c\xe7' '\x63\x03\xe7\x6b' \
-            '\x6d\x6f\xfe\xee' '\x43\x42\xd4\x3e' \
-            '\x10\x6f\x24\xfb' '\x71\x29\xf2\x5d' \
-            '\x49\xfe\x11\xcf' '\x4e\x43\x31\x81' \
-            '\x7d\x1a\x7b\x3d' '\x3d\xa6\xd3\xa7' \
-            '\x44\x62\xf6\x6d' '\x66\x45\xfd\x30' \
-            '\x14\xdc\xad\xb0' '\x52\xa4\x8b\x7f' \
-            '\x29\x5d\xda\xb9' '\x62\x7f\x43\xcd' \
-            '\x38\x60\x5c\x22' '\x48\x7d\x80\x36' \
-            '\x06\x36\x01\xc5' '\x22\x11\x88\x89' \
-            '\x46\xb3\xf8\xe0' '\x01\x91\xae\x42' \
-            '\x46\x01\x9f\xee' '\x75\xa5\x5a\x11' \
-            '\x24\x7f\xdf\x31' '\x03\x9b\x9b\xaf' \
-            '\x23\xce\xb7\xdc' '\x06\xf2\xe2\xec' \
-            '\x41\xe1\x98\x20' '\x1d\xe9\xc6\xde' \
-            '\x29\xeb\xd2\x6e' '\x59\xb0\x43\xee'
+        self.req_bin_0 = '\x64\x14\x00\x3e' '\xb1\x03\x00\x00' \
+            '\x33\xeb\x2d\x0d' '\x00\x00\xb5\xd4' \
+            '\x14\xf2\x60\x6e' '\x64\x0e\xc5\x3e' \
+            '\x7c\x74\x9b\x3a' '\x5d\xd5\x38\xcd' \
+            '\x24\x1d\x44\x1c' '\x03\x88\x7b\xa9' \
+            '\x73\x8f\xa0\xb7' '\x5c\x6f\x11\x66' \
+            '\x3e\x95\x4e\x40' '\x63\x4d\x77\x2d' \
+            '\x3a\x49\xb2\xbe' '\x44\xd4\x52\xbd' \
+            '\x2e\xf7\x46\x4e' '\x18\x0e\x8a\xde' \
+            '\x67\xec\xd5\x9c' '\x3f\xf9\x60\x7b' \
+            '\x0c\xd2\x65\x71' '\x14\xbd\x4f\x7a' \
+            '\x29\x6c\x7c\xde' '\x4b\x79\xb3\x47' \
+            '\x49\xba\x4f\x5b' '\x38\xda\x3b\x33' \
+            '\x1c\x02\x35\x0f' '\x6c\xa8\xc2\xbc' \
+            '\x4d\x57\xe5\x65' '\x28\x25\xf7\x29' \
+            '\x11\x2a\x22\xca' '\x4a\x3d\x64\x12' \
+            '\x63\xbd\x8d\xc8' '\x33\xfa\x98\x05' \
+            '\x0c\xda\xe9\xe6' '\x1c\x5f\x92\xd7' \
+            '\x07\xac\xa5\x24' '\x27\x3c\xbb\xda' \
+            '\x02\x65\x72\x5d' '\x55\x67\xa3\xfe' \
+            '\x07\x4b\x39\xb3' '\x17\x6a\xb0\x3a' \
+            '\x54\xbb\x90\x6d' '\x59\x63\x6e\xca' \
+            '\x5f\x02\x3e\x34' '\x71\x8a\x6f\x32' \
+            '\x45\xea\x0b\x99' '\x7c\x98\x8d\xb7' \
+            '\x46\xbd\x8d\xa8' '\x21\x7b\x32\x47' \
+            '\x45\x0b\x02\xc9' '\x5d\xdb\x52\xb2' \
+            '\x24\x6b\x2f\xe4' '\x41\x02\xf7\xdc' \
+            '\x55\x54\x76\xe7' '\x45\xbb\xc5\xa2' \
+            '\x19\xa0\xc0\x46' '\x68\x9a\x63\xe4' \
+            '\x5b\x72\x17\x68' '\x1e\x6b\xc9\xb1' \
+            '\x33\x19\x3c\x85' '\x38\xe6\xb6\x2f'
 
 
     def testPackRequest0(self):
@@ -4739,49 +4740,49 @@ class TestChangeKeyboardMapping(unittest.TestCase):
 class TestGetKeyboardMapping(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'count': 159,
-            'first_keycode': 134,
+            'count': 225,
+            'first_keycode': 225,
             }
-        self.req_bin_0 = '\x65\x00\x00\x02' '\x86\x9f\x00\x00'
+        self.req_bin_0 = '\x65\x00\x00\x02' '\xe1\xe1\x00\x00'
 
         self.reply_args_0 = {
-            'keysyms': [[336695481, 1640249322, 1879439584], [816964361, 65612992, 96414], [891482556, 855216951, 1811105021], [624552922, 1937275200, 1716240166], [2054887906, 81126773, 1704361088], [506129834, 869240513, 1122686985], [1274240417, 1118939674, 925049942], [1303650133, 1259926830, 1027368708], [601936636, 634105139, 941380843], [1379435406, 417140511, 134171695], [897188161, 619569763, 692303801], [904313345, 209104714, 395066241], [299249796, 591900309, 107487797], [208832448, 1010810792, 983223750], [760385841, 638593506, 532152763], [1712157766, 1086193171, 1300287885], [1801032567, 1939194062, 442847080], [910996954, 38695297, 264831518], [1402759796, 634947225, 1229475387], [1507407258, 249900412, 795782523]],
-            'sequence_number': 5773,
+            'keysyms': [[982244672, 1365661998, 1341204086], [1529056479, 1786083677, 1563398685], [1569695004, 1080191687, 692503403], [386928496, 1976629508, 1449421104], [1579986411, 936919103, 1822205117], [634040790, 1956790648, 1132386658], [306476874, 765942818, 35736709], [1132170362, 1117019525, 1678345995], [1549758437, 972517776, 1480029581], [1809975818, 1171491588, 1270076985], [1095917295, 2109792933, 506423545], [646458957, 927851321, 537630814], [1004484279, 1935660577, 1681801082], [826692607, 144952184, 1908052863], [1736007245, 2051699875, 1538774874], [894319506, 1865649148, 2055778681], [428070598, 2071498428, 1575090907], [1435450437, 301776739, 832276301], [1827733048, 1129611385, 61731195], [454306896, 831151286, 2094485253]],
+            'sequence_number': 64956,
             }
-        self.reply_bin_0 = '\x01\x03\x16\x8d' '\x00\x00\x00\x3c' \
+        self.reply_bin_0 = '\x01\x03\xfd\xbc' '\x00\x00\x00\x3c' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x14\x11\x90\xb9' '\x61\xc4\x37\xea' \
-            '\x70\x05\xf8\xe0' '\x30\xb1\xe3\x09' \
-            '\x03\xe9\x2c\xc0' '\x00\x01\x78\x9e' \
-            '\x35\x22\xf1\xbc' '\x32\xf9\x93\x37' \
-            '\x6b\xf3\x44\xfd' '\x25\x39\xeb\xda' \
-            '\x73\x78\x79\x40' '\x66\x4b\xbf\x26' \
-            '\x7a\x7b\x19\xe2' '\x04\xd5\xe5\x75' \
-            '\x65\x96\x7c\x80' '\x1e\x2a\xed\xaa' \
-            '\x33\xcf\x8e\xc1' '\x42\xea\xd8\x09' \
-            '\x4b\xf3\x5d\xa1' '\x42\xb1\xaa\x1a' \
-            '\x37\x23\x24\x56' '\x4d\xb4\x1f\x55' \
-            '\x4b\x18\xf5\x2e' '\x3d\x3c\x67\x04' \
-            '\x23\xe0\xd2\xfc' '\x25\xcb\xad\x33' \
-            '\x38\x1c\x54\xeb' '\x52\x38\x83\x8e' \
-            '\x18\xdd\x0f\x1f' '\x07\xff\x4c\x2f' \
-            '\x35\x7a\x01\x41' '\x24\xed\xe2\x63' \
-            '\x29\x43\xb7\xb9' '\x35\xe6\xba\x01' \
-            '\x0c\x76\xaf\x4a' '\x17\x8c\x3b\x81' \
-            '\x11\xd6\x30\x84' '\x23\x47\xae\x95' \
-            '\x06\x68\x22\x35' '\x0c\x72\x87\xc0' \
-            '\x3c\x3f\xbf\xa8' '\x3a\x9a\xcd\xc6' \
-            '\x2d\x52\x91\x31' '\x26\x10\x29\xe2' \
-            '\x1f\xb8\x01\xbb' '\x66\x0d\x74\x46' \
-            '\x40\xbd\xfe\x13' '\x4d\x80\xd1\x8d' \
-            '\x6b\x59\x93\x77' '\x73\x95\xc0\xce' \
-            '\x1a\x65\x4f\x68' '\x36\x4c\xb5\xda' \
-            '\x02\x4e\x71\x81' '\x0f\xc9\x02\x1e' \
-            '\x53\x9c\x6a\x74' '\x25\xd8\x86\x99' \
-            '\x49\x48\x4e\x3b' '\x59\xd9\x35\x9a' \
-            '\x0e\xe5\x2d\x7c' '\x2f\x6e\xad\x7b'
+            '\x3a\x8b\xdd\x40' '\x51\x66\x59\x2e' \
+            '\x4f\xf1\x26\x76' '\x5b\x23\x8c\xdf' \
+            '\x6a\x75\x79\x5d' '\x5d\x2f\x92\x1d' \
+            '\x5d\x8f\xa5\x1c' '\x40\x62\x6a\xc7' \
+            '\x29\x46\xc3\x6b' '\x17\x10\x0f\x70' \
+            '\x75\xd0\xf9\x04' '\x56\x64\x69\x30' \
+            '\x5e\x2c\xad\xeb' '\x37\xd8\x40\x3f' \
+            '\x6c\x9c\xa4\xbd' '\x25\xca\xb1\xd6' \
+            '\x74\xa2\x41\x78' '\x43\x7e\xd9\x62' \
+            '\x12\x44\x77\x4a' '\x2d\xa7\x5c\x22' \
+            '\x02\x21\x4c\x85' '\x43\x7b\x8c\x7a' \
+            '\x42\x94\x5d\x85' '\x64\x09\x87\x0b' \
+            '\x5c\x5f\x6f\xe5' '\x39\xf7\x71\x90' \
+            '\x58\x37\x75\x8d' '\x6b\xe2\x0a\x0a' \
+            '\x45\xd3\x8b\x04' '\x4b\xb3\xd6\x39' \
+            '\x41\x52\x5e\xef' '\x7d\xc0\xe2\xa5' \
+            '\x1e\x2f\x68\xf9' '\x26\x88\x2e\x4d' \
+            '\x37\x4d\xe3\x39' '\x20\x0b\x98\x5e' \
+            '\x3b\xdf\x36\xb7' '\x73\x5f\xd6\x21' \
+            '\x64\x3e\x3f\x7a' '\x31\x46\x53\xff' \
+            '\x08\xa3\xcb\x78' '\x71\xba\x93\x7f' \
+            '\x67\x79\x5e\x4d' '\x7a\x4a\x74\xa3' \
+            '\x5b\xb7\xd7\x5a' '\x35\x4e\x3b\x92' \
+            '\x6f\x33\x8b\xfc' '\x7a\x88\xb1\x79' \
+            '\x19\x83\xd6\xc6' '\x7b\x78\x8e\xbc' \
+            '\x5d\xe1\xfa\xdb' '\x55\x8f\x3c\x45' \
+            '\x11\xfc\xbf\x63' '\x31\x9b\x87\x4d' \
+            '\x6c\xf0\xfe\x38' '\x43\x54\x80\x79' \
+            '\x03\xad\xf1\x7b' '\x1b\x14\x2c\x50' \
+            '\x31\x8a\x5c\xb6' '\x7c\xd7\x4f\x05'
 
 
     def testPackRequest0(self):
@@ -4824,13 +4825,13 @@ class TestGetKeyboardMapping(unittest.TestCase):
 class TestChangeKeyboardControl(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'attrs': {'key_click_percent': -124, 'bell_percent': -87, 'led_mode': 0, 'bell_pitch': -31397, 'auto_repeat_mode': 0, 'bell_duration': -15288, 'key': 156, 'led': 219},
+            'attrs': {'key_click_percent': -34, 'bell_percent': -79, 'led_mode': 0, 'bell_pitch': -21776, 'auto_repeat_mode': 0, 'bell_duration': -31164, 'key': 187, 'led': 251},
             }
         self.req_bin_0 = '\x66\x00\x00\x0a' '\x00\x00\x00\xff' \
-            '\x84\x00\x00\x00' '\xa9\x00\x00\x00' \
-            '\x85\x5b\x00\x00' '\xc4\x48\x00\x00' \
-            '\xdb\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x9c\x00\x00\x00' '\x00\x00\x00\x00'
+            '\xde\x00\x00\x00' '\xb1\x00\x00\x00' \
+            '\xaa\xf0\x00\x00' '\x86\x44\x00\x00' \
+            '\xfb\x00\x00\x00' '\x00\x00\x00\x00' \
+            '\xbb\x00\x00\x00' '\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -4860,21 +4861,21 @@ class TestGetKeyboardControl(unittest.TestCase):
 
         self.reply_args_0 = {
             'key_click_percent': 231,
-            'sequence_number': 30048,
-            'bell_percent': 144,
-            'bell_pitch': 28554,
-            'auto_repeats': [1334039811, 1689844747, 1376787395, 2059944496, 816245265, 1693189176, 1553814313, 1753043446],
+            'sequence_number': 26495,
+            'bell_percent': 220,
+            'bell_pitch': 45067,
+            'auto_repeats': [2109016337, 1109211173, 1978037988, 1722547404, 1586747901, 149637172, 1889158819, 758625671],
             'global_auto_repeat': 1,
-            'led_mask': 1604810476,
-            'bell_duration': 55361,
+            'led_mask': 1291522043,
+            'bell_duration': 51914,
             }
-        self.reply_bin_0 = '\x01\x01\x75\x60' '\x00\x00\x00\x05' \
-            '\x5f\xa7\x76\xec' '\xe7\x90\x6f\x8a' \
-            '\xd8\x41\x00\x00' '\x4f\x83\xd5\x03' \
-            '\x64\xb8\xfc\x0b' '\x52\x10\x1b\xc3' \
-            '\x7a\xc8\x42\x30' '\x30\xa6\xea\x11' \
-            '\x64\xec\x04\x38' '\x5c\x9d\x53\x29' \
-            '\x68\x7d\x51\xf6'
+        self.reply_bin_0 = '\x01\x01\x67\x7f' '\x00\x00\x00\x05' \
+            '\x4c\xfb\x0f\xfb' '\xe7\xdc\xb0\x0b' \
+            '\xca\xca\x00\x00' '\x7d\xb5\x09\x11' \
+            '\x42\x1d\x38\x25' '\x75\xe6\x76\xe4' \
+            '\x66\xab\xfc\xcc' '\x5e\x93\xd9\xfd' \
+            '\x08\xeb\x48\x34' '\x70\x9a\x46\xa3' \
+            '\x2d\x37\xb5\x87'
 
 
     def testPackRequest0(self):
@@ -4917,9 +4918,9 @@ class TestGetKeyboardControl(unittest.TestCase):
 class TestBell(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'percent': -88,
+            'percent': -6,
             }
-        self.req_bin_0 = '\x68\xa8\x00\x01'
+        self.req_bin_0 = '\x68\xfa\x00\x01'
 
 
     def testPackRequest0(self):
@@ -4944,14 +4945,14 @@ class TestBell(unittest.TestCase):
 class TestChangePointerControl(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'accel_denum': -32444,
-            'accel_num': -32290,
+            'accel_denum': -17334,
+            'accel_num': -30135,
             'do_accel': 1,
             'do_thresh': 1,
-            'threshold': -23068,
+            'threshold': -353,
             }
-        self.req_bin_0 = '\x69\x00\x00\x03' '\x81\xde\x81\x44' \
-            '\xa5\xe4\x01\x01'
+        self.req_bin_0 = '\x69\x00\x00\x03' '\x8a\x49\xbc\x4a' \
+            '\xfe\x9f\x01\x01'
 
 
     def testPackRequest0(self):
@@ -4980,13 +4981,13 @@ class TestGetPointerControl(unittest.TestCase):
         self.req_bin_0 = '\x6a\x00\x00\x01'
 
         self.reply_args_0 = {
-            'accel_denom': 42503,
-            'sequence_number': 24976,
-            'threshold': 12235,
-            'accel_num': 43938,
+            'accel_denom': 42465,
+            'sequence_number': 38488,
+            'threshold': 41143,
+            'accel_num': 51665,
             }
-        self.reply_bin_0 = '\x01\x00\x61\x90' '\x00\x00\x00\x00' \
-            '\xab\xa2\xa6\x07' '\x2f\xcb\x00\x00' \
+        self.reply_bin_0 = '\x01\x00\x96\x58' '\x00\x00\x00\x00' \
+            '\xc9\xd1\xa5\xe1' '\xa0\xb7\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -5031,13 +5032,13 @@ class TestGetPointerControl(unittest.TestCase):
 class TestSetScreenSaver(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'allow_exposures': 2,
-            'timeout': -12745,
-            'interval': -5593,
-            'prefer_blank': 0,
+            'allow_exposures': 0,
+            'timeout': -8157,
+            'interval': -1202,
+            'prefer_blank': 2,
             }
-        self.req_bin_0 = '\x6b\x00\x00\x03' '\xce\x37\xea\x27' \
-            '\x00\x02\x00\x00'
+        self.req_bin_0 = '\x6b\x00\x00\x03' '\xe0\x23\xfb\x4e' \
+            '\x02\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -5067,13 +5068,13 @@ class TestGetScreenSaver(unittest.TestCase):
 
         self.reply_args_0 = {
             'allow_exposures': 1,
-            'timeout': 55379,
-            'sequence_number': 23766,
+            'timeout': 10937,
+            'sequence_number': 24710,
             'prefer_blanking': 1,
-            'interval': 24886,
+            'interval': 20258,
             }
-        self.reply_bin_0 = '\x01\x00\x5c\xd6' '\x00\x00\x00\x00' \
-            '\xd8\x53\x61\x36' '\x01\x01\x00\x00' \
+        self.reply_bin_0 = '\x01\x00\x60\x86' '\x00\x00\x00\x00' \
+            '\x2a\xb9\x4f\x22' '\x01\x01\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
 
@@ -5118,12 +5119,12 @@ class TestGetScreenSaver(unittest.TestCase):
 class TestChangeHosts(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'host': [189, 193, 184, 196],
+            'host': [151, 227, 244, 242],
             'mode': 0,
             'host_family': 1,
             }
         self.req_bin_0 = '\x6d\x00\x00\x03' '\x01\x00\x00\x04' \
-            '\xbd\xc1\xb8\xc4'
+            '\x97\xe3\xf4\xf2'
 
 
     def testPackRequest0(self):
@@ -5152,11 +5153,11 @@ class TestListHosts(unittest.TestCase):
         self.req_bin_0 = '\x6e\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 59221,
-            'mode': 1,
+            'sequence_number': 65441,
+            'mode': 0,
             'hosts': [{'family': 0, 'name': [34, 23, 178, 12]}, {'family': 0, 'name': [130, 236, 254, 15]}],
             }
-        self.reply_bin_0 = '\x01\x01\xe7\x55' '\x00\x00\x00\x04' \
+        self.reply_bin_0 = '\x01\x00\xff\xa1' '\x00\x00\x00\x04' \
             '\x00\x02\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
@@ -5204,9 +5205,9 @@ class TestListHosts(unittest.TestCase):
 class TestSetAccessControl(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'mode': 1,
+            'mode': 0,
             }
-        self.req_bin_0 = '\x6f\x01\x00\x01'
+        self.req_bin_0 = '\x6f\x00\x00\x01'
 
 
     def testPackRequest0(self):
@@ -5258,9 +5259,9 @@ class TestSetCloseDownMode(unittest.TestCase):
 class TestKillClient(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'resource': 1583445666,
+            'resource': 242928655,
             }
-        self.req_bin_0 = '\x71\x00\x00\x02' '\x5e\x61\x76\xa2'
+        self.req_bin_0 = '\x71\x00\x00\x02' '\x0e\x7a\xcc\x0f'
 
 
     def testPackRequest0(self):
@@ -5285,18 +5286,18 @@ class TestKillClient(unittest.TestCase):
 class TestRotateProperties(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'delta': -19246,
-            'window': 1567668371,
-            'properties': [1902605475, 902820585, 180229690, 267232936, 1023102392, 276320478, 1056686048, 980285318, 365082112, 724749476, 296965180, 1673629180],
+            'delta': -5085,
+            'window': 1006448130,
+            'properties': [895980169, 689578094, 352214452, 1512686315, 945965582, 1292261388, 97817273, 362335406, 424856644, 1127751013, 953906105, 1927097915],
             }
-        self.req_bin_0 = '\x72\x00\x00\x0f' '\x5d\x70\xb8\x93' \
-            '\x00\x0c\xb4\xd2' '\x71\x67\x74\xa3' \
-            '\x35\xcf\xf2\xe9' '\x0a\xbe\x16\x3a' \
-            '\x0f\xed\xa6\xa8' '\x3c\xfb\x4d\xb8' \
-            '\x10\x78\x50\xde' '\x3e\xfb\xbf\xe0' \
-            '\x3a\x6d\xf7\x86' '\x15\xc2\xb6\x00' \
-            '\x2b\x32\xcc\xa4' '\x11\xb3\x54\x3c' \
-            '\x63\xc1\x8d\xfc'
+        self.req_bin_0 = '\x72\x00\x00\x0f' '\x3b\xfd\x2e\x02' \
+            '\x00\x0c\xec\x23' '\x35\x67\x92\x89' \
+            '\x29\x1a\x20\x6e' '\x14\xfe\x5d\xb4' \
+            '\x5a\x29\xc2\xeb' '\x38\x62\x4a\x0e' \
+            '\x4d\x06\x58\x0c' '\x05\xd4\x92\xb9' \
+            '\x15\x98\xcc\xae' '\x19\x52\xcc\x44' \
+            '\x43\x38\x1d\x65' '\x38\xdb\x73\xb9' \
+            '\x72\xdd\x2e\x3b'
 
 
     def testPackRequest0(self):
@@ -5348,16 +5349,16 @@ class TestForceScreenSaver(unittest.TestCase):
 class TestSetPointerMapping(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'map': [188, 147, 189, 193, 209],
+            'map': [170, 192, 148, 216, 208],
             }
-        self.req_bin_0 = '\x74\x05\x00\x03' '\xbc\x93\xbd\xc1' \
-            '\xd1\x00\x00\x00'
+        self.req_bin_0 = '\x74\x05\x00\x03' '\xaa\xc0\x94\xd8' \
+            '\xd0\x00\x00\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 27171,
-            'status': 201,
+            'sequence_number': 6496,
+            'status': 240,
             }
-        self.reply_bin_0 = '\x01\xc9\x6a\x23' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\xf0\x19\x60' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
@@ -5407,14 +5408,14 @@ class TestGetPointerMapping(unittest.TestCase):
         self.req_bin_0 = '\x75\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 32748,
-            'map': [170, 131, 249, 200, 144],
+            'sequence_number': 20034,
+            'map': [138, 185, 172, 220, 148],
             }
-        self.reply_bin_0 = '\x01\x05\x7f\xec' '\x00\x00\x00\x02' \
+        self.reply_bin_0 = '\x01\x05\x4e\x42' '\x00\x00\x00\x02' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\xaa\x83\xf9\xc8' '\x90\x00\x00\x00'
+            '\x8a\xb9\xac\xdc' '\x94\x00\x00\x00'
 
 
     def testPackRequest0(self):
@@ -5457,17 +5458,17 @@ class TestGetPointerMapping(unittest.TestCase):
 class TestSetModifierMapping(unittest.TestCase):
     def setUp(self):
         self.req_args_0 = {
-            'keycodes': [[3, 205], [11, 238], [159, 184], [165, 113], [242, 173], [72, 103], [240, 186], [175, 141]],
+            'keycodes': [[221, 165], [156, 197], [97, 20], [71, 23], [166, 113], [75, 122], [86, 90], [110, 203]],
             }
-        self.req_bin_0 = '\x76\x02\x00\x05' '\x03\xcd\x0b\xee' \
-            '\x9f\xb8\xa5\x71' '\xf2\xad\x48\x67' \
-            '\xf0\xba\xaf\x8d'
+        self.req_bin_0 = '\x76\x02\x00\x05' '\xdd\xa5\x9c\xc5' \
+            '\x61\x14\x47\x17' '\xa6\x71\x4b\x7a' \
+            '\x56\x5a\x6e\xcb'
 
         self.reply_args_0 = {
-            'sequence_number': 47892,
-            'status': 133,
+            'sequence_number': 37737,
+            'status': 161,
             }
-        self.reply_bin_0 = '\x01\x85\xbb\x14' '\x00\x00\x00\x00' \
+        self.reply_bin_0 = '\x01\xa1\x93\x69' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00'
@@ -5517,15 +5518,15 @@ class TestGetModifierMapping(unittest.TestCase):
         self.req_bin_0 = '\x77\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 15026,
-            'keycodes': [[208, 198], [157, 114], [239, 239], [191, 93], [127, 111], [233, 58], [53, 176], [238, 188]],
+            'sequence_number': 3636,
+            'keycodes': [[49, 167], [203, 89], [42, 23], [191, 134], [189, 37], [50, 244], [92, 12], [71, 131]],
             }
-        self.reply_bin_0 = '\x01\x02\x3a\xb2' '\x00\x00\x00\x04' \
+        self.reply_bin_0 = '\x01\x02\x0e\x34' '\x00\x00\x00\x04' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
             '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\xd0\xc6\x9d\x72' '\xef\xef\xbf\x5d' \
-            '\x7f\x6f\xe9\x3a' '\x35\xb0\xee\xbc'
+            '\x31\xa7\xcb\x59' '\x2a\x17\xbf\x86' \
+            '\xbd\x25\x32\xf4' '\x5c\x0c\x47\x83'
 
 
     def testPackRequest0(self):
