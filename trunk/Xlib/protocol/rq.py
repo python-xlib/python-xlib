@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.11 2001-02-19 11:16:10 petli Exp $
+# $Id: rq.py,v 1.12 2001-12-14 17:03:10 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -1383,15 +1383,19 @@ class ReplyRequest(GetAttrData):
     
 	
 class Event(GetAttrData):
-    def __init__(self, binarydata = None, display = None, **keys):
+    def __init__(self, binarydata = None, display = None,
+		 **keys):
 	if binarydata:
 	    self._binary = binarydata
 	    self._data, data = self._fields.parse_binary(binarydata, display,
 							 rawdict = 1)
+	    # split event type into type and send_event bit
+	    self._data['send_event'] = not not self._data['type'] & 0x80
+	    self._data['type'] = self._data['type'] & 0x7f
 	else:
 	    if self._code:
 		keys['type'] = self._code
-
+	    
 	    keys['sequence_number'] = 0
 	    
 	    self._binary = apply(self._fields.to_binary, (), keys)

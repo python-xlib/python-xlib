@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.14 2001-12-04 11:41:01 petli Exp $
+# $Id: display.py,v 1.15 2001-12-14 17:03:10 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -733,9 +733,12 @@ class Display:
 	
 
     def parse_event_response(self, etype):
-	estruct = self.event_classes.get(etype, event.AnyEvent)
+	# Skip bit 8 at lookup, that is set if this event came from an
+	# SendEvent
+	estruct = self.event_classes.get(etype & 0x7f, event.AnyEvent)
 
 	e = estruct(display = self, binarydata = self.data_recv[:32])
+	
 	self.data_recv = buffer(self.data_recv, 32)
 
 	# Drop all requests having an error handler,

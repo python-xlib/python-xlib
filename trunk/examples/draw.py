@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# $Id: draw.py,v 1.4 2000-12-21 12:23:07 petli Exp $
+# $Id: draw.py,v 1.5 2001-12-14 17:03:10 petli Exp $
 #
 # examples/draw.py -- high-level xlib test application.
 #
@@ -61,10 +61,14 @@ class Window:
 
 	# Set some WM info
 
+	self.WM_DELETE_WINDOW = self.d.intern_atom('WM_DELETE_WINDOW')
+	self.WM_PROTOCOLS = self.d.intern_atom('WM_PROTOCOLS')
+	
 	self.window.set_wm_name('Xlib example: draw.py')
 	self.window.set_wm_icon_name('draw.py')
 	self.window.set_wm_class('draw', 'XlibExample')
 
+	self.window.set_wm_protocols([self.WM_DELETE_WINDOW])
 	self.window.set_wm_hints(flags = Xutil.StateHint,
 				 initial_state = Xutil.NormalState)
 
@@ -106,6 +110,12 @@ class Window:
 	    if e.type == X.MotionNotify and current:
 		current.motion(e)
 
+	    if e.type == X.ClientMessage:
+		if e.client_type == self.WM_PROTOCOLS:
+		    fmt, data = e.data
+		    if fmt == 32 and data[0] == self.WM_DELETE_WINDOW:
+			sys.exit(0)
+	    
 # A drawed objects, consisting of either a single
 # romboid, or two romboids connected by a winding line
 

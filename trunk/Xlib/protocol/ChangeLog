@@ -1,3 +1,11 @@
+2001-12-14  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
+
+	* display.py (Display.parse_event_response): 
+	* rq.py (Event.__init__): Fixed bug in event type decoding: bit
+	0-6 is the event type, and bit 7 is set if the event was sent by
+	SendEvent. 
+	
+
 2001-01-16    <petli@cendio.se>
 
 	* event.py: Changed some class names so that they correspond
