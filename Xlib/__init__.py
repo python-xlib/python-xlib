@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.9 2001-01-12 11:05:03 petli Exp $
+# $Id: __init__.py,v 1.10 2001-12-04 13:19:36 petli Exp $
 #
 # Xlib.__init__ -- glue for Xlib package
 #
@@ -20,7 +20,7 @@
 
 import string
 
-__version__ = (0, 8)
+__version__ = (0, 9)
 
 __version_string__ = string.join(map(str, __version__), '.')
 

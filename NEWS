@@ -2,6 +2,44 @@
 
 		      NEWS for Python X Library
 
+* Version 0.9  4 Dec 2001
+
+** Documentation improved
+
+The documentation has been augmented with a chapter about event
+handling, and a chapter listing all X objects and their methods
+provided by the library.  They are not described in any detail,
+though.
+
+** Keysym handling improved
+
+The module Xlib.XK, which listed all keysyms, have been split up into
+several sub-modules providing different sets of keysyms.  By importing
+Xlib.XK only the miscellany and latin1 sets are loaded, thus removing
+some unnecessary clutter.
+
+Xlib.display.Display has two new methods (lookup_string() and
+rebind_string()) for translating keysyms into characters.
+
+** Small changes to library interface
+
+The order of the Xlib.display.Display method send_event() parameters
+event_mask and propagate has changed.
+
+Some of the class names in Xlib.protocol.event have changed, to have
+the same namse as the corresponding. event type constant.
+
+** A few bugfixes
+
+If a display has more than one screen, the default screen was always
+set to the highest numbered one, irrespective of what the user
+specified in $DISPLAY.
+
+Some response attributes in Xlib.protocol.request accidentally
+included a comma.
+
+
+
 * Version 0.8  12 Jan 2001
 
 ** Uses distutils

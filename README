@@ -1,7 +1,7 @@
 
 			 The Python X Library
 
-		       Version 0.8, 12 Jan 2000
+		       Version 0.9, 4 Dec 2001
 
 
 *** Copyright
@@ -15,7 +15,7 @@ details.
 *** Requirements
 
 The Python X Library requires Python 1.5.2 or newer.  It has been
-tested with Python 1.5.2 and 2.0.
+tested with Python 1.5.2, 2.0 and 2.1.
 
 
 *** Installation
@@ -81,8 +81,10 @@ extension has been implemented.
 There are most likely still bugs, although a large part of the library
 has been exercised now and seems to work just fine.
 
-There are some documentation, but it doesn't cover the object oriented
-interface methods yet.
+The documentation is still quite rudimentary, but should be of some
+help for people programming with the Xlib.  X beginners should first
+find some general texts on X.  A very good starting point is
+http://www.rahul.net/kenton/xsites.html
 
 See the file TODO for a detailed list of what is missing,
 approximately ordered by importance.
@@ -97,4 +99,5 @@ http://sourgeforge.net/projects/python-xlib/.  Source is available
 from that page as tar.gz-releases and from the CVS tree.
 
 There isn't any real web page yet, only a derivative of this file.  It
-is located at http://python-xlib.sourceforge.net/.
+is located at http://python-xlib.sourceforge.net/.  It now also
+features the documentation for downloading or browsing.
