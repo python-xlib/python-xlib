@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.11 2002-03-24 22:31:07 petli Exp $
+# $Id: drawable.py,v 1.12 2002-05-15 22:27:14 petli Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -521,6 +521,7 @@ class Window(Drawable):
 			   pointer_mode = pointer_mode,
 			   keyboard_mode = keyboard_mode,
 			   confine_to = confine_to,
+			   cursor = cursor,
 			   button = button,
 			   modifiers = modifiers)
 

@@ -1,4 +1,4 @@
-# $Id: request.py,v 1.10 2002-02-25 11:09:23 petli Exp $
+# $Id: request.py,v 1.11 2002-05-15 22:27:14 petli Exp $
 #
 # Xlib.protocol.request -- definitions of core requests
 #
@@ -380,8 +380,8 @@ class GrabPointer(rq.ReplyRequest):
 	rq.Card16('event_mask'),
 	rq.Set('pointer_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
 	rq.Set('keyboard_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
-	rq.Window('confine_to'),
-	rq.Cursor('cursor'),
+	rq.Window('confine_to', (X.NONE, )),
+	rq.Cursor('cursor', (X.NONE, )),
 	rq.Card32('time'),
 	)
 
@@ -410,8 +410,8 @@ class GrabButton(rq.Request):
 	rq.Card16('event_mask'),
 	rq.Set('pointer_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
 	rq.Set('keyboard_mode', 1, (X.GrabModeSync, X.GrabModeAsync)),
-	rq.Window('confine_to'),
-	rq.Cursor('cursor'),
+	rq.Window('confine_to', (X.NONE, )),
+	rq.Cursor('cursor', (X.NONE, )),
 	rq.Card8('button'),
 	rq.Pad(1),
 	rq.Card16('modifiers'),
