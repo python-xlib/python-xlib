@@ -1,0 +1,17 @@
+include MANIFEST.in
+include README COPYING NEWS TODO
+
+global-include .cvsignore 
+
+recursive-include doc Makefile
+include doc/src/*.texi
+include doc/info/python-xlib.info
+include doc/html/index.html doc/html/python-xlib_toc.html doc/html/python-xlib_*.html
+include doc/ps/python-xlib.ps
+
+include utils/tcpbug.py utils/parsexbug.py
+
+include examples/draw.py examples/draw-proto.py examples/profilex.py
+include examples/threadtest.py
+
+include tests/test*.py

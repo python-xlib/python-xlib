@@ -1,7 +1,7 @@
 
 			 The Python X Library
 
-		       Version 0.7, 8 Jan 2000
+		       Version 0.8, 12 Jan 2000
 
 
 *** Copyright
@@ -14,17 +14,24 @@ details.
 
 *** Requirements
 
-The Python X Library requires Python 1.5.2 or newer, though it hasn't
-been tested with any newer Python versions yet.
+The Python X Library requires Python 1.5.2 or newer.  It has been
+tested with Python 1.5.2 and 2.0.
 
 
 *** Installation
 
-Just copy the Xlib directory to some place in the module path.  E.g.:
-     
-   cp -r Xlib /usr/lib/python1.5/site-packages/
-  
-Make sure that that directory exists before copying.
+The Python Xlib uses the standard distutils to make installation
+easy.  Distutils is shipped with Python 1.6 and newer.  Python 1.5.2
+users must download and install distutils before Python Xlib can be
+installed.  Distutils can be downloaded from
+http://www.python.org/sigs/distutils-sig/.
+
+Install Python Xlib by running this command:
+
+  python setup.py install
+
+Installation can be modified with the normal install options, see the
+documentation of distutils for details.
 
 Alternatively, you can run programs from the distribution directory,
 or changing the module path in programs.

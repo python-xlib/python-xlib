@@ -2,6 +2,17 @@
 
 		      NEWS for Python X Library
 
+* Version 0.8  12 Jan 2001
+
+** Uses distutils
+
+Python Xlib now uses distutils to make installation and distribution
+building easier.
+
+** Tested with Python 2.0
+
+A few incompatibilities with Python 2.0 has been fixed. 
+
 		      		      
 * Version 0.7  8 Jan 2001
 
