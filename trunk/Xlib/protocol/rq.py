@@ -1,4 +1,4 @@
-# $Id: rq.py,v 1.2 2000-08-07 10:30:19 petli Exp $
+# $Id: rq.py,v 1.3 2000-08-14 10:51:37 petli Exp $
 #
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
@@ -29,6 +29,7 @@ import types
 
 # Xlib modules
 from Xlib import X
+from Xlib.support import lock
 
 class BadDataError(Exception): pass
 
@@ -1104,6 +1105,8 @@ class ReplyRequest(GetAttrData):
 	self._serial = None
 	self._data = None
 	self._error = None
+
+	self._response_lock = lock.allocate_lock()
 	
 	self._display.send_request(self, 1)
 	if not defer:
@@ -1113,20 +1116,31 @@ class ReplyRequest(GetAttrData):
 	# Send request and wait for reply if we hasn't
 	# already got one.  This means that reply() can safely
 	# be called more than one time.
-	
-	if self._data is None and self._error is None:
-	    self._display.send_and_recv(request = self._serial)
-	    del self._display 
+
+	self._response_lock.acquire()
+	while self._data is None and self._error is None:
+	    self._display.send_recv_lock.acquire()
+	    self._response_lock.release()
 	    
-	    # If error has been set, raise it
-	    if self._error:
-		raise self._error
+	    self._display.send_and_recv(request = self._serial)
+	    self._response_lock.acquire()
+
+	self._response_lock.release()
+	self._display = None
+	    
+	# If error has been set, raise it
+	if self._error:
+	    raise self._error
 
     def _parse_response(self, data):
+	self._response_lock.acquire()
 	self._data, d = self._reply.parse_binary(data, self._display, rawdict = 1)
+	self._response_lock.release()
 
     def _set_error(self, error):
+	self._response_lock.acquire()
 	self._error = error
+	self._response_lock.release()
 	
     def __repr__(self):
 	return '<%s serial = %s, data = %s, error = %s>' % (self.__class__, self._serial, self._data, self._error)

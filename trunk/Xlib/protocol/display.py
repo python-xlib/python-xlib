@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.3 2000-08-08 09:47:45 petli Exp $
+# $Id: display.py,v 1.4 2000-08-14 10:51:37 petli Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -31,6 +31,8 @@ import FCNTL
 
 # Xlib modules
 from Xlib import error
+
+from Xlib.support import lock
 
 # Xlib.protocol modules
 import rq
@@ -106,18 +108,36 @@ class Display:
 	# Internal structures for communication
 	self.request_serial = 1
 
+	self.socket_error_lock = lock.allocate_lock()
 	self.socket_error = None
-	
+
+	self.event_queue_read_lock = lock.allocate_lock()
+	self.event_queue_write_lock = lock.allocate_lock()
 	self.event_queue = []
+
+	self.request_queue_lock = lock.allocate_lock()
 	self.request_queue = []
+	
 	self.sent_requests = []
 	self.request_length = 0
+
+	self.send_recv_lock = lock.allocate_lock()
+	self.event_wait_lock = lock.allocate_lock()
+	self.request_wait_lock = lock.allocate_lock()
+	self.send_recv_active = 0
 	
 	self.data_send = ''
 	self.data_recv = ''
-
+	self.data_sent_bytes = 0
+	
 	# Use an default error handler, one which just prints the error
 	self.error_handler = None
+
+	# Resource ID structures
+	self.resource_id_lock = lock.allocate_lock()
+	self.resource_ids = {}
+	self.last_resource_id = 0
+
 	
 	# Figure out which endianess the hardware uses
 	self.big_endian = struct.unpack('BB', struct.pack('H', 0x0100))[0]
@@ -144,48 +164,83 @@ class Display:
 
 	self.default_screen = max(self.default_screen, len(self.info.roots) - 1)
 
-	self.resource_ids = {}
-	self.last_resource_id = 0
-
 	
     #
     # Public interface
     #
     
     def fileno(self):
-	if self.socket_error:
-	    raise self.socket_error
-	
+	self.check_for_error()
 	return self.socket.fileno()
     
     def next_event(self):
-	if self.socket_error:
-	    raise self.socket_error
+	self.check_for_error()
 
-	if not self.event_queue:
+	# Main lock, so that only one thread at a time performs the
+	# event waiting code.  This at least guarantees that the first
+	# thread calling next_event() will get the next event, although
+	# no order is guaranteed among other threads calling next_event()
+	# while the first is blocking.
+	
+	self.event_queue_read_lock.acquire()
+
+	# Lock event queue, so we can check if it is empty
+	self.event_queue_write_lock.acquire()
+
+	# We have too loop until we get an event, as
+	# we might be woken up when there is no event.
+	
+	while not self.event_queue:
+
+	    # Lock send_recv so no send_and_recieve
+	    # can start or stop while we're checking
+	    # whether there are one.
+	    self.send_recv_lock.acquire()
+
+	    # Relase event queue to allow an send_and_recv to
+	    # insert any now.
+	    self.event_queue_write_lock.release()
+
+	    # Call send_and_recv, which will return when
+	    # something has occured
 	    self.send_and_recv(event = 1)
+
+	    # Before looping around, lock the event queue against
+	    # modifications.
+	    self.event_queue_write_lock.acquire()
+
+	# Whiew, we have an event!  Remove it from
+	# the event queue and relaese its write lock.
 	
 	event = self.event_queue[0]
 	del self.event_queue[0]
+	self.event_queue_write_lock.release()
+
+	# Finally, allow any other threads which have called next_event()
+	# while we were waiting to proceed.
+	
+	self.event_queue_read_lock.release()
+
+	# And return the event!
 	return event
 
     def pending_events(self):
-	if self.socket_error:
-	    raise self.socket_error
+	self.check_for_error()
 
-	return len(self.event_queue)
+	# Lock the queue, get the event count, and unlock again.
+	self.event_queue_write_lock.acquire()
+	count = len(self.event_queue)
+	self.event_queue_write_lock.release()
+
+	return count
     
     def flush(self):
-	if self.socket_error:
-	    raise self.socket_error
-
-	if self.request_queue:
-	    self.send_and_recv(flush = 1)
+	self.check_for_error()
+	self.send_recv_lock.acquire()
+	self.send_and_recv(flush = 1)
 	    
     def close(self):
-	if self.socket_error:
-	    raise self.socket_error
-
+	self.flush()
 	self.close_internal('client')
 
     def set_error_handler(self, handler):
@@ -200,18 +255,22 @@ class Display:
 	Raises ResourceIDError if there are no free resource ids.
 	"""
 
-	i = self.last_resource_id
-	while self.resource_ids.has_key(i):
-	    i = i + 1
-	    if i > self.info.resource_id_mask:
-		i = 0
-	    if i == self.last_resource_id:
-		raise error.ResourceIDError('out of resource ids')
+	self.resource_id_lock.acquire()
+	try:
+	    i = self.last_resource_id
+	    while self.resource_ids.has_key(i):
+		i = i + 1
+		if i > self.info.resource_id_mask:
+		    i = 0
+		if i == self.last_resource_id:
+		    raise error.ResourceIDError('out of resource ids')
 
-	self.resource_ids[i] = None
-	self.last_resource_id = i
-	return self.info.resource_id_base | i
-
+	    self.resource_ids[i] = None
+	    self.last_resource_id = i
+	    return self.info.resource_id_base | i
+	finally:
+	    self.resource_id_lock.release()
+	    
     def free_resource_id(self, rid):
 	"""d.free_resource_id(rid)
 
@@ -219,16 +278,20 @@ class Display:
 	isn't allocated by us are ignored.
 	"""
 
-	i = rid & self.info.resource_id_mask
-
-	# Attempting to free a resource id outside our range
-	if rid - i != self.info.resource_id_base:
-	    return None
-	
+	self.resource_id_lock.acquire()
 	try:
-	    del self.resource_ids[i]
-	except KeyError:
-	    pass
+	    i = rid & self.info.resource_id_mask
+
+	    # Attempting to free a resource id outside our range
+	    if rid - i != self.info.resource_id_base:
+		return None
+
+	    try:
+		del self.resource_ids[i]
+	    except KeyError:
+		pass
+	finally:
+	    self.resource_id_lock.release()
 
     
 
@@ -245,18 +308,31 @@ class Display:
     # Private functions
     #
 
+    def check_for_error(self):
+	self.socket_error_lock.acquire()
+	err = self.socket_error
+	self.socket_error_lock.release()
+
+	if err:
+	    raise err
+	
     def send_request(self, request, wait_for_response):
 	if self.socket_error:
 	    raise self.socket_error
 
+	self.request_queue_lock.acquire()
+	
 	request._serial = self.request_serial
 	self.request_serial = (self.request_serial + 1) % 65536
-	self.request_queue.append(request, wait_for_response)
 
-	if len(self.request_queue) > 10:
+	self.request_queue.append(request, wait_for_response)
+	qlen = len(self.request_queue)
+	
+	self.request_queue_lock.release()
+
+	if qlen > 10:
 	    self.flush()
 	    
-
     def close_internal(self, whom):
 	# Clear out data structures
 	self.request_queue = None
@@ -269,27 +345,113 @@ class Display:
 	self.socket.close()
 
 	# Set a connection closed indicator
+	self.socket_error_lock.acquire()
 	self.socket_error = error.ConnectionClosedError(whom)
+	self.socket_error_lock.release()
 	
 	
     def send_and_recv(self, flush = None, event = None, request = None):
+	"""send_and_recv(flush = None, event = None, request = None)
 
-	# Translate all queued requests into binary form for sending.
-	for req, wait in self.request_queue:
-	    self.data_send = self.data_send + req._binary
-	    if wait:
-		self.sent_requests.append(req)
-		
-	del self.request_queue[:]
+	Perform I/O, or wait for some other thread to do it for us.
 
-	# Loop, recieving and sending data.
+	send_recv_lock MUST be LOCKED when send_and_recv is called.
+	It will be UNLOCKED at return.
 
-	# Timeout is set to None initially to block until there is
-	# something to recieve or send.
-	timeout = None
+	Exactly one of the parameters flush, event and request must
+	be set to control the return condition.
+
+	To attempt to send all requests in the queue, flush should
+	be true.  Will return immediately if another thread is
+	already doing send_and_recv.
+
+	To wait for an event to be recieved, event should be true.
+
+	To wait for a response to a certain request (either an error
+	or a response), request should be set the that request's
+	serial number.
+
+	It is not guaranteed that the return condition has been
+	fulfilled when the function returns, so the caller has to loop
+	until it is finished.
+	"""
 	
+	# There is an active send_and_recieve, go to sleep
+	if self.send_recv_active:
+
+	    # Release send_recv, allowing a send_and_recive
+	    # to terminate or other threads to queue up
+	    self.send_recv_lock.release()
+
+	    # Return immediately if flushing, even if that
+	    # might mean that not necessarily all requests
+	    # have been sent.
+	    
+	    if flush:
+		return
+
+	    # Wait for something to happen, as the wait locks are
+	    # unlocked either when what we wait for (not necessarily
+	    # the exact object we're waiting for, though), or when
+	    # an active send_and_recv exits.
+	    
+	    # Release it immediately afterwards as we're only using
+	    # the lock for synchonization
+	    
+	    if event:
+		wait_lock = self.event_wait_lock
+	    elif request:
+		wait_lock = self.request_wait_lock
+		
+	    wait_lock.acquire()
+	    wait_lock.release()
+
+	    # Return to caller, since it might have got the
+	    # needed data and hence isn't interested in doing
+	    # more send_and_recv.
+	    return
+
+
+	# We're the only active send_and_recv, so perform
+	# all our needed network stuff.
+	
+	# Tell other threads that we are active, and lock
+	# all wait locks to give later threads something to
+	# hand on.  
+
+	self.send_recv_active = 1
+	
+	self.event_wait_lock.acquire()
+	self.request_wait_lock.acquire()
+
+	# Finally release send_recv and start doing some useful work
+	self.send_recv_lock.release()
+
+	flush_bytes = None
+	
+	# Loop, recieving and sending data.
 	while 1:
 
+	    # Turn all requests on request queue into binary form
+	    # and append them to self.data_send
+	
+	    self.request_queue_lock.acquire()
+	    
+	    for req, wait in self.request_queue:
+		self.data_send = self.data_send + req._binary
+		if wait:
+		    self.sent_requests.append(req)
+
+	    del self.request_queue[:]
+	    
+	    self.request_queue_lock.release()
+
+	    # If we're flushing, figure out how many bytes we
+	    # have to send so that we're not caught in an interminable
+	    # loop if other threads continuously append requests.
+	    if flush and flush_bytes is None:
+		flush_bytes = self.data_sent_bytes + len(self.data_send)
+	    
 	    # Wait for socket to be ready for sending data (if any)
 	    # and recieving data (always).
 	    if self.data_send:
@@ -298,7 +460,7 @@ class Display:
 		writeset = []
 
 	    try:
-		rs, ws, es = select.select([self.socket], writeset, [], timeout)
+		rs, ws, es = select.select([self.socket], writeset, [])
 
 	    # Ignore errors caused by a signal recieved while blocking.
 	    # All other errors are re-raised.
@@ -316,6 +478,8 @@ class Display:
 		    raise self.socket_error
 		
 		self.data_send = self.data_send[i:]
+		self.data_sent_bytes = self.data_sent_bytes + i
+
 
 	    # There is data to read.  Do so and parse recieved data.
 	    gotreq = 0
@@ -334,18 +498,6 @@ class Display:
 		self.data_recv = self.data_recv + recv
 		gotreq = self.parse_response(request)
 		
-	    # We have recieved or sent all that we had to and is just
-	    # trying to do some bonus recieving and sending.
-	    if timeout is not None:
-		# If that failed: quit the loop
-		if not rs and not ws:
-		    return
-
-		# Otherwise, make another pass
-		else:
-		    continue
-	    
-
 	    # There are three different end of send-recv-loop conditions.
 	    # However, we don't leave the loop immediately, instead we
 	    # try to send and recieve any data that might be left.  We
@@ -353,20 +505,34 @@ class Display:
 	    # the socket.
 
 	    # When flushing: all requests have been sent
-	    if flush and not self.data_send:
-		timeout = 0
+	    if flush and flush_bytes >= self.data_sent_bytes:
+		break
 
 	    # When waiting for an event: an event has been read
 	    if event and self.event_queue:
-		timeout = 0
+		break
 
 	    # When processing a certain request: got its reply
 	    if request is not None and gotreq:
-		timeout = 0
+		break
 
 	    # Else there's still data which must be sent,
 	    # so loop around to another blocking select
-    
+
+	# We have accomplished the callers request.
+	# Record that there are now no active send_and_recv,
+	# and wake up all waiting thread
+	
+	self.send_recv_lock.acquire()
+	self.send_recv_active = 0
+
+	if self.event_wait_lock.locked():
+	    self.event_wait_lock.release()
+	if self.request_wait_lock.locked():
+	    self.request_wait_lock.release()
+
+	self.send_recv_lock.release()
+
 
     def parse_response(self, request):
 	"""Internal method.
@@ -466,6 +632,10 @@ class Display:
 	
 	self.data_recv = self.data_recv[self.request_length:]
 	self.request_length = 0
+
+	# Unlock any response waiting threads
+	if self.request_wait_lock.locked():
+	    self.request_wait_lock.release()
 	
 	return req.sequence_number == request
 	
@@ -481,9 +651,15 @@ class Display:
 	self.get_waiting_request(e.sequence_number)
 	
 	# print 'recv Event:', e
-	
-	self.event_queue.append(e)
 
+	# Insert the event into the queue
+	self.event_queue_write_lock.acquire()
+	self.event_queue.append(e)
+	self.event_queue_write_lock.release()
+
+	# Unlock any event waiting threads
+	if self.event_wait_lock.locked():
+	    self.event_wait_lock.release()
 
     def get_waiting_request(self, sno):
 	if not self.sent_requests:
@@ -682,7 +858,16 @@ class ConnectionSetupRequest(rq.GetAttrData):
     def __init__(self, display, *args, **keys):
 	self._binary = self._request.build_from_args(args, keys)
 	self._data = None
+
+	# Don't bother about locking, since no other threads have
+	# access to the display yet
+	
 	display.request_queue.append((self, 1))
+
+	# However, we must lock send_and_recv, but we don't have
+	# to loop.
+	
+	display.send_recv_lock.acquire()
 	display.send_and_recv(request = -1)
 
 
