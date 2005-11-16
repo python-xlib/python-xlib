@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.19 2005-02-05 07:21:24 calroc99 Exp $
+# $Id: display.py,v 1.20 2005-11-16 15:50:47 petli Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -359,7 +359,8 @@ class Display:
         is received, to update the keymap cache. evt should be the event
         object."""
 	if isinstance(evt, event.MappingNotify):
-	    self._update_keymap(evt.first_keycode, evt.count)
+	    if evt.request == X.MappingKeyboard:
+		self._update_keymap(evt.first_keycode, evt.count)
 	else:
 	    raise TypeError('expected a MappingNotify event')
 	
