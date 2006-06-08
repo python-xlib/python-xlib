@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.19 2003-01-29 23:53:37 petli Exp $
+# $Id: display.py,v 1.20 2006-06-08 23:01:52 mggrant Exp $
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -528,17 +528,17 @@ class Display:
 		# We're the recieving thread, parse the data
 		if recieving:
 		    try:
-			recv = self.socket.recv(2048)
+			bytes_recv = self.socket.recv(2048)
 		    except socket.error, err:
 			self.close_internal('server: %s' % err[1])
 			raise self.socket_error
 
-		    if not recv:
+		    if not bytes_recv:
 			# Clear up, set a connection closed indicator and raise it
 			self.close_internal('server')
 			raise self.socket_error
 
-		    self.data_recv = self.data_recv + recv
+		    self.data_recv = self.data_recv + bytes_recv
 		    gotreq = self.parse_response(request)
 
 		# Otherwise return, allowing the calling thread to figure
