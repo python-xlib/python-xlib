@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.23 2006-07-19 21:51:03 mggrant Exp $
+# $Id: display.py,v 1.24 2006-07-19 23:05:52 mggrant Exp $
 # -*- coding: latin-1 -*-
 #
 # Xlib.protocol.display -- core display communication
@@ -163,7 +163,7 @@ class Display:
 	    # whether there are one active.
 	    self.send_recv_lock.acquire()
 
-	    # Relase event queue to allow an send_and_recv to
+	    # Release event queue to allow an send_and_recv to
 	    # insert any now.
 	    self.event_queue_write_lock.release()
 
@@ -363,16 +363,21 @@ class Display:
 
 	# We go to sleep if there is already a thread doing what we
 	# want to do:
-	
-	#  If flushing or waiting for a request we want to send
-	#  If waiting for an event we want to recv
+
+	#  If flushing, we want to send
+	#  If waiting for a response to a request, we want to send
+	#    (to ensure that the request was sent - we alway recv
+	#     when we get to the main loop, but sending is the important
+	#     thing here)
+	#  If waiting for an event, we want to recv
+	#  If just trying to receive anything we can, we want to recv
 	
 	if (((flush or request is not None) and self.send_active)
 	    or ((event or recv) and self.recv_active)):
 
 	    # Signal that we are waiting for something.  These locks
 	    # together with the *_waiting variables are used as
-	    # semaphores.  When an event or a reqeust respone arrives,
+	    # semaphores.  When an event or a request response arrives,
 	    # it will zero the *_waiting and unlock the lock.  The
 	    # locks will also be unlocked when an active send_and_recv
 	    # finishes to signal the other waiting threads that one of
@@ -381,7 +386,6 @@ class Display:
 	    # All this makes these locks and variables a part of the
 	    # send_and_recv control logic, and hence must be modified
 	    # only when we have the send_recv_lock locked.
-	    
 	    if event:
 		wait_lock = self.event_wait_lock
 		if not self.event_waiting:
@@ -489,13 +493,13 @@ class Display:
 		    writeset = []
 
 		# Timeout immediately if we're only checking for
-		# something to read, otherwise block
+		# something to read or if we're flushing, otherwise block
 
-		if recv:
+		if recv or flush:
 		    timeout = 0
 		else:
 		    timeout = None
-		    
+
 		rs, ws, es = select.select([self.socket], writeset, [], timeout)
 
 	    # Ignore errors caused by a signal recieved while blocking.
