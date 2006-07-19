@@ -1,4 +1,5 @@
-# $Id: display.py,v 1.21 2006-06-08 23:50:16 mggrant Exp $
+# $Id: display.py,v 1.22 2006-07-19 19:16:54 mggrant Exp $
+# -*- coding: latin-1 -*-
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -747,7 +748,7 @@ class Display:
 
 	# Decrement it by one, so that we don't remove the request
 	# that generated these events, if there is such a one.
-	# Bug reported by Ilpo Nyyssonen
+	# Bug reported by Ilpo Nyyssönen
 	self.get_waiting_request((e.sequence_number - 1) % 65536)
 	
 	# print 'recv Event:', e
