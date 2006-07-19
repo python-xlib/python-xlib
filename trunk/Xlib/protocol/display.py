@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.22 2006-07-19 19:16:54 mggrant Exp $
+# $Id: display.py,v 1.23 2006-07-19 21:51:03 mggrant Exp $
 # -*- coding: latin-1 -*-
 #
 # Xlib.protocol.display -- core display communication
@@ -24,6 +24,7 @@ import sys
 import select
 import struct
 import errno
+import socket
 
 # Xlib modules
 from Xlib import error
