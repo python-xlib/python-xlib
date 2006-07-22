@@ -1,3 +1,15 @@
+2006-07-22 Mike Grant <mgg@nobodymuch.org>
+	* Xlib/protocol/display.py: (mggrant) Fix for 1219457 - flushing
+	  was blocking and waiting for a read operation.  Added missing
+	  "import socket" per bug report #681511.  Fix for bug:1098695 &
+	  1098738.  The "recv" variable was being used for more than one
+	  thing - renamed one.
+
+	Changelog hasn't been maintained since 2002, but some of the more
+	significant comments from cvs logs follow:
+	* Xlib/protocol/request.py: (petli) Fix bugs in definition and
+	  method of GrabButton/Pointer
+
 2002-02-22  Peter Liljenberg  <peter.liljenberg@esdgkonsult.com>
 
 	* event.py(CirculateNotify, CirculateRequest): These are
