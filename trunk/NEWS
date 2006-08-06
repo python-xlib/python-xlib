@@ -2,7 +2,7 @@
 
 		      NEWS for Python X Library
 
-* Version 0.13  20 Jul 2006
+* Version 0.13  6 Aug 2006 (trialed as 0.13pre1 on 22 Jul 2006)
 
 A small release to incorporate a number of minor corrections and bug fixes, including small changes to keysym handling, .Xauthority parsing, several fixes to sending/receiving/flushing data, addition of WithdrawnState to WMHints.  petli completed documentation for Display objects.
 
