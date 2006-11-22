@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.3 2006-09-20 20:10:38 mwm Exp $
+# $Id: __init__.py,v 1.4 2006-11-22 13:39:29 mggrant Exp $
 #
 # Xlib.ext.__init__ -- X extension modules 
 #
@@ -26,6 +26,7 @@ __extensions__ = [
     ('XTEST', 'xtest'),
     ('SHAPE', 'shape'),
     ('XINERAMA', 'xinerama'),
+    ('RECORD', 'record'),
     ]
 
 __all__ = map(lambda x: x[1], __extensions__)
