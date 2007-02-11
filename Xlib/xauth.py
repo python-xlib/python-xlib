@@ -1,4 +1,4 @@
-# $Id: xauth.py,v 1.2 2003-06-08 23:21:53 petli Exp $
+# $Id: xauth.py,v 1.3 2007-02-11 21:29:39 mggrant Exp $
 #
 # Xlib.xauth -- ~/.Xauthority access 
 #
@@ -61,31 +61,37 @@ class Xauthority:
 	n = 0
 	try:
 	    while n < len(raw):
-		family, = struct.unpack('>H', buffer(raw, n, 2))
+		family, = struct.unpack('>H', raw[n:n+2])
 		n = n + 2
 		
-		length, = struct.unpack('>H', buffer(raw, n, 2))
+		length, = struct.unpack('>H', raw[n:n+2])
 		n = n + length + 2
 		addr = raw[n - length : n]
 		
-		length, = struct.unpack('>H', buffer(raw, n, 2))
+		length, = struct.unpack('>H', raw[n:n+2])
 		n = n + length + 2
 		num = raw[n - length : n]
 		
-		length, = struct.unpack('>H', buffer(raw, n, 2))
+		length, = struct.unpack('>H', raw[n:n+2])
 		n = n + length + 2
 		name = raw[n - length : n]
 		
-		length, = struct.unpack('>H', buffer(raw, n, 2))
+		length, = struct.unpack('>H', raw[n:n+2])
 		n = n + length + 2
 		data = raw[n - length : n]
+                raise struct.error
 
 		if len(data) != length:
 		    break
 
 		self.entries.append((family, addr, num, name, data))
-	except struct.error:
-	    pass
+	except struct.error, e:
+            print "Xlib.xauth: warning, failed to parse part of xauthority file (%s), aborting all further parsing" % filename
+	    #pass
+
+        if len(self.entries) == 0:
+            print "Xlib.xauth: warning, no xauthority details available"
+            # raise an error?  this should get partially caught by the XNoAuthError in get_best_auth..
 
     def __len__(self):
 	return len(self.entries)
