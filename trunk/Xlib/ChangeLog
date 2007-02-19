@@ -1,3 +1,19 @@
+2007-02-15  Mike Grant <mgg@nobodymuch.org>
+
+        * Xlib/xauth.py: (mgg) Python 2.5 didn't like the way the buffer
+          type was used, resulting in X authorisation failure, so
+          reverted to using slices
+
+2006-11-22 Mike Grant <mgg@nobodymuch.org>
+
+        * Xlib/ext/record.py: Addition of RECORD extension by Alex Badea
+          <decampos@users.sourceforge.net>, SF patch id #1538663 (demo
+          program in python-xlib/examples/record_demo.py)
+
+2006-09-20 Mike Meyer <mwm@mired.org>
+
+        * Xlib/ext/xinerama.py: (mwm) Addition of Xinerama extension
+
 2006-07-22  Mike Grant <mgg@nobodymuch.org>
 
 	Various typo fixes, general updates.
