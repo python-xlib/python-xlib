@@ -1,4 +1,4 @@
-# $Id: xauth.py,v 1.3 2007-02-11 21:29:39 mggrant Exp $
+# $Id: xauth.py,v 1.4 2007-03-17 21:04:23 mggrant Exp $
 #
 # Xlib.xauth -- ~/.Xauthority access 
 #
@@ -79,7 +79,6 @@ class Xauthority:
 		length, = struct.unpack('>H', raw[n:n+2])
 		n = n + length + 2
 		data = raw[n - length : n]
-                raise struct.error
 
 		if len(data) != length:
 		    break
