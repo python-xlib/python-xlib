@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.20 2005-11-16 15:50:47 petli Exp $
+# $Id: display.py,v 1.21 2007-03-17 22:14:06 mggrant Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -438,10 +438,22 @@ class Display:
         """Intern the string name, returning its atom number. If
         only_if_exists is true and the atom does not already exist, it
         will not be created and X.NONE is returned."""
-	r = request.InternAtom(display = self.display,
-			       name = name,
-			       only_if_exists = only_if_exists)
-	return r.atom
+        r = request.InternAtom(display = self.display,
+                               name = name,
+                               only_if_exists = only_if_exists)
+        return r.atom
+
+    def get_atom(self, atom, only_if_exists = 0):
+        """Alias for intern_atom, using internal cache if safe to do"""
+        if only_if_exists == 0:
+                 # cache lookup will create the atom, as the user wishes
+                 # safe to use the cache
+                return self.display.get_atom(atom)
+        else:
+                 # the user doesn't want the atom created if it doesn't
+                 # exist, so use intern_atom to avoid the cache creating it
+                return self.intern_atom(atom, only_if_exists)
+                
 
     def get_atom_name(self, atom):
         """Look up the name of atom, returning it as a string. Will raise
