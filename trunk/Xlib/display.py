@@ -1,4 +1,4 @@
-# $Id: display.py,v 1.21 2007-03-17 22:14:06 mggrant Exp $
+# $Id: display.py,v 1.22 2007-03-17 22:24:47 mggrant Exp $
 #
 # Xlib.display -- high level display object
 #
@@ -64,17 +64,22 @@ class _BaseDisplay(protocol.display.Display):
     # dealing with some ICCCM properties not defined in Xlib.Xatom
     
     def __init__(self, *args, **keys):
-	apply(protocol.display.Display.__init__, (self, ) + args, keys)
-	self._atom_cache = {}
+        apply(protocol.display.Display.__init__, (self, ) + args, keys)
+        self._atom_cache = {}
 
-    def get_atom(self, atomname):
-	if not self._atom_cache.has_key(atomname):
-	    r = request.InternAtom(display = self, name = atomname, only_if_exists = 0)
-	    self._atom_cache[atomname] = r.atom
-	    
-	return self._atom_cache[atomname]
+    def get_atom(self, atomname, only_if_exists=0):
+        if self._atom_cache.has_key(atomname):
+            return self._atom_cache[atomname]
 
-	
+        r = request.InternAtom(display = self, name = atomname, only_if_exists = only_if_exists)
+
+         # don't cache NONE responses in case someone creates this later
+        if r.atom != X.NONE:
+            self._atom_cache[atomname] = r.atom
+
+        return r.atom
+
+
 class Display:
     def __init__(self, display = None):
 	self.display = _BaseDisplay(display)
@@ -444,15 +449,8 @@ class Display:
         return r.atom
 
     def get_atom(self, atom, only_if_exists = 0):
-        """Alias for intern_atom, using internal cache if safe to do"""
-        if only_if_exists == 0:
-                 # cache lookup will create the atom, as the user wishes
-                 # safe to use the cache
-                return self.display.get_atom(atom)
-        else:
-                 # the user doesn't want the atom created if it doesn't
-                 # exist, so use intern_atom to avoid the cache creating it
-                return self.intern_atom(atom, only_if_exists)
+        """Alias for intern_atom, using internal cache"""
+        return self.display.get_atom(atom, only_if_exists)
                 
 
     def get_atom_name(self, atom):
