@@ -1,4 +1,4 @@
-# $Id: drawable.py,v 1.13 2003-07-11 20:49:33 petli Exp $
+# $Id: drawable.py,v 1.14 2007-03-18 14:19:45 mggrant Exp $
 #
 # Xlib.xobject.drawable -- drawable objects (window and pixmap)
 #
@@ -411,6 +411,10 @@ class Window(Drawable):
 				onerror = onerror,
 				direction = direction,
 				window = self.id)
+
+    def raise_window(self, onerror = None):
+        """alias for raising the window to the top - as in XRaiseWindow"""
+        self.configure(onerror, stack_mode = X.Above)
 
     def query_tree(self):
 	return request.QueryTree(display = self.display,
