@@ -4,22 +4,39 @@
 
 * Version 0.14 ? (trialed as 0.14rc1 on ?)
 
+A couple of new extensions, a Python 2.5 fix and a couple of aliases
+(Display.get_atom() now uses the internal cache and added
+Window.raise_window())
+
 ** RECORD extension
 
-Alex Badea contributed a RECORD extension module, allowing Python Xlib programs to capture mouse and keyboard events (or all other core or extension events) easily.  A demo is in the examples directory.  See http://refspecs.freestandards.org/X11/recordlib.pdf for more information.
+Alex Badea contributed a RECORD extension module, allowing Python Xlib
+programs to capture mouse and keyboard events (or all other core or
+extension events) easily.  A demo is in the examples directory.  See
+http://refspecs.freestandards.org/X11/recordlib.pdf for more information.
 
 ** XINERAMA extensiion
 
-Mike Meyer contributed a Xinerama extension module, allowing Python Xlib programs to interrogate the X server about positions and sizes of multiple screens.
+Mike Meyer contributed a Xinerama extension module, allowing Python Xlib
+programs to interrogate the X server about positions and sizes of
+multiple screens.  Specifications are a bit tricky to find -
+http://sourceforge.net/projects/xinerama/ has some older specs and the
+source code of the xorg project (libs & server code) has "definitive"
+information.
 
 ** Python 2.5 fix
 
-Bugfix to correct handling of ~/.Xauthority parsing under Python 2.5 causing failed authentication.
+Bugfix to correct handling of XAuthority file parsing under Python 2.5
+causing failed authentication.
 
 
 * Version 0.13  6 Aug 2006 (trialed as 0.13pre1 on 22 Jul 2006)
 
-A small release to incorporate a number of minor corrections and bug fixes, including small changes to keysym handling, .Xauthority parsing, several fixes to sending/receiving/flushing data, addition of WithdrawnState to WMHints.  petli completed documentation for Display objects.
+A small release to incorporate a number of minor corrections and bug
+fixes, including small changes to keysym handling, .Xauthority parsing,
+several fixes to sending/receiving/flushing data, addition of
+WithdrawnState to WMHints.  petli completed documentation for Display
+objects.
 
 
 * Version 0.12  29 Mar 2002
