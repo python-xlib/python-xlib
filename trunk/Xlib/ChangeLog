@@ -1,3 +1,8 @@
+2007-06-10  Mike Grant <mgg@nobodymuch.org>
+
+        * (many files): (mgg) Converted tabs to spaces throughout the
+          codebase, using reindent.py (SF id: 1559082)
+
 2007-03-18  Mike Grant <mgg@nobodymuch.org>
 
         * Xlib/display.py: (mgg) Added a get_atom alias that uses the
