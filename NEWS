@@ -2,20 +2,20 @@
 
 		      NEWS for Python X Library
 
-* Version 0.14 ? (trialed as 0.14rc1 on ?)
+* Version 0.14 ? (trialed as 0.14rc1 on 10 Jun 2007)
 
 A couple of new extensions, a Python 2.5 fix and a couple of aliases
 (Display.get_atom() now uses the internal cache and added
-Window.raise_window())
+Window.raise_window()).  Tabs converted to spaces (SF id: 1559082).
 
-** RECORD extension
+** RECORD extension (SF id: 1538663)
 
 Alex Badea contributed a RECORD extension module, allowing Python Xlib
 programs to capture mouse and keyboard events (or all other core or
 extension events) easily.  A demo is in the examples directory.  See
 http://refspecs.freestandards.org/X11/recordlib.pdf for more information.
 
-** XINERAMA extensiion
+** XINERAMA extension
 
 Mike Meyer contributed a Xinerama extension module, allowing Python Xlib
 programs to interrogate the X server about positions and sizes of
@@ -24,7 +24,7 @@ http://sourceforge.net/projects/xinerama/ has some older specs and the
 source code of the xorg project (libs & server code) has "definitive"
 information.
 
-** Python 2.5 fix
+** Python 2.5 fix (SF id: 1623900)
 
 Bugfix to correct handling of XAuthority file parsing under Python 2.5
 causing failed authentication.
