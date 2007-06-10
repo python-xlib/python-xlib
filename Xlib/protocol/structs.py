@@ -1,4 +1,4 @@
-# $Id: structs.py,v 1.3 2002-02-12 10:11:11 petli Exp $
+# $Id: structs.py,v 1.4 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.protocol.structs -- some common request structures
 #
@@ -26,63 +26,63 @@ import rq
 
 def WindowValues(arg):
     return rq.ValueList( arg, 4, 0,
-			 rq.Pixmap('background_pixmap'),
-			 rq.Card32('background_pixel'),
-			 rq.Pixmap('border_pixmap'),
-			 rq.Card32('border_pixel'),
-			 rq.Gravity('bit_gravity'),
-			 rq.Gravity('win_gravity'),
-			 rq.Set('backing_store', 1,
-				(X.NotUseful, X.WhenMapped, X.Always)),
-			 rq.Card32('backing_planes'),
-			 rq.Card32('backing_pixel'),
-			 rq.Bool('override_redirect'),
-			 rq.Bool('save_under'),
-			 rq.Card32('event_mask'),
-			 rq.Card32('do_not_propagate_mask'),
-			 rq.Colormap('colormap'),
-			 rq.Cursor('cursor'),
-			 )
+                         rq.Pixmap('background_pixmap'),
+                         rq.Card32('background_pixel'),
+                         rq.Pixmap('border_pixmap'),
+                         rq.Card32('border_pixel'),
+                         rq.Gravity('bit_gravity'),
+                         rq.Gravity('win_gravity'),
+                         rq.Set('backing_store', 1,
+                                (X.NotUseful, X.WhenMapped, X.Always)),
+                         rq.Card32('backing_planes'),
+                         rq.Card32('backing_pixel'),
+                         rq.Bool('override_redirect'),
+                         rq.Bool('save_under'),
+                         rq.Card32('event_mask'),
+                         rq.Card32('do_not_propagate_mask'),
+                         rq.Colormap('colormap'),
+                         rq.Cursor('cursor'),
+                         )
 
 def GCValues(arg):
     return rq.ValueList( arg, 4, 0,
-			 rq.Set('function', 1,
-				(X.GXclear, X.GXand, X.GXandReverse,
-				 X.GXcopy, X.GXandInverted, X.GXnoop,
-				 X.GXxor, X.GXor, X.GXnor, X.GXequiv,
-				 X.GXinvert, X.GXorReverse, X.GXcopyInverted,
-				 X.GXorInverted, X.GXnand, X.GXset)),
-			 rq.Card32('plane_mask'),
-			 rq.Card32('foreground'),
-			 rq.Card32('background'),
-			 rq.Card16('line_width'),
-			 rq.Set('line_style', 1,
-				(X.LineSolid, X.LineOnOffDash, X.LineDoubleDash)),
-			 rq.Set('cap_style', 1,
-				(X.CapNotLast, X.CapButt,
-				 X.CapRound, X.CapProjecting)),
-			 rq.Set('join_style', 1,
-				(X.JoinMiter, X.JoinRound, X.JoinBevel)),
-			 rq.Set('fill_style', 1,
-				(X.FillSolid, X.FillTiled,
-				 X.FillStippled, X.FillOpaqueStippled)),
-			 rq.Set('fill_rule', 1,
-				(X.EvenOddRule, X.WindingRule)),
-			 rq.Pixmap('tile'),
-			 rq.Pixmap('stipple'),
-			 rq.Int16('tile_stipple_x_origin'),
-			 rq.Int16('tile_stipple_y_origin'),
-			 rq.Font('font'),
-			 rq.Set('subwindow_mode', 1,
-				(X.ClipByChildren, X.IncludeInferiors)),
-			 rq.Bool('graphics_exposures'),
-			 rq.Int16('clip_x_origin'),
-			 rq.Int16('clip_y_origin'),
-			 rq.Pixmap('clip_mask'),
-			 rq.Card16('dash_offset'),
-			 rq.Card8('dashes'),
-			 rq.Set('arc_mode', 1, (X.ArcChord, X.ArcPieSlice))
-			 )
+                         rq.Set('function', 1,
+                                (X.GXclear, X.GXand, X.GXandReverse,
+                                 X.GXcopy, X.GXandInverted, X.GXnoop,
+                                 X.GXxor, X.GXor, X.GXnor, X.GXequiv,
+                                 X.GXinvert, X.GXorReverse, X.GXcopyInverted,
+                                 X.GXorInverted, X.GXnand, X.GXset)),
+                         rq.Card32('plane_mask'),
+                         rq.Card32('foreground'),
+                         rq.Card32('background'),
+                         rq.Card16('line_width'),
+                         rq.Set('line_style', 1,
+                                (X.LineSolid, X.LineOnOffDash, X.LineDoubleDash)),
+                         rq.Set('cap_style', 1,
+                                (X.CapNotLast, X.CapButt,
+                                 X.CapRound, X.CapProjecting)),
+                         rq.Set('join_style', 1,
+                                (X.JoinMiter, X.JoinRound, X.JoinBevel)),
+                         rq.Set('fill_style', 1,
+                                (X.FillSolid, X.FillTiled,
+                                 X.FillStippled, X.FillOpaqueStippled)),
+                         rq.Set('fill_rule', 1,
+                                (X.EvenOddRule, X.WindingRule)),
+                         rq.Pixmap('tile'),
+                         rq.Pixmap('stipple'),
+                         rq.Int16('tile_stipple_x_origin'),
+                         rq.Int16('tile_stipple_y_origin'),
+                         rq.Font('font'),
+                         rq.Set('subwindow_mode', 1,
+                                (X.ClipByChildren, X.IncludeInferiors)),
+                         rq.Bool('graphics_exposures'),
+                         rq.Int16('clip_x_origin'),
+                         rq.Int16('clip_y_origin'),
+                         rq.Pixmap('clip_mask'),
+                         rq.Card16('dash_offset'),
+                         rq.Card8('dashes'),
+                         rq.Set('arc_mode', 1, (X.ArcChord, X.ArcPieSlice))
+                         )
 
 
 
@@ -146,17 +146,15 @@ Segment = rq.Struct(
 Rectangle = rq.Struct(
     rq.Int16('x'),
     rq.Int16('y'),
-    rq.Card16('width'), 
+    rq.Card16('width'),
     rq.Card16('height'),
    )
 
 Arc = rq.Struct(
     rq.Int16('x'),
     rq.Int16('y'),
-    rq.Card16('width'), 
+    rq.Card16('width'),
     rq.Card16('height'),
     rq.Int16('angle1'),
     rq.Int16('angle2'),
    )
-
-

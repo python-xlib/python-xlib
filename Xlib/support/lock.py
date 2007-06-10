@@ -1,4 +1,4 @@
-# $Id: lock.py,v 1.1 2000-08-14 10:51:37 petli Exp $
+# $Id: lock.py,v 1.2 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.support.lock -- allocate a lock
 #
@@ -21,19 +21,19 @@
 class _DummyLock:
     def __init__(self):
 
-	# This might be nerdy, but by assigning methods like this
-	# instead of defining them all, we create a single bound
-	# method object once instead of one each time one of the
-	# methods is called.
+        # This might be nerdy, but by assigning methods like this
+        # instead of defining them all, we create a single bound
+        # method object once instead of one each time one of the
+        # methods is called.
 
-	# This gives some speed improvements which should reduce the
-	# impact of the threading infrastructure in the regular code,
-	# when not using threading.
-	
-	self.acquire = self.release = self.locked = self.__noop
+        # This gives some speed improvements which should reduce the
+        # impact of the threading infrastructure in the regular code,
+        # when not using threading.
+
+        self.acquire = self.release = self.locked = self.__noop
 
     def __noop(self, *args):
-	return
+        return
 
 
 # More optimisations: we use a single lock for all lock instances

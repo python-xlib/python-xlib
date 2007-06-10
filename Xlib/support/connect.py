@@ -1,4 +1,4 @@
-# $Id: connect.py,v 1.2 2003-01-29 23:53:37 petli Exp $
+# $Id: connect.py,v 1.3 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.support.connect -- OS-independent display connection functions
 #
@@ -49,7 +49,7 @@ _parts = string.split(sys.platform, '-')
 platform = _parts[0]
 del _parts
 
-    
+
 def get_display(display):
     """dname, host, dno, screen = get_display(display)
 
@@ -61,7 +61,7 @@ def get_display(display):
       DNO    -- display number (integer)
       SCREEN -- default screen number (integer)
     """
-    
+
     modname = _display_mods.get(platform, _default_display_mod)
     mod = __import__(modname, globals())
     return mod.get_display(display)
@@ -75,7 +75,7 @@ def get_socket(dname, host, dno):
 
     Return SOCKET, a new socket object connected to the X server.
     """
-    
+
     modname = _socket_mods.get(platform, _default_socket_mod)
     mod = __import__(modname, globals())
     return mod.get_socket(dname, host, dno)
@@ -90,8 +90,7 @@ def get_auth(sock, dname, host, dno):
     Return AUTH_NAME and AUTH_DATA, two strings to be used in the
     connection setup request.
     """
-    
+
     modname = _auth_mods.get(platform, _default_auth_mod)
     mod = __import__(modname, globals())
     return mod.get_auth(sock, dname, host, dno)
-

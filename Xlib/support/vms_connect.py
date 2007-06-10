@@ -1,4 +1,4 @@
-# $Id: vms_connect.py,v 1.2 2003-01-29 23:53:37 petli Exp $
+# $Id: vms_connect.py,v 1.3 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.support.vms_connect -- VMS-type display connection functions
 #
@@ -29,41 +29,41 @@ def get_display(display):
 
     # Use dummy display if none is set.  We really should
     # check DECW$DISPLAY instead, but that has to wait
-    
+
     if display is None:
-	return ':0.0', 'localhost', 0, 0
+        return ':0.0', 'localhost', 0, 0
 
     m = display_re.match(display)
     if not m:
-	raise error.DisplayNameError(display)
+        raise error.DisplayNameError(display)
 
     name = display
 
     # Always return a host, since we don't have AF_UNIX sockets
     host = m.group(1)
     if not host:
-	host = 'localhost'
-	
+        host = 'localhost'
+
     dno = int(m.group(2))
     screen = m.group(4)
     if screen:
-	screen = int(screen)
+        screen = int(screen)
     else:
-	screen = 0
+        screen = 0
 
     return name, host, dno, screen
 
 
 def get_socket(dname, host, dno):
     try:
-	# Always use TCP/IP sockets.  Later it would be nice to
-	# be able to use DECNET och LOCAL connections.
-	
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect((host, 6000 + dno))
-	
+        # Always use TCP/IP sockets.  Later it would be nice to
+        # be able to use DECNET och LOCAL connections.
+
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect((host, 6000 + dno))
+
     except socket.error, val:
-	raise error.DisplayConnectionError(dname, str(val))
+        raise error.DisplayConnectionError(dname, str(val))
 
     return s
 
@@ -71,5 +71,3 @@ def get_socket(dname, host, dno):
 def get_auth(sock, dname, host, dno):
     # VMS doesn't have xauth
     return '', ''
-
-    

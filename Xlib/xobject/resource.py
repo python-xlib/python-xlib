@@ -1,4 +1,4 @@
-# $Id: resource.py,v 1.4 2000-09-06 01:51:34 petli Exp $
+# $Id: resource.py,v 1.5 2007-06-10 14:11:59 mggrant Exp $
 #
 # Xlib.xobject.resource -- any X resource object
 #
@@ -22,33 +22,32 @@ from Xlib.protocol import request
 
 class Resource:
     def __init__(self, display, rid, owner = 0):
-	self.display = display
-	self.id = rid
-	self.owner = owner
+        self.display = display
+        self.id = rid
+        self.owner = owner
 
     def __resource__(self):
-	return self.id
+        return self.id
 
     def __cmp__(self, obj):
-	if isinstance(obj, Resource):
-	    if self.display == obj.display:
-		return cmp(self.id, obj.id)
-	    else:
-		return cmp(self.display, obj.display)
-	else:
-	    return cmp(id(self), id(obj))
+        if isinstance(obj, Resource):
+            if self.display == obj.display:
+                return cmp(self.id, obj.id)
+            else:
+                return cmp(self.display, obj.display)
+        else:
+            return cmp(id(self), id(obj))
 
     def __hash__(self):
-	return int(self.id)
+        return int(self.id)
 
     def __str__(self):
-	return '%s(0x%08x)' % (self.__class__, self.id)
+        return '%s(0x%08x)' % (self.__class__, self.id)
 
     def __repr__(self):
-	return '<%s 0x%08x>' % (self.__class__, self.id)
+        return '<%s 0x%08x>' % (self.__class__, self.id)
 
     def kill_client(self, onerror = None):
-	request.KillClient(display = self.display,
-			   onerror = onerror,
-			   resource = self.id)
-	
+        request.KillClient(display = self.display,
+                           onerror = onerror,
+                           resource = self.id)

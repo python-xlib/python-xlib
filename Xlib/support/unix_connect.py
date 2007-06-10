@@ -1,4 +1,4 @@
-# $Id: unix_connect.py,v 1.4 2003-06-08 23:21:53 petli Exp $
+# $Id: unix_connect.py,v 1.5 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.support.unix_connect -- Unix-type display connection functions
 #
@@ -32,9 +32,9 @@ import fcntl
 if hasattr(fcntl, 'F_SETFD'):
     F_SETFD = fcntl.F_SETFD
     if hasattr(fcntl, 'FD_CLOEXEC'):
-	FD_CLOEXEC = fcntl.FD_CLOEXEC
+        FD_CLOEXEC = fcntl.FD_CLOEXEC
     else:
-	FD_CLOEXEC = 1
+        FD_CLOEXEC = 1
 else:
     from FCNTL import F_SETFD, FD_CLOEXEC
 
@@ -46,37 +46,37 @@ display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 def get_display(display):
     # Use $DISPLAY if display isn't provided
     if display is None:
-	display = os.environ.get('DISPLAY', '')
+        display = os.environ.get('DISPLAY', '')
 
     m = display_re.match(display)
     if not m:
-	raise error.DisplayNameError(display)
+        raise error.DisplayNameError(display)
 
     name = display
     host = m.group(1)
     dno = int(m.group(2))
     screen = m.group(4)
     if screen:
-	screen = int(screen)
+        screen = int(screen)
     else:
-	screen = 0
+        screen = 0
 
     return name, host, dno, screen
 
 
 def get_socket(dname, host, dno):
     try:
-	# If hostname (or IP) is provided, use TCP socket
-	if host:
-	    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	    s.connect((host, 6000 + dno))
+        # If hostname (or IP) is provided, use TCP socket
+        if host:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((host, 6000 + dno))
 
-	# Else use Unix socket
-	else:
-	    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-	    s.connect('/tmp/.X11-unix/X%d' % dno)
+        # Else use Unix socket
+        else:
+            s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            s.connect('/tmp/.X11-unix/X%d' % dno)
     except socket.error, val:
-	raise error.DisplayConnectionError(dname, str(val))
+        raise error.DisplayConnectionError(dname, str(val))
 
     # Make sure that the connection isn't inherited in child processes
     fcntl.fcntl(s.fileno(), F_SETFD, FD_CLOEXEC)
@@ -87,63 +87,63 @@ def get_socket(dname, host, dno):
 def new_get_auth(sock, dname, host, dno):
     # Translate socket address into the xauth domain
     if host:
-	family = xauth.FamilyInternet
+        family = xauth.FamilyInternet
 
-	# Convert the prettyprinted IP number into 4-octet string.
-	# Sometimes these modules are too damn smart...
-	octets = string.split(sock.getpeername()[0], '.')
-	addr = string.join(map(lambda x: chr(int(x)), octets), '')
+        # Convert the prettyprinted IP number into 4-octet string.
+        # Sometimes these modules are too damn smart...
+        octets = string.split(sock.getpeername()[0], '.')
+        addr = string.join(map(lambda x: chr(int(x)), octets), '')
     else:
-	family = xauth.FamilyLocal
-	addr = socket.gethostname()
+        family = xauth.FamilyLocal
+        addr = socket.gethostname()
 
     au = xauth.Xauthority()
     while 1:
-	try:
-	    return au.get_best_auth(family, addr, dno)
-	except error.XNoAuthError:
-	    pass
+        try:
+            return au.get_best_auth(family, addr, dno)
+        except error.XNoAuthError:
+            pass
 
-	# We need to do this to handle ssh's X forwarding.  It sets
-	# $DISPLAY to localhost:10, but stores the xauth cookie as if
-	# DISPLAY was :10.  Hence, if localhost and not found, try
-	# again as a Unix socket.
-	if family == xauth.FamilyInternet and addr == '\x7f\x00\x00\x01':
-	    family = xauth.FamilyLocal
-	    addr = socket.gethostname()
-	else:
-	    return '', ''
-	
-    
+        # We need to do this to handle ssh's X forwarding.  It sets
+        # $DISPLAY to localhost:10, but stores the xauth cookie as if
+        # DISPLAY was :10.  Hence, if localhost and not found, try
+        # again as a Unix socket.
+        if family == xauth.FamilyInternet and addr == '\x7f\x00\x00\x01':
+            family = xauth.FamilyLocal
+            addr = socket.gethostname()
+        else:
+            return '', ''
+
+
 def old_get_auth(sock, dname, host, dno):
     # Find authorization cookie
     auth_name = auth_data = ''
-    
+
     try:
-	# We could parse .Xauthority, but xauth is simpler
-	# although more inefficient
-	data = os.popen('xauth list %s 2>/dev/null' % dname).read()
+        # We could parse .Xauthority, but xauth is simpler
+        # although more inefficient
+        data = os.popen('xauth list %s 2>/dev/null' % dname).read()
 
-	# If there's a cookie, it is of the format
-	#      DISPLAY SCHEME COOKIE
-	# We're interested in the two last parts for the
-	# connection establishment
-	lines = string.split(data, '\n')
-	if len(lines) >= 1:
-	    parts = string.split(lines[0], None, 2)
-	    if len(parts) == 3:
-		auth_name = parts[1]
-		hexauth = parts[2]
-		auth = ''
+        # If there's a cookie, it is of the format
+        #      DISPLAY SCHEME COOKIE
+        # We're interested in the two last parts for the
+        # connection establishment
+        lines = string.split(data, '\n')
+        if len(lines) >= 1:
+            parts = string.split(lines[0], None, 2)
+            if len(parts) == 3:
+                auth_name = parts[1]
+                hexauth = parts[2]
+                auth = ''
 
-		# Translate hexcode into binary
-		for i in range(0, len(hexauth), 2):
-		    auth = auth + chr(string.atoi(hexauth[i:i+2], 16))
+                # Translate hexcode into binary
+                for i in range(0, len(hexauth), 2):
+                    auth = auth + chr(string.atoi(hexauth[i:i+2], 16))
 
-		auth_data = auth
+                auth_data = auth
     except os.error:
-	pass
+        pass
 
     return auth_name, auth_data
-    
+
 get_auth = new_get_auth

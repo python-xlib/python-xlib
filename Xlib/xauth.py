@@ -1,6 +1,6 @@
-# $Id: xauth.py,v 1.4 2007-03-17 21:04:23 mggrant Exp $
+# $Id: xauth.py,v 1.5 2007-06-10 14:11:58 mggrant Exp $
 #
-# Xlib.xauth -- ~/.Xauthority access 
+# Xlib.xauth -- ~/.Xauthority access
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
@@ -30,101 +30,100 @@ FamilyLocal = 256
 
 class Xauthority:
     def __init__(self, filename = None):
-	if filename is None:
-	    filename = os.environ.get('XAUTHORITY')
+        if filename is None:
+            filename = os.environ.get('XAUTHORITY')
 
-	if filename is None:
-	    try:
-		filename = os.path.join(os.environ['HOME'], '.Xauthority')
-	    except KeyError:
-		raise error.XauthError(
-		    '$HOME not set, cannot find ~/.Xauthority')
+        if filename is None:
+            try:
+                filename = os.path.join(os.environ['HOME'], '.Xauthority')
+            except KeyError:
+                raise error.XauthError(
+                    '$HOME not set, cannot find ~/.Xauthority')
 
-	try:
-	    raw = open(filename, 'rb').read()
-	except IOError, err:
-	    raise error.XauthError('~/.Xauthority: %s' % err)
+        try:
+            raw = open(filename, 'rb').read()
+        except IOError, err:
+            raise error.XauthError('~/.Xauthority: %s' % err)
 
-	self.entries = []
+        self.entries = []
 
-	# entry format (all shorts in big-endian)
-	#   short family;
-	#   short addrlen;
-	#   char addr[addrlen];
-	#   short numlen;
-	#   char num[numlen];
-	#   short namelen;
-	#   char name[namelen];
-	#   short datalen;
-	#   char data[datalen];
+        # entry format (all shorts in big-endian)
+        #   short family;
+        #   short addrlen;
+        #   char addr[addrlen];
+        #   short numlen;
+        #   char num[numlen];
+        #   short namelen;
+        #   char name[namelen];
+        #   short datalen;
+        #   char data[datalen];
 
-	n = 0
-	try:
-	    while n < len(raw):
-		family, = struct.unpack('>H', raw[n:n+2])
-		n = n + 2
-		
-		length, = struct.unpack('>H', raw[n:n+2])
-		n = n + length + 2
-		addr = raw[n - length : n]
-		
-		length, = struct.unpack('>H', raw[n:n+2])
-		n = n + length + 2
-		num = raw[n - length : n]
-		
-		length, = struct.unpack('>H', raw[n:n+2])
-		n = n + length + 2
-		name = raw[n - length : n]
-		
-		length, = struct.unpack('>H', raw[n:n+2])
-		n = n + length + 2
-		data = raw[n - length : n]
+        n = 0
+        try:
+            while n < len(raw):
+                family, = struct.unpack('>H', raw[n:n+2])
+                n = n + 2
 
-		if len(data) != length:
-		    break
+                length, = struct.unpack('>H', raw[n:n+2])
+                n = n + length + 2
+                addr = raw[n - length : n]
 
-		self.entries.append((family, addr, num, name, data))
-	except struct.error, e:
+                length, = struct.unpack('>H', raw[n:n+2])
+                n = n + length + 2
+                num = raw[n - length : n]
+
+                length, = struct.unpack('>H', raw[n:n+2])
+                n = n + length + 2
+                name = raw[n - length : n]
+
+                length, = struct.unpack('>H', raw[n:n+2])
+                n = n + length + 2
+                data = raw[n - length : n]
+
+                if len(data) != length:
+                    break
+
+                self.entries.append((family, addr, num, name, data))
+        except struct.error, e:
             print "Xlib.xauth: warning, failed to parse part of xauthority file (%s), aborting all further parsing" % filename
-	    #pass
+            #pass
 
         if len(self.entries) == 0:
             print "Xlib.xauth: warning, no xauthority details available"
             # raise an error?  this should get partially caught by the XNoAuthError in get_best_auth..
 
     def __len__(self):
-	return len(self.entries)
+        return len(self.entries)
 
     def __getitem__(self, i):
-	return self.entries[i]
+        return self.entries[i]
 
     def get_best_auth(self, family, address, dispno,
-		      types = ( "MIT-MAGIC-COOKIE-1", )):
+                      types = ( "MIT-MAGIC-COOKIE-1", )):
 
-	"""Find an authentication entry matching FAMILY, ADDRESS and
-	DISPNO.
+        """Find an authentication entry matching FAMILY, ADDRESS and
+        DISPNO.
 
-	The name of the auth scheme must match one of the names in
-	TYPES.  If several entries match, the first scheme in TYPES
-	will be choosen.
+        The name of the auth scheme must match one of the names in
+        TYPES.  If several entries match, the first scheme in TYPES
+        will be choosen.
 
-	If an entry is found, the tuple (name, data) is returned,
-	otherwise XNoAuthError is raised.
-	"""
+        If an entry is found, the tuple (name, data) is returned,
+        otherwise XNoAuthError is raised.
+        """
 
-	num = str(dispno)
-	
-	matches = {}
-	
-	for efam, eaddr, enum, ename, edata in self.entries:
-	    if efam == family and eaddr == address and num == enum:
-		matches[ename] = edata
+        num = str(dispno)
 
-	for t in types:
-	    try:
-		return (t, matches[t])
-	    except KeyError:
-		pass
-	    
-	raise error.XNoAuthError((family, address, dispno))
+        matches = {}
 
+        for efam, eaddr, enum, ename, edata in self.entries:
+            if efam == family and eaddr == address and num == enum:
+                matches[ename] = edata
+
+        for t in types:
+            try:
+                return (t, matches[t])
+            except KeyError:
+                pass
+
+        raise error.XNoAuthError((family, address, dispno))

@@ -1,4 +1,4 @@
-# $Id: Xatom.py,v 1.2 2000-08-22 14:06:22 petli Exp $
+# $Id: Xatom.py,v 1.3 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.Xatom -- Standard X atoms
 #
@@ -87,4 +87,3 @@ CAP_HEIGHT = 66
 WM_CLASS = 67
 WM_TRANSIENT_FOR = 68
 LAST_PREDEFINED = 68
-
