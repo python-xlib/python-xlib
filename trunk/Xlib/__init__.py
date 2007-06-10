@@ -1,4 +1,4 @@
-# $Id: __init__.py,v 1.14 2002-03-30 00:34:53 petli Exp $
+# $Id: __init__.py,v 1.15 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.__init__ -- glue for Xlib package
 #
@@ -38,4 +38,3 @@ __all__ = [
     # Explicitly exclude threaded, so that it isn't imported by
     #  from Xlib import *
     ]
-

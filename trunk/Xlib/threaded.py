@@ -1,4 +1,4 @@
-# $Id: threaded.py,v 1.1 2000-08-14 10:51:37 petli Exp $
+# $Id: threaded.py,v 1.2 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.threaded -- Import this module to enable threading
 #
@@ -25,4 +25,3 @@ import thread
 
 from Xlib.support import lock
 lock.allocate_lock = thread.allocate_lock
-

@@ -50,15 +50,15 @@ class QueryVersion(rq.ReplyRequest):
         )
 
     _reply = rq.Struct(
-	    rq.ReplyCode(),
-	    rq.Pad(1),
-	    rq.Card16('sequence_number'),
-	    rq.ReplyLength(),
-	    rq.Card16('major_version'),
-	    rq.Card16('minor_version'),
-	    rq.Pad(20),
+            rq.ReplyCode(),
+            rq.Pad(1),
+            rq.Card16('sequence_number'),
+            rq.ReplyLength(),
+            rq.Card16('major_version'),
+            rq.Card16('minor_version'),
+            rq.Pad(20),
             )
-        
+
 def query_version(self):
     return QueryVersion(display=self.display,
                         opcode=self.display.get_extension_major(extname),
@@ -219,4 +219,3 @@ def init(disp, info):
     disp.extension_add_method('display', 'xinerama_is_active', is_active)
     disp.extension_add_method('display', 'xinerama_query_screens', query_screens)
     disp.extension_add_method('display', 'xinerama_get_info', get_info)
-    

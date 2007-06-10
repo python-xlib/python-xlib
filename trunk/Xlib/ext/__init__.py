@@ -1,6 +1,6 @@
-# $Id: __init__.py,v 1.4 2006-11-22 13:39:29 mggrant Exp $
+# $Id: __init__.py,v 1.5 2007-06-10 14:11:58 mggrant Exp $
 #
-# Xlib.ext.__init__ -- X extension modules 
+# Xlib.ext.__init__ -- X extension modules
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
@@ -30,4 +30,3 @@ __extensions__ = [
     ]
 
 __all__ = map(lambda x: x[1], __extensions__)
-

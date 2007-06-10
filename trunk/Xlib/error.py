@@ -1,4 +1,4 @@
-# $Id: error.py,v 1.5 2003-01-29 23:53:31 petli Exp $
+# $Id: error.py,v 1.6 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.error -- basic error classes
 #
@@ -30,29 +30,29 @@ from Xlib.protocol import rq
 
 class DisplayError(Exception):
     def __init__(self, display):
-	self.display = display
-	
-    def __str__(self):
-	return 'Display error "%s"' % self.display
-    
-class DisplayNameError(DisplayError):
-    def __str__(self):
-	return 'Bad display name "%s"' % self.display
-    
-class DisplayConnectionError(DisplayError):
-    def __init__(self, display, msg):
-	self.display = display
-	self.msg = msg
+        self.display = display
 
     def __str__(self):
-	return 'Can\'t connect to display "%s": %s' % (self.display, self.msg)
+        return 'Display error "%s"' % self.display
+
+class DisplayNameError(DisplayError):
+    def __str__(self):
+        return 'Bad display name "%s"' % self.display
+
+class DisplayConnectionError(DisplayError):
+    def __init__(self, display, msg):
+        self.display = display
+        self.msg = msg
+
+    def __str__(self):
+        return 'Can\'t connect to display "%s": %s' % (self.display, self.msg)
 
 class ConnectionClosedError(Exception):
     def __init__(self, whom):
-	self.whom = whom
+        self.whom = whom
 
     def __str__(self):
-	return 'Display connection closed by %s' % self.whom
+        return 'Display connection closed by %s' % self.whom
 
 
 class XauthError(Exception): pass
@@ -60,38 +60,38 @@ class XNoAuthError(Exception): pass
 
 class ResourceIDError(Exception): pass
 
-    
+
 class XError(rq.GetAttrData, Exception):
     _fields = rq.Struct( rq.Card8('type'),  # Always 0
-			 rq.Card8('code'),
-			 rq.Card16('sequence_number'),
-			 rq.Card32('resource_id'),
-			 rq.Card16('minor_opcode'),
-			 rq.Card8('major_opcode'),
-			 rq.Pad(21)
-			 )
+                         rq.Card8('code'),
+                         rq.Card16('sequence_number'),
+                         rq.Card32('resource_id'),
+                         rq.Card16('minor_opcode'),
+                         rq.Card8('major_opcode'),
+                         rq.Pad(21)
+                         )
 
     def __init__(self, display, data):
-	self._data, data = self._fields.parse_binary(data, display, rawdict = 1)
-	
+        self._data, data = self._fields.parse_binary(data, display, rawdict = 1)
+
     def __str__(self):
-	s = []
-	for f in ('code', 'resource_id', 'sequence_number',
-		  'major_opcode', 'minor_opcode'):
-	    s.append('%s = %s' % (f, self._data[f]))
-	    
-	return '%s: %s' % (self.__class__, string.join(s, ', '))
+        s = []
+        for f in ('code', 'resource_id', 'sequence_number',
+                  'major_opcode', 'minor_opcode'):
+            s.append('%s = %s' % (f, self._data[f]))
+
+        return '%s: %s' % (self.__class__, string.join(s, ', '))
 
 class XResourceError(XError):
     _fields = rq.Struct( rq.Card8('type'),  # Always 0
-			 rq.Card8('code'),
-			 rq.Card16('sequence_number'),
-			 rq.Resource('resource_id'),
-			 rq.Card16('minor_opcode'),
-			 rq.Card8('major_opcode'),
-			 rq.Pad(21)
-			 )
-    
+                         rq.Card8('code'),
+                         rq.Card16('sequence_number'),
+                         rq.Resource('resource_id'),
+                         rq.Card16('minor_opcode'),
+                         rq.Card8('major_opcode'),
+                         rq.Pad(21)
+                         )
+
 class BadRequest(XError): pass
 class BadValue(XError): pass
 class BadWindow(XResourceError): pass
@@ -128,36 +128,35 @@ xerror_class = {
     X.BadName: BadName,
     X.BadLength: BadLength,
     X.BadImplementation: BadImplementation,
-    }    
+    }
 
 
 class CatchError:
     def __init__(self, *errors):
-	self.error_types = errors
-	self.error = None
-	self.request = None
-	
-    def __call__(self, error, request):
-	if self.error_types:
-	    for etype in self.error_types:
-		if isinstance(error, etype):
-		    self.error = error
-		    self.request = request
-		    return 1
+        self.error_types = errors
+        self.error = None
+        self.request = None
 
-	    return 0
-	else:
-	    self.error = error
-	    self.request = request
-	    return 1
-	
+    def __call__(self, error, request):
+        if self.error_types:
+            for etype in self.error_types:
+                if isinstance(error, etype):
+                    self.error = error
+                    self.request = request
+                    return 1
+
+            return 0
+        else:
+            self.error = error
+            self.request = request
+            return 1
+
     def get_error(self):
-	return self.error
+        return self.error
 
     def get_request(self):
-	return self.request
+        return self.request
 
     def reset(self):
-	self.error = None
-	self.request = None
-	
+        self.error = None
+        self.request = None

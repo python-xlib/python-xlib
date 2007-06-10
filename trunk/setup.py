@@ -9,16 +9,16 @@ setup(name = 'python-xlib',
 
       description = "Python X Library",
       url = 'http://python-xlib.sourceforge.net/',
-      
+
       author = 'Peter Liljenberg',
       author_email = 'petli@ctrl-c.liu.se',
-      
+
       packages = [
-	  'Xlib',
-	  'Xlib.ext',
-	  'Xlib.keysymdef',
-	  'Xlib.protocol',
-	  'Xlib.support',
-	  'Xlib.xobject'
-	  ],
+          'Xlib',
+          'Xlib.ext',
+          'Xlib.keysymdef',
+          'Xlib.protocol',
+          'Xlib.support',
+          'Xlib.xobject'
+          ],
       )

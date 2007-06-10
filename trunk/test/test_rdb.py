@@ -117,35 +117,35 @@ resource_set2 = (
 
 class TestRDB(unittest.TestCase):
     def testParseAndQuery(self):
-	# Test string parsing and querying
-	db = Xlib.rdb.ResourceDB(string = resources)
-	for name, cls, value in queries:
-	    try:
-		v = db[name, cls]
-	    except KeyError:
-		raise AssertionError('Value not found for %s/%s:\n    expected %s' % (name, cls, value))
-	    
-	    if v != value:
-		raise AssertionError('Value mismatch for %s/%s:\n    expected %s, got %s' % (name, cls, value, v))
+        # Test string parsing and querying
+        db = Xlib.rdb.ResourceDB(string = resources)
+        for name, cls, value in queries:
+            try:
+                v = db[name, cls]
+            except KeyError:
+                raise AssertionError('Value not found for %s/%s:\n    expected %s' % (name, cls, value))
+
+            if v != value:
+                raise AssertionError('Value mismatch for %s/%s:\n    expected %s, got %s' % (name, cls, value, v))
 
 
     def testUpdate(self):
-	# Test update.  An update should have the same result as
-	# inserting all the resource entries in the manually
-    
-	db1 = Xlib.rdb.ResourceDB()
-	db2 = Xlib.rdb.ResourceDB()
-	db3 = Xlib.rdb.ResourceDB()
+        # Test update.  An update should have the same result as
+        # inserting all the resource entries in the manually
 
-	db1.insert_resources(resource_set1)
-	db2.insert_resources(resource_set2)
+        db1 = Xlib.rdb.ResourceDB()
+        db2 = Xlib.rdb.ResourceDB()
+        db3 = Xlib.rdb.ResourceDB()
 
-	db1.update(db2)
+        db1.insert_resources(resource_set1)
+        db2.insert_resources(resource_set2)
 
-	db3.insert_resources(resource_set1)
-	db3.insert_resources(resource_set2)
+        db1.update(db2)
 
-	assert db1.db == db3.db
+        db3.insert_resources(resource_set1)
+        db3.insert_resources(resource_set2)
+
+        assert db1.db == db3.db
 
 
 if __name__ == '__main__':

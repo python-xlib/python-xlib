@@ -1,4 +1,4 @@
-# $Id: X.py,v 1.2 2000-08-07 10:30:19 petli Exp $
+# $Id: X.py,v 1.3 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.X -- basic X constants
 #
@@ -22,60 +22,60 @@
 NONE                = 0
 
 ParentRelative      = 1  # background pixmap in CreateWindow
-                         # and ChangeWindowAttributes 
+                         # and ChangeWindowAttributes
 
 CopyFromParent      = 0  # border pixmap in CreateWindow
                          # and ChangeWindowAttributes
                          # special VisualID and special window
-                         # class passed to CreateWindow 
+                         # class passed to CreateWindow
 
-PointerWindow       = 0  # destination window in SendEvent 
-InputFocus          = 1  # destination window in SendEvent 
-PointerRoot         = 1  # focus window in SetInputFocus 
-AnyPropertyType     = 0  # special Atom, passed to GetProperty 
-AnyKey              = 0  # special Key Code, passed to GrabKey 
-AnyButton           = 0  # special Button Code, passed to GrabButton 
-AllTemporary        = 0  # special Resource ID passed to KillClient 
-CurrentTime         = 0  # special Time 
-NoSymbol            = 0  # special KeySym 
+PointerWindow       = 0  # destination window in SendEvent
+InputFocus          = 1  # destination window in SendEvent
+PointerRoot         = 1  # focus window in SetInputFocus
+AnyPropertyType     = 0  # special Atom, passed to GetProperty
+AnyKey              = 0  # special Key Code, passed to GrabKey
+AnyButton           = 0  # special Button Code, passed to GrabButton
+AllTemporary        = 0  # special Resource ID passed to KillClient
+CurrentTime         = 0  # special Time
+NoSymbol            = 0  # special KeySym
 
 
 #-----------------------------------------------------------------------
 # Event masks:
 #
 NoEventMask               = 0
-KeyPressMask              = (1<<0)  
-KeyReleaseMask            = (1<<1)  
-ButtonPressMask           = (1<<2)  
-ButtonReleaseMask         = (1<<3)  
-EnterWindowMask           = (1<<4)  
-LeaveWindowMask           = (1<<5)  
-PointerMotionMask         = (1<<6)  
-PointerMotionHintMask     = (1<<7)  
-Button1MotionMask         = (1<<8)  
-Button2MotionMask         = (1<<9)  
-Button3MotionMask         = (1<<10) 
-Button4MotionMask         = (1<<11) 
-Button5MotionMask         = (1<<12) 
-ButtonMotionMask          = (1<<13) 
+KeyPressMask              = (1<<0)
+KeyReleaseMask            = (1<<1)
+ButtonPressMask           = (1<<2)
+ButtonReleaseMask         = (1<<3)
+EnterWindowMask           = (1<<4)
+LeaveWindowMask           = (1<<5)
+PointerMotionMask         = (1<<6)
+PointerMotionHintMask     = (1<<7)
+Button1MotionMask         = (1<<8)
+Button2MotionMask         = (1<<9)
+Button3MotionMask         = (1<<10)
+Button4MotionMask         = (1<<11)
+Button5MotionMask         = (1<<12)
+ButtonMotionMask          = (1<<13)
 KeymapStateMask           = (1<<14)
-ExposureMask              = (1<<15) 
-VisibilityChangeMask      = (1<<16) 
-StructureNotifyMask       = (1<<17) 
-ResizeRedirectMask        = (1<<18) 
-SubstructureNotifyMask    = (1<<19) 
-SubstructureRedirectMask  = (1<<20) 
-FocusChangeMask           = (1<<21) 
-PropertyChangeMask        = (1<<22) 
-ColormapChangeMask        = (1<<23) 
-OwnerGrabButtonMask       = (1<<24) 
+ExposureMask              = (1<<15)
+VisibilityChangeMask      = (1<<16)
+StructureNotifyMask       = (1<<17)
+ResizeRedirectMask        = (1<<18)
+SubstructureNotifyMask    = (1<<19)
+SubstructureRedirectMask  = (1<<20)
+FocusChangeMask           = (1<<21)
+PropertyChangeMask        = (1<<22)
+ColormapChangeMask        = (1<<23)
+OwnerGrabButtonMask       = (1<<24)
 
 #-----------------------------------------------------------------------
 # Event names:
 #
 # Used in "type" field in XEvent structures.  Not to be confused with event
 # masks above.  They start from 2 because 0 and 1 are reserved in the
-# protocol for errors and replies. 
+# protocol for errors and replies.
 #
 KeyPress               = 2
 KeyRelease             = 3
@@ -110,7 +110,7 @@ SelectionNotify        = 31
 ColormapNotify         = 32
 ClientMessage          = 33
 MappingNotify          = 34
-LASTEvent              = 35    # must be bigger than any event 
+LASTEvent              = 35    # must be bigger than any event
 
 
 #-----------------------------------------------------------------------
@@ -156,14 +156,14 @@ Button3Mask            = (1<<10)
 Button4Mask            = (1<<11)
 Button5Mask            = (1<<12)
 
-AnyModifier            = (1<<15)  # used in GrabButton, GrabKey 
+AnyModifier            = (1<<15)  # used in GrabButton, GrabKey
 
 #-----------------------------------------------------------------------
 # Button names:
 #
 # Used as arguments to GrabButton and as detail in ButtonPress and
 # ButtonRelease events.  Not to be confused with button masks above.
-# Note that 0 is already defined above as "AnyButton".  
+# Note that 0 is already defined above as "AnyButton".
 #
 Button1                = 1
 Button2                = 2

@@ -1,4 +1,4 @@
-# $Id: XK.py,v 1.6 2005-09-06 19:18:19 calroc99 Exp $
+# $Id: XK.py,v 1.7 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.XK -- X keysym defs
 #
@@ -38,7 +38,7 @@ def load_keysym_group(group):
     Given a group name such as 'latin1' or 'katakana' load the keysyms
     defined in module 'Xlib.keysymdef.group-name' into this XK module.'''
     if '.' in group:
-	raise ValueError('invalid keysym group name: %s' % group)
+        raise ValueError('invalid keysym group name: %s' % group)
 
     G = globals() #Get a reference to XK.__dict__ a.k.a. globals
 
@@ -75,11 +75,11 @@ def keysym_to_string(keysym):
 
     # ISO latin 1, LSB is the code
     if keysym & 0xff00 == 0:
-	return chr(keysym & 0xff)
+        return chr(keysym & 0xff)
 
     if keysym in [XK_BackSpace, XK_Tab, XK_Clear, XK_Return,
-		  XK_Pause, XK_Scroll_Lock, XK_Escape, XK_Delete]:
-	return chr(keysym & 0xff)
+                  XK_Pause, XK_Scroll_Lock, XK_Escape, XK_Delete]:
+        return chr(keysym & 0xff)
 
     # We should be able to do these things quite automatically
     # for latin2, latin3, etc, in Python 2.0 using the Unicode,

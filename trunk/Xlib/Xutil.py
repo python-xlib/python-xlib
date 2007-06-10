@@ -1,4 +1,4 @@
-# $Id: Xutil.py,v 1.2 2000-08-22 14:06:22 petli Exp $
+# $Id: Xutil.py,v 1.3 2007-06-10 14:11:58 mggrant Exp $
 #
 # Xlib.Xutil -- ICCCM definitions and similar stuff
 #
@@ -46,7 +46,7 @@ IconPositionHint = (1 << 4)
 IconMaskHint = (1 << 5)
 WindowGroupHint = (1 << 6)
 AllHints = (InputHint|StateHint|IconPixmapHint|IconWindowHint|
-	    IconPositionHint|IconMaskHint|WindowGroupHint)
+            IconPositionHint|IconMaskHint|WindowGroupHint)
 WithdrawnState = 0
 NormalState = 1
 IconicState = 3
