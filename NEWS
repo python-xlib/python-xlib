@@ -2,7 +2,7 @@
 
 		      NEWS for Python X Library
 
-* Version 0.14 ? (trialed as 0.14rc1 on 10 Jun 2007)
+* Version 0.14 1 Oct 2007 (trialed as 0.14rc1 on 10 Jun 2007)
 
 A couple of new extensions, a Python 2.5 fix and a couple of aliases
 (Display.get_atom() now uses the internal cache and added

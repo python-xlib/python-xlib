@@ -17,7 +17,7 @@ details.
 *** Requirements
 
 The Python X Library requires Python 1.5.2 or newer.  It has been
-tested to various extents with Pythons 1.5.2, 2.0, 2.1 and 2.2.
+tested to various extents with Pythons 1.5.2, 2.0 - 2.5.
 
 
 *** Installation
