@@ -32,8 +32,11 @@ def dostuff():
         r.query_tree()
         cm.query_colors([0, 1, 2, 3, 4, 5, 6, 7])
 
-def main():
-    profile.run('dostuff()', sys.argv[1])
+def main(filename):
+    profile.run('dostuff()', filename)
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 2:
+        main(sys.argv[1])
+    else:
+        print sys.argv[0], "<filename to write profile output to>"
