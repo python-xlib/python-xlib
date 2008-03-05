@@ -20,7 +20,7 @@
 
 import string
 
-__version__ = (0, 12)
+__version__ = (0, 14)
 
 __version_extra__ = ''
 
