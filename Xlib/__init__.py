@@ -18,13 +18,11 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import string
-
 __version__ = (0, 14)
 
 __version_extra__ = ''
 
-__version_string__ = string.join(map(str, __version__), '.') + __version_extra__
+__version_string__ = '.'.join(map(str, __version__)) + __version_extra__
 
 __all__ = [
     'X',
