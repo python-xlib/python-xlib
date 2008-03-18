@@ -1,5 +1,4 @@
 #!/usr/bin/python
-# $Id: threadtest.py,v 1.3 2007-06-10 14:11:59 mggrant Exp $
 
 import sys
 import os

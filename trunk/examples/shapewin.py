@@ -1,7 +1,5 @@
 #!/usr/bin/python
 #
-# $Id: shapewin.py,v 1.2 2007-06-10 14:11:59 mggrant Exp $
-#
 # examples/shapewin.py -- demonstrate shape extension
 #
 #    Copyright (C) 2002 Peter Liljenberg <petli@ctrl-c.liu.se>

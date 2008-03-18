@@ -1,7 +1,5 @@
 #!/usr/bin/python
 #
-# $Id: record_demo.py,v 1.2 2007-06-10 14:11:59 mggrant Exp $
-#
 # examples/record_demo.py -- demonstrate record extension
 #
 #    Copyright (C) 2006 Alex Badea <vamposdecampos@gmail.com>

@@ -1,5 +1,3 @@
-# $Id: XK.py,v 1.7 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.XK -- X keysym defs
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

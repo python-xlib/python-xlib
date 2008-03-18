@@ -11,7 +11,6 @@ eval '(exit $?0)' && eval 'exec perl -S $0 ${1+"$@"}' && eval 'exec perl -S $0 $
 #-##############################################################################
 
 # From @(#)texi2html	1.52 01/05/98	Written (mainly) by Lionel Cons, Lionel.Cons@cern.ch
-# $Id: texi2html,v 1.1 2001-12-17 12:18:11 petli Exp $
 # This version of texi2html is currently maintained at
 # ftp://ftp.cs.umb.edu/pub/tex/texi2html by kb@cs.umb.edu.
 

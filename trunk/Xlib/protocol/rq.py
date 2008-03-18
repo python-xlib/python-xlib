@@ -1,5 +1,3 @@
-# $Id: rq.py,v 1.16 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.protocol.rq -- structure primitives for request, events and errors
 #
 #    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>

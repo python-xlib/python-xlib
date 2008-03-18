@@ -1,6 +1,4 @@
 # Make HTML documentation for Python Xlib
-#
-# $Id: Makefile,v 1.2 2001-12-16 14:23:38 petli Exp $
 
 include ../src/defs
 

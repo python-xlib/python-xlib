@@ -1,5 +1,3 @@
-# $Id: record.py,v 1.2 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.ext.record -- RECORD extension module
 #
 #    Copyright (C) 2006 Alex Badea <vamposdecampos@gmail.com>

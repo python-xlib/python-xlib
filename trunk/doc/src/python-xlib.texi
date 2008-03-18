@@ -1,7 +1,5 @@
 \input texinfo   @c -*-texinfo-*-
 @c
-@c $Id: python-xlib.texi,v 1.4 2001-12-16 14:23:38 petli Exp $
-@c
 @c %**start of header
 @setfilename python-xlib.info
 @settitle The Python X Library

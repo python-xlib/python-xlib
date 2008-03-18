@@ -1,5 +1,3 @@
-# $Id: lock.py,v 1.2 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.support.lock -- allocate a lock
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

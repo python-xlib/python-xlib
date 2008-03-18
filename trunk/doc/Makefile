@@ -1,6 +1,4 @@
 # Top-level makefile for Python Xlib documentation
-#
-# $Id: Makefile,v 1.1 2000-09-22 11:37:51 petli Exp $
 
 FORMATS = info ps html
 

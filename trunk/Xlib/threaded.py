@@ -1,5 +1,3 @@
-# $Id: threaded.py,v 1.2 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.threaded -- Import this module to enable threading
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

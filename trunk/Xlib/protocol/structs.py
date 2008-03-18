@@ -1,5 +1,3 @@
-# $Id: structs.py,v 1.4 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.protocol.structs -- some common request structures
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

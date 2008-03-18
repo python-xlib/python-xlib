@@ -1,7 +1,5 @@
 #!/usr/bin/python
 #
-# $Id: draw-proto.py,v 1.2 2007-06-10 14:11:59 mggrant Exp $
-#
 # examples/draw.py -- protocol test application.
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

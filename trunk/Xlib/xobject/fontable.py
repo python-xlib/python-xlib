@@ -1,5 +1,3 @@
-# $Id: fontable.py,v 1.4 2007-06-10 14:11:59 mggrant Exp $
-#
 # Xlib.xobject.fontable -- fontable objects (GC, font)
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

@@ -1,5 +1,3 @@
-# $Id: __init__.py,v 1.3 2001-01-12 11:05:03 petli Exp $
-#
 # Xlib.support.__init__ -- support code package
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

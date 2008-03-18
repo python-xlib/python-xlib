@@ -1,5 +1,4 @@
 @c The Python X Library -- display connection
-@c $Id: connect.texi,v 1.1 2000-09-06 01:47:19 petli Exp $
 @c
 @c Copyright 2000 Peter Liljenberg
 @c

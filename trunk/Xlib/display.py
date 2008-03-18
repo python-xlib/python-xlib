@@ -1,5 +1,3 @@
-# $Id: display.py,v 1.23 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.display -- high level display object
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

@@ -1,4 +1,3 @@
-# $Id: display.py,v 1.25 2007-06-10 14:11:58 mggrant Exp $
 # -*- coding: latin-1 -*-
 #
 # Xlib.protocol.display -- core display communication

@@ -1,6 +1,4 @@
 # Definitions for documentation makefiles
-#
-# $Id: defs,v 1.2 2001-11-30 10:38:06 petli Exp $
 
 SRCDIR = ../src
 

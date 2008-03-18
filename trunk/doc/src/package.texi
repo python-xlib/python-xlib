@@ -1,5 +1,4 @@
 @c The Python X Library -- package layout
-@c $Id: package.texi,v 1.2 2002-09-12 19:49:10 petli Exp $
 @c
 @c Copyright 2000 Peter Liljenberg
 @c

@@ -1,6 +1,4 @@
 # Make info documentation for Python Xlib
-#
-# $Id: Makefile,v 1.2 2002-07-16 20:48:59 petli Exp $
 
 include ../src/defs
 

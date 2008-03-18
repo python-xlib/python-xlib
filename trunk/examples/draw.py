@@ -1,7 +1,5 @@
 #!/usr/bin/python
 #
-# $Id: draw.py,v 1.6 2007-06-10 14:11:59 mggrant Exp $
-#
 # examples/draw.py -- high-level xlib test application.
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

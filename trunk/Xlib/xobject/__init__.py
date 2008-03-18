@@ -1,5 +1,3 @@
-# $Id: __init__.py,v 1.3 2000-10-04 08:15:57 petli Exp $
-#
 # Xlib.xobject.__init__ -- glue for Xlib.xobject package
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

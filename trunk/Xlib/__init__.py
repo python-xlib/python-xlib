@@ -1,5 +1,3 @@
-# $Id: __init__.py,v 1.15 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.__init__ -- glue for Xlib package
 #
 #    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>
