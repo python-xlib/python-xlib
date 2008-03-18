@@ -1,5 +1,3 @@
-# $Id: __init__.py,v 1.1 2000-07-21 09:54:49 petli Exp $
-#
 # Xlib.protocol.__init__ -- glue for Xlib.protocol package
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

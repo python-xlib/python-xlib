@@ -1,5 +1,3 @@
-# $Id: __init__.py,v 1.5 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.ext.__init__ -- X extension modules
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

@@ -1,5 +1,3 @@
-# $Id: xtest.py,v 1.2 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.ext.xtest -- XTEST extension module
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

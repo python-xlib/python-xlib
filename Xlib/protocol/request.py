@@ -1,5 +1,3 @@
-# $Id: request.py,v 1.13 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.protocol.request -- definitions of core requests
 #
 #    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>

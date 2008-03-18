@@ -1,5 +1,3 @@
-# $Id: Xcursorfont.py,v 1.2 2000-08-22 14:06:22 petli Exp $
-#
 # Xlib.Xcursorfont -- standard cursors
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

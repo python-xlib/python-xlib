@@ -1,5 +1,3 @@
-# $Id: connect.py,v 1.3 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.support.connect -- OS-independent display connection functions
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

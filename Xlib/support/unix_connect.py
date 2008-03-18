@@ -1,5 +1,3 @@
-# $Id: unix_connect.py,v 1.5 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.support.unix_connect -- Unix-type display connection functions
 #
 #    Copyright (C) 2000,2002 Peter Liljenberg <petli@ctrl-c.liu.se>

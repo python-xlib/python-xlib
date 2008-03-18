@@ -1,5 +1,3 @@
-# $Id: __init__.py,v 1.1 2001-01-19 18:59:37 petli Exp $
-#
 # Xlib.keysymdef -- X keysym defs
 #
 #    Copyright (C) 2001 Peter Liljenberg <petli@ctrl-c.liu.se>

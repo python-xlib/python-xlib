@@ -1,5 +1,3 @@
-# $Id: vms_connect.py,v 1.3 2007-06-10 14:11:58 mggrant Exp $
-#
 # Xlib.support.vms_connect -- VMS-type display connection functions
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>

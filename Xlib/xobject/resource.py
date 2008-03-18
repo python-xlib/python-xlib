@@ -1,5 +1,3 @@
-# $Id: resource.py,v 1.5 2007-06-10 14:11:59 mggrant Exp $
-#
 # Xlib.xobject.resource -- any X resource object
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
