@@ -2,6 +2,19 @@
 
 		      NEWS for Python X Library
 
+* Version 0.15 ???
+
+** Composite extension
+
+Support for the composite extension, used to implement a composition
+manager (added for plcm work in plwm).
+
+By itself this extension is not very useful, it is intended to be used
+together with the DAMAGE and XFIXES extensions.  Typically you would
+also need RENDER or glX or some similar method of creating fancy
+graphics.
+
+
 * Version 0.14 1 Oct 2007 (trialed as 0.14rc1 on 10 Jun 2007)
 
 A couple of new extensions, a Python 2.5 fix and a couple of aliases
