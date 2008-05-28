@@ -322,10 +322,12 @@ class Window(Drawable):
     def create_window(self, x, y, width, height, border_width, depth,
                       window_class =  X.CopyFromParent,
                       visual = X.CopyFromParent,
+                      onerror = None,
                       **keys):
 
         wid = self.display.allocate_resource_id()
         request.CreateWindow(display = self.display,
+                             onerror = onerror,
                              depth = depth,
                              wid = wid,
                              parent = self.id,
