@@ -19,6 +19,7 @@
 import re
 import string
 import os
+import platform
 import socket
 
 # FCNTL is deprecated from Python 2.2, so only import it if we doesn't
@@ -39,7 +40,14 @@ else:
 
 from Xlib import error, xauth
 
-display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
+uname = platform.uname()
+if (uname[0] == 'Darwin') and ([int(x) for x in uname[2].split('.')] >= [9, 0]):
+
+    display_re = re.compile(r'^([-a-zA-Z0-9._/]*):([0-9]+)(\.([0-9]+))?$')
+
+else:
+
+    display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 
 def get_display(display):
     # Use $DISPLAY if display isn't provided
@@ -64,8 +72,13 @@ def get_display(display):
 
 def get_socket(dname, host, dno):
     try:
+        # Darwin funky socket
+        if (uname[0] == 'Darwin') and host.startswith('/tmp/'):
+            s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+            s.connect(dname)
+
         # If hostname (or IP) is provided, use TCP socket
-        if host:
+        elif host:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((host, 6000 + dno))
 
@@ -84,7 +97,11 @@ def get_socket(dname, host, dno):
 
 def new_get_auth(sock, dname, host, dno):
     # Translate socket address into the xauth domain
-    if host:
+    if (uname[0] == 'Darwin') and host.startswith('/tmp/'):
+        family = xauth.FamilyLocal
+        addr = socket.gethostname()
+
+    elif host:
         family = xauth.FamilyInternet
 
         # Convert the prettyprinted IP number into 4-octet string.
