@@ -629,7 +629,7 @@ class PropertyData(ValueField):
         fmt, val = value
 
         if fmt not in (8, 16, 32):
-            raise BadDataError('Invalid property data format %d' % format)
+            raise BadDataError('Invalid property data format %d' % fmt)
 
         if type(val) is types.StringType:
             size = fmt / 8
