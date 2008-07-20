@@ -2,6 +2,7 @@
 #
 # examples/childwin.py -- demonstrate child windows.
 #
+#	Copyright (C) 2008 David Bronke <whitelynx@gmail.com>
 #	Copyright (C) 2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
 #	This program is free software; you can redistribute it and/or modify
