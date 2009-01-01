@@ -15,6 +15,19 @@ also need RENDER or glX or some similar method of creating fancy
 graphics.
 
 
+** XF86 special function keysyms
+
+Keysym definitions for special function keys found on modern
+keyboards, e.g. raise and lower volume, start specific applications,
+etc.  Have a look in Xlib/keysymdef/xf86.py to see what there are and
+experiment with xev to see what your keyboard generates.  These
+definitions aren't brought in by default, so you must do this after
+importing Xlib.XK:
+
+Xlib.XK.load_keysym_group('xf86')
+
+
+
 * Version 0.14 1 Oct 2007 (trialed as 0.14rc1 on 10 Jun 2007)
 
 A couple of new extensions, a Python 2.5 fix and a couple of aliases

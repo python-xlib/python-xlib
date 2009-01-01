@@ -33,6 +33,7 @@ __all__ = [
     'special',
     'technical',
     'thai',
+    'xf86',
     'xk3270',
     'xkb',
     ]
