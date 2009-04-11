@@ -130,39 +130,37 @@ class Movement:
                             start = self.time,
                             stop = ev.time)
 
-        if not r.events:
-            return
-
         # Record the previous last coordinate, and append
         # the new coordinates
 
         firstline = len(self.lines) - 1
 
-        # Discard the first coordinate if that is identical to
-        # the last recorded coordinate
+        if r.events:
+            # Discard the first coordinate if that is identical to
+            # the last recorded coordinate
 
-        pos = r.events[0]
-        if (pos.x, pos.y) == self.lines[-1]:
-            events = r.events[1:]
-        else:
-            events = r.events
+            pos = r.events[0]
+            if (pos.x, pos.y) == self.lines[-1]:
+                events = r.events[1:]
+            else:
+                events = r.events
 
-        # Append all coordinates
-        for pos in events:
-            x = pos.x
-            y = pos.y
+            # Append all coordinates
+            for pos in events:
+                x = pos.x
+                y = pos.y
 
-            if x < self.left:
-                self.left = x
-            if x > self.right:
-                self.right = x
+                if x < self.left:
+                    self.left = x
+                if x > self.right:
+                    self.right = x
 
-            if y < self.top:
-                self.top = y
-            if y > self.bottom:
-                self.bottom = y
+                if y < self.top:
+                    self.top = y
+                if y > self.bottom:
+                    self.bottom = y
 
-            self.lines.append((x, y))
+                self.lines.append((x, y))
 
         # Append the event coordinate, if that is different from the
         # last movement coordinate
