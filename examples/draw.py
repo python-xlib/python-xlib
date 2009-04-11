@@ -137,38 +137,36 @@ class Movement:
         # last event received
 
         events = self.win.window.get_motion_events(self.time, ev.time)
-
-        if not events:
-            return
+        self.time = ev.time
 
         # Record the previous last coordinate, and append
         # the new coordinates
-
         firstline = len(self.lines) - 1
 
-        # Discard the first coordinate if that is identical to
-        # the last recorded coordinate
+        if events:
+            # Discard the first coordinate if that is identical to
+            # the last recorded coordinate
 
-        pos = events[0]
-        if (pos.x, pos.y) == self.lines[-1]:
-            events = events[1:]
+            pos = events[0]
+            if (pos.x, pos.y) == self.lines[-1]:
+                events = events[1:]
 
-        # Append all coordinates
-        for pos in events:
-            x = pos.x
-            y = pos.y
+            # Append all coordinates
+            for pos in events:
+                x = pos.x
+                y = pos.y
 
-            if x < self.left:
-                self.left = x
-            if x > self.right:
-                self.right = x
+                if x < self.left:
+                    self.left = x
+                if x > self.right:
+                    self.right = x
 
-            if y < self.top:
-                self.top = y
-            if y > self.bottom:
-                self.bottom = y
+                if y < self.top:
+                    self.top = y
+                if y > self.bottom:
+                    self.bottom = y
 
-            self.lines.append((x, y))
+                self.lines.append((x, y))
 
         # Append the event coordinate, if that is different from the
         # last movement coordinate
@@ -180,7 +178,6 @@ class Movement:
                                   X.CoordModeOrigin,
                                   self.lines[firstline:])
 
-        self.time = ev.time
 
     def finish(self, ev):
         self.motion(ev)
