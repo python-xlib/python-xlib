@@ -26,6 +26,7 @@ __extensions__ = [
     ('XINERAMA', 'xinerama'),
     ('RECORD', 'record'),
     ('Composite', 'composite'),
+    ('RANDR', 'randr'),
     ]
 
 __all__ = map(lambda x: x[1], __extensions__)
