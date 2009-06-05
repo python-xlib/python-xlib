@@ -43,8 +43,11 @@ IconWindowHint = (1 << 3)
 IconPositionHint = (1 << 4)
 IconMaskHint = (1 << 5)
 WindowGroupHint = (1 << 6)
+MessageHint = (1 << 7)
+UrgencyHint	= (1 << 8)
 AllHints = (InputHint|StateHint|IconPixmapHint|IconWindowHint|
-            IconPositionHint|IconMaskHint|WindowGroupHint)
+            IconPositionHint|IconMaskHint|WindowGroupHint|MessageHint|
+            UrgencyHint)
 WithdrawnState = 0
 NormalState = 1
 IconicState = 3
