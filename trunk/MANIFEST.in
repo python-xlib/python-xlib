@@ -1,7 +1,7 @@
 include MANIFEST.in
 include README COPYING NEWS TODO
 
-global-include .cvsignore 
+global-include .cvsignore
 
 recursive-include doc Makefile
 include doc/src/*.texi
