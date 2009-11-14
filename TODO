@@ -19,7 +19,7 @@
 
 * Faster, faster!  The protocol engine isn't very fast, despite the
   optimizations in version 0.7.  I've started on this, but it is a big
-  job. 
+  job.
 
 * The tread support and the protocol engine needs to be stress
   tested.  They _seem_ to work, but that's no guarantee.
@@ -31,7 +31,7 @@
   testing the protocol definitions.
 
 * Porting: the library should be runnable wherever there is a Python
-  interpreter (with the necessary IPC support, that is.)  
+  interpreter (with the necessary IPC support, that is.)
 
 * Widget set: a Python-optimized widget set using the X library would
   be really cute.  The AnyGUI project could be a good front-end to
@@ -42,3 +42,4 @@
   could be usable for writing X proxies, or for that matter, a
   complete X server in Python (this might be a little too spaced-out,
   though...)
+
