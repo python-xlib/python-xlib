@@ -43,11 +43,11 @@ from Xlib import error, xauth
 uname = platform.uname()
 if (uname[0] == 'Darwin') and ([int(x) for x in uname[2].split('.')] >= [9, 0]):
 
-    display_re = re.compile(r'^([-a-zA-Z0-9._/]*):([0-9]+)(\.([0-9]+))?$')
+    display_re = re.compile(r'^([-:a-zA-Z0-9._/]*):([0-9]+)(\.([0-9]+))?$')
 
 else:
 
-    display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
+    display_re = re.compile(r'^([-:a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 
 def get_display(display):
     # Use $DISPLAY if display isn't provided
