@@ -676,7 +676,7 @@ class AddOutputMode(rq.Request):
         rq.Card32('mode'),
         )
 
-def add_output_mode(self):
+def add_output_mode(self, output, mode):
     return AddOutputMode(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
