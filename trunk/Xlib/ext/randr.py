@@ -444,12 +444,11 @@ class GetOutputInfo(rq.ReplyRequest):
         rq.Card8('subpixel_order'),
         rq.LengthOf('crtcs', 2),
         rq.LengthOf('modes', 2),
-        rq.LengthOf('preferred', 2),
+        rq.Card16('num_preferred'),
         rq.LengthOf('clones', 2),
         rq.LengthOf('name', 2),
         rq.List('crtcs', rq.Card32Obj),
         rq.List('modes', rq.Card32Obj),
-        rq.List('preferred', rq.Card32Obj),
         rq.List('clones', rq.Card32Obj),
         rq.String8('name'),
         )
