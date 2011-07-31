@@ -553,16 +553,15 @@ class ChangeOutputProperty(rq.Request):
         rq.List('value', rq.Card8Obj),
         )
 
-def change_output_property(self, output, property, type, format, mode, nUnits):
+def change_output_property(self, output, property, type, mode, value):
     return ChangeOutputProperty(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
         output=output,
         property=property,
         type=type,
-        format=format,
         mode=mode,
-        nUnits=nUnits,
+        value=value,
         )
 
 
