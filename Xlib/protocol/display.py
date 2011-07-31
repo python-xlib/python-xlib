@@ -371,6 +371,9 @@ class Display:
         #  If waiting for an event, we want to recv
         #  If just trying to receive anything we can, we want to recv
 
+        # FIXME: It would be good if we could also sleep when we're waiting on
+        # a response to a request that has already been sent.
+
         if (((flush or request is not None) and self.send_active)
             or ((event or recv) and self.recv_active)):
 
@@ -471,6 +474,10 @@ class Display:
             # We've done all setup, so release the lock and start waiting
             # for the network to fire up
             self.send_recv_lock.release()
+
+            # There's no longer anything useful we can do here.
+            if not (sending or recieving):
+                break
 
             # If we're flushing, figure out how many bytes we
             # have to send so that we're not caught in an interminable
