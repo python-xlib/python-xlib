@@ -28,6 +28,7 @@ __extensions__ = [
     ('Composite', 'composite'),
     ('RANDR', 'randr'),
     ('XFIXES', 'xfixes'),
+    ('SECURITY', 'security'),
     ]
 
 __all__ = map(lambda x: x[1], __extensions__)
