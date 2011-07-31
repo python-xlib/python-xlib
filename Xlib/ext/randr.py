@@ -550,7 +550,7 @@ class ChangeOutputProperty(rq.Request):
         rq.Card8('mode'),
         rq.Pad(2),
         rq.LengthOf('value', 4),
-        rq.List('value', rq.Card8Obj),
+        rq.PropertyData('value'),
         )
 
 def change_output_property(self, output, property, type, mode, value):
