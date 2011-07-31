@@ -641,11 +641,13 @@ class CreateMode(rq.ReplyRequest):
         rq.Pad(20),
         )
 
-def create_mode(self):
+def create_mode(self, mode, name):
     return CreateMode (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
         window=self,
+        mode=mode,
+        name=name,
         )
 
 
