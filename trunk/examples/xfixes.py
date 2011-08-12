@@ -20,8 +20,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-import sys, os
-from optparse import OptionParser
+import sys, os, time
 
 # Change path so we find Xlib
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
@@ -30,18 +29,6 @@ from Xlib.display import Display
 
 
 def main(argv):
-    parser = OptionParser()
-    parser.add_option('--hide-cursor', action='store_true', default=False)
-    parser.add_option('--show-cursor', action='store_true', default=False)
-
-    opts, args = parser.parse_args(argv[1:])
-
-    if opts.hide_cursor and opts.show_cursor:
-        parser.error('--hide-cursor and --show-cursor cannot be combined')
-
-    if not any((opts.hide_cursor, opts.show_cursor)):
-        parser.error('specify --hide-cursor or --show-cursor')
-
     display = Display()
 
     if not display.has_extension('XFIXES'):
@@ -55,10 +42,17 @@ def main(argv):
       xfixes_version.minor_version,
     )
 
-    if opts.hide_cursor:
-        display.screen().root.xfixes_hide_cursor()
-    elif opts.show_cursor:
-        display.screen().root.xfixes_hide_cursor()
+    screen = display.screen()
+
+    print >>sys.stderr, 'Hiding cursor ...'
+    screen.root.xfixes_hide_cursor()
+    display.sync()
+
+    time.sleep(5)
+
+    print >>sys.stderr, 'Showing cursor ...'
+    screen.root.xfixes_hide_cursor()
+    display.sync()
 
 
 if __name__ == '__main__':
