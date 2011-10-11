@@ -715,6 +715,8 @@ class GetCrtcInfo(rq.ReplyRequest):
         rq.Card16('sequence_number'),
         rq.ReplyLength(),
         rq.Card32('timestamp'),
+        rq.Int16('x'),
+        rq.Int16('y'),
         rq.Card16('width'),
         rq.Card16('height'),
         rq.Card32('mode'),
