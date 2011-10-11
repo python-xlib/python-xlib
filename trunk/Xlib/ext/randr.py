@@ -761,14 +761,17 @@ class SetCrtcConfig(rq.ReplyRequest):
         rq.Pad(20),
         )
 
-def set_crtc_config(self, crtc, config_timestamp, mode, rotation, timestamp=X.CurrentTime):
+def set_crtc_config(self, crtc, config_timestamp, x, y, mode, rotation, outputs, timestamp=X.CurrentTime):
     return SetCrtcConfig (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
         crtc=crtc,
         config_timestamp=config_timestamp,
+        x=x,
+        y=y,
         mode=mode,
         rotation=rotation,
+        outputs=outputs,
         timestamp=timestamp,
         )
 
