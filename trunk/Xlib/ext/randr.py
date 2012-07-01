@@ -609,7 +609,7 @@ class GetOutputProperty(rq.ReplyRequest):
         rq.List('value', rq.Card8Obj),
         )
 
-def get_output_property(self, output, property, type, long_offset, long_length):
+def get_output_property(self, output, property, type, long_offset, long_length, delete=False, pending=False):
     return GetOutputProperty(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -618,6 +618,8 @@ def get_output_property(self, output, property, type, long_offset, long_length):
         type=type,
         long_offset=long_offset,
         long_length=long_length,
+        delete=delete,
+        pending=pending,
         )
 
 
