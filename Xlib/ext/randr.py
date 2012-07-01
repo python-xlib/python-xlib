@@ -842,12 +842,15 @@ class SetCrtcGamma(rq.Request):
         rq.List('blue', rq.Card16Obj),
         )
 
-def set_crtc_gamma(self, crtc, size):
+def set_crtc_gamma(self, crtc, size, red, green, blue):
     return SetCrtcGamma(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
         crtc=crtc,
         size=size,
+        red=red,
+        green=green,
+        blue=blue,
         )
 
 
