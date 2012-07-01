@@ -609,15 +609,15 @@ class GetOutputProperty(rq.ReplyRequest):
         rq.List('value', rq.Card8Obj),
         )
 
-def get_output_property(self, output, property, type, longOffset, longLength):
+def get_output_property(self, output, property, type, long_offset, long_length):
     return GetOutputProperty(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
         output=output,
         property=property,
         type=type,
-        longOffset=longOffset,
-        longLength=longLength,
+        long_offset=long_offset,
+        long_length=long_length,
         )
 
 
