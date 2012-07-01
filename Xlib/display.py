@@ -261,7 +261,7 @@ class Display:
 
         if object == 'display':
             if hasattr(self, name):
-                raise error.MethodOverrideError('attempting to replace display method: %s' % name)
+                raise AssertionError('attempting to replace display method: %s' % name)
 
             self.display_extension_methods[name] = function
 
@@ -270,7 +270,7 @@ class Display:
             for type in types:
                 cls = _resource_baseclasses[type]
                 if hasattr(cls, name):
-                    raise error.MethodOverrideError('attempting to replace %s method: %s' % (type, name))
+                    raise AssertionError('attempting to replace %s method: %s' % (type, name))
 
                 method = new.instancemethod(function, None, cls)
 
