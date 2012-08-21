@@ -161,7 +161,9 @@ class LengthField(Field):
     may vary, e.g. List and String8.
 
     Its name should be the same as the name of the field whose size
-    it stores.
+    it stores.  The other_fields attribute can be used to specify the
+    names of other fields whose sizes are stored by this field, so
+    a single length field can set the length of multiple fields.
 
     The lf.get_binary_value() method of LengthFields is not used, instead
     a lf.get_binary_length() should be provided.
@@ -172,6 +174,7 @@ class LengthField(Field):
 
     structcode = 'L'
     structvalues = 1
+    other_fields = None
 
     def calc_length(self, length):
         """newlen = lf.calc_length(length)
@@ -202,7 +205,11 @@ class ReplyLength(TotalLengthField):
 
 class LengthOf(LengthField):
     def __init__(self, name, size):
-        self.name = name
+        if isinstance(name, (list, tuple)):
+            self.name = name[0]
+            self.other_fields = name[1:]
+        else:
+            self.name = name
         self.structcode = unsigned_codes[size]
 
 
@@ -1222,12 +1229,16 @@ class Struct:
             # when treating varfields.
 
             elif isinstance(f, LengthField):
-                if f.parse_value is None:
-                    lengths[f.name] = 'val[%d]' % vno
-                else:
-                    lengths[f.name] = ('self.static_fields[%d].'
-                                       'parse_value(val[%d], display)'
-                                       % (fno, vno))
+                f_names = [f.name]
+                if f.other_fields:
+                    f_names.extend(f.other_fields)
+                for f_name in f_names:
+                    if f.parse_value is None:
+                        lengths[f_name] = 'val[%d]' % vno
+                    else:
+                        lengths[f_name] = ('self.static_fields[%d].'
+                                           'parse_value(val[%d], display)'
+                                           % (fno, vno))
 
             elif isinstance(f, FormatField):
                 formats[f.name] = 'val[%d]' % vno
