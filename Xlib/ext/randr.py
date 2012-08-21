@@ -814,7 +814,7 @@ class GetCrtcGamma(rq.ReplyRequest):
         rq.Card8('status'),
         rq.Card16('sequence_number'),
         rq.ReplyLength(),
-        rq.Card16('size'),
+        rq.LengthOf(('red', 'green', 'blue'), 2),
         rq.Pad(22),
         rq.List('red', rq.Card16Obj),
         rq.List('green', rq.Card16Obj),
