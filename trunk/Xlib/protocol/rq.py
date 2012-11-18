@@ -546,8 +546,6 @@ class FixedList(List):
 
 
 class Object(ValueField):
-    structcode = None
-
     def __init__(self, name, type, default = None):
         ValueField.__init__(self, name, default)
         self.type = type
@@ -555,41 +553,26 @@ class Object(ValueField):
         self.structvalues = self.type.structvalues
 
     def parse_binary_value(self, data, display, length, format):
-        if self.type.structcode is None:
-            return self.type.parse_binary(data, display)
-
-        else:
-            scode = '=' + self.type.structcode
-            slen = struct.calcsize(scode)
-
-            v = struct.unpack(scode, data[:slen])
-            if self.type.structvalues == 1:
-                v = v[0]
-
-            if self.type.parse_value is not None:
-                v = self.type.parse_value(v, display)
-
-            return v, buffer(data, slen)
+        return self.type.parse_binary(data, display)
 
     def parse_value(self, val, display):
-        if self.type.parse_value is None:
-            return val
-        else:
-            return self.type.parse_value(val, display)
+        return self.type.parse_value(val, display)
 
     def pack_value(self, val):
-        # Single-char values, we'll assume that mean an integer
-        if self.type.structcode and len(self.type.structcode) == 1:
-            return struct.pack('=' + self.type.structcode, val), None, None
-        else:
-            return self.type.pack_value(val)
+        return self.type.pack_value(val)
 
     def check_value(self, val):
-        if self.type.structcode is None:
-            return val
-
         if type(val) is types.TupleType:
-            return val
+            vals = []
+            i = 0
+            for f in self.type.fields:
+                if f.name:
+                    if f.check_value is None:
+                        vals.append(val[i])
+                    else:
+                        vals.append(f.check_value(val[i]))
+                    i = i + 1
+            return vals
 
         if type(val) is types.DictType:
             data = val
@@ -601,7 +584,10 @@ class Object(ValueField):
         vals = []
         for f in self.type.fields:
             if f.name:
-                vals.append(data[f.name])
+                if f.check_value is None:
+                    vals.append(data[f.name])
+                else:
+                    vals.append(f.check_value(data[f.name]))
 
         return vals
 
