@@ -817,6 +817,9 @@ class EventField(ValueField):
         import event
 
         estruct = display.event_classes.get(ord(data[0]) & 0x7f, event.AnyEvent)
+        if type(estruct) == dict:
+            # this etype refers to a set of sub-events with individual subcodes
+            estruct = estruct[ord(data[1])]
 
         return estruct(display = display, binarydata = data[:32]), buffer(data, 32)
 
@@ -1367,7 +1370,7 @@ class TextElements16(TextElements8):
 
 
 
-class GetAttrData:
+class GetAttrData(object):
     def __getattr__(self, attr):
         try:
             if self._data:

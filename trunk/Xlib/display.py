@@ -287,7 +287,7 @@ class Display:
         the event class.  EVT will be cloned, and the attribute _code
         of the new event class will be set to CODE.
 
-        If NAME is ommitted, it will be set to the name of EVT.  This
+        If NAME is omitted, it will be set to the name of EVT.  This
         name is used to insert an entry in the DictWrapper
         extension_event.
         """
@@ -303,6 +303,29 @@ class Display:
 
         setattr(self.extension_event, name, code)
 
+    def extension_add_subevent(self, code, subcode, evt, name = None):
+        """extension_add_subevent(code, evt, [name])
+
+        Add an extension subevent.  CODE is the numeric code, subcode
+        is the sub-ID of this event that shares the code ID with other
+        sub-events and EVT is the event class.  EVT will be cloned, and
+        the attribute _code of the new event class will be set to CODE.
+
+        If NAME is omitted, it will be set to the name of EVT.  This
+        name is used to insert an entry in the DictWrapper
+        extension_event.
+        """
+
+        newevt = new.classobj(evt.__name__, evt.__bases__,
+                              evt.__dict__.copy())
+        newevt._code = code
+
+        self.display.add_extension_event(code, newevt, subcode)
+
+        if name is None:
+            name = evt.__name__
+
+        setattr(self.extension_event, name, code)
 
     def add_extension_error(self, code, err):
         """add_extension_error(code, err)

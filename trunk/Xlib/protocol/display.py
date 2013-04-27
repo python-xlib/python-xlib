@@ -279,8 +279,14 @@ class Display:
     def get_extension_major(self, extname):
         return self.extension_major_opcodes[extname]
 
-    def add_extension_event(self, code, evt):
-        self.event_classes[code] = evt
+    def add_extension_event(self, code, evt, subcode=None):
+       if subcode == None:
+           self.event_classes[code] = evt
+       else:
+           if not code in self.event_classes:
+               self.event_classes[code] = {subcode: evt}
+           else:
+               self.event_classes[code][subcode] = evt
 
     def add_extension_error(self, code, err):
         self.error_classes[code] = err
@@ -749,6 +755,9 @@ class Display:
         # Skip bit 8 at lookup, that is set if this event came from an
         # SendEvent
         estruct = self.event_classes.get(etype & 0x7f, event.AnyEvent)
+        if type(estruct) == dict:
+            # this etype refers to a set of sub-events with individual subcodes
+            estruct = estruct[ord(self.data_recv[1])]
 
         e = estruct(display = self, binarydata = self.data_recv[:32])
 
