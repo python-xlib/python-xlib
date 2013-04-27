@@ -1181,10 +1181,11 @@ def init(disp, info):
     disp.extension_add_method('display', 'xrandr_get_panning', get_panning)
     disp.extension_add_method('display', 'xrandr_set_panning', set_panning)
 
-    disp.extension_add_event(info.first_event, ScreenChangeNotify)
-    disp.extension_add_subevent(info.first_event + 1, 0, CrtcChangeNotify)
-    disp.extension_add_subevent(info.first_event + 1, 1, OutputChangeNotify)
-    disp.extension_add_subevent(info.first_event + 1, 2, OutputPropertyNotify)
+    disp.extension_add_event(info.first_event + RRScreenChangeNotify, ScreenChangeNotify)
+     # add RRNotify events (1 event code with 3 subcodes)
+    disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_CrtcChange, CrtcChangeNotify)
+    disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_OutputChange, OutputChangeNotify)
+    disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_OutputProperty, OutputPropertyNotify)
 
     #disp.extension_add_error(BadRROutput, BadRROutputError)
     #disp.extension_add_error(BadRRCrtc, BadRRCrtcError)
