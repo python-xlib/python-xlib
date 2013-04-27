@@ -148,23 +148,26 @@ class Window:
                 sys.exit(0)
 
             # Screen information has changed
-            elif e.type == self.d.extension_event.ScreenChangeNotify:
+            elif e.__class__.__name__ == randr.ScreenChangeNotify.__name__:
                 print 'Screen change'
                 print self.pp.pprint(e._data)
 
             # CRTC information has changed
-            elif e.type == self.d.extension_event.CrtcChangeNotify:
+            elif e.__class__.__name__ == randr.CrtcChangeNotify.__name__:
                 print 'CRTC change'
+                #e = randr.CrtcChangeNotify(display=display.display, binarydata = e._binary)
                 print self.pp.pprint(e._data)
 
             # Output information has changed
-            elif e.type == self.d.extension_event.OutputChangeNotify:
+            elif e.__class__.__name__ == randr.OutputChangeNotify.__name__:
                 print 'Output change'
+                #e = randr.OutputChangeNotify(display=display.display, binarydata = e._binary)
                 print self.pp.pprint(e._data)
 
             # Output property information has changed
-            elif e.type == self.d.extension_event.OutputPropertyNotify:
+            elif e.__class__.__name__ == randr.OutputPropertyNotify.__name__:
                 print 'Output property change'
+                #e = randr.OutputPropertyNotify(display=display.display, binarydata = e._binary)
                 print self.pp.pprint(e._data)
 
             # Somebody wants to tell us something
