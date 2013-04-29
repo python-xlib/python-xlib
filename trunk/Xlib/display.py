@@ -97,6 +97,11 @@ class Display:
         self.class_extension_dicts = {}
         self.display_extension_methods = {}
 
+        # a dict that maps the event name to the code
+        # or, when it's an event with a subcode, to a tuple of (event,subcode)
+        # note this wraps the dict so you address it as
+        # extension_event.EXTENSION_EVENT_NAME rather than
+        # extension_event["EXTENSION_EVENT_NAME"]
         self.extension_event = rq.DictWrapper({})
 
         exts = self.list_extensions()
@@ -325,7 +330,9 @@ class Display:
         if name is None:
             name = evt.__name__
 
-        setattr(self.extension_event, name, code)
+        # store subcodes as a tuple of (event code, subcode) in the
+        # extension dict maintained in the display object
+        setattr(self.extension_event, name, (code,subcode))
 
     def add_extension_error(self, code, err):
         """add_extension_error(code, err)

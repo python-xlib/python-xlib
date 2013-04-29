@@ -26,6 +26,9 @@ not be compatible with other versions.
 Version 1.2 of the protocol is documented at:
 http://cgit.freedesktop.org/xorg/proto/randrproto/tree/randrproto.txt
 
+Version 1.3.1 here:
+http://www.x.org/releases/X11R7.5/doc/randrproto/randrproto.txt
+
 """
 
 
