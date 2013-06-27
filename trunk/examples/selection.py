@@ -66,8 +66,7 @@ def main():
 
     # Create ourselves a window and a property for the returned data
     w = d.screen().root.create_window(
-        0, 0, 10, 10, 0, X.CopyFromParent,
-        event_mask = X.PropertyChangeMask)
+        0, 0, 10, 10, 0, X.CopyFromParent)
     data_atom = d.get_atom('SEL_DATA')
 
     # The data_atom should not be set according to ICCCM, and since
@@ -103,7 +102,7 @@ def main():
 
     # Can the data be used directly or read incrementally
     if r.property_type == d.get_atom('INCR'):
-        log('reading data incrementally: >{0} bytes', r.value[0])
+        log('reading data incrementally: at least {0} bytes', r.value[0])
         handle_incr(d, w, data_atom, target_name)
     else:
         output_data(d, r, target_name)
@@ -117,10 +116,7 @@ def handle_incr(d, w, data_atom, target_name):
     # getting a notification of that, and then setting the property
     # again with more data.  To notice that, we must listen for
     # PropertyNotify events.
-
-    # To ensure that we are in sync, just throw away any queued events
-    while d.pending_events() > 0:
-        e = d.next_event()
+    w.change_attributes(event_mask = X.PropertyChangeMask)
 
     while True:
         # Delete data property to tell owner to give us more data
@@ -147,7 +143,7 @@ def handle_incr(d, w, data_atom, target_name):
 
 
 def output_data(d, r, target_name):
-    log('got {0}/{1}, length {2}',
+    log('got {0}:{1}, length {2}',
         d.get_atom_name(r.property_type),
         r.format,
         len(r.value))
@@ -155,12 +151,11 @@ def output_data(d, r, target_name):
     if r.format == 8:
         sys.stdout.write(r.value)
 
-    elif r.format == 32 and target_name == 'TARGETS':
-        # convert to atoms - might do this for more types
+    elif r.format == 32 and r.property_type == Xatom.ATOM:
         for v in r.value:
             sys.stdout.write('{0}\n'.format(d.get_atom_name(v)))
 
-    elif r.format == 16:
+    else:
         for v in r.value:
             sys.stdout.write('{0}\n'.format(v))
 
