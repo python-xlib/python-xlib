@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #
-# examples/selection.py -- demonstrate using selections (clipboard)
+# examples/get_selection.py -- demonstrate getting selections
+# (equivalent to pasting from the clipboard)
 #
 #	Copyright (C) 2013 Peter Liljenberg <peter.liljenberg@gmail.com>
 #
@@ -67,6 +68,8 @@ def main():
     # Create ourselves a window and a property for the returned data
     w = d.screen().root.create_window(
         0, 0, 10, 10, 0, X.CopyFromParent)
+    w.set_wm_name(os.path.basename(sys.argv[0]))
+
     data_atom = d.get_atom('SEL_DATA')
 
     # The data_atom should not be set according to ICCCM, and since
