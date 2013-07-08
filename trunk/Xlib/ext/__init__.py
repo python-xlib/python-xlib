@@ -21,6 +21,9 @@
 # protocol.  extmod is the name of the module in this package.
 
 __extensions__ = [
+    # We load this first so other extensions can register generic event data
+    # structures.
+    ('Generic Event Extension', 'ge'),
     ('XTEST', 'xtest'),
     ('SHAPE', 'shape'),
     ('XINERAMA', 'xinerama'),

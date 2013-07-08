@@ -27,6 +27,7 @@ import socket
 
 # Xlib modules
 from Xlib import error
+from Xlib.ext import ge
 
 from Xlib.support import lock, connect
 
@@ -639,34 +640,39 @@ class Display:
         # Parse ordinary server response
         gotreq = 0
         while 1:
-            # Are we're waiting for additional data for a request response?
+            if self.data_recv:
+                # Check the first byte to find out what kind of response it is
+                rtype = ord(self.data_recv[0])
+
+            # Are we're waiting for additional data for the current packet?
             if self.recv_packet_len:
                 if len(self.data_recv) < self.recv_packet_len:
                     return gotreq
-                else:
-                    gotreq = self.parse_request_response(request) or gotreq
 
+                if rtype == 1:
+                    gotreq = self.parse_request_response(request) or gotreq
+                elif rtype & 0x7f == ge.GenericEventCode:
+                    self.parse_event_response(rtype)
+                else:
+                    raise AssertionError(rtype)
 
             # Every response is at least 32 bytes long, so don't bother
             # until we have recieved that much
             if len(self.data_recv) < 32:
                 return gotreq
 
-            # Check the first byte to find out what kind of response it is
-            rtype = ord(self.data_recv[0])
-
             # Error resposne
             if rtype == 0:
                 gotreq = self.parse_error_response(request) or gotreq
 
-            # Request response
-            elif rtype == 1:
+            # Request response or generic event.
+            elif rtype == 1 or rtype & 0x7f == ge.GenericEventCode:
                 # Set reply length, and loop around to see if
                 # we have got the full response
                 rlen = int(struct.unpack('=L', self.data_recv[4:8])[0])
                 self.recv_packet_len = 32 + rlen * 4
 
-            # Else event response
+            # Else non-generic event
             else:
                 self.parse_event_response(rtype)
 
@@ -752,16 +758,25 @@ class Display:
 
 
     def parse_event_response(self, etype):
-        # Skip bit 8 at lookup, that is set if this event came from an
-        # SendEvent
-        estruct = self.event_classes.get(etype & 0x7f, event.AnyEvent)
+        # Skip bit 8, that is set if this event came from an SendEvent
+        etype = etype & 0x7f
+
+        if etype == ge.GenericEventCode:
+            length = self.recv_packet_len
+        else:
+            length = 32
+
+        estruct = self.event_classes.get(etype, event.AnyEvent)
         if type(estruct) == dict:
             # this etype refers to a set of sub-events with individual subcodes
             estruct = estruct[ord(self.data_recv[1])]
 
-        e = estruct(display = self, binarydata = self.data_recv[:32])
+        e = estruct(display = self, binarydata = self.data_recv[:length])
 
-        self.data_recv = buffer(self.data_recv, 32)
+        if etype == ge.GenericEventCode:
+            self.recv_packet_len = 0
+
+        self.data_recv = buffer(self.data_recv, length)
 
         # Drop all requests having an error handler,
         # but which obviously succeded.
