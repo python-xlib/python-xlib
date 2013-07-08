@@ -82,7 +82,7 @@ class Display:
 
         # Data used by the send-and-recieve loop
         self.sent_requests = []
-        self.request_length = 0
+        self.recv_packet_len = 0
         self.data_send = ''
         self.data_recv = ''
         self.data_sent_bytes = 0
@@ -640,8 +640,8 @@ class Display:
         gotreq = 0
         while 1:
             # Are we're waiting for additional data for a request response?
-            if self.request_length:
-                if len(self.data_recv) < self.request_length:
+            if self.recv_packet_len:
+                if len(self.data_recv) < self.recv_packet_len:
                     return gotreq
                 else:
                     gotreq = self.parse_request_response(request) or gotreq
@@ -664,7 +664,7 @@ class Display:
                 # Set reply length, and loop around to see if
                 # we have got the full response
                 rlen = int(struct.unpack('=L', self.data_recv[4:8])[0])
-                self.request_length = 32 + rlen * 4
+                self.recv_packet_len = 32 + rlen * 4
 
             # Else event response
             else:
@@ -730,11 +730,11 @@ class Display:
             raise RuntimeError("Expected reply for request %s, but got %s.  Can't happen!"
                                % (req._serial, sno))
 
-        req._parse_response(self.data_recv[:self.request_length])
+        req._parse_response(self.data_recv[:self.recv_packet_len])
         # print 'recv Request:', req
 
-        self.data_recv = buffer(self.data_recv, self.request_length)
-        self.request_length = 0
+        self.data_recv = buffer(self.data_recv, self.recv_packet_len)
+        self.recv_packet_len = 0
 
 
         # Unlock any response waiting threads
