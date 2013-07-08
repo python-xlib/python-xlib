@@ -1,6 +1,6 @@
 # Xlib.ext.security -- SECURITY extension module
 #
-#    Copyright (C) 2010-2011 Outpost Embedded, LLC
+#    Copyright (C) 2010-2013 Outpost Embedded, LLC
 #      Forest Bond <forest.bond@rapidrollout.com>
 #
 #    This program is free software; you can redistribute it and/or modify
@@ -80,8 +80,8 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
                        rq.Card16('sequence_number'),
                        rq.ReplyLength(),
                        AUTHID('authid'),
-                       rq.Pad(18),
                        rq.LengthOf('auth_data_return', 2),
+                       rq.Pad(18),
                        rq.String8('auth_data_return')
                        )
 
