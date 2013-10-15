@@ -43,33 +43,44 @@ def error(msg, *args):
 
 
 def main():
-    if len(sys.argv) < 3 or len(sys.argv) > 4:
-        sys.exit('usage: {0} SELECTION TYPE [FILE]\n\n'
+    if len(sys.argv) < 3:
+        sys.exit('usage: {0} SELECTION TYPE [FILE [TYPE [FILE...]]]\n\n'
                  'SELECTION is typically PRIMARY, SECONDARY or CLIPBOARD.\n'
                  'If FILE is omitted, stdin is read.\n'
+                 'Multiple type/file combos can be specified.\n'
                  .format(sys.argv[0]))
 
-    if len(sys.argv) > 3:
-        f = open(sys.argv[3], 'rb')
-    else:
-        f = sys.stdin
-
-    # Limit selection size to avoid implementing INCR
-    data = f.read(MAX_SIZE)
-    f.close()
-
-    if len(data) >= MAX_SIZE:
-        log('too much data: {0} bytes, max is {1} bytes', len(data), MAX_SIZE)
-        error('INCR support not implemented to put larger files')
-
+    args = sys.argv[1:]
 
     d = display.Display()
 
-    sel_name = sys.argv[1]
+    sel_name = args[0]
+    del args[0]
     sel_atom = d.get_atom(sel_name)
 
-    type_name = sys.argv[2]
-    type_atom = d.get_atom(type_name)
+    # map type atom -> data
+    types = {}
+
+    while args:
+        type_atom = d.get_atom(args[0])
+        del args[0]
+
+        if args:
+            f = open(args[0], 'rb')
+            del args[0]
+        else:
+            f = sys.stdin
+
+        # Limit selection size to avoid implementing INCR
+        data = f.read(MAX_SIZE)
+        f.close()
+
+        if len(data) >= MAX_SIZE:
+            log('too much data: {0} bytes, max is {1} bytes', len(data), MAX_SIZE)
+            error('INCR support not implemented to put larger files')
+
+        types[type_atom] = data
+
 
     targets_atom = d.get_atom('TARGETS')
 
@@ -120,14 +131,14 @@ def main():
             # Is the client asking for which types we support?
             if e.target == targets_atom:
                 # Then respond with TARGETS and the type
-                prop_value = [targets_atom, type_atom]
+                prop_value = [targets_atom] + types.keys()
                 prop_type = Xatom.ATOM
                 prop_format = 32
 
             # Request for the offered type
-            elif e.target == type_atom:
-                prop_value = data
-                prop_type = type_atom
+            elif e.target in types:
+                prop_value = types[e.target]
+                prop_type = e.target
                 prop_format = 8
 
             # Something else, tell client they can't get it
