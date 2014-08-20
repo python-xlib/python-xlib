@@ -24,6 +24,7 @@ A very incomplete implementation of the XInput extension.
 import sys, array
 
 from Xlib.protocol import rq
+from Xlib import X
 
 
 extname = 'XInputExtension'
@@ -138,6 +139,10 @@ RawButtonPressMask = (1 << RawButtonPress)
 RawButtonReleaseMask = (1 << RawButtonRelease)
 RawMotionMask = (1 << RawMotion)
 
+GrabModeSync = 0
+GrabModeAsync = 1
+GrabModeTouch = 2
+
 DEVICEID = rq.Card16
 DEVICE = rq.Card16
 DEVICEUSE = rq.Card8
@@ -232,6 +237,66 @@ def select_events(self, event_masks):
         masks=masks,
         )
 
+class XIGrabDevice(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(51),
+        rq.RequestLength(),
+        rq.Window('grab_window'),
+        rq.Card32('time'),
+        rq.Cursor('cursor', (X.NONE, )),
+        rq.Card16('deviceid'),
+        rq.Set('grab_mode', 1, (GrabModeSync, GrabModeAsync)),
+        rq.Set('paired_device_mode', 1, (GrabModeSync, GrabModeAsync)),
+        rq.Bool('owner_events'),
+        rq.Pad(1),
+        rq.LengthOf('masks', 2),
+        rq.List('masks', EventMask),
+    )
+
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card8('status'),
+        rq.Pad(23),
+        )
+
+def grab_device(self, deviceid, time, grab_mode, paired_device_mode, owner_events, event_mask):
+    masks = []
+    mask_seq = array.array(rq.struct_to_array_codes['L'])
+    mask_seq.append(event_mask)
+    return XIGrabDevice(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        deviceid=deviceid,
+        grab_window=self,
+        time=time,
+        cursor=X.NONE,
+        grab_mode=grab_mode,
+        paired_device_mode=paired_device_mode,
+        owner_events=owner_events,
+        masks=masks,
+        )
+
+class XIUngrabDevice(rq.Request):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(52),
+        rq.RequestLength(),
+        rq.Card32('time'),
+        rq.Card16('deviceid'),
+        rq.Pad(2),
+    )
+
+def ungrab_device(self, deviceid, time):
+    return XIUngrabDevice(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        time=time,
+        deviceid=deviceid,
+    )
 
 HierarchyInfo = rq.Struct(
         DEVICEID('deviceid'),
@@ -252,9 +317,26 @@ HierarchyEventData = rq.Struct(
         rq.List('info', HierarchyInfo),
         )
 
+DeviceEventData = rq.Struct(
+        DEVICEID('deviceid'),
+        rq.Card32('time'),
+        rq.Card32('detail'),
+        rq.Window('root'),
+        rq.Window('event'),
+        rq.Window('child'),
+        rq.LengthOf('info', 2),
+        rq.Pad(8 + 8 + 4),
+        rq.Pad(16),
+        rq.Pad(4),
+        )
+
 
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
     disp.extension_add_method('window', 'xinput_select_events', select_events)
+    disp.extension_add_method('window', 'xinput_grab_device', grab_device)
+    disp.extension_add_method('display', 'xinput_ungrab_device', ungrab_device)
 
-    disp.ge_add_event_data(info.major_opcode, 11, HierarchyEventData)
+    disp.ge_add_event_data(info.major_opcode, KeyPress, DeviceEventData)
+    disp.ge_add_event_data(info.major_opcode, KeyRelease, DeviceEventData)
+    disp.ge_add_event_data(info.major_opcode, HierarchyChanged, HierarchyEventData)
