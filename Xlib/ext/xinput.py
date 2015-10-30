@@ -317,18 +317,36 @@ HierarchyEventData = rq.Struct(
         rq.List('info', HierarchyInfo),
         )
 
+ModifierInfo = rq.Struct(
+    rq.Card32('base_mods'),
+    rq.Card32('latched_mods'),
+    rq.Card32('locked_mods'),
+    rq.Card32('effective_mods'),
+)
+
+GroupInfo = rq.Struct(
+    rq.Card8('base_group'),
+    rq.Card8('latched_group'),
+    rq.Card8('locked_group'),
+    rq.Card8('effective_group'),
+)
+
 DeviceEventData = rq.Struct(
-        DEVICEID('deviceid'),
-        rq.Card32('time'),
-        rq.Card32('detail'),
-        rq.Window('root'),
-        rq.Window('event'),
-        rq.Window('child'),
-        rq.LengthOf('info', 2),
-        rq.Pad(8 + 8 + 4),
-        rq.Pad(16),
-        rq.Pad(4),
-        )
+    DEVICEID('deviceid'),
+    rq.Card32('time'),
+    rq.Card32('detail'),
+    rq.Window('root'),
+    rq.Window('event'),
+    rq.Window('child'),
+    rq.Pad(4 * 4), # 4*FP1616 (root_x, root_y, event_x, event_y)
+    rq.Card16('buttons_len'),
+    rq.Card16('valulators_len'),
+    DEVICEID('sourceid'),
+    rq.Pad(2),
+    rq.Card32('flags'),
+    rq.Object('mods', ModifierInfo),
+    rq.Object('groups', GroupInfo),
+)
 
 
 def init(disp, info):
