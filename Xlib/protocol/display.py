@@ -651,8 +651,10 @@ class Display(object):
 
                 if rtype == 1:
                     gotreq = self.parse_request_response(request) or gotreq
+                    continue
                 elif rtype & 0x7f == ge.GenericEventCode:
                     self.parse_event_response(rtype)
+                    continue
                 else:
                     raise AssertionError(rtype)
 
