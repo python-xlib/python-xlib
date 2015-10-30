@@ -331,6 +331,14 @@ GroupInfo = rq.Struct(
     rq.Card8('effective_group'),
 )
 
+class FP1616(rq.Int32):
+
+    def check_value(self, value):
+        return int(value * 65536.0)
+
+    def parse_value(self, value, display):
+        return float(value) / float(1 << 16)
+
 DeviceEventData = rq.Struct(
     DEVICEID('deviceid'),
     rq.Card32('time'),
@@ -338,7 +346,10 @@ DeviceEventData = rq.Struct(
     rq.Window('root'),
     rq.Window('event'),
     rq.Window('child'),
-    rq.Pad(4 * 4), # 4*FP1616 (root_x, root_y, event_x, event_y)
+    FP1616('root_x'),
+    FP1616('root_y'),
+    FP1616('event_x'),
+    FP1616('event_y'),
     rq.Card16('buttons_len'),
     rq.Card16('valulators_len'),
     DEVICEID('sourceid'),
