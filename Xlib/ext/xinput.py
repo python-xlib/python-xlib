@@ -296,6 +296,98 @@ def ungrab_device(self, deviceid, time):
         deviceid=deviceid,
     )
 
+class XIPassiveGrabDevice(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(54),
+        rq.RequestLength(),
+        rq.Card32('time'),
+        rq.Window('grab_window'),
+        rq.Cursor('cursor', (X.NONE, )),
+        rq.Card32('detail'),
+        DEVICEID('deviceid'),
+        rq.LengthOf('modifiers', 2),
+        rq.LengthOf('mask', 2),
+        rq.Set('grab_type', 1, (GrabtypeButton, GrabtypeKeycode, GrabtypeEnter,
+                                GrabtypeFocusIn, GrabtypeTouchBegin)),
+        rq.Set('grab_mode', 1, (GrabModeSync, GrabModeAsync)),
+        rq.Set('paired_device_mode', 1, (GrabModeSync, GrabModeAsync)),
+        rq.Bool('owner_events'),
+        rq.Pad(2),
+        rq.List('mask', rq.Card32),
+        rq.List('modifiers', rq.Card32),
+    )
+
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.LengthOf('modifiers', 2),
+        rq.Pad(22),
+        rq.List('modifiers', rq.Card32),
+        )
+
+def passive_grab_device(self, deviceid, time, detail,
+                        grab_type, grab_mode, paired_device_mode,
+                        owner_events, event_mask, modifiers):
+    mask = pack_event_mask(deviceid, event_mask)
+    return XIPassiveGrabDevice(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        deviceid=deviceid,
+        grab_window=self,
+        time=time,
+        cursor=X.NONE,
+        detail=detail,
+        grab_type=grab_type,
+        grab_mode=grab_mode,
+        paired_device_mode=paired_device_mode,
+        owner_events=owner_events,
+        mask=mask['mask'],
+        modifiers=modifiers,
+        )
+
+def grab_keycode(self, deviceid, time, keycode,
+                 grab_mode, paired_device_mode,
+                 owner_events, event_mask, modifiers):
+    return passive_grab_device(self, deviceid, time, keycode,
+                               GrabtypeKeycode,
+                               grab_mode, paired_device_mode,
+                               owner_events, event_mask, modifiers)
+
+class XIPassiveUngrabDevice(rq.Request):
+
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(55),
+        rq.RequestLength(),
+        rq.Window('grab_window'),
+        rq.Card32('detail'),
+        DEVICEID('deviceid'),
+        rq.LengthOf('modifiers', 2),
+        rq.Set('grab_type', 1, (GrabtypeButton, GrabtypeKeycode,
+                                GrabtypeEnter, GrabtypeFocusIn,
+                                GrabtypeTouchBegin)),
+        rq.Pad(3),
+        rq.List('modifiers', rq.Card32),
+    )
+
+def passive_ungrab_device(self, deviceid, detail, grab_type, modifiers):
+    return XIPassiveUngrabDevice(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        deviceid=deviceid,
+        grab_window=self,
+        detail=detail,
+        grab_type=grab_type,
+        modifiers=modifiers,
+        )
+
+def ungrab_keycode(self, deviceid, keycode, modifiers):
+    return passive_ungrab_device(self, deviceid, keycode,
+                                 GrabtypeKeycode, modifiers)
+
 HierarchyInfo = rq.Struct(
         DEVICEID('deviceid'),
         DEVICEID('attachment'),
@@ -363,6 +455,8 @@ def init(disp, info):
     disp.extension_add_method('window', 'xinput_select_events', select_events)
     disp.extension_add_method('window', 'xinput_grab_device', grab_device)
     disp.extension_add_method('display', 'xinput_ungrab_device', ungrab_device)
+    disp.extension_add_method('window', 'xinput_grab_keycode', grab_keycode)
+    disp.extension_add_method('window', 'xinput_ungrab_keycode', ungrab_keycode)
 
     disp.ge_add_event_data(info.major_opcode, KeyPress, DeviceEventData)
     disp.ge_add_event_data(info.major_opcode, KeyRelease, DeviceEventData)
