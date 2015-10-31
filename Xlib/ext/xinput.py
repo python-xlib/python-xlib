@@ -194,6 +194,29 @@ class XISelectEvents(rq.Request):
         rq.List('masks', EventMask),
         )
 
+def pack_event_mask(deviceid, mask):
+    mask_seq = array.array(rq.struct_to_array_codes['L'])
+
+    if isinstance(mask, (int, long)):
+        # We need to build a "binary mask" that (as far as I can tell) is
+        # encoded in native byte order from end to end.  The simple case is
+        # with a single unsigned 32-bit value, for which we construct an
+        # array with just one item.  For values too big to fit inside 4
+        # bytes we build a longer array, being careful to maintain native
+        # byte order across the entire set of values.
+        if sys.byteorder == 'little':
+            f = lambda v: mask_seq.insert(0, v)
+        elif sys.byteorder == 'big':
+            f = mask_seq.append
+        else:
+            raise AssertionError(sys.byteorder)
+        while mask:
+            f(mask & 0xFFFFFFFF)
+            mask = mask >> 32
+    else:
+        mask_seq.extend(mask)
+
+    return {'deviceid': deviceid, 'mask': mask_seq}
 
 def select_events(self, event_masks):
     '''
@@ -205,31 +228,7 @@ def select_events(self, event_masks):
       integer or sequence of 32 byte unsigned values
     '''
 
-    masks = []
-    for deviceid, mask in event_masks:
-        mask_seq = array.array(rq.struct_to_array_codes['L'])
-
-        if isinstance(mask, (int, long)):
-            # We need to build a "binary mask" that (as far as I can tell) is
-            # encoded in native byte order from end to end.  The simple case is
-            # with a single unsigned 32-bit value, for which we construct an
-            # array with just one item.  For values too big to fit inside 4
-            # bytes we build a longer array, being careful to maintain native
-            # byte order across the entire set of values.
-            if sys.byteorder == 'little':
-                f = lambda v: mask_seq.insert(0, v)
-            elif sys.byteorder == 'big':
-                f = mask_seq.append
-            else:
-                raise AssertionError(sys.byteorder)
-            while mask:
-                f(mask & 0xFFFFFFFF)
-                mask = mask >> 32
-        else:
-            mask_seq.extend(mask)
-
-        masks.append({'deviceid': deviceid, 'mask': mask_seq})
-
+    masks = [pack_event_mask(deviceid, mask) for deviceid, mask in event_masks]
     return XISelectEvents(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -250,8 +249,8 @@ class XIGrabDevice(rq.ReplyRequest):
         rq.Set('paired_device_mode', 1, (GrabModeSync, GrabModeAsync)),
         rq.Bool('owner_events'),
         rq.Pad(1),
-        rq.LengthOf('masks', 2),
-        rq.List('masks', EventMask),
+        rq.LengthOf('mask', 2),
+        rq.List('mask', rq.Card32),
     )
 
     _reply = rq.Struct(
@@ -264,9 +263,7 @@ class XIGrabDevice(rq.ReplyRequest):
         )
 
 def grab_device(self, deviceid, time, grab_mode, paired_device_mode, owner_events, event_mask):
-    masks = []
-    mask_seq = array.array(rq.struct_to_array_codes['L'])
-    mask_seq.append(event_mask)
+    mask = pack_event_mask(deviceid, event_mask)
     return XIGrabDevice(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -277,7 +274,7 @@ def grab_device(self, deviceid, time, grab_mode, paired_device_mode, owner_event
         grab_mode=grab_mode,
         paired_device_mode=paired_device_mode,
         owner_events=owner_events,
-        masks=masks,
+        mask=mask['mask'],
         )
 
 class XIUngrabDevice(rq.Request):
