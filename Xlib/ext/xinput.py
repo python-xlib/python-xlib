@@ -53,6 +53,7 @@ GrabtypeButton = 0
 GrabtypeKeycode = 1
 GrabtypeEnter = 2
 GrabtypeFocusIn = 3
+GrabtypeTouchBegin = 4
 
 AnyModifier = (1 << 31)
 AnyButton = 0
