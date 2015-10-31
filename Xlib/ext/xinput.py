@@ -245,7 +245,7 @@ class XIGrabDevice(rq.ReplyRequest):
         rq.Window('grab_window'),
         rq.Card32('time'),
         rq.Cursor('cursor', (X.NONE, )),
-        rq.Card16('deviceid'),
+        DEVICEID('deviceid'),
         rq.Set('grab_mode', 1, (GrabModeSync, GrabModeAsync)),
         rq.Set('paired_device_mode', 1, (GrabModeSync, GrabModeAsync)),
         rq.Bool('owner_events'),
@@ -286,7 +286,7 @@ class XIUngrabDevice(rq.Request):
         rq.Opcode(52),
         rq.RequestLength(),
         rq.Card32('time'),
-        rq.Card16('deviceid'),
+        DEVICEID('deviceid'),
         rq.Pad(2),
     )
 
