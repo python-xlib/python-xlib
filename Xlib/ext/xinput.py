@@ -21,7 +21,7 @@
 A very incomplete implementation of the XInput extension.
 '''
 
-import sys, array
+import sys, array, struct
 
 from Xlib.protocol import rq
 from Xlib import X
@@ -98,6 +98,8 @@ FloatingSlave = 5
 KeyClass = 0
 ButtonClass = 1
 ValuatorClass = 2
+ScrollClass = 3
+TouchClass = 8
 
 KeyRepeat = (1 << 16)
 
@@ -235,6 +237,155 @@ def select_events(self, event_masks):
         opcode=self.display.get_extension_major(extname),
         window=self,
         masks=masks,
+        )
+
+DeviceInfo = rq.Struct(
+    DEVICEID('deviceid'),
+    rq.Card16('use'),
+    rq.Card16('attachment'),
+    rq.Card16('num_classes'),
+    rq.LengthOf('name', 2),
+    rq.Bool('enabled'),
+    rq.Pad(1),
+    rq.String8('name', 4),
+    # <num_classes> classes follow.
+)
+
+AnyInfo = rq.Struct(
+     rq.Card16('type'),
+     rq.Card16('length'),
+     rq.Card16('sourceid'),
+     rq.Pad(2),
+)
+
+ButtonInfo = rq.Struct(
+    rq.Card16('type'),
+    rq.Card16('length'),
+    rq.Card16('sourceid'),
+    rq.Card16('num_buttons'),
+    # state mask and label atoms follow.
+)
+
+KeyInfo = rq.Struct(
+    rq.Card16('type'),
+    rq.Card16('length'),
+    rq.Card16('sourceid'),
+    rq.LengthOf('keycodes', 2),
+    rq.List('keycodes', rq.Card32),
+)
+
+class FP3232(rq.ValueField):
+    structcode = 'lL'
+    structvalues = 2
+
+    def check_value(self, value):
+        return value
+
+    def parse_value(self, value, display):
+        integral, frac = value
+        ret = float(integral)
+        # optimised math.ldexp(float(frac), -32)
+        ret += float(frac) * (1.0 / (1 << 32))
+        return ret
+
+ValuatorInfo = rq.Struct(
+    rq.Card16('type'),
+    rq.Card16('length'),
+    rq.Card16('sourceid'),
+    rq.Card16('number'),
+    rq.Card32('label'),
+    FP3232('min'),
+    FP3232('max'),
+    FP3232('value'),
+    rq.Card32('resolution'),
+    rq.Card8('mode'),
+    rq.Pad(3),
+)
+
+ScrollInfo = rq.Struct(
+    rq.Card16('type'),
+    rq.Card16('length'),
+    rq.Card16('sourceid'),
+    rq.Card16('number'),
+    rq.Card16('scroll_type'),
+    rq.Pad(2),
+    rq.Card32('flags'),
+    FP3232('increment'),
+)
+
+TouchInfo = rq.Struct(
+    rq.Card16('type'),
+    rq.Card16('length'),
+    rq.Card16('sourceid'),
+    rq.Card8('mode'),
+    rq.Card8('num_touches'),
+)
+
+INFO_CLASSES = {
+    KeyClass: KeyInfo,
+    ButtonClass: ButtonInfo,
+    ValuatorClass: ValuatorInfo,
+    ScrollClass: ScrollInfo,
+    TouchClass: TouchInfo,
+}
+
+class XIQueryDevice(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(48),
+        rq.RequestLength(),
+        DEVICEID('deviceid'),
+        rq.Pad(2),
+    )
+
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card16('num_devices'),
+        rq.Pad(22),
+        )
+
+    def _parse_response(self, data):
+        self._response_lock.acquire()
+        self._data, d = self._reply.parse_binary(data, self._display)
+        self._data.devices = devices = []
+        for _ in range(self._data.num_devices):
+            devinfo, d = DeviceInfo.parse_binary(d, self._display)
+            devinfo.classes = classes = []
+            for _ in range(devinfo.num_classes):
+                class_type, length = struct.unpack('=HH', d[:4])
+                class_struct = INFO_CLASSES.get(class_type, None)
+                if class_struct is not None:
+                    class_data, _ = class_struct.parse_binary(d, self._display)
+                    classes.append(class_data)
+                    # Parse ButtonInfo state mask and label atoms.
+                    if ButtonClass == class_type:
+                        # Mask: bitfield of size a multiple of 4.
+                        mask_offset = ButtonInfo.static_size
+                        mask_len = 4 * ((((class_data.num_buttons + 7) >> 3) + 3) >> 2)
+                        mask_data = d[mask_offset:mask_offset+mask_len]
+                        mask = 0
+                        for b in reversed(struct.unpack('=%uB' % mask_len, mask_data)):
+                            mask <<= 8
+                            mask |= b
+                        class_data.state = mask
+                        # Labels: a list of <num_buttons> atoms.
+                        labels_offset = mask_offset + mask_len
+                        labels_len = class_data.num_buttons * 4
+                        labels_data = d[labels_offset:labels_offset+labels_len]
+                        labels = struct.unpack('=%uL' % class_data.num_buttons, labels_data)
+                        class_data.labels = labels
+                d = buffer(d, length * 4)
+            devices.append(devinfo)
+        self._response_lock.release()
+
+def query_device(self, deviceid):
+    return XIQueryDevice(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        deviceid=deviceid,
         )
 
 class XIGrabDevice(rq.ReplyRequest):
@@ -453,6 +604,7 @@ DeviceEventData = rq.Struct(
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
     disp.extension_add_method('window', 'xinput_select_events', select_events)
+    disp.extension_add_method('display', 'xinput_query_device', query_device)
     disp.extension_add_method('window', 'xinput_grab_device', grab_device)
     disp.extension_add_method('display', 'xinput_ungrab_device', ungrab_device)
     disp.extension_add_method('window', 'xinput_grab_keycode', grab_keycode)
