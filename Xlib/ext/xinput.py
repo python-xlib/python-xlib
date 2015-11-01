@@ -150,6 +150,27 @@ DEVICEID = rq.Card16
 DEVICE = rq.Card16
 DEVICEUSE = rq.Card8
 
+class FP1616(rq.Int32):
+
+    def check_value(self, value):
+        return int(value * 65536.0)
+
+    def parse_value(self, value, display):
+        return float(value) / float(1 << 16)
+
+class FP3232(rq.ValueField):
+    structcode = 'lL'
+    structvalues = 2
+
+    def check_value(self, value):
+        return value
+
+    def parse_value(self, value, display):
+        integral, frac = value
+        ret = float(integral)
+        # optimised math.ldexp(float(frac), -32)
+        ret += float(frac) * (1.0 / (1 << 32))
+        return ret
 
 class XIQueryVersion(rq.ReplyRequest):
     _request = rq.Struct(
@@ -239,18 +260,6 @@ def select_events(self, event_masks):
         masks=masks,
         )
 
-DeviceInfo = rq.Struct(
-    DEVICEID('deviceid'),
-    rq.Card16('use'),
-    rq.Card16('attachment'),
-    rq.Card16('num_classes'),
-    rq.LengthOf('name', 2),
-    rq.Bool('enabled'),
-    rq.Pad(1),
-    rq.String8('name', 4),
-    # <num_classes> classes follow.
-)
-
 AnyInfo = rq.Struct(
      rq.Card16('type'),
      rq.Card16('length'),
@@ -258,12 +267,50 @@ AnyInfo = rq.Struct(
      rq.Pad(2),
 )
 
+class Mask(object):
+
+    def __init__(self, value, length):
+        self._value = value
+        self._length = length
+
+    def __len__(self):
+        return self._length
+
+    def __getitem__(self, key):
+        return self._value & (1 << key)
+
+    def __str__(self):
+        return ('{0:0%ub}' % self._length).format(self._value)
+
+    def __repr__(self):
+        return '%#0*x' % ((self._length + 3) / 8, self._value)
+
+class ButtonState(rq.ValueField):
+
+    structcode = None
+
+    def __init__(self, name):
+        rq.ValueField.__init__(self, name)
+
+    def parse_binary_value(self, data, display, length, format):
+        # Mask: bitfield of <length> button states.
+        mask_len = 4 * ((((length + 7) >> 3) + 3) >> 2)
+        mask_data = data[:mask_len]
+        mask_value = 0
+        for b in reversed(struct.unpack('=%uB' % mask_len, mask_data)):
+            mask_value <<= 8
+            mask_value |= b
+        data = buffer(data, mask_len)
+        assert 0 == (mask_value & 1)
+        return Mask(mask_value >> 1, length), data
+
 ButtonInfo = rq.Struct(
     rq.Card16('type'),
     rq.Card16('length'),
     rq.Card16('sourceid'),
-    rq.Card16('num_buttons'),
-    # state mask and label atoms follow.
+    rq.LengthOf(('state', 'labels'), 2),
+    ButtonState('state'),
+    rq.List('labels', rq.Card32),
 )
 
 KeyInfo = rq.Struct(
@@ -273,20 +320,6 @@ KeyInfo = rq.Struct(
     rq.LengthOf('keycodes', 2),
     rq.List('keycodes', rq.Card32),
 )
-
-class FP3232(rq.ValueField):
-    structcode = 'lL'
-    structvalues = 2
-
-    def check_value(self, value):
-        return value
-
-    def parse_value(self, value, display):
-        integral, frac = value
-        ret = float(integral)
-        # optimised math.ldexp(float(frac), -32)
-        ret += float(frac) * (1.0 / (1 << 32))
-        return ret
 
 ValuatorInfo = rq.Struct(
     rq.Card16('type'),
@@ -329,6 +362,31 @@ INFO_CLASSES = {
     TouchClass: TouchInfo,
 }
 
+class ClassInfoClass:
+
+    structcode = None
+
+    def parse_binary(self, data, display):
+        class_type, length = struct.unpack('=HH', data[:4])
+        class_struct = INFO_CLASSES.get(class_type, AnyInfo)
+        class_data, _ = class_struct.parse_binary(data, display)
+        data = buffer(data, length * 4)
+        return class_data, data
+
+ClassInfo = ClassInfoClass()
+
+DeviceInfo = rq.Struct(
+    DEVICEID('deviceid'),
+    rq.Card16('use'),
+    rq.Card16('attachment'),
+    rq.LengthOf('classes', 2),
+    rq.LengthOf('name', 2),
+    rq.Bool('enabled'),
+    rq.Pad(1),
+    rq.String8('name', 4),
+    rq.List('classes', ClassInfo),
+)
+
 class XIQueryDevice(rq.ReplyRequest):
     _request = rq.Struct(
         rq.Card8('opcode'),
@@ -343,43 +401,10 @@ class XIQueryDevice(rq.ReplyRequest):
         rq.Pad(1),
         rq.Card16('sequence_number'),
         rq.ReplyLength(),
-        rq.Card16('num_devices'),
+        rq.LengthOf('devices', 2),
         rq.Pad(22),
+        rq.List('devices', DeviceInfo),
         )
-
-    def _parse_response(self, data):
-        self._response_lock.acquire()
-        self._data, d = self._reply.parse_binary(data, self._display)
-        self._data.devices = devices = []
-        for _ in range(self._data.num_devices):
-            devinfo, d = DeviceInfo.parse_binary(d, self._display)
-            devinfo.classes = classes = []
-            for _ in range(devinfo.num_classes):
-                class_type, length = struct.unpack('=HH', d[:4])
-                class_struct = INFO_CLASSES.get(class_type, None)
-                if class_struct is not None:
-                    class_data, _ = class_struct.parse_binary(d, self._display)
-                    classes.append(class_data)
-                    # Parse ButtonInfo state mask and label atoms.
-                    if ButtonClass == class_type:
-                        # Mask: bitfield of size a multiple of 4.
-                        mask_offset = ButtonInfo.static_size
-                        mask_len = 4 * ((((class_data.num_buttons + 7) >> 3) + 3) >> 2)
-                        mask_data = d[mask_offset:mask_offset+mask_len]
-                        mask = 0
-                        for b in reversed(struct.unpack('=%uB' % mask_len, mask_data)):
-                            mask <<= 8
-                            mask |= b
-                        class_data.state = mask
-                        # Labels: a list of <num_buttons> atoms.
-                        labels_offset = mask_offset + mask_len
-                        labels_len = class_data.num_buttons * 4
-                        labels_data = d[labels_offset:labels_offset+labels_len]
-                        labels = struct.unpack('=%uL' % class_data.num_buttons, labels_data)
-                        class_data.labels = labels
-                d = buffer(d, length * 4)
-            devices.append(devinfo)
-        self._response_lock.release()
 
 def query_device(self, deviceid):
     return XIQueryDevice(
@@ -571,14 +596,6 @@ GroupInfo = rq.Struct(
     rq.Card8('locked_group'),
     rq.Card8('effective_group'),
 )
-
-class FP1616(rq.Int32):
-
-    def check_value(self, value):
-        return int(value * 65536.0)
-
-    def parse_value(self, value, display):
-        return float(value) / float(1 << 16)
 
 DeviceEventData = rq.Struct(
     DEVICEID('deviceid'),
