@@ -618,6 +618,15 @@ DeviceEventData = rq.Struct(
     ButtonState('buttons'),
 )
 
+DeviceChangedEventData = rq.Struct(
+    DEVICEID('deviceid'),
+    rq.Card32('time'),
+    rq.LengthOf('classes', 2),
+    DEVICEID('sourceid'),
+    rq.Card8('reason'),
+    rq.Pad(11),
+    rq.List('classes', ClassInfo),
+)
 
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
@@ -630,4 +639,5 @@ def init(disp, info):
 
     for device_event in (ButtonPress, ButtonRelease, KeyPress, KeyRelease, Motion):
         disp.ge_add_event_data(info.major_opcode, device_event, DeviceEventData)
+    disp.ge_add_event_data(info.major_opcode, DeviceChanged, DeviceEventData)
     disp.ge_add_event_data(info.major_opcode, HierarchyChanged, HierarchyEventData)
