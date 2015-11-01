@@ -608,13 +608,14 @@ DeviceEventData = rq.Struct(
     FP1616('root_y'),
     FP1616('event_x'),
     FP1616('event_y'),
-    rq.Card16('buttons_len'),
+    rq.LengthOf('buttons', 2),
     rq.Card16('valulators_len'),
     DEVICEID('sourceid'),
     rq.Pad(2),
     rq.Card32('flags'),
     rq.Object('mods', ModifierInfo),
     rq.Object('groups', GroupInfo),
+    ButtonState('buttons'),
 )
 
 
@@ -627,6 +628,6 @@ def init(disp, info):
     disp.extension_add_method('window', 'xinput_grab_keycode', grab_keycode)
     disp.extension_add_method('window', 'xinput_ungrab_keycode', ungrab_keycode)
 
-    disp.ge_add_event_data(info.major_opcode, KeyPress, DeviceEventData)
-    disp.ge_add_event_data(info.major_opcode, KeyRelease, DeviceEventData)
+    for device_event in (ButtonPress, ButtonRelease, KeyPress, KeyRelease, Motion):
+        disp.ge_add_event_data(info.major_opcode, device_event, DeviceEventData)
     disp.ge_add_event_data(info.major_opcode, HierarchyChanged, HierarchyEventData)
