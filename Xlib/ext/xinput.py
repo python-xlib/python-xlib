@@ -185,9 +185,9 @@ class XIQueryVersion(rq.ReplyRequest):
         rq.Pad(1),
         rq.Card16('sequence_number'),
         rq.ReplyLength(),
-        rq.Card32('major_version'),
-        rq.Card32('minor_version'),
-        rq.Pad(16),
+        rq.Card16('major_version'),
+        rq.Card16('minor_version'),
+        rq.Pad(20),
         )
 
 
