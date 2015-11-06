@@ -199,11 +199,40 @@ def query_version(self):
         minor_version=0,
         )
 
+class Mask(rq.List):
+
+    def __init__(self, name):
+        rq.List.__init__(self, name, rq.Card32, pad = 0)
+
+    def pack_value(self, val):
+
+        mask_seq = array.array(rq.struct_to_array_codes['L'])
+
+        if isinstance(val, (int, long)):
+            # We need to build a "binary mask" that (as far as I can tell) is
+            # encoded in native byte order from end to end.  The simple case is
+            # with a single unsigned 32-bit value, for which we construct an
+            # array with just one item.  For values too big to fit inside 4
+            # bytes we build a longer array, being careful to maintain native
+            # byte order across the entire set of values.
+            if sys.byteorder == 'little':
+                f = lambda v: mask_seq.insert(0, v)
+            elif sys.byteorder == 'big':
+                f = mask_seq.append
+            else:
+                raise AssertionError(sys.byteorder)
+            while val:
+                f(val & 0xFFFFFFFF)
+                val = val >> 32
+        else:
+            mask_seq.extend(val)
+
+        return mask_seq.tostring(), len(mask_seq), None
 
 EventMask = rq.Struct(
         DEVICE('deviceid'),
         rq.LengthOf('mask', 2),
-        rq.List('mask', rq.Card32),
+        Mask('mask'),
         )
 
 
@@ -218,30 +247,6 @@ class XISelectEvents(rq.Request):
         rq.List('masks', EventMask),
         )
 
-def pack_event_mask(deviceid, mask):
-    mask_seq = array.array(rq.struct_to_array_codes['L'])
-
-    if isinstance(mask, (int, long)):
-        # We need to build a "binary mask" that (as far as I can tell) is
-        # encoded in native byte order from end to end.  The simple case is
-        # with a single unsigned 32-bit value, for which we construct an
-        # array with just one item.  For values too big to fit inside 4
-        # bytes we build a longer array, being careful to maintain native
-        # byte order across the entire set of values.
-        if sys.byteorder == 'little':
-            f = lambda v: mask_seq.insert(0, v)
-        elif sys.byteorder == 'big':
-            f = mask_seq.append
-        else:
-            raise AssertionError(sys.byteorder)
-        while mask:
-            f(mask & 0xFFFFFFFF)
-            mask = mask >> 32
-    else:
-        mask_seq.extend(mask)
-
-    return {'deviceid': deviceid, 'mask': mask_seq}
-
 def select_events(self, event_masks):
     '''
     select_events(event_masks)
@@ -249,15 +254,13 @@ def select_events(self, event_masks):
     event_masks:
       Sequence of (deviceid, mask) pairs, where deviceid is a numerical device
       ID, or AllDevices or AllMasterDevices, and mask is either an unsigned
-      integer or sequence of 32 byte unsigned values
+      integer or sequence of 32 bits unsigned values
     '''
-
-    masks = [pack_event_mask(deviceid, mask) for deviceid, mask in event_masks]
     return XISelectEvents(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
         window=self,
-        masks=masks,
+        masks=event_masks,
         )
 
 AnyInfo = rq.Struct(
@@ -267,7 +270,7 @@ AnyInfo = rq.Struct(
      rq.Pad(2),
 )
 
-class Mask(object):
+class ButtonMask(object):
 
     def __init__(self, value, length):
         self._value = value
@@ -302,7 +305,7 @@ class ButtonState(rq.ValueField):
             mask_value |= b
         data = buffer(data, mask_len)
         assert 0 == (mask_value & 1)
-        return Mask(mask_value >> 1, length), data
+        return ButtonMask(mask_value >> 1, length), data
 
 ButtonInfo = rq.Struct(
     rq.Card16('type'),
@@ -427,7 +430,7 @@ class XIGrabDevice(rq.ReplyRequest):
         rq.Bool('owner_events'),
         rq.Pad(1),
         rq.LengthOf('mask', 2),
-        rq.List('mask', rq.Card32),
+        Mask('mask'),
     )
 
     _reply = rq.Struct(
@@ -440,7 +443,6 @@ class XIGrabDevice(rq.ReplyRequest):
         )
 
 def grab_device(self, deviceid, time, grab_mode, paired_device_mode, owner_events, event_mask):
-    mask = pack_event_mask(deviceid, event_mask)
     return XIGrabDevice(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -451,7 +453,7 @@ def grab_device(self, deviceid, time, grab_mode, paired_device_mode, owner_event
         grab_mode=grab_mode,
         paired_device_mode=paired_device_mode,
         owner_events=owner_events,
-        mask=mask['mask'],
+        mask=event_mask,
         )
 
 class XIUngrabDevice(rq.Request):
@@ -490,7 +492,7 @@ class XIPassiveGrabDevice(rq.ReplyRequest):
         rq.Set('paired_device_mode', 1, (GrabModeSync, GrabModeAsync)),
         rq.Bool('owner_events'),
         rq.Pad(2),
-        rq.List('mask', rq.Card32),
+        Mask('mask'),
         rq.List('modifiers', rq.Card32),
     )
 
@@ -507,7 +509,6 @@ class XIPassiveGrabDevice(rq.ReplyRequest):
 def passive_grab_device(self, deviceid, time, detail,
                         grab_type, grab_mode, paired_device_mode,
                         owner_events, event_mask, modifiers):
-    mask = pack_event_mask(deviceid, event_mask)
     return XIPassiveGrabDevice(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -520,7 +521,7 @@ def passive_grab_device(self, deviceid, time, detail,
         grab_mode=grab_mode,
         paired_device_mode=paired_device_mode,
         owner_events=owner_events,
-        mask=mask['mask'],
+        mask=event_mask,
         modifiers=modifiers,
         )
 
