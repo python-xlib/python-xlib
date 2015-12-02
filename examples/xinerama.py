@@ -30,7 +30,7 @@ from Xlib import X, display, Xutil
 from Xlib.ext import xinerama
 
 # Application window (only one)
-class Window:
+class Window(object):
     def __init__(self, display):
         self.d = display
 

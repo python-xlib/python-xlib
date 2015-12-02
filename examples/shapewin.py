@@ -29,7 +29,7 @@ from Xlib import X, display, Xutil
 from Xlib.ext import shape
 
 # Application window (only one)
-class Window:
+class Window(object):
     def __init__(self, display):
         self.d = display
 

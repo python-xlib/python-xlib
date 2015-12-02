@@ -29,7 +29,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from Xlib import X, display, Xutil
 
 # Application window
-class Window:
+class Window(object):
 	def __init__(self, display):
 		self.d = display
 
