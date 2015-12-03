@@ -443,7 +443,7 @@ class String16(ValueField):
         else:
             pad = b''
 
-        return struct.pack(*('>' + 'H' * slen, ) + tuple(val)) + pad, slen, None
+        return struct.pack('>' + 'H' * slen, *val) + pad, slen, None
 
     def parse_binary_value(self, data, display, length, format):
         if length == 'odd':
