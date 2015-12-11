@@ -214,7 +214,7 @@ class EnableContext(rq.ReplyRequest):
 
     def __init__(self, callback, *args, **keys):
         self._callback = callback
-        apply(rq.ReplyRequest.__init__, (self, ) + args, keys)
+        rq.ReplyRequest.__init__(self, *args, **keys)
 
     def _parse_response(self, data):
         r, d = self._reply.parse_binary(data, self._display)
