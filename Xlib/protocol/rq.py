@@ -703,7 +703,7 @@ class ValueList(Field):
             arg = keys
 
         for field, flag in self.fields:
-            if arg.has_key(field.name):
+            if field.name in arg:
                 mask = mask | flag
 
                 val = arg[field.name]

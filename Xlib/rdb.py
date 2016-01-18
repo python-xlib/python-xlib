@@ -172,7 +172,7 @@ class ResourceDB:
         for i in range(1, len(parts), 2):
 
             # Create a new mapping/value group
-            if not db.has_key(parts[i - 1]):
+            if parts[i - 1] not in db:
                 db[parts[i - 1]] = ({}, {})
 
             # Use second mapping if a loose binding, first otherwise
@@ -182,7 +182,7 @@ class ResourceDB:
                 db = db[parts[i - 1]][0]
 
         # Insert value into the derived db
-        if db.has_key(parts[-1]):
+        if parts[-1] in db:
             db[parts[-1]] = db[parts[-1]][:2] + (value, )
         else:
             db[parts[-1]] = ({}, {}, value)
@@ -218,13 +218,13 @@ class ResourceDB:
 
             # Precedence order: name -> class -> ?
 
-            if self.db.has_key(namep[0]):
+            if namep[0] in self.db:
                 bin_insert(matches, _Match((NAME_MATCH, ), self.db[namep[0]]))
 
-            if self.db.has_key(clsp[0]):
+            if clsp[0] in self.db:
                 bin_insert(matches, _Match((CLASS_MATCH, ), self.db[clsp[0]]))
 
-            if self.db.has_key('?'):
+            if '?' in self.db:
                 bin_insert(matches, _Match((WILD_MATCH, ), self.db['?']))
 
 
@@ -240,7 +240,7 @@ class ResourceDB:
 
             # Special case for resources which begins with a loose
             # binding, e.g. '*foo.bar'
-            if self.db.has_key(''):
+            if '' in self.db:
                 bin_insert(matches, _Match((), self.db[''][1]))
 
 
@@ -396,14 +396,14 @@ class _Match:
 
     def match(self, part, score):
         if self.skip:
-            if self.db.has_key(part):
+            if part in self.db:
                 return _Match(self.path + (score, ), self.db[part])
             else:
                 return None
         else:
-            if self.group[0].has_key(part):
+            if part in self.group[0]:
                 return _Match(self.path + (score, ), self.group[0][part])
-            elif self.group[1].has_key(part):
+            elif part in self.group[1]:
                 return _Match(self.path + (score + 1, ), self.group[1][part])
             else:
                 return None
@@ -482,7 +482,7 @@ def update_db(dest, src):
     for comp, group in src.items():
 
         # DEST already contains this component, update it
-        if dest.has_key(comp):
+        if comp in dest:
 
             # Update tight and loose binding databases
             update_db(dest[comp][0], group[0])

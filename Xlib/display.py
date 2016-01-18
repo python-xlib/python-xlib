@@ -66,7 +66,7 @@ class _BaseDisplay(protocol.display.Display):
         self._atom_cache = {}
 
     def get_atom(self, atomname, only_if_exists=0):
-        if self._atom_cache.has_key(atomname):
+        if atomname in self._atom_cache:
             return self._atom_cache[atomname]
 
         r = request.InternAtom(display = self, name = atomname, only_if_exists = only_if_exists)
@@ -425,7 +425,7 @@ class Display:
             index = 0
             for sym in syms:
                 if sym != X.NoSymbol:
-                    if self._keymap_syms.has_key(sym):
+                    if sym in self._keymap_syms:
                         symcodes = self._keymap_syms[sym]
                         symcodes.append((index, code))
                         symcodes.sort()
