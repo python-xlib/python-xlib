@@ -13,7 +13,7 @@ import array
 
 class CmpArray:
     def __init__(self, *args, **kws):
-        self.array = apply(array.array, args, kws)
+        self.array = array.array(*args, **kws)
 
     def __len__(self):
         return len(self.array)
@@ -73,7 +73,7 @@ class TestKeymapNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.KeymapNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.KeymapNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -110,7 +110,7 @@ class TestExpose(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.Expose._fields.to_binary, (), self.evt_args_0)
+        bin = event.Expose._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -149,7 +149,7 @@ class TestGraphicsExpose(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.GraphicsExpose._fields.to_binary, (), self.evt_args_0)
+        bin = event.GraphicsExpose._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -183,7 +183,7 @@ class TestNoExpose(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.NoExpose._fields.to_binary, (), self.evt_args_0)
+        bin = event.NoExpose._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -216,7 +216,7 @@ class TestVisibilityNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.VisibilityNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.VisibilityNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -255,7 +255,7 @@ class TestCreateNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.CreateNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.CreateNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -288,7 +288,7 @@ class TestDestroyNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.DestroyNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.DestroyNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -322,7 +322,7 @@ class TestUnmapNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.UnmapNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.UnmapNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -356,7 +356,7 @@ class TestMapNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.MapNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.MapNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -389,7 +389,7 @@ class TestMapRequest(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.MapRequest._fields.to_binary, (), self.evt_args_0)
+        bin = event.MapRequest._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -426,7 +426,7 @@ class TestReparentNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ReparentNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.ReparentNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -466,7 +466,7 @@ class TestConfigureNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ConfigureNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.ConfigureNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -507,7 +507,7 @@ class TestConfigureRequest(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ConfigureRequest._fields.to_binary, (), self.evt_args_0)
+        bin = event.ConfigureRequest._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -542,7 +542,7 @@ class TestGravityNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.GravityNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.GravityNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -576,7 +576,7 @@ class TestResizeRequest(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ResizeRequest._fields.to_binary, (), self.evt_args_0)
+        bin = event.ResizeRequest._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -611,7 +611,7 @@ class TestPropertyNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.PropertyNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.PropertyNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -645,7 +645,7 @@ class TestSelectionClear(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.SelectionClear._fields.to_binary, (), self.evt_args_0)
+        bin = event.SelectionClear._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -682,7 +682,7 @@ class TestSelectionRequest(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.SelectionRequest._fields.to_binary, (), self.evt_args_0)
+        bin = event.SelectionRequest._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -718,7 +718,7 @@ class TestSelectionNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.SelectionNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.SelectionNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -753,7 +753,7 @@ class TestColormapNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ColormapNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.ColormapNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -811,7 +811,7 @@ class TestClientMessage(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ClientMessage._fields.to_binary, (), self.evt_args_0)
+        bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -829,7 +829,7 @@ class TestClientMessage(unittest.TestCase):
             raise AssertionError(args)
 
     def testPack1(self):
-        bin = apply(event.ClientMessage._fields.to_binary, (), self.evt_args_1)
+        bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_1)
         try:
             assert bin == self.evt_bin_1
         except AssertionError:
@@ -847,7 +847,7 @@ class TestClientMessage(unittest.TestCase):
             raise AssertionError(args)
 
     def testPack2(self):
-        bin = apply(event.ClientMessage._fields.to_binary, (), self.evt_args_2)
+        bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_2)
         try:
             assert bin == self.evt_bin_2
         except AssertionError:
@@ -881,7 +881,7 @@ class TestMappingNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.MappingNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.MappingNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
