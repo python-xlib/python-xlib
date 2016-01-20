@@ -5,8 +5,7 @@ python:
   - "2.7"
 
 # command to install dependencies
-install:
-  - pip install --user coverage
+install: true
 
 before_script:
   - "export DISPLAY=:99.0"
