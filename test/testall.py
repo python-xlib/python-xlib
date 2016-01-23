@@ -49,7 +49,7 @@ def run_tests():
             suite.addTests(
                 unittest.defaultTestLoader.loadTestsFromModule(imported_mod))
 
-    unittest.TextTestRunner(verbosity=1).run(suite)
+    unittest.TextTestRunner(verbosity=3).run(suite)
     cov.stop()
     #print(cov.analysis())
     print(cov.report())
