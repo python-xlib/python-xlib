@@ -13,4 +13,4 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 # command to run tests
-script: nosetests
+script: nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/testall.py
