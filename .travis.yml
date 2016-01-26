@@ -5,7 +5,7 @@ python:
   - "2.7"
 
 # command to install dependencies
-install: pip install coverage
+install: pip install -r dev-requirements.txt
 
 before_script:
   - "export DISPLAY=:99.0"
@@ -14,3 +14,6 @@ before_script:
 
 # command to run tests
 script: nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/testall.py
+
+after_success:
+  - codecov
