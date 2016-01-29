@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/python-xlib/python-xlib.svg?branch=master)](https://travis-ci.org/python-xlib/python-xlib)
+
 # The Python X Library
 
 ### Copyright
@@ -8,12 +10,13 @@ The main part of the code is
 
 Some contributed code is copyrighted by [the contributors](https://github.com/python-xlib/python-xlib/graphs/contributors), in these cases that is indicated in the source files in question.
 
-The Python X Library is released under LGPL v2.1 or later, see the file LICENSE for details.
+The Python X Library is released under LGPL v2.1 or later (since 2016), see the file LICENSE for details.
+0.15rc1 and before were released under GPL v2.
 
 ### Requirements
 
 The Python X Library requires Python 1.5.2 or newer.  It has been
-tested to various extents with Python 1.5.2 and 2.0 through 2.6.
+tested to various extents with Python 1.5.2 and 2.0 through 2.7.
 
 
 ### Installation
