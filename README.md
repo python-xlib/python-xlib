@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/python-xlib/python-xlib.svg?branch=master)](https://travis-ci.org/python-xlib/python-xlib)
+[![codecov.io](https://codecov.io/github/python-xlib/python-xlib/coverage.svg?branch=master)](https://codecov.io/github/python-xlib/python-xlib?branch=master)
 
 # The Python X Library
 
