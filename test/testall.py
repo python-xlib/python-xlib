@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import sys, os
-import string
+import sys
+import os
 import unittest
 import struct
-import array
 
 import coverage
 
@@ -21,9 +20,13 @@ from Xlib.protocol import request, rq, event
 import Xlib.protocol.event
 
 def is_big_endian():
+    "Check endianess (return True on big-endian system)"
     return struct.unpack('BB', struct.pack('H', 0x0100))[0] != 0
 
+
 def run_tests():
+    "Run all suitable tests"
+
     if is_big_endian():
         excludes = ['test_events_le', 'test_requests_le', ]
     else:
