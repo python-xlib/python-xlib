@@ -228,7 +228,7 @@ class Display:
         self.resource_id_lock.acquire()
         try:
             i = self.last_resource_id
-            while self.resource_ids.has_key(i):
+            while i in self.resource_ids:
                 i = i + 1
                 if i > self.info.resource_id_mask:
                     i = 0
