@@ -17,16 +17,16 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # Python modules
-import new
+import types
 
 # Xlib modules
-import error
-import ext
-import X
+from . import error
+from . import ext
+from . import X
 
 # Xlib.protocol modules
-import protocol.display
-from protocol import request, event, rq
+from . import protocol.display
+from .protocol import request, event, rq
 
 # Xlib.xobjects modules
 import xobject.resource
@@ -78,7 +78,7 @@ class _BaseDisplay(protocol.display.Display):
         return r.atom
 
 
-class Display:
+class Display(object):
     def __init__(self, display = None):
         self.display = _BaseDisplay(display)
 
@@ -126,9 +126,14 @@ class Display:
         # Finalize extensions by creating new classes
         for type, dict in self.class_extension_dicts.items():
             origcls = self.display.resource_classes[type]
-            self.display.resource_classes[type] = new.classobj(origcls.__name__,
-                                                               (origcls,),
-                                                               dict)
+            if hasattr(types, 'ClassType'):
+                self.display.resource_classes[type] = types.ClassType(origcls.__name__,
+                                                                      (origcls,),
+                                                                      dict)
+            else:
+                self.display.resource_classes[type] = types.new_class(origcls.__name__,
+                                                                      (origcls,),
+                                                                      dict)
 
         # Problem: we have already created some objects without the
         # extensions: the screen roots and default colormaps.
@@ -216,7 +221,7 @@ class Display:
     def __getattr__(self, attr):
         try:
             function = self.display_extension_methods[attr]
-            return new.instancemethod(function, self, self.__class__)
+            return types.MethodType(function, self, self.__class__)
         except KeyError:
             raise AttributeError(attr)
 
@@ -277,7 +282,7 @@ class Display:
                 if hasattr(cls, name):
                     raise AssertionError('attempting to replace %s method: %s' % (type, name))
 
-                method = new.instancemethod(function, None, cls)
+                method = types.MethodType(function, None, cls)
 
                 # Maybe should check extension overrides too
                 try:
@@ -297,8 +302,12 @@ class Display:
         extension_event.
         """
 
-        newevt = new.classobj(evt.__name__, evt.__bases__,
-                              evt.__dict__.copy())
+        if hasattr(types, 'ClassType'):
+            newevt = types.ClassType(evt.__name__, evt.__bases__,
+                                     evt.__dict__.copy())
+        else:
+            newevt = types.new_class(evt.__name__, evt.__bases__,
+                                     evt.__dict__.copy())
         newevt._code = code
 
         self.display.add_extension_event(code, newevt)
@@ -321,8 +330,12 @@ class Display:
         extension_event.
         """
 
-        newevt = new.classobj(evt.__name__, evt.__bases__,
-                              evt.__dict__.copy())
+        if hasattr(types, 'ClassType'):
+            newevt = types.ClassType(evt.__name__, evt.__bases__,
+                                     evt.__dict__.copy())
+        else:
+            newevt = types.new_class(evt.__name__, evt.__bases__,
+                                     evt.__dict__.copy())
         newevt._code = code
 
         self.display.add_extension_event(code, newevt, subcode)

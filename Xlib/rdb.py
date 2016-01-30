@@ -28,7 +28,7 @@ import re
 import sys
 
 # Xlib modules
-from support import lock
+from .support import lock
 
 # Set up a few regexpes for parsing string representation of resources
 
@@ -49,7 +49,7 @@ class OptionError(Exception):
     pass
 
 
-class ResourceDB:
+class ResourceDB(object):
     def __init__(self, file = None, string = None, resources = None):
         self.db = {}
         self.lock = lock.allocate_lock()
@@ -189,7 +189,7 @@ class ResourceDB:
 
         self.lock.release()
 
-    def __getitem__(self, (name, cls)):
+    def __getitem__(self, keys_tuple):
         """db[name, class]
 
         Return the value matching the resource identified by NAME and
@@ -197,6 +197,7 @@ class ResourceDB:
         """
 
         # Split name and class into their parts
+        name, cls = keys_tuple
 
         namep = string.split(name, '.')
         clsp = string.split(cls, '.')
@@ -376,7 +377,7 @@ class ResourceDB:
         return argv
 
 
-class _Match:
+class _Match(object):
     def __init__(self, path, dbs):
         self.path = path
 
@@ -551,7 +552,7 @@ def output_escape(value):
 # Option type definitions
 #
 
-class Option:
+class Option(object):
     def __init__(self):
         pass
 

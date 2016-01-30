@@ -26,16 +26,16 @@ import errno
 import socket
 
 # Xlib modules
-from Xlib import error
-from Xlib.ext import ge
+from .. import error
+from ..ext import ge
 
-from Xlib.support import lock, connect
+from ..support import lock, connect
 
 # Xlib.protocol modules
-import rq
-import event
+from . import rq
+from . import event
 
-class Display:
+class Display(object):
     resource_classes = {}
     extension_major_opcodes = {}
     error_classes = error.xerror_class.copy()

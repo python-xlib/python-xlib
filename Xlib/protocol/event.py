@@ -18,10 +18,10 @@
 
 
 # Xlib modules
-from Xlib import X
+from .. import X
 
 # Xlib.protocol modules
-import rq
+from . import rq
 
 
 class AnyEvent(rq.Event):

@@ -25,7 +25,7 @@ import sys
 import os
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import X, XK, display
 from Xlib.ext import record
