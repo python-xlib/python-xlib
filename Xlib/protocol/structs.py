@@ -17,10 +17,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # Xlib modules
-from Xlib import X
+from .. import X
 
 # Xlib.protocol modules
-import rq
+from . import rq
 
 def WindowValues(arg):
     return rq.ValueList( arg, 4, 0,

@@ -26,7 +26,7 @@ FamilyDECnet = X.FamilyDECnet
 FamilyChaos = X.FamilyChaos
 FamilyLocal = 256
 
-class Xauthority:
+class Xauthority(object):
     def __init__(self, filename = None):
         if filename is None:
             filename = os.environ.get('XAUTHORITY')

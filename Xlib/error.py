@@ -20,10 +20,10 @@
 import string
 
 # Xlib modules
-import X
+from . import X
 
 # Xlib.protocol modules
-from Xlib.protocol import rq
+from .protocol import rq
 
 
 class DisplayError(Exception):
@@ -129,7 +129,7 @@ xerror_class = {
     }
 
 
-class CatchError:
+class CatchError(object):
     def __init__(self, *errors):
         self.error_types = errors
         self.error = None

@@ -1011,7 +1011,7 @@ void output(char *name, void *data, int length)
 PY_HEADER = r'''#!/usr/bin/env python
 
 import sys, os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 import string
 import unittest
