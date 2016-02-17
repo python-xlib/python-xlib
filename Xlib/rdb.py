@@ -28,7 +28,7 @@ import re
 import sys
 
 # Xlib modules
-from support import lock
+from .support import lock
 
 # Set up a few regexpes for parsing string representation of resources
 
@@ -189,12 +189,13 @@ class ResourceDB:
 
         self.lock.release()
 
-    def __getitem__(self, (name, cls)):
+    def __getitem__(self, name_cls):
         """db[name, class]
 
         Return the value matching the resource identified by NAME and
         CLASS.  If no match is found, KeyError is raised.
         """
+        name, cls = name_cls
 
         # Split name and class into their parts
 

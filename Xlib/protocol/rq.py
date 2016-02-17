@@ -24,7 +24,6 @@ import struct
 import string
 from array import array
 import types
-import new
 
 # Xlib modules
 from Xlib import X
@@ -52,14 +51,20 @@ struct_to_array_codes = { }
 for c in 'bhil':
     size = array(c).itemsize
 
-    array_unsigned_codes[size] = string.upper(c)
+    array_unsigned_codes[size] = c.upper()
     try:
         struct_to_array_codes[signed_codes[size]] = c
-        struct_to_array_codes[unsigned_codes[size]] = string.upper(c)
+        struct_to_array_codes[unsigned_codes[size]] = c.upper()
     except KeyError:
         pass
 
 # print array_unsigned_codes, struct_to_array_codes
+
+def _method(func, instance):
+    if sys.version_info[0] >= 3:
+        return types.MethodType(func, instance)
+    else:
+        return types.MethodType(func, instance, type(instance))
 
 
 class Field:
@@ -1095,12 +1100,12 @@ class Struct:
         # Structs are not really created dynamically so the potential
         # memory leak isn't that serious.  Besides, Python 2.0 has
         # real garbage collect.
-
-        exec code
-        self.to_binary = new.instancemethod(to_binary, self, self.__class__)
+        ns = {}
+        exec(code, ns)
+        self.to_binary = _method(ns['to_binary'], self)
 
         # Finally call it manually
-        return apply(self.to_binary, varargs, keys)
+        return self.to_binary(varargs, keys)
 
 
     def pack_value(self, value):
@@ -1111,12 +1116,12 @@ class Struct:
 
         """
 
-        if type(value) is types.TupleType:
-            return apply(self.to_binary, value, {})
-        elif type(value) is types.DictionaryType:
-            return apply(self.to_binary, (), value)
+        if type(value) is tuple:
+            return self.to_binary(*value)
+        elif type(value) is dict:
+            return self.to_binary(**value)
         elif isinstance(value, DictWrapper):
-            return apply(self.to_binary, (), value._data)
+            return self.to_binary(**value._data)
         else:
             raise BadDataError('%s is not a tuple or a list' % (value))
 
@@ -1180,9 +1185,9 @@ class Struct:
         # print
 
         # Finally, compile function as for to_binary.
-
-        exec code
-        self.parse_value = new.instancemethod(parse_value, self, self.__class__)
+        ns = {}
+        exec(code, ns)
+        self.parse_value = _method(ns['parse_value'], self)
 
         # Call it manually
         return self.parse_value(val, display, rawdict)
@@ -1284,9 +1289,9 @@ class Struct:
         # print
 
         # Finally, compile function as for to_binary.
-
-        exec code
-        self.parse_binary = new.instancemethod(parse_binary, self, self.__class__)
+        ns = {}
+        exec(code, ns)
+        self.parse_binary = _method(ns['parse_binary'], self)
 
         # Call it manually
         return self.parse_binary(data, display, rawdict)

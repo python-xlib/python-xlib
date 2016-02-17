@@ -21,7 +21,7 @@
 from Xlib import X
 
 # Xlib.protocol modules
-import rq
+from . import rq
 
 
 class AnyEvent(rq.Event):
