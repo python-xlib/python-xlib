@@ -292,7 +292,7 @@ class Resource(Card32):
         self.codes = codes
 
     def check_value(self, value):
-        if type(value) is types.InstanceType:
+        if hasattr(value, self.cast_function):  # ? Not sure what this should check
             return getattr(value, self.cast_function)()
         else:
             return value
@@ -424,11 +424,11 @@ class String16(ValueField):
         slen = len(val)
 
         if self.pad:
-            pad = '\0\0' * (slen % 2)
+            pad = b'\0\0' * (slen % 2)
         else:
-            pad = ''
+            pad = b''
 
-        return apply(struct.pack, ('>' + 'H' * slen, ) + tuple(val)) + pad, slen, None
+        return struct.pack(('>' + 'H' * slen), *tuple(val)) + pad, slen, None
 
     def parse_binary_value(self, data, display, length, format):
         if length == 'odd':
@@ -1058,12 +1058,12 @@ class Struct:
 
 
         # Construct call to struct.pack
-        pack = 'struct.pack(%s)' % string.join(pack_args, ', ')
+        pack = 'struct.pack(%s)' % ', '.join(pack_args)
 
         # If there are any varfields, we append the packed strings to build
         # the resulting binary value
         if self.var_fields:
-            code = code + '  return %s + %s\n' % (pack, string.join(joins, ' + '))
+            code = code + '  return %s + %s\n' % (pack, ' + '.join(joins))
 
         # If there's only static fields, return the packed value
         else:
@@ -1083,7 +1083,8 @@ class Struct:
             args.append('**_keyword_args')
 
         # Add function header
-        code = 'def to_binary(self, %s):\n' % string.join(args, ', ') + code
+        code = ('import struct\n'
+                'def to_binary(self, %s):\n') % ', '.join(args) + code
 
         # self._pack_code = code
 
@@ -1105,7 +1106,7 @@ class Struct:
         self.to_binary = _method(ns['to_binary'], self)
 
         # Finally call it manually
-        return self.to_binary(varargs, keys)
+        return self.to_binary(*varargs, **keys)
 
 
     def pack_value(self, value):
@@ -1185,7 +1186,7 @@ class Struct:
         # print
 
         # Finally, compile function as for to_binary.
-        ns = {}
+        ns = {'DictWrapper': DictWrapper}
         exec(code, ns)
         self.parse_value = _method(ns['parse_value'], self)
 
@@ -1213,9 +1214,10 @@ class Struct:
 
         """
 
-        code = ('def parse_binary(self, data, display, rawdict = 0):\n'
+        code = ('import struct\n'
+                'def parse_binary(self, data, display, rawdict = 0):\n'
                 '  ret = {}\n'
-                '  val = struct.unpack("%s", data[:%d])\n'
+                '  val = struct.unpack(%r, data[:%d])\n'
                 % (self.static_codes, self.static_size))
 
         lengths = {}
@@ -1289,7 +1291,7 @@ class Struct:
         # print
 
         # Finally, compile function as for to_binary.
-        ns = {}
+        ns = {'DictWrapper': DictWrapper}
         exec(code, ns)
         self.parse_binary = _method(ns['parse_binary'], self)
 
@@ -1420,7 +1422,7 @@ class DictWrapper(GetAttrData):
 class Request:
     def __init__(self, display, onerror = None, *args, **keys):
         self._errorhandler = onerror
-        self._binary = apply(self._request.to_binary, args, keys)
+        self._binary = self._request.to_binary(*args, **keys)
         self._serial = None
         display.send_request(self, onerror is not None)
 
@@ -1433,7 +1435,7 @@ class Request:
 class ReplyRequest(GetAttrData):
     def __init__(self, display, defer = 0, *args, **keys):
         self._display = display
-        self._binary = apply(self._request.to_binary, args, keys)
+        self._binary = self._request.to_binary(*args, **keys)
         self._serial = None
         self._data = None
         self._error = None
@@ -1495,7 +1497,7 @@ class Event(GetAttrData):
 
             keys['sequence_number'] = 0
 
-            self._binary = apply(self._fields.to_binary, (), keys)
+            self._binary = self._fields.to_binary(**keys)
 
             keys['send_event'] = 0
             self._data = keys
