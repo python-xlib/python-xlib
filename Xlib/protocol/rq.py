@@ -60,6 +60,12 @@ for c in 'bhil':
 
 # print array_unsigned_codes, struct_to_array_codes
 
+def _method(func, instance):
+    if sys.version_info[0] >= 3:
+        return types.MethodType(func, instance)
+    else:
+        return types.MethodType(func, instance, type(instance))
+
 
 class Field(object):
     """Field objects represent the data fields of a Struct.
@@ -286,7 +292,7 @@ class Resource(Card32):
         self.codes = codes
 
     def check_value(self, value):
-        if type(value) is types.InstanceType:
+        if hasattr(value, self.cast_function):
             return getattr(value, self.cast_function)()
         else:
             return value
@@ -1052,12 +1058,12 @@ class Struct(object):
 
 
         # Construct call to struct.pack
-        pack = 'struct.pack(%s)' % string.join(pack_args, ', ')
+        pack = 'struct.pack(%s)' % ', '.join(pack_args)
 
         # If there are any varfields, we append the packed strings to build
         # the resulting binary value
         if self.var_fields:
-            code = code + '  return %s + %s\n' % (pack, string.join(joins, ' + '))
+            code = code + '  return %s + %s\n' % (pack, ' + '.join(joins))
 
         # If there's only static fields, return the packed value
         else:
@@ -1077,7 +1083,7 @@ class Struct(object):
             args.append('**_keyword_args')
 
         # Add function header
-        code = 'def to_binary(self, %s):\n' % string.join(args, ', ') + code
+        code = 'def to_binary(self, %s):\n' % ', '.join(args) + code
 
         # self._pack_code = code
 
@@ -1094,12 +1100,12 @@ class Struct(object):
         # Structs are not really created dynamically so the potential
         # memory leak isn't that serious.  Besides, Python 2.0 has
         # real garbage collect.
-
-        exec(code)
-        self.to_binary = types.MethodType(to_binary, self, self.__class__)
+        ns = {'struct': struct}
+        exec(code, ns)
+        self.to_binary = _method(ns['to_binary'], self)
 
         # Finally call it manually
-        return apply(self.to_binary, varargs, keys)
+        return self.to_binary(*varargs, **keys)
 
 
     def pack_value(self, value):
@@ -1283,9 +1289,9 @@ class Struct(object):
         # print
 
         # Finally, compile function as for to_binary.
-
-        exec(code)
-        self.parse_binary = types.MethodType(parse_binary, self, self.__class__)
+        ns = {'struct': struct}
+        exec(code, ns)
+        self.parse_binary = _method(ns['parse_binary'], self)
 
         # Call it manually
         return self.parse_binary(data, display, rawdict)
