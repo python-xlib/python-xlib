@@ -20,7 +20,7 @@
 from Xlib import X
 
 # Xlib.protocol modules
-import rq
+from . import rq
 
 def WindowValues(arg):
     return rq.ValueList( arg, 4, 0,

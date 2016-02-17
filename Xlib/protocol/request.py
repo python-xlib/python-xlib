@@ -21,8 +21,8 @@
 from Xlib import X
 
 # Xlib.protocol modules
-import rq
-import structs
+from . import rq
+from . import structs
 
 
 class CreateWindow(rq.Request):
