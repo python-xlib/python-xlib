@@ -1185,9 +1185,9 @@ class Struct(object):
         # print
 
         # Finally, compile function as for to_binary.
-
-        exec(code)
-        self.parse_value = types.MethodType(parse_value, self, self.__class__)
+        ns = {'DictWrapper': DictWrapper}
+        exec(code, ns)
+        self.parse_value = types.MethodType(ns['parse_value'], self, self.__class__)
 
         # Call it manually
         return self.parse_value(val, display, rawdict)
@@ -1289,7 +1289,7 @@ class Struct(object):
         # print
 
         # Finally, compile function as for to_binary.
-        ns = {'struct': struct}
+        ns = {'struct': struct, 'DictWrapper': DictWrapper}
         exec(code, ns)
         self.parse_binary = _method(ns['parse_binary'], self)
 
