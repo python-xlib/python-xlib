@@ -18,11 +18,11 @@
 
 
 # Xlib modules
-from Xlib import X
+from .. import X
 
 # Xlib.protocol modules
-import rq
-import structs
+from . import rq
+from . import structs
 
 
 class CreateWindow(rq.Request):

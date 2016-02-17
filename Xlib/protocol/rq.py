@@ -24,11 +24,10 @@ import struct
 import string
 from array import array
 import types
-import new
 
 # Xlib modules
-from Xlib import X
-from Xlib.support import lock
+from .. import X
+from ..support import lock
 
 
 class BadDataError(Exception): pass
@@ -52,17 +51,17 @@ struct_to_array_codes = { }
 for c in 'bhil':
     size = array(c).itemsize
 
-    array_unsigned_codes[size] = string.upper(c)
+    array_unsigned_codes[size] = c.upper()
     try:
         struct_to_array_codes[signed_codes[size]] = c
-        struct_to_array_codes[unsigned_codes[size]] = string.upper(c)
+        struct_to_array_codes[unsigned_codes[size]] = c.upper()
     except KeyError:
         pass
 
 # print array_unsigned_codes, struct_to_array_codes
 
 
-class Field:
+class Field(object):
     """Field objects represent the data fields of a Struct.
 
     Field objects must have the following attributes:
@@ -703,7 +702,7 @@ class ValueList(Field):
             arg = keys
 
         for field, flag in self.fields:
-            if arg.has_key(field.name):
+            if field.name in arg:
                 mask = mask | flag
 
                 val = arg[field.name]
@@ -829,7 +828,7 @@ class EventField(ValueField):
 # Struct is also usable.
 #
 
-class ScalarObj:
+class ScalarObj(object):
     def __init__(self, code):
         self.structcode = code
         self.structvalues = 1
@@ -840,7 +839,7 @@ Card8Obj  = ScalarObj('B')
 Card16Obj = ScalarObj('H')
 Card32Obj = ScalarObj('L')
 
-class ResourceObj:
+class ResourceObj(object):
     structcode = 'L'
     structvalues = 1
 
@@ -860,7 +859,7 @@ class ResourceObj:
 WindowObj = ResourceObj('window')
 ColormapObj = ResourceObj('colormap')
 
-class StrClass:
+class StrClass(object):
     structcode = None
 
     def pack_value(self, val):
@@ -873,7 +872,7 @@ class StrClass:
 Str = StrClass()
 
 
-class Struct:
+class Struct(object):
 
     """Struct objects represents a binary data structure.  It can
     contain both fields with static and dynamic sizes.  However, all
@@ -1096,8 +1095,8 @@ class Struct:
         # memory leak isn't that serious.  Besides, Python 2.0 has
         # real garbage collect.
 
-        exec code
-        self.to_binary = new.instancemethod(to_binary, self, self.__class__)
+        exec(code)
+        self.to_binary = types.MethodType(to_binary, self, self.__class__)
 
         # Finally call it manually
         return apply(self.to_binary, varargs, keys)
@@ -1181,8 +1180,8 @@ class Struct:
 
         # Finally, compile function as for to_binary.
 
-        exec code
-        self.parse_value = new.instancemethod(parse_value, self, self.__class__)
+        exec(code)
+        self.parse_value = types.MethodType(parse_value, self, self.__class__)
 
         # Call it manually
         return self.parse_value(val, display, rawdict)
@@ -1285,8 +1284,8 @@ class Struct:
 
         # Finally, compile function as for to_binary.
 
-        exec code
-        self.parse_binary = new.instancemethod(parse_binary, self, self.__class__)
+        exec(code)
+        self.parse_binary = types.MethodType(parse_binary, self, self.__class__)
 
         # Call it manually
         return self.parse_binary(data, display, rawdict)
@@ -1412,7 +1411,7 @@ class DictWrapper(GetAttrData):
             return cmp(self._data, other)
 
 
-class Request:
+class Request(object):
     def __init__(self, display, onerror = None, *args, **keys):
         self._errorhandler = onerror
         self._binary = apply(self._request.to_binary, args, keys)

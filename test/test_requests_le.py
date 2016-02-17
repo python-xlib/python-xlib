@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys, os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 import string
 import unittest
@@ -13,7 +13,7 @@ import array
 
 class CmpArray:
     def __init__(self, *args, **kws):
-        self.array = apply(array.array, args, kws)
+        self.array = array.array(*args, **kws)
 
     def __len__(self):
         return len(self.array)
@@ -90,7 +90,7 @@ class TestCreateWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateWindow._request.to_binary, (), self.req_args_0)
+        bin = request.CreateWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -126,7 +126,7 @@ class TestChangeWindowAttributes(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeWindowAttributes._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeWindowAttributes._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -178,7 +178,7 @@ class TestGetWindowAttributes(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetWindowAttributes._request.to_binary, (), self.req_args_0)
+        bin = request.GetWindowAttributes._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -196,7 +196,7 @@ class TestGetWindowAttributes(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetWindowAttributes._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetWindowAttributes._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -223,7 +223,7 @@ class TestDestroyWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.DestroyWindow._request.to_binary, (), self.req_args_0)
+        bin = request.DestroyWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -250,7 +250,7 @@ class TestDestroySubWindows(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.DestroySubWindows._request.to_binary, (), self.req_args_0)
+        bin = request.DestroySubWindows._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -278,7 +278,7 @@ class TestChangeSaveSet(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeSaveSet._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeSaveSet._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -309,7 +309,7 @@ class TestReparentWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ReparentWindow._request.to_binary, (), self.req_args_0)
+        bin = request.ReparentWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -336,7 +336,7 @@ class TestMapWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.MapWindow._request.to_binary, (), self.req_args_0)
+        bin = request.MapWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -363,7 +363,7 @@ class TestMapSubwindows(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.MapSubwindows._request.to_binary, (), self.req_args_0)
+        bin = request.MapSubwindows._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -390,7 +390,7 @@ class TestUnmapWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UnmapWindow._request.to_binary, (), self.req_args_0)
+        bin = request.UnmapWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -417,7 +417,7 @@ class TestUnmapSubwindows(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UnmapSubwindows._request.to_binary, (), self.req_args_0)
+        bin = request.UnmapSubwindows._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -449,7 +449,7 @@ class TestConfigureWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ConfigureWindow._request.to_binary, (), self.req_args_0)
+        bin = request.ConfigureWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -477,7 +477,7 @@ class TestCirculateWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CirculateWindow._request.to_binary, (), self.req_args_0)
+        bin = request.CirculateWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -519,7 +519,7 @@ class TestGetGeometry(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetGeometry._request.to_binary, (), self.req_args_0)
+        bin = request.GetGeometry._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -537,7 +537,7 @@ class TestGetGeometry(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetGeometry._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetGeometry._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -579,7 +579,7 @@ class TestQueryTree(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryTree._request.to_binary, (), self.req_args_0)
+        bin = request.QueryTree._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -597,7 +597,7 @@ class TestQueryTree(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryTree._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryTree._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -636,7 +636,7 @@ class TestInternAtom(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.InternAtom._request.to_binary, (), self.req_args_0)
+        bin = request.InternAtom._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -654,7 +654,7 @@ class TestInternAtom(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.InternAtom._reply.to_binary, (), self.reply_args_0)
+        bin = request.InternAtom._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -691,7 +691,7 @@ class TestGetAtomName(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetAtomName._request.to_binary, (), self.req_args_0)
+        bin = request.GetAtomName._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -709,7 +709,7 @@ class TestGetAtomName(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetAtomName._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetAtomName._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -825,7 +825,7 @@ class TestChangeProperty(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -843,7 +843,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest1(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_1)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_1)
         try:
             assert bin == self.req_bin_1
         except AssertionError:
@@ -861,7 +861,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest2(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_2)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_2)
         try:
             assert bin == self.req_bin_2
         except AssertionError:
@@ -879,7 +879,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest3(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_3)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_3)
         try:
             assert bin == self.req_bin_3
         except AssertionError:
@@ -897,7 +897,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest4(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_4)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_4)
         try:
             assert bin == self.req_bin_4
         except AssertionError:
@@ -915,7 +915,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest5(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_5)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_5)
         try:
             assert bin == self.req_bin_5
         except AssertionError:
@@ -933,7 +933,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest6(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_6)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_6)
         try:
             assert bin == self.req_bin_6
         except AssertionError:
@@ -951,7 +951,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest7(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_7)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_7)
         try:
             assert bin == self.req_bin_7
         except AssertionError:
@@ -980,7 +980,7 @@ class TestDeleteProperty(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.DeleteProperty._request.to_binary, (), self.req_args_0)
+        bin = request.DeleteProperty._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1108,7 +1108,7 @@ class TestGetProperty(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetProperty._request.to_binary, (), self.req_args_0)
+        bin = request.GetProperty._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1126,7 +1126,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1144,7 +1144,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply1(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_1)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_1)
         try:
             assert bin == self.reply_bin_1
         except AssertionError:
@@ -1162,7 +1162,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply2(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_2)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_2)
         try:
             assert bin == self.reply_bin_2
         except AssertionError:
@@ -1180,7 +1180,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply3(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_3)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_3)
         try:
             assert bin == self.reply_bin_3
         except AssertionError:
@@ -1198,7 +1198,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply4(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_4)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_4)
         try:
             assert bin == self.reply_bin_4
         except AssertionError:
@@ -1216,7 +1216,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply5(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_5)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_5)
         try:
             assert bin == self.reply_bin_5
         except AssertionError:
@@ -1234,7 +1234,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply6(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_6)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_6)
         try:
             assert bin == self.reply_bin_6
         except AssertionError:
@@ -1252,7 +1252,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply7(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_7)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_7)
         try:
             assert bin == self.reply_bin_7
         except AssertionError:
@@ -1300,7 +1300,7 @@ class TestListProperties(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListProperties._request.to_binary, (), self.req_args_0)
+        bin = request.ListProperties._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1318,7 +1318,7 @@ class TestListProperties(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListProperties._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListProperties._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1348,7 +1348,7 @@ class TestSetSelectionOwner(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetSelectionOwner._request.to_binary, (), self.req_args_0)
+        bin = request.SetSelectionOwner._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1384,7 +1384,7 @@ class TestGetSelectionOwner(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetSelectionOwner._request.to_binary, (), self.req_args_0)
+        bin = request.GetSelectionOwner._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1402,7 +1402,7 @@ class TestGetSelectionOwner(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetSelectionOwner._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetSelectionOwner._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1435,7 +1435,7 @@ class TestConvertSelection(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ConvertSelection._request.to_binary, (), self.req_args_0)
+        bin = request.ConvertSelection._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1470,7 +1470,7 @@ class TestSendEvent(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SendEvent._request.to_binary, (), self.req_args_0)
+        bin = request.SendEvent._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1515,7 +1515,7 @@ class TestGrabPointer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabPointer._request.to_binary, (), self.req_args_0)
+        bin = request.GrabPointer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1533,7 +1533,7 @@ class TestGrabPointer(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GrabPointer._reply.to_binary, (), self.reply_args_0)
+        bin = request.GrabPointer._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1560,7 +1560,7 @@ class TestUngrabPointer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabPointer._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabPointer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1597,7 +1597,7 @@ class TestGrabButton(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabButton._request.to_binary, (), self.req_args_0)
+        bin = request.GrabButton._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1627,7 +1627,7 @@ class TestUngrabButton(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabButton._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabButton._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1657,7 +1657,7 @@ class TestChangeActivePointerGrab(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeActivePointerGrab._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeActivePointerGrab._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1698,7 +1698,7 @@ class TestGrabKeyboard(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabKeyboard._request.to_binary, (), self.req_args_0)
+        bin = request.GrabKeyboard._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1716,7 +1716,7 @@ class TestGrabKeyboard(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GrabKeyboard._reply.to_binary, (), self.reply_args_0)
+        bin = request.GrabKeyboard._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1743,7 +1743,7 @@ class TestUngrabKeyboard(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabKeyboard._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabKeyboard._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1776,7 +1776,7 @@ class TestGrabKey(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabKey._request.to_binary, (), self.req_args_0)
+        bin = request.GrabKey._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1806,7 +1806,7 @@ class TestUngrabKey(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabKey._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabKey._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1834,7 +1834,7 @@ class TestAllowEvents(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllowEvents._request.to_binary, (), self.req_args_0)
+        bin = request.AllowEvents._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1860,7 +1860,7 @@ class TestGrabServer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabServer._request.to_binary, (), self.req_args_0)
+        bin = request.GrabServer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1886,7 +1886,7 @@ class TestUngrabServer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabServer._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabServer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1929,7 +1929,7 @@ class TestQueryPointer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryPointer._request.to_binary, (), self.req_args_0)
+        bin = request.QueryPointer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1947,7 +1947,7 @@ class TestQueryPointer(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryPointer._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryPointer._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1991,7 +1991,7 @@ class TestGetMotionEvents(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetMotionEvents._request.to_binary, (), self.req_args_0)
+        bin = request.GetMotionEvents._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2009,7 +2009,7 @@ class TestGetMotionEvents(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetMotionEvents._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetMotionEvents._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2052,7 +2052,7 @@ class TestTranslateCoords(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.TranslateCoords._request.to_binary, (), self.req_args_0)
+        bin = request.TranslateCoords._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2070,7 +2070,7 @@ class TestTranslateCoords(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.TranslateCoords._reply.to_binary, (), self.reply_args_0)
+        bin = request.TranslateCoords._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2106,7 +2106,7 @@ class TestWarpPointer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.WarpPointer._request.to_binary, (), self.req_args_0)
+        bin = request.WarpPointer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2136,7 +2136,7 @@ class TestSetInputFocus(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetInputFocus._request.to_binary, (), self.req_args_0)
+        bin = request.SetInputFocus._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2172,7 +2172,7 @@ class TestGetInputFocus(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetInputFocus._request.to_binary, (), self.req_args_0)
+        bin = request.GetInputFocus._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2190,7 +2190,7 @@ class TestGetInputFocus(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetInputFocus._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetInputFocus._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2226,7 +2226,7 @@ class TestQueryKeymap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryKeymap._request.to_binary, (), self.req_args_0)
+        bin = request.QueryKeymap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2244,7 +2244,7 @@ class TestQueryKeymap(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryKeymap._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryKeymap._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2274,7 +2274,7 @@ class TestOpenFont(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.OpenFont._request.to_binary, (), self.req_args_0)
+        bin = request.OpenFont._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2301,7 +2301,7 @@ class TestCloseFont(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CloseFont._request.to_binary, (), self.req_args_0)
+        bin = request.CloseFont._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2358,7 +2358,7 @@ class TestQueryFont(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryFont._request.to_binary, (), self.req_args_0)
+        bin = request.QueryFont._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2376,7 +2376,7 @@ class TestQueryFont(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryFont._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryFont._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2421,7 +2421,7 @@ class TestQueryTextExtents(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryTextExtents._request.to_binary, (), self.req_args_0)
+        bin = request.QueryTextExtents._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2439,7 +2439,7 @@ class TestQueryTextExtents(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryTextExtents._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryTextExtents._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2480,7 +2480,7 @@ class TestListFonts(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListFonts._request.to_binary, (), self.req_args_0)
+        bin = request.ListFonts._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2498,7 +2498,7 @@ class TestListFonts(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListFonts._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListFonts._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2555,7 +2555,7 @@ class TestListFontsWithInfo(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListFontsWithInfo._request.to_binary, (), self.req_args_0)
+        bin = request.ListFontsWithInfo._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2573,7 +2573,7 @@ class TestListFontsWithInfo(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListFontsWithInfo._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListFontsWithInfo._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2607,7 +2607,7 @@ class TestSetFontPath(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetFontPath._request.to_binary, (), self.req_args_0)
+        bin = request.SetFontPath._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2625,7 +2625,7 @@ class TestSetFontPath(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest1(self):
-        bin = apply(request.SetFontPath._request.to_binary, (), self.req_args_1)
+        bin = request.SetFontPath._request.to_binary(*(), **self.req_args_1)
         try:
             assert bin == self.req_bin_1
         except AssertionError:
@@ -2671,7 +2671,7 @@ class TestGetFontPath(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetFontPath._request.to_binary, (), self.req_args_0)
+        bin = request.GetFontPath._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2689,7 +2689,7 @@ class TestGetFontPath(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetFontPath._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetFontPath._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2707,7 +2707,7 @@ class TestGetFontPath(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply1(self):
-        bin = apply(request.GetFontPath._reply.to_binary, (), self.reply_args_1)
+        bin = request.GetFontPath._reply.to_binary(*(), **self.reply_args_1)
         try:
             assert bin == self.reply_bin_1
         except AssertionError:
@@ -2739,7 +2739,7 @@ class TestCreatePixmap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreatePixmap._request.to_binary, (), self.req_args_0)
+        bin = request.CreatePixmap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2766,7 +2766,7 @@ class TestFreePixmap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreePixmap._request.to_binary, (), self.req_args_0)
+        bin = request.FreePixmap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2808,7 +2808,7 @@ class TestCreateGC(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateGC._request.to_binary, (), self.req_args_0)
+        bin = request.CreateGC._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2848,7 +2848,7 @@ class TestChangeGC(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeGC._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeGC._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2878,7 +2878,7 @@ class TestCopyGC(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CopyGC._request.to_binary, (), self.req_args_0)
+        bin = request.CopyGC._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2909,7 +2909,7 @@ class TestSetDashes(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetDashes._request.to_binary, (), self.req_args_0)
+        bin = request.SetDashes._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2953,7 +2953,7 @@ class TestSetClipRectangles(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetClipRectangles._request.to_binary, (), self.req_args_0)
+        bin = request.SetClipRectangles._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2971,7 +2971,7 @@ class TestSetClipRectangles(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest1(self):
-        bin = apply(request.SetClipRectangles._request.to_binary, (), self.req_args_1)
+        bin = request.SetClipRectangles._request.to_binary(*(), **self.req_args_1)
         try:
             assert bin == self.req_bin_1
         except AssertionError:
@@ -2998,7 +2998,7 @@ class TestFreeGC(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreeGC._request.to_binary, (), self.req_args_0)
+        bin = request.FreeGC._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3031,7 +3031,7 @@ class TestClearArea(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ClearArea._request.to_binary, (), self.req_args_0)
+        bin = request.ClearArea._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3069,7 +3069,7 @@ class TestCopyArea(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CopyArea._request.to_binary, (), self.req_args_0)
+        bin = request.CopyArea._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3108,7 +3108,7 @@ class TestCopyPlane(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CopyPlane._request.to_binary, (), self.req_args_0)
+        bin = request.CopyPlane._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3140,7 +3140,7 @@ class TestPolyPoint(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyPoint._request.to_binary, (), self.req_args_0)
+        bin = request.PolyPoint._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3173,7 +3173,7 @@ class TestPolyLine(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyLine._request.to_binary, (), self.req_args_0)
+        bin = request.PolyLine._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3204,7 +3204,7 @@ class TestPolySegment(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolySegment._request.to_binary, (), self.req_args_0)
+        bin = request.PolySegment._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3237,7 +3237,7 @@ class TestPolyRectangle(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyRectangle._request.to_binary, (), self.req_args_0)
+        bin = request.PolyRectangle._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3271,7 +3271,7 @@ class TestPolyArc(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyArc._request.to_binary, (), self.req_args_0)
+        bin = request.PolyArc._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3305,7 +3305,7 @@ class TestFillPoly(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FillPoly._request.to_binary, (), self.req_args_0)
+        bin = request.FillPoly._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3337,7 +3337,7 @@ class TestPolyFillRectangle(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyFillRectangle._request.to_binary, (), self.req_args_0)
+        bin = request.PolyFillRectangle._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3368,7 +3368,7 @@ class TestPolyFillArc(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyFillArc._request.to_binary, (), self.req_args_0)
+        bin = request.PolyFillArc._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3408,7 +3408,7 @@ class TestPutImage(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PutImage._request.to_binary, (), self.req_args_0)
+        bin = request.PutImage._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3458,7 +3458,7 @@ class TestGetImage(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetImage._request.to_binary, (), self.req_args_0)
+        bin = request.GetImage._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3476,7 +3476,7 @@ class TestGetImage(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetImage._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetImage._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -3510,7 +3510,7 @@ class TestPolyText8(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyText8._request.to_binary, (), self.req_args_0)
+        bin = request.PolyText8._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3544,7 +3544,7 @@ class TestPolyText16(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyText16._request.to_binary, (), self.req_args_0)
+        bin = request.PolyText16._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3577,7 +3577,7 @@ class TestImageText8(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ImageText8._request.to_binary, (), self.req_args_0)
+        bin = request.ImageText8._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3611,7 +3611,7 @@ class TestImageText16(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ImageText16._request.to_binary, (), self.req_args_0)
+        bin = request.ImageText16._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3642,7 +3642,7 @@ class TestCreateColormap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateColormap._request.to_binary, (), self.req_args_0)
+        bin = request.CreateColormap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3669,7 +3669,7 @@ class TestFreeColormap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreeColormap._request.to_binary, (), self.req_args_0)
+        bin = request.FreeColormap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3698,7 +3698,7 @@ class TestCopyColormapAndFree(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CopyColormapAndFree._request.to_binary, (), self.req_args_0)
+        bin = request.CopyColormapAndFree._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3725,7 +3725,7 @@ class TestInstallColormap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.InstallColormap._request.to_binary, (), self.req_args_0)
+        bin = request.InstallColormap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3752,7 +3752,7 @@ class TestUninstallColormap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UninstallColormap._request.to_binary, (), self.req_args_0)
+        bin = request.UninstallColormap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3789,7 +3789,7 @@ class TestListInstalledColormaps(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListInstalledColormaps._request.to_binary, (), self.req_args_0)
+        bin = request.ListInstalledColormaps._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3807,7 +3807,7 @@ class TestListInstalledColormaps(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListInstalledColormaps._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListInstalledColormaps._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -3850,7 +3850,7 @@ class TestAllocColor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllocColor._request.to_binary, (), self.req_args_0)
+        bin = request.AllocColor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3868,7 +3868,7 @@ class TestAllocColor(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.AllocColor._reply.to_binary, (), self.reply_args_0)
+        bin = request.AllocColor._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -3913,7 +3913,7 @@ class TestAllocNamedColor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllocNamedColor._request.to_binary, (), self.req_args_0)
+        bin = request.AllocNamedColor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3931,7 +3931,7 @@ class TestAllocNamedColor(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.AllocNamedColor._reply.to_binary, (), self.reply_args_0)
+        bin = request.AllocNamedColor._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -3992,7 +3992,7 @@ class TestAllocColorCells(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllocColorCells._request.to_binary, (), self.req_args_0)
+        bin = request.AllocColorCells._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4010,7 +4010,7 @@ class TestAllocColorCells(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.AllocColorCells._reply.to_binary, (), self.reply_args_0)
+        bin = request.AllocColorCells._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4028,7 +4028,7 @@ class TestAllocColorCells(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply1(self):
-        bin = apply(request.AllocColorCells._reply.to_binary, (), self.reply_args_1)
+        bin = request.AllocColorCells._reply.to_binary(*(), **self.reply_args_1)
         try:
             assert bin == self.reply_bin_1
         except AssertionError:
@@ -4075,7 +4075,7 @@ class TestAllocColorPlanes(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllocColorPlanes._request.to_binary, (), self.req_args_0)
+        bin = request.AllocColorPlanes._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4093,7 +4093,7 @@ class TestAllocColorPlanes(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.AllocColorPlanes._reply.to_binary, (), self.reply_args_0)
+        bin = request.AllocColorPlanes._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4131,7 +4131,7 @@ class TestFreeColors(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreeColors._request.to_binary, (), self.req_args_0)
+        bin = request.FreeColors._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4165,7 +4165,7 @@ class TestStoreColors(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.StoreColors._request.to_binary, (), self.req_args_0)
+        bin = request.StoreColors._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4197,7 +4197,7 @@ class TestStoreNamedColor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.StoreNamedColor._request.to_binary, (), self.req_args_0)
+        bin = request.StoreNamedColor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4249,7 +4249,7 @@ class TestQueryColors(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryColors._request.to_binary, (), self.req_args_0)
+        bin = request.QueryColors._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4267,7 +4267,7 @@ class TestQueryColors(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest1(self):
-        bin = apply(request.QueryColors._request.to_binary, (), self.req_args_1)
+        bin = request.QueryColors._request.to_binary(*(), **self.req_args_1)
         try:
             assert bin == self.req_bin_1
         except AssertionError:
@@ -4285,7 +4285,7 @@ class TestQueryColors(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryColors._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryColors._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4329,7 +4329,7 @@ class TestLookupColor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.LookupColor._request.to_binary, (), self.req_args_0)
+        bin = request.LookupColor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4347,7 +4347,7 @@ class TestLookupColor(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.LookupColor._reply.to_binary, (), self.reply_args_0)
+        bin = request.LookupColor._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4387,7 +4387,7 @@ class TestCreateCursor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateCursor._request.to_binary, (), self.req_args_0)
+        bin = request.CreateCursor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4427,7 +4427,7 @@ class TestCreateGlyphCursor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateGlyphCursor._request.to_binary, (), self.req_args_0)
+        bin = request.CreateGlyphCursor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4454,7 +4454,7 @@ class TestFreeCursor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreeCursor._request.to_binary, (), self.req_args_0)
+        bin = request.FreeCursor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4489,7 +4489,7 @@ class TestRecolorCursor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.RecolorCursor._request.to_binary, (), self.req_args_0)
+        bin = request.RecolorCursor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4530,7 +4530,7 @@ class TestQueryBestSize(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryBestSize._request.to_binary, (), self.req_args_0)
+        bin = request.QueryBestSize._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4548,7 +4548,7 @@ class TestQueryBestSize(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryBestSize._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryBestSize._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4588,7 +4588,7 @@ class TestQueryExtension(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryExtension._request.to_binary, (), self.req_args_0)
+        bin = request.QueryExtension._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4606,7 +4606,7 @@ class TestQueryExtension(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryExtension._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryExtension._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4643,7 +4643,7 @@ class TestListExtensions(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListExtensions._request.to_binary, (), self.req_args_0)
+        bin = request.ListExtensions._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4661,7 +4661,7 @@ class TestListExtensions(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListExtensions._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListExtensions._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4719,7 +4719,7 @@ class TestChangeKeyboardMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeKeyboardMapping._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeKeyboardMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4786,7 +4786,7 @@ class TestGetKeyboardMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetKeyboardMapping._request.to_binary, (), self.req_args_0)
+        bin = request.GetKeyboardMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4804,7 +4804,7 @@ class TestGetKeyboardMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetKeyboardMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetKeyboardMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4835,7 +4835,7 @@ class TestChangeKeyboardControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeKeyboardControl._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeKeyboardControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4879,7 +4879,7 @@ class TestGetKeyboardControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetKeyboardControl._request.to_binary, (), self.req_args_0)
+        bin = request.GetKeyboardControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4897,7 +4897,7 @@ class TestGetKeyboardControl(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetKeyboardControl._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetKeyboardControl._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4924,7 +4924,7 @@ class TestBell(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.Bell._request.to_binary, (), self.req_args_0)
+        bin = request.Bell._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4956,7 +4956,7 @@ class TestChangePointerControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangePointerControl._request.to_binary, (), self.req_args_0)
+        bin = request.ChangePointerControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4993,7 +4993,7 @@ class TestGetPointerControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetPointerControl._request.to_binary, (), self.req_args_0)
+        bin = request.GetPointerControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5011,7 +5011,7 @@ class TestGetPointerControl(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetPointerControl._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetPointerControl._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5042,7 +5042,7 @@ class TestSetScreenSaver(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetScreenSaver._request.to_binary, (), self.req_args_0)
+        bin = request.SetScreenSaver._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5080,7 +5080,7 @@ class TestGetScreenSaver(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetScreenSaver._request.to_binary, (), self.req_args_0)
+        bin = request.GetScreenSaver._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5098,7 +5098,7 @@ class TestGetScreenSaver(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetScreenSaver._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetScreenSaver._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5128,7 +5128,7 @@ class TestChangeHosts(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeHosts._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeHosts._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5166,7 +5166,7 @@ class TestListHosts(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListHosts._request.to_binary, (), self.req_args_0)
+        bin = request.ListHosts._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5184,7 +5184,7 @@ class TestListHosts(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListHosts._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListHosts._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5211,7 +5211,7 @@ class TestSetAccessControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetAccessControl._request.to_binary, (), self.req_args_0)
+        bin = request.SetAccessControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5238,7 +5238,7 @@ class TestSetCloseDownMode(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetCloseDownMode._request.to_binary, (), self.req_args_0)
+        bin = request.SetCloseDownMode._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5265,7 +5265,7 @@ class TestKillClient(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.KillClient._request.to_binary, (), self.req_args_0)
+        bin = request.KillClient._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5301,7 +5301,7 @@ class TestRotateProperties(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.RotateProperties._request.to_binary, (), self.req_args_0)
+        bin = request.RotateProperties._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5328,7 +5328,7 @@ class TestForceScreenSaver(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ForceScreenSaver._request.to_binary, (), self.req_args_0)
+        bin = request.ForceScreenSaver._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5365,7 +5365,7 @@ class TestSetPointerMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetPointerMapping._request.to_binary, (), self.req_args_0)
+        bin = request.SetPointerMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5383,7 +5383,7 @@ class TestSetPointerMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.SetPointerMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.SetPointerMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5419,7 +5419,7 @@ class TestGetPointerMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetPointerMapping._request.to_binary, (), self.req_args_0)
+        bin = request.GetPointerMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5437,7 +5437,7 @@ class TestGetPointerMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetPointerMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetPointerMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5475,7 +5475,7 @@ class TestSetModifierMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetModifierMapping._request.to_binary, (), self.req_args_0)
+        bin = request.SetModifierMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5493,7 +5493,7 @@ class TestSetModifierMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.SetModifierMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.SetModifierMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5530,7 +5530,7 @@ class TestGetModifierMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetModifierMapping._request.to_binary, (), self.req_args_0)
+        bin = request.GetModifierMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5548,7 +5548,7 @@ class TestGetModifierMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetModifierMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetModifierMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5574,7 +5574,7 @@ class TestNoOperation(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.NoOperation._request.to_binary, (), self.req_args_0)
+        bin = request.NoOperation._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:

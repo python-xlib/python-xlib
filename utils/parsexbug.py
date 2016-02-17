@@ -7,7 +7,7 @@ import struct
 
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 def dummy_buffer(str, x, y = sys.maxint):
     return str[x:y]

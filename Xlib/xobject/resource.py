@@ -18,7 +18,7 @@
 
 from Xlib.protocol import request
 
-class Resource:
+class Resource(object):
     def __init__(self, display, rid, owner = 0):
         self.display = display
         self.id = rid
