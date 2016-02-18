@@ -1170,8 +1170,8 @@ class Struct(object):
 
         for f in self.var_fields:
             ret[f.name], data = f.parse_binary_value(data, display,
-                                                     lengths.get(f.name, None),
-                                                     formats.get(f.name, None),
+                                                     lengths.get(f.name),
+                                                     formats.get(f.name),
                                                     )
 
         if not rawdict:
