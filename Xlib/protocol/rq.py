@@ -823,7 +823,7 @@ class EventField(ValueField):
         return value._binary, None, None
 
     def parse_binary_value(self, data, display, length, format):
-        import event
+        from . import event
 
         estruct = display.event_classes.get(ord(data[0]) & 0x7f, event.AnyEvent)
         if type(estruct) == dict:
@@ -1121,11 +1121,11 @@ class Struct(object):
         """
 
         if type(value) is types.TupleType:
-            return apply(self.to_binary, value, {})
+            return self.to_binary(*value)
         elif type(value) is types.DictionaryType:
-            return apply(self.to_binary, (), value)
+            return self.to_binary(**value)
         elif isinstance(value, DictWrapper):
-            return apply(self.to_binary, (), value._data)
+            return self.to_binary(**value._data)
         else:
             raise BadDataError('%s is not a tuple or a list' % (value))
 
@@ -1424,7 +1424,7 @@ class DictWrapper(GetAttrData):
 class Request(object):
     def __init__(self, display, onerror = None, *args, **keys):
         self._errorhandler = onerror
-        self._binary = apply(self._request.to_binary, args, keys)
+        self._binary = self._request.to_binary(*args, **keys)
         self._serial = None
         display.send_request(self, onerror is not None)
 
@@ -1437,7 +1437,7 @@ class Request(object):
 class ReplyRequest(GetAttrData):
     def __init__(self, display, defer = 0, *args, **keys):
         self._display = display
-        self._binary = apply(self._request.to_binary, args, keys)
+        self._binary = self._request.to_binary(*args, **keys)
         self._serial = None
         self._data = None
         self._error = None
@@ -1499,7 +1499,7 @@ class Event(GetAttrData):
 
             keys['sequence_number'] = 0
 
-            self._binary = apply(self._fields.to_binary, (), keys)
+            self._binary = self._fields.to_binary(**keys)
 
             keys['send_event'] = 0
             self._data = keys
