@@ -410,7 +410,7 @@ class String8(ValueField):
         else:
             slen = length
 
-        return str(data[:length]), buffer(data, slen)
+        return str(data[:length]), data[slen:]
 
 
 class String16(ValueField):
@@ -445,7 +445,7 @@ class String16(ValueField):
         else:
             slen = length
 
-        return struct.unpack('>' + 'H' * length, data[:length * 2]), buffer(data, slen * 2)
+        return struct.unpack('>' + 'H' * length, data[:length * 2]), data[slen * 2:]
 
 
 
@@ -489,7 +489,7 @@ class List(ValueField):
 
                     pos = pos + slen
 
-                data = buffer(data, pos)
+                data = data[pos:]
 
         else:
             ret = [None] * int(length)
@@ -514,10 +514,10 @@ class List(ValueField):
 
                     pos = pos + slen
 
-                data = buffer(data, pos)
+                data = data[pos:]
 
         if self.pad:
-            data = buffer(data, len(data) % 4)
+            data = data[len(data) % 4:]
 
         return ret, data
 
@@ -625,15 +625,15 @@ class PropertyData(ValueField):
 
         elif format == 8:
             ret = (8, str(data[:length]))
-            data = buffer(data, length + ((4 - length % 4) % 4))
+            data = data[length + ((4 - length % 4) % 4):]
 
         elif format == 16:
             ret = (16, array(array_unsigned_codes[2], str(data[:2 * length])))
-            data = buffer(data, 2 * (length + length % 2))
+            data = data[2 * (length + length % 2):]
 
         elif format == 32:
             ret = (32, array(array_unsigned_codes[4], str(data[:4 * length])))
-            data = buffer(data, 4 * length)
+            data = data[4 * length:]
 
         return ret, data
 
@@ -728,7 +728,7 @@ class ValueList(Field):
         r = {}
 
         mask = int(struct.unpack(self.maskcode, data[:self.maskcodelen])[0])
-        data = buffer(data, self.maskcodelen)
+        data = data[self.maskcodelen:]
 
         for field, flag in self.fields:
             if mask & flag:
@@ -745,7 +745,7 @@ class ValueList(Field):
                     vals, d = field.parse_binary_value(data[:4], display, None, None)
 
                 r[field.name] = vals
-                data = buffer(data, 4)
+                data = data[4:]
 
         return DictWrapper(r), data
 
@@ -765,7 +765,7 @@ class KeyboardMapping(ValueField):
         for i in range(0, len(a), format):
             ret.append(a[i : i + format])
 
-        return ret, buffer(data, dlen)
+        return ret, data[dlen:]
 
     def pack_value(self, value):
         keycodes = 0
@@ -793,7 +793,7 @@ class ModifierMapping(ValueField):
         for i in range(0, 8):
             ret.append(a[i * format : (i + 1) * format])
 
-        return ret, buffer(data, 8 * format)
+        return ret, data[8 * format:]
 
     def pack_value(self, value):
         if len(value) != 8:
@@ -830,7 +830,7 @@ class EventField(ValueField):
             # this etype refers to a set of sub-events with individual subcodes
             estruct = estruct[ord(data[1])]
 
-        return estruct(display = display, binarydata = data[:32]), buffer(data, 32)
+        return estruct(display = display, binarydata = data[:32]), data[32:]
 
 
 #
@@ -877,7 +877,7 @@ class StrClass(object):
 
     def parse_binary(self, data, display):
         slen = ord(data[0]) + 1
-        return data[1:slen], buffer(data, slen)
+        return data[1:slen], data[slen:]
 
 Str = StrClass()
 
@@ -1270,7 +1270,7 @@ class Struct(object):
             fno = fno + 1
             vno = vno + f.structvalues
 
-        code = code + '  data = buffer(data, %d)\n' % self.static_size
+        code = code + '  data = data[%d:]\n' % self.static_size
 
         # Call parse_binary_value for each var_field, passing the
         # length and format values from the unpacked val.
@@ -1357,11 +1357,11 @@ class TextElements8(ValueField):
             # font change
             if ord(data[0]) == 255:
                 values.append(struct.unpack('>L', str(data[1:5]))[0])
-                data = buffer(data, 5)
+                data = data[5:]
 
             # skip null strings
             elif ord(data[0]) == 0 and ord(data[1]) == 0:
-                data = buffer(data, 2)
+                data = data[2:]
 
             # string with delta
             else:
