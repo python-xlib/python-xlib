@@ -537,7 +537,7 @@ class List(ValueField):
 
         if self.pad:
             dlen = len(data)
-            data = data + '\0' * ((4 - dlen % 4) % 4)
+            data = data + b'\0' * ((4 - dlen % 4) % 4)
 
         return data, len(val), None
 
