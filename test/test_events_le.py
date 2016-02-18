@@ -13,9 +13,11 @@ import array
 
 if sys.version_info[0] >= 3:
     def _ordb(i):
+        """Integer representation of a byte indexed from a byte string - Py3"""
         return i
 else:
     def _ordb(c):
+        """Integer representation of a byte indexed from a byte string - Py2"""
         return ord(c)
 
 class CmpArray:

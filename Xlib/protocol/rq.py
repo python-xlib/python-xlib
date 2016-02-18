@@ -61,6 +61,10 @@ for c in 'bhil':
 # print array_unsigned_codes, struct_to_array_codes
 
 def _method(func, instance):
+    """Dynamically create a new method.
+
+    Exposes a common interface for types.MethodType across Python 3 and 2
+    """
     if sys.version_info[0] >= 3:
         return types.MethodType(func, instance)
     else:
