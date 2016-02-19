@@ -25,26 +25,26 @@ from . import ext
 from . import X
 
 # Xlib.protocol modules
-from . import protocol.display
+from .protocol import display as protocol_display
 from .protocol import request, event, rq
 
 # Xlib.xobjects modules
-import xobject.resource
-import xobject.drawable
-import xobject.fontable
-import xobject.colormap
-import xobject.cursor
+from .xobject import resource
+from .xobject import drawable
+from .xobject import fontable
+from .xobject import colormap
+from .xobject import cursor
 
 _resource_baseclasses = {
-    'resource': xobject.resource.Resource,
-    'drawable': xobject.drawable.Drawable,
-    'window': xobject.drawable.Window,
-    'pixmap': xobject.drawable.Pixmap,
-    'fontable': xobject.fontable.Fontable,
-    'font': xobject.fontable.Font,
-    'gc': xobject.fontable.GC,
-    'colormap': xobject.colormap.Colormap,
-    'cursor': xobject.cursor.Cursor,
+    'resource': resource.Resource,
+    'drawable': drawable.Drawable,
+    'window': drawable.Window,
+    'pixmap': drawable.Pixmap,
+    'fontable': fontable.Fontable,
+    'font': fontable.Font,
+    'gc': fontable.GC,
+    'colormap': colormap.Colormap,
+    'cursor': cursor.Cursor,
     }
 
 _resource_hierarchy = {
@@ -55,14 +55,14 @@ _resource_hierarchy = {
     'fontable': ('font', 'gc')
     }
 
-class _BaseDisplay(protocol.display.Display):
+class _BaseDisplay(protocol_display.Display):
     resource_classes = _resource_baseclasses.copy()
 
     # Implement a cache of atom names, used by Window objects when
     # dealing with some ICCCM properties not defined in Xlib.Xatom
 
     def __init__(self, *args, **keys):
-        protocol.display.Display.__init__(*(self, ) + args, **keys)
+        protocol_display.Display.__init__(*(self, ) + args, **keys)
         self._atom_cache = {}
 
     def get_atom(self, atomname, only_if_exists=0):
@@ -276,8 +276,8 @@ class Display(object):
             self.display_extension_methods[name] = function
 
         else:
-            types = (object, ) + _resource_hierarchy.get(object, ())
-            for type in types:
+            types_ = (object, ) + _resource_hierarchy.get(object, ())
+            for type in types_:
                 cls = _resource_baseclasses[type]
                 if hasattr(cls, name):
                     raise AssertionError('attempting to replace %s method: %s' % (type, name))
@@ -638,7 +638,7 @@ class Display(object):
             self.display.free_resource_id(fid)
             return None
         else:
-            cls = self.display.get_resource_class('font', xobject.fontable.Font)
+            cls = self.display.get_resource_class('font', fontable.Font)
             return cls(self.display, fid, owner = 1)
 
     def list_fonts(self, pattern, max_names):
