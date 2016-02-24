@@ -959,157 +959,85 @@ class Struct(object):
 
         """
 
-        code = ''
-        total_length = str(self.static_size)
-        joins = []
-        args = []
-        defargs = []
-        kwarg = 0
+        # Emulate Python function argument handling with our field names
+        names = [f.name for f in self.fields \
+                 if isinstance(f, ValueField) and f.name]
+        field_args = dict(zip(names, varargs))
+        if set(field_args).intersection(keys):
+            dupes = ", ".join(set(field_args).intersection(keys))
+            raise TypeError("%s arguments were passed both positionally and by keyword" % dupes)
+        field_args.update(keys)
+        for f in self.fields:
+            if f.name and (f.name not in field_args):
+                if f.default is None:
+                    raise TypeError("Missing required argument %s" % f.name)
+                field_args[f.name] = f.default
+        # /argument handling
 
         # First pack all varfields so their lengths and formats are
         # available when we pack their static LengthFields and
         # FormatFields
 
-        i = 0
+        total_length = self.static_size
+        var_vals = {}
+        lengths = {}
+        formats = {}
+
         for f in self.var_fields:
             if f.keyword_args:
-                kwarg = 1
-                kw = ', _keyword_args'
+                v, l, fm = f.pack_value(field_args[f.name], keys)
             else:
-                kw = ''
+                v, l, fm = f.pack_value(field_args[f.name])
+            var_vals[f.name] = v
+            lengths[f.name] = l
+            formats[f.name] = fm
 
-            # Call pack_value method for each field, storing
-            # the return values for later use
-            code = code + ('  _%(name)s, _%(name)s_length, _%(name)s_format'
-                           ' = self.var_fields[%(fno)d].pack_value(%(name)s%(kw)s)\n'
-                           % { 'name': f.name,
-                               'fno': i,
-                               'kw': kw })
-
-            total_length = total_length + ' + len(_%s)' % f.name
-            joins.append('_%s' % f.name)
-
-            i = i + 1
+            total_length += len(v)
 
 
-        # Construct argument list for struct.pack call, packing all
-        # static fields.  First argument is the structcode, the
-        # remaining are values.
+        # Construct item list for struct.pack call, packing all static fields.
+        pack_items = []
 
-        pack_args = ['"%s"' % self.static_codes]
-
-        i = 0
         for f in self.static_fields:
             if isinstance(f, LengthField):
 
                 # If this is a total length field, insert
                 # the calculated field value here
                 if isinstance(f, TotalLengthField):
-                    if self.var_fields:
-                        pack_args.append('self.static_fields[%d].calc_length(%s)'
-                                         % (i, total_length))
-                    else:
-                        pack_args.append(str(f.calc_length(self.static_size)))
+                    pack_items.append(f.calc_length(total_length))
                 else:
-                    pack_args.append('self.static_fields[%d].calc_length(_%s_length)'
-                                       % (i, f.name))
+                    pack_items.append(f.calc_length(lengths[f.name]))
 
             # Format field, just insert the value we got previously
             elif isinstance(f, FormatField):
-                pack_args.append('_%s_format' % f.name)
+                pack_items.append(formats[f.name])
 
             # A constant field, insert its value directly
             elif isinstance(f, ConstantField):
-                pack_args.append(str(f.value))
+                pack_items.append(f.value)
 
             # Value fields
             else:
                 if f.structvalues == 1:
-
                     # If there's a value check/convert function, call it
                     if f.check_value is not None:
-                        pack_args.append('self.static_fields[%d].check_value(%s)'
-                                           % (i, f.name))
-
+                        pack_items.append(f.check_value(field_args[f.name]))
                     # Else just use the argument as provided
                     else:
-                        pack_args.append(f.name)
+                        pack_items.append(field_args[f.name])
 
                 # Multivalue field.  Handled like single valuefield,
                 # but the value are tuple unpacked into seperate arguments
-                # which are appended to pack_args
+                # which are appended to pack_items
                 else:
-                    a = []
-                    for j in range(f.structvalues):
-                        a.append('_%s_%d' % (f.name, j))
-
                     if f.check_value is not None:
-                        code = code + ('  %s = self.static_fields[%d].check_value(%s)\n'
-                                       % (string.join(a, ', '), i, f.name))
+                        pack_items.extend(f.check_value(field_args[f.name]))
                     else:
-                        code = code + '  %s = %s\n' % (string.join(a, ', '), f.name)
+                        pack_items.extend(field_args[f.name])
 
-                    pack_args = pack_args + a
-
-                # Add field to argument list
-                if f.name:
-                    if f.default is None:
-                        args.append(f.name)
-                    else:
-                        defargs.append('%s = %s' % (f.name, repr(f.default)))
-
-            i = i + 1
-
-
-        # Construct call to struct.pack
-        pack = 'struct.pack(%s)' % ', '.join(pack_args)
-
-        # If there are any varfields, we append the packed strings to build
-        # the resulting binary value
-        if self.var_fields:
-            code = code + '  return %s + %s\n' % (pack, ' + '.join(joins))
-
-        # If there's only static fields, return the packed value
-        else:
-            code = code + '  return %s\n' % pack
-
-        # Add all varsize fields to argument list.  We do it here
-        # to ensure that they appear after the static fields.
-        for f in self.var_fields:
-            if f.name:
-                if f.default is None:
-                    args.append(f.name)
-                else:
-                    defargs.append('%s = %s' % (f.name, repr(f.default)))
-
-        args = args + defargs
-        if kwarg:
-            args.append('**_keyword_args')
-
-        # Add function header
-        code = 'def to_binary(self, %s):\n' % ', '.join(args) + code
-
-        # self._pack_code = code
-
-        # print
-        # print code
-        # print
-
-        # Finally, compile function by evaluating it.  This will store
-        # the function in the local variable to_binary, thanks to the
-        # def: line.  Convert it into a instance metod bound to self,
-        # and store it in self.
-
-        # Unfortunately, this creates a circular reference.  However,
-        # Structs are not really created dynamically so the potential
-        # memory leak isn't that serious.  Besides, Python 2.0 has
-        # real garbage collect.
-        ns = {'struct': struct}
-        exec(code, ns)
-        self.to_binary = _method(ns['to_binary'], self)
-
-        # Finally call it manually
-        return self.to_binary(*varargs, **keys)
+        static_part = struct.pack(self.static_codes, *pack_items)
+        var_parts = [var_vals[f.name] for f in self.var_fields]
+        return static_part + b''.join(var_parts)
 
 
     def pack_value(self, value):
@@ -1120,9 +1048,9 @@ class Struct(object):
 
         """
 
-        if type(value) is types.TupleType:
+        if type(value) is tuple:
             return self.to_binary(*value)
-        elif type(value) is types.DictionaryType:
+        elif type(value) is dict:
             return self.to_binary(**value)
         elif isinstance(value, DictWrapper):
             return self.to_binary(**value._data)
@@ -1136,12 +1064,8 @@ class Struct(object):
         Struct objects with no var_fields into Python values.
 
         """
-
-        code = ('def parse_value(self, val, display, rawdict = 0):\n'
-                '  ret = {}\n')
-
+        ret = {}
         vno = 0
-        fno = 0
         for f in self.static_fields:
             # Fields without names should be ignored, and there should
             # not be any length or format fields if this function
@@ -1160,42 +1084,22 @@ class Struct(object):
 
             # Value fields
             else:
-
-                # Get the index or range in val representing this field.
-
-                if f.structvalues == 1:
-                    vrange = str(vno)
-                else:
-                    vrange = '%d:%d' % (vno, vno + f.structvalues)
-
                 # If this field has a parse_value method, call it, otherwise
                 # use the unpacked value as is.
-
-                if f.parse_value is None:
-                    code = code + '  ret["%s"] = val[%s]\n' % (f.name, vrange)
+                if f.structvalues == 1:
+                    field_val = val[vno]
                 else:
-                    code = code + ('  ret["%s"] = self.static_fields[%d].'
-                                   'parse_value(val[%s], display)\n'
-                                   % (f.name, fno, vrange))
+                    field_val = val[vno:vno+f.structvalues]
 
-            fno = fno + 1
+                if f.parse_value is not None:
+                    field_val = f.parse_value(field_val, display, rawdict=rawdict)
+                ret[f.name] = field_val
+
             vno = vno + f.structvalues
 
-        code = code + '  if not rawdict: return DictWrapper(ret)\n'
-        code = code + '  return ret\n'
-
-        # print
-        # print code
-        # print
-
-        # Finally, compile function as for to_binary.
-        ns = {'DictWrapper': DictWrapper}
-        exec(code, ns)
-        self.parse_value = types.MethodType(ns['parse_value'], self, self.__class__)
-
-        # Call it manually
-        return self.parse_value(val, display, rawdict)
-
+        if not rawdict:
+            return DictWrapper(ret)
+        return ret
 
     def parse_binary(self, data, display, rawdict = 0):
 
@@ -1216,17 +1120,12 @@ class Struct(object):
         REMDATA are the remaining binary data, unused by the Struct object.
 
         """
-
-        code = ('def parse_binary(self, data, display, rawdict = 0):\n'
-                '  ret = {}\n'
-                '  val = struct.unpack("%s", data[:%d])\n'
-                % (self.static_codes, self.static_size))
-
+        ret = {}
+        val = struct.unpack(self.static_codes, data[:self.static_size])
         lengths = {}
         formats = {}
 
         vno = 0
-        fno = 0
         for f in self.static_fields:
 
             # Fields without name should be ignored.  This is typically
@@ -1242,63 +1141,42 @@ class Struct(object):
                 f_names = [f.name]
                 if f.other_fields:
                     f_names.extend(f.other_fields)
+                field_val = val[vno]
+                if f.parse_value is not None:
+                    field_val = f.parse_value(field_val, display)
                 for f_name in f_names:
-                    if f.parse_value is None:
-                        lengths[f_name] = 'val[%d]' % vno
-                    else:
-                        lengths[f_name] = ('self.static_fields[%d].'
-                                           'parse_value(val[%d], display)'
-                                           % (fno, vno))
+                    lengths[f_name] = field_val
 
             elif isinstance(f, FormatField):
-                formats[f.name] = 'val[%d]' % vno
+                formats[f.name] = val[vno]
 
             # Treat value fields the same was as in parse_value.
             else:
                 if f.structvalues == 1:
-                    vrange = str(vno)
+                    field_val = val[vno]
                 else:
-                    vrange = '%d:%d' % (vno, vno + f.structvalues)
+                    field_val = val[vno:vno+f.structvalues]
 
-                if f.parse_value is None:
-                    code = code + '  ret["%s"] = val[%s]\n' % (f.name, vrange)
-                else:
-                    code = code + ('  ret["%s"] = self.static_fields[%d].'
-                                   'parse_value(val[%s], display)\n'
-                                   % (f.name, fno, vrange))
+                if f.parse_value is not None:
+                    field_val = f.parse_value(field_val, display)
+                ret[f.name] = field_val
 
-            fno = fno + 1
             vno = vno + f.structvalues
 
-        code = code + '  data = data[%d:]\n' % self.static_size
+        data = data[self.static_size:]
 
         # Call parse_binary_value for each var_field, passing the
         # length and format values from the unpacked val.
 
-        fno = 0
         for f in self.var_fields:
-            code = code + ('  ret["%s"], data = '
-                           'self.var_fields[%d].parse_binary_value'
-                           '(data, display, %s, %s)\n'
-                           % (f.name, fno,
-                              lengths.get(f.name, 'None'),
-                              formats.get(f.name, 'None')))
-            fno = fno + 1
+            ret[f.name], data = f.parse_binary_value(data, display,
+                                                     lengths.get(f.name),
+                                                     formats.get(f.name),
+                                                    )
 
-        code = code + '  if not rawdict: ret = DictWrapper(ret)\n'
-        code = code + '  return ret, data\n'
-
-        # print
-        # print code
-        # print
-
-        # Finally, compile function as for to_binary.
-        ns = {'struct': struct, 'DictWrapper': DictWrapper}
-        exec(code, ns)
-        self.parse_binary = _method(ns['parse_binary'], self)
-
-        # Call it manually
-        return self.parse_binary(data, display, rawdict)
+        if not rawdict:
+            ret = DictWrapper(ret)
+        return ret, data
 
 
 class TextElements8(ValueField):
