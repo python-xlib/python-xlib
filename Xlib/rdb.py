@@ -381,7 +381,7 @@ class _Match(object):
     def __init__(self, path, dbs):
         self.path = path
 
-        if type(dbs) is types.TupleType:
+        if type(dbs) is tuple:
             self.skip = 0
             self.group = dbs
 

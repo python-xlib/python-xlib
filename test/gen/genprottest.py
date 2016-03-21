@@ -97,7 +97,7 @@ def build_request(endian):
             sys.stderr.write('missing def for request: %s\n' % name)
         else:
             vardefs = request_var_defs.get(name, [()])
-            if type(vardefs) is not types.ListType:
+            if type(vardefs) is not list:
                 vardefs = [vardefs]
 
             i = 0
@@ -129,7 +129,7 @@ def build_request(endian):
                 sys.stderr.write('missing def for reply: %s\n' % name)
             else:
                 vardefs = reply_var_defs.get(name, ())
-                if type(vardefs) is not types.ListType:
+                if type(vardefs) is not list:
                     vardefs = [vardefs]
 
                 i = 0
@@ -302,7 +302,7 @@ def build_event(endian):
             sys.stderr.write('missing def for event: %s\n' % name)
         else:
             vardefs = event_var_defs.get(name, [()])
-            if type(vardefs) is not types.ListType:
+            if type(vardefs) is not list:
                 vardefs = [vardefs]
 
             i = 0

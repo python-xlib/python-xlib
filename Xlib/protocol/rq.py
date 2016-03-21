@@ -421,7 +421,7 @@ class String16(ValueField):
         self.pad = pad
 
     def pack_value(self, val):
-        # Convert 8-byte string into 16-byte list
+        """Convert 8-byte string into 16-byte list"""
         if type(val) is types.StringType:
             val = map(lambda c: ord(c), val)
 
@@ -573,7 +573,7 @@ class Object(ValueField):
         return self.type.pack_value(val)
 
     def check_value(self, val):
-        if type(val) is types.TupleType:
+        if type(val) is tuple:
             vals = []
             i = 0
             for f in self.type.fields:
@@ -589,7 +589,7 @@ class Object(ValueField):
                     i = i + 1
             return vals
 
-        if type(val) is types.DictType:
+        if type(val) is dict:
             data = val
         elif isinstance(val, DictWrapper):
             data = val._data
@@ -655,7 +655,7 @@ class PropertyData(ValueField):
             dlen = vlen / size
 
         else:
-            if type(val) is types.TupleType:
+            if type(val) is tuple:
                 val = list(val)
 
             size = fmt / 8
@@ -1196,10 +1196,10 @@ class TextElements8(ValueField):
             # A tuple, it should be (delta, string)
             # Encode it as one or more textitems
 
-            if type(v) in (types.TupleType, types.DictType) or \
+            if type(v) in (tuple, dict) or \
                isinstance(v, DictWrapper):
 
-                if type(v) is types.TupleType:
+                if type(v) is tuple:
                     delta, str = v
                 else:
                     delta = v['delta']
