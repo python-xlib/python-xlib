@@ -6,7 +6,6 @@ import os
 sys.path.insert(1, os.path.join(sys.path[0], '../..'))
 
 import types
-import string
 import struct
 from whrandom import randint, choice
 
@@ -35,11 +34,11 @@ def read_defs():
     event_defs = {}
 
     for line in sys.stdin.readlines():
-        parts = string.split(string.strip(line))
+        parts = line.strip().split()
 
         fields = []
         for f in parts[2:]:
-            fields.append(string.split(f, ':'))
+            fields.append(f.split(':'))
 
         if parts[0] == 'REQUEST':
             request_defs[parts[1]] = fields
@@ -176,7 +175,7 @@ def build_request(endian):
     reply_bins = {}
     pc = os.popen('./genrequest', 'r')
     for line in pc.readlines():
-        parts = string.split(string.strip(line))
+        parts = line.strip().split()
         if parts[0] == 'REQUEST':
             req_bins[parts[1]] = parts[2]
         elif parts[0] == 'REPLY':
@@ -347,7 +346,7 @@ def build_event(endian):
     evt_bins = {}
     pc = os.popen('./genevent', 'r')
     for line in pc.readlines():
-        parts = string.split(string.strip(line))
+        parts = line.strip().split()
         if parts[0] == 'EVENT':
             evt_bins[parts[1]] = parts[2]
 
@@ -488,7 +487,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                                   'xKeymapEvent'):
                     extra_vars.append('%s %s_def[%d] = { %s };'
                                       % (ctype, f.name, vflen,
-                                         string.join(map(str, vfdata), ', ')))
+                                         ', '.join(map(str, vfdata))))
                     varfs[f.name] = ('memcpy(data.xstruct.map, %s_def, sizeof(%s_def));'
                                      % (f.name, f.name),
                                      vflen, 0)
@@ -497,7 +496,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                              % (ctype, f.name, deflen))
                     extra_vars.append('%s %s_def[%d] = { %s };'
                                       % (ctype, f.name, vflen,
-                                         string.join(map(str, vfdata), ', ')))
+                                         ', '.join(map(str, vfdata))))
                     varfs[f.name] = ('memcpy(data.%s, %s_def, sizeof(%s_def));'
                                      % (f.name, f.name, f.name),
                                      vflen, 0)
@@ -522,7 +521,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
 
                 extra_vars.append('struct { xHostEntry e; CARD8 name[4]; } %s_def[%d] = { %s };'
                                   % (f.name, len(pydata),
-                                     string.join(cdata, ', ')))
+                                     ', '.join(cdata)))
 
                 varfs[f.name] = ('memcpy(data.%s, %s_def, sizeof(%s_def));'
                                  % (f.name, f.name, f.name),
@@ -551,13 +550,13 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                         pyd[f.type.fields[sj].name] = d[sj]
 
                     pydata.append(pyd)
-                    defdata.append('{ ' + string.join(map(str, d), ', ') + ' }')
+                    defdata.append('{ ' + ', '.join(map(str, d)) + ' }')
 
                 fc.write('x%s %s[%d];\n        ' % (vfname, f.name, vflen))
 
                 extra_vars.append('x%s %s_def[%d] = { %s };'
                                   % (vfname, f.name, vflen,
-                                     string.join(defdata, ', ')))
+                                     ', '.join(defdata)))
                 varfs[f.name] = ('memcpy(data.%s, %s_def, sizeof(%s_def));'
                                  % (f.name, f.name, f.name),
                                  vflen, 0)
@@ -623,7 +622,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
 
             # vlcode.append('data.%s_flags = %d;' % (f.name, flags))
 
-            varfs[f.name] = (string.join(vlcode, ' '), 0, 0)
+            varfs[f.name] = (' '.join(vlcode), 0, 0)
             args[f.name] = vlargs
 
         #
@@ -679,7 +678,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
             fc.write('%s %s[%d];\n      ' % (ctype, f.name, len(cdata)))
             extra_vars.append('%s %s_def[%d] = { %s };'
                               % (ctype, f.name, len(cdata),
-                                 string.join(cdata, ', ')))
+                                 ', '.join(cdata)))
             varfs[f.name] = ('memcpy(data.%s, %s_def, sizeof(%s_def));'
                              % (f.name, f.name, f.name),
                              length, format)
@@ -699,11 +698,11 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
             elif format == 16:
                 ctype = 'CARD16'
                 clen = length + length % 2
-                cdata = string.join(map(str, data), ', ')
+                cdata = ', '.join(map(str, data))
             elif format == 32:
                 ctype = 'CARD32'
                 clen = length
-                cdata = string.join(map(str, data), ', ')
+                cdata = ', '.join(map(str, data))
 
             if not isinstance(f, rq.FixedPropertyData):
                 fc.write('%s %s[%d];\n        ' %
@@ -825,7 +824,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                 pyd[pyf.type.fields[sj].name] = d[sj]
 
             fc.write('{ %s def = { %s };\n      '
-                     % (t, string.join(map(str, d), ', ')))
+                     % (t, ', '.join(map(str, d))))
             fc.write('memcpy(&data.xstruct.%s, &def, sizeof(def)); }\n        ' % f)
             args[pyf.name] = pyd
 
@@ -870,7 +869,7 @@ def pad4(l):
     return l + (4 - l % 4) % 4
 
 def cstring(s):
-    return '"' + string.join(map(lambda c: '\\x%x' % ord(c), s), '') + '"'
+    return '"' + ''.join(map(lambda c: '\\x%x' % ord(c), s)) + '"'
 
 
 def build_args(args):
@@ -878,7 +877,7 @@ def build_args(args):
     for kw, val in args.items():
         kwlist.append("            '%s': %s,\n" % (kw, repr(val)))
 
-    return '{\n' + string.join(kwlist, '') + '            }'
+    return '{\n' + ''.join(kwlist) + '            }'
 
 def build_bin(bin):
     bins = []
@@ -892,7 +891,7 @@ def build_bin(bin):
         except IndexError:
             bins2.append("'%s'" % bins[i])
 
-    return string.join(bins2, ' \\\n            ')
+    return ' \\\n            '.join(bins2)
 
 
 request_var_defs = {
@@ -1013,7 +1012,6 @@ PY_HEADER = r'''#!/usr/bin/env python
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-import string
 import unittest
 from Xlib.protocol import request, rq, event
 import Xlib.protocol.event
@@ -1040,7 +1038,7 @@ class CmpArray:
 rq.array = CmpArray
 
 def tohex(bin):
-    bin = string.join(map(lambda c: '\\x%%02x' %% ord(c), bin), '')
+    bin = ''.join(map(lambda c: '\\x%%02x' %% ord(c), bin))
 
     bins = []
     for i in range(0, len(bin), 16):
@@ -1053,7 +1051,7 @@ def tohex(bin):
         except IndexError:
             bins2.append("'%%s'" %% bins[i])
 
-    return string.join(bins2, ' \\\n            ')
+    return ' \\\n            '.join(bins2)
 
 class DummyDisplay:
     def get_resource_class(self, x):

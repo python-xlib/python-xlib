@@ -21,7 +21,6 @@
 import sys
 import traceback
 import struct
-import string
 from array import array
 import types
 
@@ -533,7 +532,7 @@ class List(ValueField):
             for v in val:
                 data.append(self.type.pack_value(v))
 
-            data = string.join(data, '')
+            data = ''.join(data)
 
         if self.pad:
             dlen = len(data)
@@ -1391,7 +1390,7 @@ class Event(GetAttrData):
                 val = val | 0x80
             kwlist.append('%s = %s' % (kw, repr(val)))
 
-        kws = string.join(kwlist, ', ')
+        kws = ', '.join(kwlist)
         return '%s(%s)' % (self.__class__, kws)
 
     def __cmp__(self, other):

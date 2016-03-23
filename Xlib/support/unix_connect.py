@@ -17,7 +17,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re
-import string
+import locale
 import os
 import platform
 import socket
@@ -106,8 +106,8 @@ def new_get_auth(sock, dname, host, dno):
 
         # Convert the prettyprinted IP number into 4-octet string.
         # Sometimes these modules are too damn smart...
-        octets = string.split(sock.getpeername()[0], '.')
-        addr = string.join(map(lambda x: chr(int(x)), octets), '')
+        octets = sock.getpeername()[0].split('.')
+        addr = ''.join(map(lambda x: chr(int(x)), octets))
     else:
         family = xauth.FamilyLocal
         addr = socket.gethostname()
@@ -143,9 +143,9 @@ def old_get_auth(sock, dname, host, dno):
         #      DISPLAY SCHEME COOKIE
         # We're interested in the two last parts for the
         # connection establishment
-        lines = string.split(data, '\n')
+        lines = data.split('\n')
         if len(lines) >= 1:
-            parts = string.split(lines[0], None, 2)
+            parts = lines[0].split(None, 2)
             if len(parts) == 3:
                 auth_name = parts[1]
                 hexauth = parts[2]
@@ -153,7 +153,7 @@ def old_get_auth(sock, dname, host, dno):
 
                 # Translate hexcode into binary
                 for i in range(0, len(hexauth), 2):
-                    auth = auth + chr(string.atoi(hexauth[i:i+2], 16))
+                    auth = auth + chr(locale.atoi(hexauth[i:i+2], 16))
 
                 auth_data = auth
     except os.error:

@@ -16,8 +16,6 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import string
-
 from Xlib import X, Xatom, Xutil
 from Xlib.protocol import request, rq
 
@@ -668,7 +666,7 @@ class Window(Drawable):
         if d is None or d.format != 8:
             return None
         else:
-            parts = string.split(d.value, '\0')
+            parts = d.value.split('\0')
             if len(parts) < 2:
                 return None
             else:

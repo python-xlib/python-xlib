@@ -22,8 +22,7 @@
 
 
 # Standard modules
-import string
-import types
+import locale
 import re
 import sys
 
@@ -84,7 +83,7 @@ class ResourceDB(object):
         """
 
         # First split string into lines
-        lines = string.split(data, '\n')
+        lines = data.split('\n')
 
         while lines:
             line = lines[0]
@@ -122,15 +121,15 @@ class ResourceDB(object):
             for i in range(1, len(splits), 2):
                 s = splits[i]
                 if len(s) == 3:
-                    splits[i] = chr(string.atoi(s, 8))
+                    splits[i] = chr(locale.atoi(s, 8))
                 elif s == 'n':
                     splits[i] = '\n'
 
             # strip the last value part to get rid of any
             # unescaped blanks
-            splits[-1] = string.rstrip(splits[-1])
+            splits[-1] = splits[-1].rstrip()
 
-            value = string.join(splits, '')
+            value = ''.join(splits)
 
             self.insert(res, value)
 
@@ -199,8 +198,8 @@ class ResourceDB(object):
         # Split name and class into their parts
         name, cls = keys_tuple
 
-        namep = string.split(name, '.')
-        clsp = string.split(cls, '.')
+        namep = name.split('.')
+        clsp = cls.split('.')
 
         # It is an error for name and class to have different number
         # of parts
@@ -537,7 +536,7 @@ def output_escape(value):
                       ('\000', '\\000'),
                       ('\n', '\\n')):
 
-        value = string.replace(value, char, esc)
+        value = value.replace(char, esc)
 
     # If first or last character is space or tab, escape them.
     if value[0] in ' \t':
