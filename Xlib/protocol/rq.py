@@ -21,7 +21,6 @@
 import sys
 import traceback
 import struct
-import string
 from array import array
 import types
 
@@ -421,8 +420,8 @@ class String16(ValueField):
         self.pad = pad
 
     def pack_value(self, val):
-        # Convert 8-byte string into 16-byte list
-        if type(val) is types.StringType:
+        """Convert 8-byte string into 16-byte list"""
+        if type(val) is bytes:
             val = map(lambda c: ord(c), val)
 
         slen = len(val)
@@ -533,7 +532,7 @@ class List(ValueField):
             for v in val:
                 data.append(self.type.pack_value(v))
 
-            data = string.join(data, '')
+            data = ''.join(data)
 
         if self.pad:
             dlen = len(data)
@@ -573,7 +572,7 @@ class Object(ValueField):
         return self.type.pack_value(val)
 
     def check_value(self, val):
-        if type(val) is types.TupleType:
+        if type(val) is tuple:
             vals = []
             i = 0
             for f in self.type.fields:
@@ -589,7 +588,7 @@ class Object(ValueField):
                     i = i + 1
             return vals
 
-        if type(val) is types.DictType:
+        if type(val) is dict:
             data = val
         elif isinstance(val, DictWrapper):
             data = val._data
@@ -643,7 +642,7 @@ class PropertyData(ValueField):
         if fmt not in (8, 16, 32):
             raise BadDataError('Invalid property data format %d' % fmt)
 
-        if type(val) is types.StringType:
+        if type(val) is bytes:
             size = fmt / 8
             vlen = len(val)
             if vlen % size:
@@ -655,7 +654,7 @@ class PropertyData(ValueField):
             dlen = vlen / size
 
         else:
-            if type(val) is types.TupleType:
+            if type(val) is tuple:
                 val = list(val)
 
             size = fmt / 8
@@ -1190,16 +1189,16 @@ class TextElements8(ValueField):
 
         for v in value:
             # Let values be simple strings, meaning a delta of 0
-            if type(v) is types.StringType:
+            if type(v) is bytes:
                 v = (0, v)
 
             # A tuple, it should be (delta, string)
             # Encode it as one or more textitems
 
-            if type(v) in (types.TupleType, types.DictType) or \
+            if type(v) in (tuple, dict) or \
                isinstance(v, DictWrapper):
 
-                if type(v) is types.TupleType:
+                if type(v) is tuple:
                     delta, str = v
                 else:
                     delta = v['delta']
@@ -1391,7 +1390,7 @@ class Event(GetAttrData):
                 val = val | 0x80
             kwlist.append('%s = %s' % (kw, repr(val)))
 
-        kws = string.join(kwlist, ', ')
+        kws = ', '.join(kwlist)
         return '%s(%s)' % (self.__class__, kws)
 
     def __cmp__(self, other):

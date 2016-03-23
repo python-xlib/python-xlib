@@ -3,7 +3,6 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-import string
 import unittest
 from Xlib.protocol import request, rq, event
 import Xlib.protocol.event

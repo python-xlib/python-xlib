@@ -3,7 +3,6 @@
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-import string
 import unittest
 from Xlib.protocol import request, rq, event
 import Xlib.protocol.event
@@ -30,7 +29,7 @@ class CmpArray:
 rq.array = CmpArray
 
 def tohex(bin):
-    bin = string.join(map(lambda c: '\\x%02x' % ord(c), bin), '')
+    bin = ''.join(map(lambda c: '\\x%02x' % ord(c), bin))
 
     bins = []
     for i in range(0, len(bin), 16):
@@ -43,7 +42,7 @@ def tohex(bin):
         except IndexError:
             bins2.append("'%s'" % bins[i])
 
-    return string.join(bins2, ' \\\n            ')
+    return ' \\\n            '.join(bins2)
 
 class DummyDisplay:
     def get_resource_class(self, x):

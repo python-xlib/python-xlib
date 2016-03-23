@@ -17,7 +17,6 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import sys
-import string
 
 # List the modules which contain the corresponding functions
 
@@ -43,7 +42,7 @@ _default_auth_mod = 'unix_connect'
 # Figure out which OS we're using.
 # sys.platform is either "OS-ARCH" or just "OS".
 
-_parts = string.split(sys.platform, '-')
+_parts = sys.platform.split('-')
 platform = _parts[0]
 del _parts
 
