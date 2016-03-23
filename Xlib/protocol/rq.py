@@ -422,7 +422,7 @@ class String16(ValueField):
 
     def pack_value(self, val):
         """Convert 8-byte string into 16-byte list"""
-        if type(val) is types.StringType:
+        if type(val) is bytes:
             val = map(lambda c: ord(c), val)
 
         slen = len(val)
@@ -643,7 +643,7 @@ class PropertyData(ValueField):
         if fmt not in (8, 16, 32):
             raise BadDataError('Invalid property data format %d' % fmt)
 
-        if type(val) is types.StringType:
+        if type(val) is bytes:
             size = fmt / 8
             vlen = len(val)
             if vlen % size:
@@ -1190,7 +1190,7 @@ class TextElements8(ValueField):
 
         for v in value:
             # Let values be simple strings, meaning a delta of 0
-            if type(v) is types.StringType:
+            if type(v) is bytes:
                 v = (0, v)
 
             # A tuple, it should be (delta, string)

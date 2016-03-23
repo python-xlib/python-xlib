@@ -69,7 +69,7 @@ class ResourceDB(object):
 
         """
 
-        if type(file) is types.StringType:
+        if type(file) is bytes:
             file = open(file, 'r')
 
         self.insert_string(file.read())
