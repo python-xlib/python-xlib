@@ -67,6 +67,15 @@ def _method(func, instance):
     else:
         return types.MethodType(func, instance, type(instance))
 
+def _to_ord(ch):
+    """Get char code in a cross-Python way"""
+    if isinstance(ch, int):
+        # Python 3: bytes char is already an integer, no need to call ord()
+        return ch
+    else:
+        # Python 2: string char required to call ord()
+        return ord(ch)
+
 
 class Field(object):
     """Field objects represent the data fields of a Struct.
@@ -387,23 +396,24 @@ class String8(ValueField):
         self.pad = pad
 
     def pack_value(self, val):
-        slen = len(val)
+        val_bytes = val.encode()
+        slen = len(val_bytes)
 
         if self.pad:
-            return val + b'\0' * ((4 - slen % 4) % 4), slen, None
+            return val_bytes + b'\0' * ((4 - slen % 4) % 4), slen, None
         else:
-            return val, slen, None
+            return val_bytes, slen, None
 
     def parse_binary_value(self, data, display, length, format):
         if length is None:
-            return str(data), ''
+            return data.decode(), b''
 
         if self.pad:
             slen = length + ((4 - length % 4) % 4)
         else:
             slen = length
 
-        return str(data[:length]), data[slen:]
+        return data[:length].decode(), data[slen:]
 
 
 class String16(ValueField):
@@ -621,11 +631,11 @@ class PropertyData(ValueField):
             data = data[length + ((4 - length % 4) % 4):]
 
         elif format == 16:
-            ret = (16, array(array_unsigned_codes[2], str(data[:2 * length]).encode()))
+            ret = (16, array(array_unsigned_codes[2], data[:2 * length].decode().encode()))
             data = data[2 * (length + length % 2):]
 
         elif format == 32:
-            ret = (32, array(array_unsigned_codes[4], str(data[:4 * length]).encode()))
+            ret = (32, array(array_unsigned_codes[4], data[:4 * length].decode().encode()))
             data = data[4 * length:]
 
         return ret, data
@@ -780,7 +790,7 @@ class ModifierMapping(ValueField):
     structcode = None
 
     def parse_binary_value(self, data, display, length, format):
-        a = array(array_unsigned_codes[1], str(data[:8 * format]))
+        a = array(array_unsigned_codes[1], data[:8 * format])
 
         ret = []
         for i in range(0, 8):
@@ -818,10 +828,10 @@ class EventField(ValueField):
     def parse_binary_value(self, data, display, length, format):
         from . import event
 
-        estruct = display.event_classes.get(ord(data[0]) & 0x7f, event.AnyEvent)
+        estruct = display.event_classes.get(_to_ord(data[0]) & 0x7f, event.AnyEvent)
         if type(estruct) == dict:
             # this etype refers to a set of sub-events with individual subcodes
-            estruct = estruct[ord(data[1])]
+            estruct = estruct[_to_ord(data[1])]
 
         return estruct(display = display, binarydata = data[:32]), data[32:]
 
@@ -869,7 +879,7 @@ class StrClass(object):
         return chr(len(val)) + val
 
     def parse_binary(self, data, display):
-        slen = ord(data[0]) + 1
+        slen = _to_ord(data[0]) + 1
         return data[1:slen], data[slen:]
 
 Str = StrClass()
@@ -1222,12 +1232,12 @@ class TextElements8(ValueField):
                 break
 
             # font change
-            if ord(data[0]) == 255:
-                values.append(struct.unpack('>L', str(data[1:5]).encode())[0])
+            if _to_ord(data[0]) == 255:
+                values.append(struct.unpack('>L', data[1:5].decode().encode())[0])
                 data = data[5:]
 
             # skip null strings
-            elif ord(data[0]) == 0 and ord(data[1]) == 0:
+            elif _to_ord(data[0]) == 0 and _to_ord(data[1]) == 0:
                 data = data[2:]
 
             # string with delta
