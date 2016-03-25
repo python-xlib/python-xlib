@@ -54,10 +54,10 @@ class Window:
 
 		bggc.change(foreground=self.screen.white_pixel)
 
-		bgpm.arc(bggc, -bgsize / 2, 0, bgsize, bgsize, 0, 360 * 64)
-		bgpm.arc(bggc, bgsize / 2, 0, bgsize, bgsize, 0, 360 * 64)
-		bgpm.arc(bggc, 0, -bgsize / 2, bgsize, bgsize, 0, 360 * 64)
-		bgpm.arc(bggc, 0, bgsize / 2, bgsize, bgsize, 0, 360 * 64)
+		bgpm.arc(bggc, -bgsize // 2, 0, bgsize, bgsize, 0, 360 * 64)
+		bgpm.arc(bggc, bgsize // 2, 0, bgsize, bgsize, 0, 360 * 64)
+		bgpm.arc(bggc, 0, -bgsize // 2, bgsize, bgsize, 0, 360 * 64)
+		bgpm.arc(bggc, 0, bgsize // 2, bgsize, bgsize, 0, 360 * 64)
 
 		# Actual window
 		self.window = self.screen.root.create_window(
@@ -129,8 +129,8 @@ class Window:
 				if e.detail == 1:
 					print "Moving child window."
 					self.childWindow.configure(
-						x=e.event_x - self.childWidth / 2,
-						y=e.event_y - self.childHeight / 2
+						x=e.event_x - self.childWidth // 2,
+						y=e.event_y - self.childHeight // 2
 						)
 					self.d.flush()
 

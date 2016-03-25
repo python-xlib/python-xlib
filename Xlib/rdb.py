@@ -460,7 +460,7 @@ def bin_insert(list, element):
     upper = len(list) - 1
 
     while lower <= upper:
-        center = (lower + upper) / 2
+        center = (lower + upper) // 2
         if element < list[center]:
             upper = center - 1
         elif element > list[center]:

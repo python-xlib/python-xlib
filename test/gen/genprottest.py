@@ -232,7 +232,7 @@ def build_request(endian):
         for i in range(0, reqs + 1):
             fpy.write('''
     def testPackRequest%(n)d(self):
-        bin = apply(request.%(req)s._request.to_binary, (), self.req_args_%(n)d)
+        bin = request.%(req)s._request.to_binary(*(), **self.req_args_%(n)d)
         self.assert_(bin == self.req_bin_%(n)d, tohex(bin))
 
     def testUnpackRequest%(n)d(self):
@@ -244,7 +244,7 @@ def build_request(endian):
         for i in range(0, replies + 1):
             fpy.write('''
     def testPackReply%(n)d(self):
-        bin = apply(request.%(req)s._reply.to_binary, (), self.reply_args_%(n)d)
+        bin = request.%(req)s._reply.to_binary(*(), **self.reply_args_%(n)d)
         self.assert_(bin == self.reply_bin_%(n)d, tohex(bin))
 
     def testUnpackReply%(n)d(self):
@@ -394,7 +394,7 @@ def build_event(endian):
         for i in range(0, evts + 1):
             fpy.write('''
     def testPack%(n)d(self):
-        bin = apply(event.%(evt)s._fields.to_binary, (), self.evt_args_%(n)d)
+        bin = event.%(evt)s._fields.to_binary(*(), **self.evt_args_%(n)d)
         self.assert_(bin == self.evt_bin_%(n)d, tohex(bin))
 
     def testUnpack%(n)d(self):
@@ -790,14 +790,14 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
             assert f == 'length'
 
             fc.write('      assert(sizeof(data) % 4 == 0);\n')
-            fc.write('      data.xstruct.length = sizeof(data) / 4;\n')
+            fc.write('      data.xstruct.length = sizeof(data) // 4;\n')
 
         elif isinstance(pyf, rq.ReplyLength):
             assert f == 'length'
 
             fc.write('      assert(sizeof(data) % 4 == 0);\n')
             fc.write('      assert(sizeof(data) >= 32);\n')
-            fc.write('      data.xstruct.length = (sizeof(data) - 32) / 4;\n')
+            fc.write('      data.xstruct.length = (sizeof(data) - 32) // 4;\n')
 
         elif isinstance(pyf, rq.LengthOf):
             fc.write('      data.xstruct.%s = %d;\n' % (f, varfs[pyf.name][1]))
@@ -1021,7 +1021,7 @@ import array
 
 class CmpArray:
     def __init__(self, *args, **kws):
-        self.array = apply(array.array, args, kws)
+        self.array = array.array(*args, **kws)
 
     def __len__(self):
         return len(self.array)
