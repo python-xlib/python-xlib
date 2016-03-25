@@ -390,7 +390,7 @@ class String8(ValueField):
         slen = len(val)
 
         if self.pad:
-            return val + '\0' * ((4 - slen % 4) % 4), slen, None
+            return val + b'\0' * ((4 - slen % 4) % 4), slen, None
         else:
             return val, slen, None
 
@@ -421,9 +421,9 @@ class String16(ValueField):
         slen = len(val)
 
         if self.pad:
-            pad = '\0\0' * (slen % 2)
+            pad = b'\0\0' * (slen % 2)
         else:
-            pad = ''
+            pad = b''
 
         return struct.pack(*('>' + 'H' * slen, ) + tuple(val)) + pad, slen, None
 
@@ -526,11 +526,11 @@ class List(ValueField):
             for v in val:
                 data.append(self.type.pack_value(v))
 
-            data = ''.join(data)
+            data = b''.join(data)
 
         if self.pad:
             dlen = len(data)
-            data = data + '\0' * ((4 - dlen % 4) % 4)
+            data = data + b'\0' * ((4 - dlen % 4) % 4)
 
         return data, len(val), None
 
@@ -641,9 +641,9 @@ class PropertyData(ValueField):
             vlen = len(val)
             if vlen % size:
                 vlen = vlen - vlen % size
-                data = val[:vlen]
+                data = val[:vlen].encode()
             else:
-                data = val
+                data = val.encode()
 
             dlen = vlen // size
 
@@ -656,7 +656,7 @@ class PropertyData(ValueField):
             dlen = len(val)
 
         dl = len(data)
-        data = data + '\0' * ((4 - dl % 4) % 4)
+        data = data + b'\0' * ((4 - dl % 4) % 4)
 
         return data, dlen, fmt
 
@@ -699,7 +699,7 @@ class ValueList(Field):
 
     def pack_value(self, arg, keys):
         mask = 0
-        data = ''
+        data = b''
 
         if arg == self.default:
             arg = keys
@@ -713,7 +713,7 @@ class ValueList(Field):
                     val = field.check_value(val)
 
                 d = struct.pack('=' + field.structcode, val)
-                data = data + d + '\0' * (4 - len(d))
+                data = data + d + b'\0' * (4 - len(d))
 
         return struct.pack(self.maskcode, mask) + data, None, None
 
@@ -1174,7 +1174,7 @@ class TextElements8(ValueField):
                               String8('string', pad = 0) )
 
     def pack_value(self, value):
-        data = ''
+        data = b''
         args = {}
 
         for v in value:
@@ -1213,7 +1213,7 @@ class TextElements8(ValueField):
 
         # Pad out to four byte length
         dlen = len(data)
-        return data + '\0' * ((4 - dlen % 4) % 4), None, None
+        return data + b'\0' * ((4 - dlen % 4) % 4), None, None
 
     def parse_binary_value(self, data, display, length, format):
         values = []

@@ -22,7 +22,6 @@
 
 
 # Standard modules
-import locale
 import re
 import sys
 
@@ -121,7 +120,7 @@ class ResourceDB(object):
             for i in range(1, len(splits), 2):
                 s = splits[i]
                 if len(s) == 3:
-                    splits[i] = chr(locale.atoi(s, 8))
+                    splits[i] = chr(int(s, 8))
                 elif s == 'n':
                     splits[i] = '\n'
 
