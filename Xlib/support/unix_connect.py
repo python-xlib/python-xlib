@@ -17,7 +17,6 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import re
-import locale
 import os
 import platform
 import socket
@@ -153,7 +152,7 @@ def old_get_auth(sock, dname, host, dno):
 
                 # Translate hexcode into binary
                 for i in range(0, len(hexauth), 2):
-                    auth = auth + chr(locale.atoi(hexauth[i:i+2], 16))
+                    auth = auth + chr(int(hexauth[i:i+2], 16))
 
                 auth_data = auth
     except os.error:

@@ -22,7 +22,6 @@
 
 
 # Standard modules
-import locale
 import re
 import sys
 
@@ -121,7 +120,7 @@ class ResourceDB(object):
             for i in range(1, len(splits), 2):
                 s = splits[i]
                 if len(s) == 3:
-                    splits[i] = chr(locale.atoi(s, 8))
+                    splits[i] = chr(int(s, 8))
                 elif s == 'n':
                     splits[i] = '\n'
 
@@ -460,7 +459,7 @@ def bin_insert(list, element):
     upper = len(list) - 1
 
     while lower <= upper:
-        center = (lower + upper) / 2
+        center = (lower + upper) // 2
         if element < list[center]:
             upper = center - 1
         elif element > list[center]:

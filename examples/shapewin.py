@@ -59,10 +59,10 @@ class Window:
 
         bggc.change(foreground = self.screen.white_pixel)
 
-        bgpm.arc(bggc, -bgsize / 2, 0, bgsize, bgsize, 0, 360 * 64)
-        bgpm.arc(bggc, bgsize / 2, 0, bgsize, bgsize, 0, 360 * 64)
-        bgpm.arc(bggc, 0, -bgsize / 2, bgsize, bgsize, 0, 360 * 64)
-        bgpm.arc(bggc, 0, bgsize / 2, bgsize, bgsize, 0, 360 * 64)
+        bgpm.arc(bggc, -bgsize // 2, 0, bgsize, bgsize, 0, 360 * 64)
+        bgpm.arc(bggc, bgsize // 2, 0, bgsize, bgsize, 0, 360 * 64)
+        bgpm.arc(bggc, 0, -bgsize // 2, bgsize, bgsize, 0, 360 * 64)
+        bgpm.arc(bggc, 0, bgsize // 2, bgsize, bgsize, 0, 360 * 64)
 
         # Actual window
         self.window = self.screen.root.create_window(
@@ -112,10 +112,10 @@ class Window:
         self.sub_pm.fill_rectangle(gc, 0, 0, self.sub_size, self.sub_size)
         gc.change(foreground = 1)
         self.sub_pm.fill_poly(gc, X.Convex, X.CoordModeOrigin,
-                              [(self.sub_size / 2, 0),
-                               (self.sub_size, self.sub_size / 2),
-                               (self.sub_size / 2, self.sub_size),
-                               (0, self.sub_size / 2)])
+                              [(self.sub_size // 2, 0),
+                               (self.sub_size, self.sub_size // 2),
+                               (self.sub_size // 2, self.sub_size),
+                               (0, self.sub_size // 2)])
         gc.free()
 
         # Set initial mask
@@ -151,14 +151,14 @@ class Window:
                 if e.detail == 1:
                     self.window.shape_mask(shape.ShapeUnion,
                                            shape.ShapeBounding,
-                                           e.event_x - self.add_size / 2,
-                                           e.event_y - self.add_size / 2,
+                                           e.event_x - self.add_size // 2,
+                                           e.event_y - self.add_size // 2,
                                            self.add_pm)
                 elif e.detail == 3:
                     self.window.shape_mask(shape.ShapeSubtract,
                                            shape.ShapeBounding,
-                                           e.event_x - self.sub_size / 2,
-                                           e.event_y - self.sub_size / 2,
+                                           e.event_x - self.sub_size // 2,
+                                           e.event_y - self.sub_size // 2,
                                            self.sub_pm)
 
             # Shape has changed

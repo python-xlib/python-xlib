@@ -16,7 +16,6 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
 # Standard modules
 import sys
 import traceback
@@ -49,7 +48,6 @@ struct_to_array_codes = { }
 
 for c in 'bhil':
     size = array(c).itemsize
-
     array_unsigned_codes[size] = c.upper()
     try:
         struct_to_array_codes[signed_codes[size]] = c
@@ -68,6 +66,15 @@ def _method(func, instance):
         return types.MethodType(func, instance)
     else:
         return types.MethodType(func, instance, type(instance))
+
+def _to_ord(ch):
+    """Get char code in a cross-Python way"""
+    if isinstance(ch, int):
+        # Python 3: bytes char is already an integer, no need to call ord()
+        return ch
+    else:
+        # Python 2: string char required to call ord()
+        return ord(ch)
 
 
 class Field(object):
@@ -104,9 +111,7 @@ class Field(object):
     If `structcode' is None the Field must have the method
     f.parse_binary_value() instead.  See its documentation string for
     details.
-
     """
-
     name = None
     default = None
 
@@ -135,16 +140,15 @@ class Field(object):
         The decoded value is returned as VALUE, and the remaining part
         of DATA shold be returned as REMAINDATA.
         """
-
-        raise RuntimeError('Neither structcode or parse_binary_value provided for %s'
-                           % self)
+        raise RuntimeError('Neither structcode or parse_binary_value ' \
+                'provided for {0}'.format(self))
 
 
 class Pad(Field):
     def __init__(self, size):
         self.size = size
-        self.value = '\0' * size
-        self.structcode = '%dx' % size
+        self.value = b'\0' * size
+        self.structcode = '{0}x'.format(size)
         self.structvalues = 0
 
 
@@ -179,7 +183,6 @@ class LengthField(Field):
     Unless LengthField.get_binary_length() is overridden in child classes,
     there should also be a lf.calc_length().
     """
-
     structcode = 'L'
     structvalues = 1
     other_fields = None
@@ -201,14 +204,14 @@ class RequestLength(TotalLengthField):
     structvalues = 1
 
     def calc_length(self, length):
-        return length / 4
+        return length // 4
 
 class ReplyLength(TotalLengthField):
     structcode = 'L'
     structvalues = 1
 
     def calc_length(self, length):
-        return (length - 32) / 4
+        return (length - 32) // 4
 
 
 class LengthOf(LengthField):
@@ -382,7 +385,7 @@ class FixedString(ValueField):
 
     def __init__(self, name, size):
         ValueField.__init__(self, name)
-        self.structcode = '%ds' % size
+        self.structcode = '{0}s'.format(size)
 
 
 class String8(ValueField):
@@ -393,23 +396,24 @@ class String8(ValueField):
         self.pad = pad
 
     def pack_value(self, val):
-        slen = len(val)
+        val_bytes = val.encode()
+        slen = len(val_bytes)
 
         if self.pad:
-            return val + '\0' * ((4 - slen % 4) % 4), slen, None
+            return val_bytes + b'\0' * ((4 - slen % 4) % 4), slen, None
         else:
-            return val, slen, None
+            return val_bytes, slen, None
 
     def parse_binary_value(self, data, display, length, format):
         if length is None:
-            return str(data), ''
+            return data.decode(), b''
 
         if self.pad:
             slen = length + ((4 - length % 4) % 4)
         else:
             slen = length
 
-        return str(data[:length]), data[slen:]
+        return data[:length].decode(), data[slen:]
 
 
 class String16(ValueField):
@@ -427,17 +431,17 @@ class String16(ValueField):
         slen = len(val)
 
         if self.pad:
-            pad = '\0\0' * (slen % 2)
+            pad = b'\0\0' * (slen % 2)
         else:
-            pad = ''
+            pad = b''
 
-        return apply(struct.pack, ('>' + 'H' * slen, ) + tuple(val)) + pad, slen, None
+        return struct.pack(*('>' + 'H' * slen, ) + tuple(val)) + pad, slen, None
 
     def parse_binary_value(self, data, display, length, format):
         if length == 'odd':
-            length = len(data) / 2 - 1
+            length = len(data) // 2 - 1
         elif length == 'even':
-            length = len(data) / 2
+            length = len(data) // 2
 
         if self.pad:
             slen = length + (length % 2)
@@ -532,7 +536,7 @@ class List(ValueField):
             for v in val:
                 data.append(self.type.pack_value(v))
 
-            data = ''.join(data)
+            data = b''.join(data)
 
         if self.pad:
             dlen = len(data)
@@ -615,7 +619,7 @@ class PropertyData(ValueField):
 
     def parse_binary_value(self, data, display, length, format):
         if length is None:
-            length = len(data) / (format / 8)
+            length = len(data) // (format // 8)
         else:
             length = int(length)
 
@@ -627,11 +631,11 @@ class PropertyData(ValueField):
             data = data[length + ((4 - length % 4) % 4):]
 
         elif format == 16:
-            ret = (16, array(array_unsigned_codes[2], str(data[:2 * length])))
+            ret = (16, array(array_unsigned_codes[2], data[:2 * length].decode().encode()))
             data = data[2 * (length + length % 2):]
 
         elif format == 32:
-            ret = (32, array(array_unsigned_codes[4], str(data[:4 * length])))
+            ret = (32, array(array_unsigned_codes[4], data[:4 * length].decode().encode()))
             data = data[4 * length:]
 
         return ret, data
@@ -640,29 +644,29 @@ class PropertyData(ValueField):
         fmt, val = value
 
         if fmt not in (8, 16, 32):
-            raise BadDataError('Invalid property data format %d' % fmt)
+            raise BadDataError('Invalid property data format {0}'.format(fmt))
 
-        if type(val) is bytes:
-            size = fmt / 8
+        if type(val) in [bytes, str]:
+            size = fmt // 8
             vlen = len(val)
             if vlen % size:
                 vlen = vlen - vlen % size
-                data = val[:vlen]
+                data = val[:vlen].encode()
             else:
-                data = val
+                data = val.encode()
 
-            dlen = vlen / size
+            dlen = vlen // size
 
         else:
             if type(val) is tuple:
                 val = list(val)
 
-            size = fmt / 8
-            data =  array(array_unsigned_codes[size], val).tostring()
+            size = fmt // 8
+            data = array(array_unsigned_codes[size], val).tostring()
             dlen = len(val)
 
         dl = len(data)
-        data = data + '\0' * ((4 - dl % 4) % 4)
+        data = data + b'\0' * ((4 - dl % 4) % 4)
 
         return data, dlen, fmt
 
@@ -674,7 +678,7 @@ class FixedPropertyData(PropertyData):
 
     def parse_binary_value(self, data, display, length, format):
         return PropertyData.parse_binary_value(self, data, display,
-                                               self.size / (format / 8), format)
+                                               self.size // (format // 8), format)
 
     def pack_value(self, value):
         data, dlen, fmt = PropertyData.pack_value(self, value)
@@ -693,7 +697,7 @@ class ValueList(Field):
 
     def __init__(self, name, mask, pad, *fields):
         self.name = name
-        self.maskcode = '=%s%dx' % (unsigned_codes[mask], pad)
+        self.maskcode = '={0}{1}x'.format(unsigned_codes[mask], pad).encode()
         self.maskcodelen = struct.calcsize(self.maskcode)
         self.fields = []
 
@@ -705,7 +709,7 @@ class ValueList(Field):
 
     def pack_value(self, arg, keys):
         mask = 0
-        data = ''
+        data = b''
 
         if arg == self.default:
             arg = keys
@@ -719,7 +723,7 @@ class ValueList(Field):
                     val = field.check_value(val)
 
                 d = struct.pack('=' + field.structcode, val)
-                data = data + d + '\0' * (4 - len(d))
+                data = data + d + b'\0' * (4 - len(d))
 
         return struct.pack(self.maskcode, mask) + data, None, None
 
@@ -758,7 +762,7 @@ class KeyboardMapping(ValueField):
         else:
             dlen = 4 * length * format
 
-        a = array(array_unsigned_codes[4], str(data[:dlen]))
+        a = array(array_unsigned_codes[4], bytes(data[:dlen]))
 
         ret = []
         for i in range(0, len(a), format):
@@ -786,7 +790,7 @@ class ModifierMapping(ValueField):
     structcode = None
 
     def parse_binary_value(self, data, display, length, format):
-        a = array(array_unsigned_codes[1], str(data[:8 * format]))
+        a = array(array_unsigned_codes[1], data[:8 * format])
 
         ret = []
         for i in range(0, 8):
@@ -824,10 +828,10 @@ class EventField(ValueField):
     def parse_binary_value(self, data, display, length, format):
         from . import event
 
-        estruct = display.event_classes.get(ord(data[0]) & 0x7f, event.AnyEvent)
+        estruct = display.event_classes.get(_to_ord(data[0]) & 0x7f, event.AnyEvent)
         if type(estruct) == dict:
             # this etype refers to a set of sub-events with individual subcodes
-            estruct = estruct[ord(data[1])]
+            estruct = estruct[_to_ord(data[1])]
 
         return estruct(display = display, binarydata = data[:32]), data[32:]
 
@@ -875,7 +879,7 @@ class StrClass(object):
         return chr(len(val)) + val
 
     def parse_binary(self, data, display):
-        slen = ord(data[0]) + 1
+        slen = _to_ord(data[0]) + 1
         return data[1:slen], data[slen:]
 
 Str = StrClass()
@@ -901,7 +905,6 @@ class Struct(object):
     These functions will be generated dynamically for each Struct
     object to make conversion as fast as possible.  They are
     generated the first time the methods are called.
-
     """
 
     def __init__(self, *fields):
@@ -946,7 +949,6 @@ class Struct(object):
     # object
 
     def to_binary(self, *varargs, **keys):
-
         """data = s.to_binary(...)
 
         Convert Python values into the binary representation.  The
@@ -955,21 +957,19 @@ class Struct(object):
         exception: fields with default arguments will be last.
 
         Returns the binary representation as the string DATA.
-
         """
-
         # Emulate Python function argument handling with our field names
         names = [f.name for f in self.fields \
                  if isinstance(f, ValueField) and f.name]
         field_args = dict(zip(names, varargs))
         if set(field_args).intersection(keys):
             dupes = ", ".join(set(field_args).intersection(keys))
-            raise TypeError("%s arguments were passed both positionally and by keyword" % dupes)
+            raise TypeError("{0} arguments were passed both positionally and by keyword".format(dupes))
         field_args.update(keys)
         for f in self.fields:
             if f.name and (f.name not in field_args):
                 if f.default is None:
-                    raise TypeError("Missing required argument %s" % f.name)
+                    raise TypeError("Missing required argument {0}".format(f.name))
                 field_args[f.name] = f.default
         # /argument handling
 
@@ -1184,7 +1184,7 @@ class TextElements8(ValueField):
                               String8('string', pad = 0) )
 
     def pack_value(self, value):
-        data = ''
+        data = b''
         args = {}
 
         for v in value:
@@ -1208,7 +1208,7 @@ class TextElements8(ValueField):
                     args['delta'] = delta
                     args['string'] = str[:254]
 
-                    data = data + apply(self.string_textitem.to_binary, (), args)
+                    data = data + self.string_textitem.to_binary(*(), **args)
 
                     delta = 0
                     str = str[254:]
@@ -1216,14 +1216,14 @@ class TextElements8(ValueField):
             # Else an integer, i.e. a font change
             else:
                 # Use fontable cast function if instance
-                if type(v) is types.InstanceType:
+                if isinstance(v, Fontable):
                     v = v.__fontable__()
 
                 data = data + struct.pack('>BL', 255, v)
 
         # Pad out to four byte length
         dlen = len(data)
-        return data + '\0' * ((4 - dlen % 4) % 4), None, None
+        return data + b'\0' * ((4 - dlen % 4) % 4), None, None
 
     def parse_binary_value(self, data, display, length, format):
         values = []
@@ -1232,12 +1232,12 @@ class TextElements8(ValueField):
                 break
 
             # font change
-            if ord(data[0]) == 255:
-                values.append(struct.unpack('>L', str(data[1:5]))[0])
+            if _to_ord(data[0]) == 255:
+                values.append(struct.unpack('>L', data[1:5].decode().encode())[0])
                 data = data[5:]
 
             # skip null strings
-            elif ord(data[0]) == 0 and ord(data[1]) == 0:
+            elif _to_ord(data[0]) == 0 and _to_ord(data[1]) == 0:
                 data = data[2:]
 
             # string with delta

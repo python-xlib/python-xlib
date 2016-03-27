@@ -233,7 +233,7 @@ class Drawable(resource.Resource):
 
         maxlen = (self.display.info.max_request_length << 2) \
                  - request.PutImage._request.static_size
-        split = maxlen / stride
+        split = maxlen // stride
 
         x1 = 0
         x2 = width
@@ -459,7 +459,7 @@ class Window(Drawable):
             val = prop.value
             if prop.bytes_after:
                 prop = self.get_property(property, type, sizehint,
-                                         prop.bytes_after / 4 + 1)
+                                         prop.bytes_after // 4 + 1)
                 val = val + prop.value
 
             prop.value = val
@@ -763,7 +763,7 @@ class Window(Drawable):
     # Returns a DictWrapper, or None
 
     def _get_struct_prop(self, pname, ptype, pstruct):
-        r = self.get_property(pname, ptype, 0, pstruct.static_size / 4)
+        r = self.get_property(pname, ptype, 0, pstruct.static_size // 4)
         if r and r.format == 32:
             value = r.value.tostring()
             if len(value) == pstruct.static_size:
@@ -782,7 +782,7 @@ class Window(Drawable):
         else:
             keys.update(hints)
 
-        value = apply(pstruct.to_binary, (), keys)
+        value = pstruct.to_binary(*(), **keys)
 
         self.change_property(pname, ptype, 32, value, onerror = onerror)
 
