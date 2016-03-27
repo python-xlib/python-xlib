@@ -1019,15 +1019,20 @@ import Xlib.protocol.event
 import struct
 import array
 
-class CmpArray:
+class CmpArray(object):
     def __init__(self, *args, **kws):
         self.array = array.array(*args, **kws)
 
     def __len__(self):
         return len(self.array)
 
-    def __getslice__(self, x, y):
-        return list(self.array[x:y])
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            x = key.start
+            y = key.stop
+            return list(self.array[x:y])
+        else:
+            return self.array[key]
 
     def __getattr__(self, attr):
         return getattr(self.array, attr)
