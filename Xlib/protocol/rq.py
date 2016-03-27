@@ -1216,7 +1216,7 @@ class TextElements8(ValueField):
             # Else an integer, i.e. a font change
             else:
                 # Use fontable cast function if instance
-                if type(v) is types.InstanceType:
+                if isinstance(v, Fontable):
                     v = v.__fontable__()
 
                 data = data + struct.pack('>BL', 255, v)
