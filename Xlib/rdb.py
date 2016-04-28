@@ -387,8 +387,14 @@ class _Match(object):
             self.skip = 1
             self.db = dbs
 
-    def __cmp__(self, other):
-        return cmp(self.path, other.path)
+    def __lt__(self, other):
+        return self.path < other.path
+
+    def __gt__(self, other):
+        return self.path > other.path
+
+    def __eq__(self, other):
+        return self.path == other.path
 
     def match_length(self):
         return len(self.path)
