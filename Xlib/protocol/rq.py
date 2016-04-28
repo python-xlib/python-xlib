@@ -1291,11 +1291,23 @@ class DictWrapper(GetAttrData):
     def __repr__(self):
         return '%s(%s)' % (self.__class__, repr(self._data))
 
-    def __cmp__(self, other):
+    def __lt__(self, other):
         if isinstance(other, DictWrapper):
-            return cmp(self._data, other._data)
+            return self._data < other._data
         else:
-            return cmp(self._data, other)
+            return self._data < other
+
+    def __gt__(self, other):
+        if isinstance(other, DictWrapper):
+            return self._data > other._data
+        else:
+            return self._data > other
+
+    def __eq__(self, other):
+        if isinstance(other, DictWrapper):
+            return self._data == other._data
+        else:
+            return self._data == other
 
 
 class Request(object):
