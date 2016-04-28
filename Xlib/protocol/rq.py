@@ -627,7 +627,7 @@ class PropertyData(ValueField):
             ret = None
 
         elif format == 8:
-            ret = (8, str(data[:length]))
+            ret = (8, data[:length].decode())
             data = data[length + ((4 - length % 4) % 4):]
 
         elif format == 16:
@@ -876,11 +876,11 @@ class StrClass(object):
     structcode = None
 
     def pack_value(self, val):
-        return chr(len(val)) + val
+        return (chr(len(val)) + val).encode()
 
     def parse_binary(self, data, display):
         slen = _to_ord(data[0]) + 1
-        return data[1:slen], data[slen:]
+        return data[1:slen].decode(), data[slen:]
 
 Str = StrClass()
 
@@ -1291,11 +1291,23 @@ class DictWrapper(GetAttrData):
     def __repr__(self):
         return '%s(%s)' % (self.__class__, repr(self._data))
 
-    def __cmp__(self, other):
+    def __lt__(self, other):
         if isinstance(other, DictWrapper):
-            return cmp(self._data, other._data)
+            return self._data < other._data
         else:
-            return cmp(self._data, other)
+            return self._data < other
+
+    def __gt__(self, other):
+        if isinstance(other, DictWrapper):
+            return self._data > other._data
+        else:
+            return self._data > other
+
+    def __eq__(self, other):
+        if isinstance(other, DictWrapper):
+            return self._data == other._data
+        else:
+            return self._data == other
 
 
 class Request(object):
@@ -1393,11 +1405,23 @@ class Event(GetAttrData):
         kws = ', '.join(kwlist)
         return '%s(%s)' % (self.__class__, kws)
 
-    def __cmp__(self, other):
+    def __lt__(self, other):
         if isinstance(other, Event):
-            return cmp(self._data, other._data)
+            return self._data < other._data
         else:
-            return cmp(self._data, other)
+            return self._data < other
+
+    def __gt__(self, other):
+        if isinstance(other, Event):
+            return self._data > other._data
+        else:
+            return self._data > other
+
+    def __eq__(self, other):
+        if isinstance(other, Event):
+            return self._data == other._data
+        else:
+            return self._data == other
 
 
 def call_error_handler(handler, error, request):

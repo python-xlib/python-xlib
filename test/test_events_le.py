@@ -37,8 +37,14 @@ class CmpArray(object):
     def __getattr__(self, attr):
         return getattr(self.array, attr)
 
-    def __cmp__(self, other):
-        return cmp(self.array.tolist(), other)
+    def __lt__(self, other):
+        return self.array.tolist() < other
+
+    def __gt__(self, other):
+        return self.array.tolist() > other
+
+    def __eq__(self, other):
+        return self.array.tolist() == other
 
 rq.array = CmpArray
 
