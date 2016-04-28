@@ -530,7 +530,7 @@ class List(ValueField):
             if self.type.check_value is not None:
                 val = [self.type.check_value(v) for v in val]
             data = array(struct_to_array_codes[self.type.structcode],
-                               val).tobytes()
+                               val).tostring()
         else:
             data = []
             for v in val:
@@ -662,7 +662,7 @@ class PropertyData(ValueField):
                 val = list(val)
 
             size = fmt // 8
-            data = array(array_unsigned_codes[size], val).tobytes()
+            data = array(array_unsigned_codes[size], val).tostring()
             dlen = len(val)
 
         dl = len(data)
@@ -783,7 +783,7 @@ class KeyboardMapping(ValueField):
             for i in range(len(v), keycodes):
                 a.append(X.NoSymbol)
 
-        return a.tobytes(), len(value), keycodes
+        return a.tostring(), len(value), keycodes
 
 
 class ModifierMapping(ValueField):
@@ -814,7 +814,7 @@ class ModifierMapping(ValueField):
             for i in range(len(v), keycodes):
                 a.append(0)
 
-        return a.tobytes(), len(value), keycodes
+        return a.tostring(), len(value), keycodes
 
 class EventField(ValueField):
     structcode = None
