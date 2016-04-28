@@ -536,7 +536,7 @@ class List(ValueField):
             for v in val:
                 data.append(self.type.pack_value(v))
 
-            data = b''.join(data)
+            data = ''.join(data).encode()
 
         if self.pad:
             dlen = len(data)
@@ -880,7 +880,7 @@ class StrClass(object):
 
     def parse_binary(self, data, display):
         slen = _to_ord(data[0]) + 1
-        return data[1:slen], data[slen:]
+        return data[1:slen].decode(), data[slen:]
 
 Str = StrClass()
 
