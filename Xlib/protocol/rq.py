@@ -396,7 +396,10 @@ class String8(ValueField):
         self.pad = pad
 
     def pack_value(self, val):
-        val_bytes = val.encode()
+        if isinstance(val, bytes):
+            val_bytes = val
+        else:
+            val_bytes = val.encode()
         slen = len(val_bytes)
 
         if self.pad:
