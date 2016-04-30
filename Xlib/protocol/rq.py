@@ -634,11 +634,11 @@ class PropertyData(ValueField):
             data = data[length + ((4 - length % 4) % 4):]
 
         elif format == 16:
-            ret = (16, array(array_unsigned_codes[2], data[:2 * length].decode().encode()))
+            ret = (16, array(array_unsigned_codes[2], data[:2 * length]))
             data = data[2 * (length + length % 2):]
 
         elif format == 32:
-            ret = (32, array(array_unsigned_codes[4], data[:4 * length].decode().encode()))
+            ret = (32, array(array_unsigned_codes[4], data[:4 * length]))
             data = data[4 * length:]
 
         return ret, data
