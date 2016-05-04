@@ -10,6 +10,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import Xlib.display
 import Xlib.error
 import Xlib.protocol.display
+import Xlib.protocol.event
+import Xlib.protocol.rq
+import Xlib.xobject.fontable
+import Xlib.X
 
 
 class TestXlibDisplay(unittest.TestCase):
@@ -46,9 +50,119 @@ class TestXlibDisplay(unittest.TestCase):
 
     def test_can_close_display_and_check_for_error(self):
         self.display.close()
-        with self.assertRaises(Xlib.error.ConnectionClosedError, None) as e:
-            self.display.flush()
+        self.assertRaises(self.display.flush)
 
+    def test_return_fileno(self):
+        self.assertTrue(isinstance(self.display.fileno(), int))
+
+    def test_has_no_invalid_extension(self):
+        self.assertTrue(~self.display.has_extension("QQQ"))
+
+    def test_has_valid_extension(self):
+        extensions = self.display.list_extensions()
+        if extensions:
+            self.assertTrue(~self.display.has_extension(extensions[0]))
+
+    def test_can_create_resource_object(self):
+        self.assertTrue(
+            isinstance(self.display.create_resource_object("font", 0), Xlib.xobject.fontable.Font))
+
+    def test_get_default_screen_instance(self):
+        self.assertTrue(isinstance(self.display.screen(), Xlib.protocol.rq.DictWrapper))
+
+    def test_get_zero_screen_instance(self):
+        self.assertTrue(isinstance(self.display.screen(0), Xlib.protocol.rq.DictWrapper))
+
+    def test_default_screen_count(self):
+        self.assertEqual(self.display.screen_count(), 1)
+
+    def test_cannot_add_existing_display_method(self):
+        self.assertRaises(AssertionError, self.display.extension_add_method,
+                          "display", "extension_add_method", lambda x: x)
+
+    def test_cannot_add_existing_font_method(self):
+        self.assertRaises(AssertionError, self.display.extension_add_method, "font", "__init__", lambda x: x)
+
+    def test_can_add_extension_error(self):
+        self.display.add_extension_error(1, Xlib.error.XError)
+        self.assertEqual(self.display.display.error_classes[1], Xlib.error.XError)
+
+    def test_keycode_to_keysym_for_invalid_index(self):
+        self.assertEqual(self.display.keycode_to_keysym(0, 0), Xlib.X.NoSymbol)
+
+    def test_keysym_to_keycode_for_nosymbol(self):
+        self.assertEqual(self.display.keysym_to_keycode(Xlib.X.NoSymbol), 0)
+
+    def test_keysym_to_keycode_for_valid_symbol(self):
+        self.assertEqual(self.display.keysym_to_keycode(65535L), 119)
+
+    def test_keysym_to_keycodes_for_nosymbol(self):
+        self.assertEqual(self.display.keysym_to_keycodes(Xlib.X.NoSymbol), [])
+
+    def test_refresh_keyboard_mapping_invalid_event(self):
+        self.assertRaises(TypeError, self.display.refresh_keyboard_mapping, Xlib.protocol.event.AnyEvent)
+
+    def test_get_modifier_mapping(self):
+        self.assertEqual(len(self.display.get_modifier_mapping()), 8)
+
+    def test_set_modifier_mapping(self):
+        mapping = self.display.get_modifier_mapping()
+        self.assertEqual(self.display.set_modifier_mapping(mapping), Xlib.X.MappingSuccess)
+
+    def test_get_screensaver(self):
+        self.assertTrue(isinstance(self.display.get_screen_saver(), Xlib.protocol.request.GetScreenSaver))
+
+    def test_list_hosts(self):
+        self.assertTrue(isinstance(self.display.list_hosts(), Xlib.protocol.request.ListHosts))
+
+    def test_get_keyboard_control(self):
+        self.assertTrue(
+            isinstance(self.display.get_keyboard_control(), Xlib.protocol.request.GetKeyboardControl))
+
+    def test_change_keyboard_mapping(self):
+        kpt_mapping = self.display.get_keyboard_mapping(254, 1)
+        self.display.change_keyboard_mapping(254, kpt_mapping)
+        self.assertEqual(self.display.get_keyboard_mapping(254, 1), kpt_mapping)
+
+    def test_get_font_path(self):
+        self.assertNotEqual(self.display.get_font_path(), [])
+
+    def test_get_atom_name(self):
+        atom = self.display.get_atom(":99.0")
+        val = self.display.get_atom_name(atom)
+        self.assertEqual(val, ":99.0")
+
+    def test_intern_atom(self):
+        atom = self.display.intern_atom(":99.0")
+        val = self.display.get_atom_name(atom)
+        self.assertEqual(val, ":99.0")
+
+    def test_get_input_focus(self):
+        self.assertTrue(isinstance(self.display.get_input_focus(), Xlib.protocol.request.GetInputFocus))
+
+    def test_query_keymap(self):
+        self.assertTrue(isinstance(self.display.query_keymap(), list))
+
+    def test_open_invalid_font(self):
+        self.assertEqual(self.display.open_font("QQQ"), None)
+
+    def test_list_fonts(self):
+        fonts = self.display.list_fonts("*", 1)
+        self.assertNotEqual(fonts, [])
+
+    def test_lookup_valid_keysym(self):
+        self.assertNotEqual(self.display.lookup_string(65535L), None)
+
+    def test_lookup_invalid_keysym(self):
+        self.assertEqual(self.display.lookup_string(-1), None)
+
+    def test_rebind_string(self):
+        self.display.rebind_string(65535L, "qqq")
+        self.assertEqual(self.display.lookup_string(65535L), "qqq")
+
+    def test_get_selection_owner(self):
+        atom = self.display.get_atom(":99.0")
+        self.assertEqual(self.display.get_selection_owner(atom), 0)
 
     def tearDown(self):
         os.remove(self.authfile)
