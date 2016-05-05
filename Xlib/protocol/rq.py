@@ -416,7 +416,12 @@ class String8(ValueField):
         else:
             slen = length
 
-        return data[:length].decode(), data[slen:]
+        if sys.version_info < (3, 0):
+            data_str = data[:length]
+        else:
+            data_str = data[:length].decode()
+
+        return data_str, data[slen:]
 
 
 class String16(ValueField):
