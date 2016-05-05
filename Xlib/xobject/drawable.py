@@ -20,13 +20,13 @@ from Xlib import X, Xatom, Xutil
 from Xlib.protocol import request, rq
 
 # Other X resource objects
-import resource
-import colormap
-import cursor
-import fontable
+from . import resource
+from . import colormap
+from . import cursor
+from . import fontable
 
 # Inter-client communication conventions
-import icccm
+from . import icccm
 
 class Drawable(resource.Resource):
     __drawable__ = resource.Resource.__resource__
@@ -229,7 +229,7 @@ class Drawable(resource.Resource):
             unit = self.display.info.bitmap_format_scanline_unit
             stride = roundup(width * unit, pad) >> 3
         else:
-            raise ValueError, 'Unknown data format'
+            raise ValueError('Unknown data format')
 
         maxlen = (self.display.info.max_request_length << 2) \
                  - request.PutImage._request.static_size
@@ -798,8 +798,8 @@ class Pixmap(Drawable):
         self.display.free_resource_id(self.id)
 
     def create_cursor(self, mask,
-                      (fore_red, fore_green, fore_blue),
-                      (back_red, back_green, back_blue),
+                      fore_red, fore_green, fore_blue,
+                      back_red, back_green, back_blue,
                       x, y):
         cid = self.display.allocate_resource_id()
         request.CreateCursor(display = self.display,
