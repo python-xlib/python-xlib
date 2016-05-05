@@ -19,11 +19,7 @@ import Xlib.X
 class TestXlibDisplay(unittest.TestCase):
     def setUp(self):
         # Create authority file.
-        self.authfile = os.path.join(os.getenv("HOME"), ".Xauthority")
-        self.cookie = "926e3f51b3540ca0d54bf2725c1af2b6"
         self.display_num = os.getenv("DISPLAY")
-        os.system("xauth -f {0} add {1} MIT-MAGIC-COOKIE-1 {2}".format(self.authfile, self.display_num,
-                                                                       self.cookie))
         self.display = Xlib.display.Display(self.display_num)
         self.dummy_str = "qqq"
         self.keysym = 65535
@@ -167,9 +163,6 @@ class TestXlibDisplay(unittest.TestCase):
     def test_get_selection_owner(self):
         atom = self.display.get_atom(self.display_num)
         self.assertEqual(self.display.get_selection_owner(atom), 0)
-
-    def tearDown(self):
-        os.remove(self.authfile)
 
 
 if __name__ == '__main__':
