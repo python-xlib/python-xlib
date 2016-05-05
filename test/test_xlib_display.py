@@ -21,14 +21,18 @@ class TestXlibDisplay(unittest.TestCase):
         # Create authority file.
         self.authfile = os.path.join(os.getenv("HOME"), ".Xauthority")
         self.cookie = "926e3f51b3540ca0d54bf2725c1af2b6"
-        os.system("xauth -f {0} add :99.0 MIT-MAGIC-COOKIE-1 {1}".format(self.authfile, self.cookie))
-        self.display = Xlib.display.Display(":99.0")
+        self.display_num = os.getenv("DISPLAY")
+        os.system("xauth -f {0} add {1} MIT-MAGIC-COOKIE-1 {2}".format(self.authfile, self.display_num,
+                                                                       self.cookie))
+        self.display = Xlib.display.Display(self.display_num)
+        self.dummy_str = "qqq"
+        self.keysym = 65535
 
     def test_display_instance(self):
         self.assertTrue(isinstance(self.display, Xlib.display.Display))
 
     def test_default_display_name(self):
-        self.assertEqual(self.display.get_display_name(), ":99.0")
+        self.assertEqual(self.display.get_display_name(), self.display_num)
 
     def test_default_screen_number(self):
         self.assertEqual(self.display.get_default_screen(), 0)
@@ -50,13 +54,13 @@ class TestXlibDisplay(unittest.TestCase):
 
     def test_can_close_display_and_check_for_error(self):
         self.display.close()
-        self.assertRaises(self.display.flush)
+        self.assertRaises(Xlib.error.ConnectionClosedError, self.display.flush)
 
     def test_return_fileno(self):
         self.assertTrue(isinstance(self.display.fileno(), int))
 
     def test_has_no_invalid_extension(self):
-        self.assertTrue(~self.display.has_extension("QQQ"))
+        self.assertTrue(~self.display.has_extension(self.dummy_str))
 
     def test_has_valid_extension(self):
         extensions = self.display.list_extensions()
@@ -94,7 +98,7 @@ class TestXlibDisplay(unittest.TestCase):
         self.assertEqual(self.display.keysym_to_keycode(Xlib.X.NoSymbol), 0)
 
     def test_keysym_to_keycode_for_valid_symbol(self):
-        self.assertEqual(self.display.keysym_to_keycode(65535L), 119)
+        self.assertEqual(self.display.keysym_to_keycode(self.keysym), 119)
 
     def test_keysym_to_keycodes_for_nosymbol(self):
         self.assertEqual(self.display.keysym_to_keycodes(Xlib.X.NoSymbol), [])
@@ -128,14 +132,14 @@ class TestXlibDisplay(unittest.TestCase):
         self.assertNotEqual(self.display.get_font_path(), [])
 
     def test_get_atom_name(self):
-        atom = self.display.get_atom(":99.0")
+        atom = self.display.get_atom(self.display_num)
         val = self.display.get_atom_name(atom)
-        self.assertEqual(val, ":99.0")
+        self.assertEqual(val, self.display_num)
 
     def test_intern_atom(self):
-        atom = self.display.intern_atom(":99.0")
+        atom = self.display.intern_atom(self.display_num)
         val = self.display.get_atom_name(atom)
-        self.assertEqual(val, ":99.0")
+        self.assertEqual(val, self.display_num)
 
     def test_get_input_focus(self):
         self.assertTrue(isinstance(self.display.get_input_focus(), Xlib.protocol.request.GetInputFocus))
@@ -144,24 +148,24 @@ class TestXlibDisplay(unittest.TestCase):
         self.assertTrue(isinstance(self.display.query_keymap(), list))
 
     def test_open_invalid_font(self):
-        self.assertEqual(self.display.open_font("QQQ"), None)
+        self.assertEqual(self.display.open_font(self.dummy_str), None)
 
     def test_list_fonts(self):
         fonts = self.display.list_fonts("*", 1)
         self.assertNotEqual(fonts, [])
 
     def test_lookup_valid_keysym(self):
-        self.assertNotEqual(self.display.lookup_string(65535L), None)
+        self.assertNotEqual(self.display.lookup_string(self.keysym), None)
 
     def test_lookup_invalid_keysym(self):
         self.assertEqual(self.display.lookup_string(-1), None)
 
     def test_rebind_string(self):
-        self.display.rebind_string(65535L, "qqq")
-        self.assertEqual(self.display.lookup_string(65535L), "qqq")
+        self.display.rebind_string(self.keysym, self.dummy_str)
+        self.assertEqual(self.display.lookup_string(self.keysym), self.dummy_str)
 
     def test_get_selection_owner(self):
-        atom = self.display.get_atom(":99.0")
+        atom = self.display.get_atom(self.display_num)
         self.assertEqual(self.display.get_selection_owner(atom), 0)
 
     def tearDown(self):
