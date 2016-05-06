@@ -26,7 +26,7 @@
 
 import subprocess
 import unittest
-from subprocess import call
+from subprocess import check_output
 
 class TestExamples(unittest.TestCase):
 	def testEventthread(self):
