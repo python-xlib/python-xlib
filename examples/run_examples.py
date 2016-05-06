@@ -33,7 +33,7 @@ from subprocess import call
 
 class TestExamples(unittest.TestCase):
 	def test_get_selection(self):
-		self.assertEqual(subprocess.call(["./get_selection.py", "PRIMARY"]), 0)
+		self.assertEqual(subprocess.call("/home/travis/build/python-xlib/python-xlib/examples/get_selection.py PRIMARY", shell=True), 0)
 
 if __name__ == '__main__':
     unittest.main()
