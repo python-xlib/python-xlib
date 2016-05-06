@@ -19,56 +19,44 @@
 #	along with this program; if not, write to the Free Software
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import subprocess
+import subprocess, unittest
 from subprocess import Popen, PIPE, call
 
 def run(name):
 	proc = Popen("./" + name, shell=True, stdout=PIPE, stderr=PIPE)
-	
-	if proc.wait() == 0:
-		print(name + " ..... ok")
-		return True
-	else:
-		print(name + " ..... fail")
-		return False
+	return proc.wait() == 0
 
 def run_with_args(name, args):
 	for arg in args:
 		proc = Popen("./" + name + " " + arg, shell=True, stdout=PIPE, stderr=PIPE)
 		if proc.wait() != 0:
-			print(name + " ..... fail")
 			return False
-	
-	print(name + " ..... ok")
 	return True
 
-n = 0
-n_ok = 0
-	 
-if run("eventthread.py"): n_ok += 1
-n += 1
+class TestExamples(unittest.TestCase):
+	def testEventthread(self):
+		assert run("eventthread.py")
 
-if run_with_args("get_selection.py", ["PRIMARY", "SECONDARY", "CLIPBOARD"]): n_ok += 1
-n += 1
+	def testGetSelection(self):
+		assert run_with_args("get_selection.py", ["PRIMARY", "SECONDARY", "CLIPBOARD"])
 
-if run_with_args("profilex.py", ["profilex_output"]): n_ok += 1
-subprocess.call(["rm", "./profilex_output"])
-n += 1
+	def testProfilex(self):
+		assert run_with_args("profilex.py", ["profilex_output"])
+		subprocess.call(["rm", "./profilex_output"])
 
-if run("record_demo.py"): n_ok += 1
-n += 1
+	def testRecordDemo(self):
+		assert run("record_demo.py")
 
-if run_with_args("security.py", ["--generate", "--revoke"]): n_ok += 1
-n += 1
+	def testSecurity(self):
+		assert run_with_args("security.py", ["--generate", "--revoke"])
 
-if run("xfixes.py"): n_ok += 1
-n += 1
+	def testXfixes(self):
+		assert run("xfixes.py")
 
-if run("xlsatoms.py"): n_ok += 1
-n += 1
+	def testXlsatoms(self):
+		assert run("xlsatoms.py")
 
-print("\n--------------------------------------------------")
-print("Run: " + str(n))
-print("Success: " + str(n_ok))
+if __name__ == '__main__':
+    unittest.main()
 
 
