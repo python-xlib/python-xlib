@@ -30,11 +30,11 @@ from subprocess import call
 
 class TestExamples(unittest.TestCase):
 	def testEventthread(self):
-		self.assertEqual(subprocess.call("./eventthread.py"), 0)
+		self.assertEqual(subprocess.call("eventthread.py"), 0)
 
 	def testProfilex(self):
-		self.assertEqual(subprocess.call(["./profilex.py", "profilex_output"]), 0)
-		subprocess.call(["rm", "./profilex_output"])
+		self.assertEqual(subprocess.call(["profilex.py", "profilex_output"]), 0)
+		subprocess.call(["rm", "profilex_output"])
 
 
 if __name__ == '__main__':
