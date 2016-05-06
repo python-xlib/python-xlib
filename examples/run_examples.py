@@ -26,6 +26,9 @@
 
 import subprocess
 import unittest
+
+from subprocess import Popen
+from subprocess import PIPE
 from subprocess import call
 
 def run(name):
