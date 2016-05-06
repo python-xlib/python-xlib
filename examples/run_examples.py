@@ -26,33 +26,16 @@
 
 import subprocess
 import unittest
-from subprocess import check_output
+from subprocess import call
 
 class TestExamples(unittest.TestCase):
 	def testEventthread(self):
-		subprocess.check_output("./eventthread.py")
-
-	def testGetSelection(self):
-		subprocess.check_output(["./get_selection.py", "PRIMARY"])
-		subprocess.check_output(["./get_selection.py", "SECONDARY"])
-		subprocess.check_output(["./get_selection.py", "CLIPBOARD"])
+		assert subprocess.call("./eventthread.py") == 0
 
 	def testProfilex(self):
-		subprocess.check_output(["./profilex.py", "profilex_output"])
-		subprocess.call(["rm", "./profilex_output"])
+		assert subprocess.call(["./profilex.py", "profilex_output"]) == 0
+		assert subprocess.call(["rm", "./profilex_output"]) == 0
 
-	def testRecordDemo(self):
-		subprocess.check_output("./record_demo.py")
-
-	def testSecurity(self):
-		subprocess.check_output(["./security.py", "--generate"])
-		subprocess.check_output(["./security.py", "--revoke"])
-
-	def testXfixes(self):
-		subprocess.check_output("./xfixes.py")
-
-	def testXlsatoms(self):
-		subprocess.check_output("./xlsatoms.py")
 
 if __name__ == '__main__':
     unittest.main()
