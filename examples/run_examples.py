@@ -33,7 +33,7 @@ from subprocess import call
 
 class TestExamples(unittest.TestCase):
 	def testGetSelection(self):
-		proc = Popen(["python ./get_selection.py", "PRIMARY"])
+		proc = Popen(["./get_selection.py", "PRIMARY"])
 		self.assertEqual(proc.wait(), 0)
 
 if __name__ == '__main__':
