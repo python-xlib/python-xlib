@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #
 # examples/run_examples.py -- run some examples.
 #
@@ -33,7 +33,7 @@ from subprocess import call
 
 class TestExamples(unittest.TestCase):
 	def test_get_selection(self):
-		self.assertEqual(subprocess.call("./get_selection.py PRIMARY", shell=True), 0)
+		self.assertEqual(subprocess.call(["./get_selection.py", "PRIMARY"]), 0)
 
 if __name__ == '__main__':
     unittest.main()
