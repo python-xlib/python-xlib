@@ -31,18 +31,9 @@ from subprocess import Popen
 from subprocess import PIPE
 from subprocess import call
 
-def run(name):
-	proc = Popen("./" + name, shell=True, stdout=PIPE, stderr=PIPE)
-	return proc.wait()
-
 class TestExamples(unittest.TestCase):
-	def testEventthread(self):
-		self.assertEqual(run("eventthread.py"), 0)
-
-	def testProfilex(self):
-		self.assertEqual(run("./profilex.py profilex_output"), 0)
-		subprocess.call(["rm", "./profilex_output"])
-
+	def testGetSelection(self):
+		self.assertEqual(subprocess.call(["./get_selection.py", "PRIMARY"]), 0)
 
 if __name__ == '__main__':
     unittest.main()
