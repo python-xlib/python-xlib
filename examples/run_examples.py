@@ -32,9 +32,8 @@ from subprocess import PIPE
 from subprocess import call
 
 class TestExamples(unittest.TestCase):
-	def testGetSelection(self):
-		proc = Popen(["./get_selection.py", "PRIMARY"])
-		self.assertEqual(proc.wait(), 0)
+	def test_get_selection(self):
+		self.assertEqual(subprocess.call("./get_selection.py PRIMARY", shell=True), 0)
 
 if __name__ == '__main__':
     unittest.main()
