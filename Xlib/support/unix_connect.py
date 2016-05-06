@@ -85,7 +85,7 @@ def get_socket(dname, host, dno):
         else:
             s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             s.connect('/tmp/.X11-unix/X%d' % dno)
-    except socket.error, val:
+    except socket.error as val:
         raise error.DisplayConnectionError(dname, str(val))
 
     # Make sure that the connection isn't inherited in child processes

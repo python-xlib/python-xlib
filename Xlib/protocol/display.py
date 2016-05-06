@@ -998,7 +998,7 @@ class ConnectionSetupRequest(rq.GetAttrData):
 
 
     def __init__(self, display, *args, **keys):
-        self._binary = apply(self._request.to_binary, args, keys)
+        self._binary = self._request.to_binary(*args, **keys)
         self._data = None
 
         # Don't bother about locking, since no other threads have
