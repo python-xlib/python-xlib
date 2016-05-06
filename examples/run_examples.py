@@ -22,39 +22,31 @@
 import subprocess, unittest
 from subprocess import Popen, PIPE, call
 
-def run(name):
-	proc = Popen("./" + name, shell=True, stdout=PIPE, stderr=PIPE)
-	return proc.wait() == 0
-
-def run_with_args(name, args):
-	for arg in args:
-		proc = Popen("./" + name + " " + arg, shell=True, stdout=PIPE, stderr=PIPE)
-		if proc.wait() != 0:
-			return False
-	return True
-
 class TestExamples(unittest.TestCase):
 	def testEventthread(self):
-		assert run("eventthread.py")
+		subprocess.check_output("./eventthread.py")
 
 	def testGetSelection(self):
-		assert run_with_args("get_selection.py", ["PRIMARY", "SECONDARY", "CLIPBOARD"])
+		subprocess.check_output(["./get_selection.py", "PRIMARY"])
+		subprocess.check_output(["./get_selection.py", "SECONDARY"])
+		subprocess.check_output(["./get_selection.py", "CLIPBOARD"])
 
 	def testProfilex(self):
-		assert run_with_args("profilex.py", ["profilex_output"])
+		subprocess.check_output(["./profilex.py", "profilex_output"])
 		subprocess.call(["rm", "./profilex_output"])
 
 	def testRecordDemo(self):
-		assert run("record_demo.py")
+		subprocess.check_output("./record_demo.py")
 
 	def testSecurity(self):
-		assert run_with_args("security.py", ["--generate", "--revoke"])
+		subprocess.check_output(["./security.py", "--generate"])
+		subprocess.check_output(["./security.py", "--revoke"])
 
 	def testXfixes(self):
-		assert run("xfixes.py")
+		subprocess.check_output("./xfixes.py")
 
 	def testXlsatoms(self):
-		assert run("xlsatoms.py")
+		subprocess.check_output("./xlsatoms.py")
 
 if __name__ == '__main__':
     unittest.main()
