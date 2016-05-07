@@ -38,7 +38,7 @@ class TestExamples(unittest.TestCase):
 
 	def test_get_selection(self):
 		self.assertEqual(subprocess.call(["./get_selection.py", "PRIMARY"]), 0)
-		self.assertEqual(subprocess.call(["./get_selection.py", "SECONDARY"]), 0)
+		self.assertEqual(subprocess.call(["get_selection", "SECONDARY"]), 0)
 		self.assertEqual(subprocess.call(["./get_selection.py", "CLIPBOARD"]), 0)
 
 	def test_profilex(self):
