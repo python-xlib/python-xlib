@@ -24,6 +24,9 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 import subprocess
 import unittest
 
@@ -35,11 +38,11 @@ class TestExamples(unittest.TestCase):
 
 	def test_get_selection(self):
 		self.assertEqual(subprocess.call(["examples/get_selection.py", "PRIMARY"]), 0)
-		self.assertEqual(subprocess.call(["examples/get_selection", "SECONDARY"]), 0)
+		self.assertEqual(subprocess.call(["examples/get_selection.py", "SECONDARY"]), 0)
 		self.assertEqual(subprocess.call(["examples/get_selection.py", "CLIPBOARD"]), 0)
 
 	def test_profilex(self):
-		self.assertEqual(subprocess.call(["examples/profilex.py", "profilex_output"]), 0)
+		self.assertEqual(subprocess.call(["examples/profilex.py", "examples/profilex_output"]), 0)
 		subprocess.call(["rm", "examples/profilex_output"])
 
 	def test_record_demo(self):
