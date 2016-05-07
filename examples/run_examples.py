@@ -24,6 +24,9 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+import sys, os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 import subprocess
 import unittest
 
@@ -31,7 +34,7 @@ from subprocess import call
 
 class TestExamples(unittest.TestCase):
 	def test_eventthread(self):
-		self.assertEqual(subprocess.call("./eventthread.py"), 0)
+		self.assertEqual(subprocess.call("eventthread.py"), 0)
 
 	def test_get_selection(self):
 		self.assertEqual(subprocess.call(["./get_selection.py", "PRIMARY"]), 0)
