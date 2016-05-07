@@ -34,26 +34,26 @@ class TestExamples(unittest.TestCase):
 		self.assertEqual(subprocess.call("examples/eventthread.py"), 0)
 
 	def test_get_selection(self):
-		self.assertEqual(subprocess.call(["./get_selection.py", "PRIMARY"]), 0)
-		self.assertEqual(subprocess.call(["./get_selection", "SECONDARY"]), 0)
-		self.assertEqual(subprocess.call(["./get_selection.py", "CLIPBOARD"]), 0)
+		self.assertEqual(subprocess.call(["examples/get_selection.py", "PRIMARY"]), 0)
+		self.assertEqual(subprocess.call(["examples/get_selection", "SECONDARY"]), 0)
+		self.assertEqual(subprocess.call(["examples/get_selection.py", "CLIPBOARD"]), 0)
 
 	def test_profilex(self):
-		self.assertEqual(subprocess.call(["./profilex.py", "profilex_output"]), 0)
-		subprocess.call(["rm", "./profilex_output"])
+		self.assertEqual(subprocess.call(["examples/profilex.py", "profilex_output"]), 0)
+		subprocess.call(["rm", "examples/profilex_output"])
 
 	def test_record_demo(self):
-		self.assertEqual(subprocess.call("./record_demo.py"), 0)
+		self.assertEqual(subprocess.call("examples/record_demo.py"), 0)
 
 	def test_security(self):
-		self.assertEqual(subprocess.call(["./security.py", "--generate"]), 0)
-		self.assertEqual(subprocess.call(["./security.py", "--revoke"]), 0)
+		self.assertEqual(subprocess.call(["examples/security.py", "--generate"]), 0)
+		self.assertEqual(subprocess.call(["examples/security.py", "--revoke"]), 0)
 
 	def test_xfixes(self):
-		self.assertEqual(subprocess.call("./xfixes.py"), 0)
+		self.assertEqual(subprocess.call("examples/xfixes.py"), 0)
 
 	def test_xlsatoms(self):
-		self.assertEqual(subprocess.call("./xlsatoms.py"), 0)
+		self.assertEqual(subprocess.call("examples/xlsatoms.py"), 0)
 
 if __name__ == '__main__':
     unittest.main()
