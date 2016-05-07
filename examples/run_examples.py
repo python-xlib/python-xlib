@@ -34,7 +34,7 @@ from subprocess import call
 
 class TestExamples(unittest.TestCase):
 	def test_profilex(self):
-		subprocess.call(["rm", "./profilex.py"])
+		subprocess.call(["ls", "-a"])
 
 if __name__ == '__main__':
     unittest.main()
