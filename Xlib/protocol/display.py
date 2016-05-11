@@ -517,7 +517,7 @@ class Display(object):
 
             # Ignore errors caused by a signal recieved while blocking.
             # All other errors are re-raised.
-            except select.error, err:
+            except select.error as err:
                 if err[0] != errno.EINTR:
                     raise err
 
@@ -532,7 +532,7 @@ class Display(object):
             if ws:
                 try:
                     i = self.socket.send(self.data_send)
-                except socket.error, err:
+                except socket.error as err:
                     self.close_internal('server: %s' % err[1])
                     raise self.socket_error
 
@@ -548,7 +548,7 @@ class Display(object):
                 if recieving:
                     try:
                         bytes_recv = self.socket.recv(2048)
-                    except socket.error, err:
+                    except socket.error as err:
                         self.close_internal('server: %s' % err[1])
                         raise self.socket_error
 
@@ -998,7 +998,7 @@ class ConnectionSetupRequest(rq.GetAttrData):
 
 
     def __init__(self, display, *args, **keys):
-        self._binary = apply(self._request.to_binary, args, keys)
+        self._binary = self._request.to_binary(*args, **keys)
         self._data = None
 
         # Don't bother about locking, since no other threads have
