@@ -21,6 +21,9 @@
 # Simple demo for the RECORD extension
 # Not very much unlike the xmacrorec2 program in the xmacro package.
 
+print("\n_____________________________________________________________")
+print("record_demo.py -- demonstrate record extension -- is running")
+
 import sys
 import os
 

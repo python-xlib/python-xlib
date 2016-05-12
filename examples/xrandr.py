@@ -19,7 +19,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-import sys, os, pprint
+import sys
+import os
+import pprint
 
 # Change path so we find Xlib
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))

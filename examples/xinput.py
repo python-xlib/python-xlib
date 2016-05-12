@@ -20,6 +20,10 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import sys
+import os
+
+# Change path so we find Xlib
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib.display import Display
 from Xlib.ext import xinput
