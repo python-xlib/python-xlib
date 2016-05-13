@@ -23,9 +23,6 @@ additional capability is to match against regular expressions for atoms
 
 '''
 
-print("\n_____________________________________________________________")
-print("xlsatoms.py -- demonstrate list atoms on X server -- is running")
-
 import sys
 import os
 
