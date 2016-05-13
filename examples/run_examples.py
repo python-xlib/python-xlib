@@ -63,10 +63,11 @@ class TestExamples(unittest.TestCase):
 #         """ Run record_demo.py -- demonstrate record extension """
 #         self.assertEqual(run_example(examples_folder + "record_demo.py"), 0)
 
-    def test_security(self):
-        """ Run security.py -- demonstrate the SECURITY extension """
-        self.assertEqual(run_example(examples_folder + "security.py --generate"), 0)
-        self.assertEqual(run_example(examples_folder + "security.py --revoke"), 0)
+# TODO Python 3
+#     def test_security(self):
+#         """ Run security.py -- demonstrate the SECURITY extension """
+#         self.assertEqual(run_example(examples_folder + "security.py --generate"), 0)
+#         self.assertEqual(run_example(examples_folder + "security.py --revoke"), 0)
 
     def test_xfixes(self):
         """ Run xfixes.py -- demonstrate the XFIXES extension """
