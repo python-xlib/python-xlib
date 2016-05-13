@@ -23,8 +23,17 @@ additional capability is to match against regular expressions for atoms
 
 '''
 
-import sys,re
-from Xlib import X,display,error
+print("\n_____________________________________________________________")
+print("xlsatoms.py -- demonstrate list atoms on X server -- is running")
+
+import sys
+import os
+
+# Change path so we find Xlib
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+import re
+from Xlib import display, error
 from optparse import OptionParser
 
 parser = OptionParser()

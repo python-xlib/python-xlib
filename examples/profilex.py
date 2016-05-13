@@ -3,6 +3,9 @@
 # Program to generate profiling data.  Run with one argument,
 # the profile stats file to generate.
 
+print("\n_______________________________________________________________")
+print("profilex.py -- program to generate profiling data -- is running")
+
 import sys
 import os
 

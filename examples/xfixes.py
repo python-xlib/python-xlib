@@ -19,8 +19,12 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+print("\n___________________________________________________________")
+print("xfixes.py -- demonstrate the XFIXES extension -- is running")
 
-import sys, os, time
+import sys
+import os
+import time
 
 # Change path so we find Xlib
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
