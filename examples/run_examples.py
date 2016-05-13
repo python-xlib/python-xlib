@@ -42,9 +42,10 @@ def run_example(path):
 class TestExamples(unittest.TestCase):
     """ Run some of examples """
 
-    def test_eventthread(self):
-        """ Run eventthread.py -- Tests multithreaded event handling """
-        self.assertEqual(run_example(examples_folder + "eventthread.py"), 0)
+# TODO
+#     def test_eventthread(self):
+#         """ Run eventthread.py -- Tests multithreaded event handling """
+#         self.assertEqual(run_example(examples_folder + "eventthread.py"), 0)
 
     def test_get_selection(self):
         """ Run get_selection.py -- demonstrate getting selections """
