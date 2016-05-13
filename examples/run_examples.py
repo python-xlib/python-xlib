@@ -36,7 +36,7 @@ def run_example(path):
     proc = subprocess.Popen(path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     res = proc.communicate()
     if proc.returncode:
-        print(res[1])
+        print(res[1].decode())
     return proc.returncode
 
 class TestExamples(unittest.TestCase):
