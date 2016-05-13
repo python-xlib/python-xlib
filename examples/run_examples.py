@@ -39,29 +39,37 @@ def run_example(path):
     return proc.returncode
 
 class TestExamples(unittest.TestCase):
+    """ Run some of examples """
     def test_eventthread(self):
+        """ Run eventthread.py -- Tests multithreaded event handling """
         self.assertEqual(run_example(examples_folder + "eventthread.py"), 0)
 
     def test_get_selection(self):
+        """ Run get_selection.py -- demonstrate getting selections """
         self.assertEqual(run_example(examples_folder + "get_selection.py PRIMARY"), 0)
         self.assertEqual(run_example(examples_folder + "get_selection.py SECONDARY"), 0)
         self.assertEqual(run_example(examples_folder + "get_selection.py CLIPBOARD"), 0)
 
     def test_profilex(self):
+        """ Run profilex.py -- program to generate profiling data """
         self.assertEqual(run_example(examples_folder + "profilex.py " + examples_folder + "profilex_output"), 0)
         subprocess.call(["rm", examples_folder + "profilex_output"])
 
     def test_record_demo(self):
+        """ Run record_demo.py -- demonstrate record extension """
         self.assertEqual(run_example(examples_folder + "record_demo.py"), 0)
 
     def test_security(self):
+        """ Run security.py -- demonstrate the SECURITY extension """
         self.assertEqual(run_example(examples_folder + "security.py --generate"), 0)
         self.assertEqual(run_example(examples_folder + "security.py --revoke"), 0)
 
     def test_xfixes(self):
+        """ Run xfixes.py -- demonstrate the XFIXES extension """
         self.assertEqual(run_example(examples_folder + "xfixes.py"), 0)
 
     def test_xlsatoms(self):
+        """ Run xlsatoms.py -- show list atoms on X server """
         self.assertEqual(run_example(examples_folder + "xlsatoms.py"), 0)
 
 
