@@ -21,6 +21,7 @@
 # Simple demo for the RECORD extension
 # Not very much unlike the xmacrorec2 program in the xmacro package.
 
+
 import sys
 import os
 

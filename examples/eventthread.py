@@ -19,10 +19,16 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import sys, time
+import sys
+import os
+
+# Change path so we find Xlib
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+import time
 from threading import Thread
 
-from Xlib import X, Xatom, threaded
+from Xlib import Xatom, threaded
 from Xlib.display import Display
 
 
