@@ -24,13 +24,6 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-import sys
-import os
-
-examplefolder = os.path.abspath(os.path.dirname(__file__))
-package_root = os.path.abspath(os.path.join(examplefolder, ".."))
-sys.path.append(package_root)
-
 import subprocess
 import unittest
 
@@ -63,6 +56,6 @@ class TestExamples(unittest.TestCase):
 		self.assertEqual(subprocess.call("examples/xlsatoms.py"), 0)
 
 if __name__ == '__main__':
-    unittest.main()
+	unittest.main()
 
 

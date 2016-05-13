@@ -19,6 +19,13 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+import sys
+import os
+
+examplefolder = os.path.abspath(os.path.dirname(__file__))
+package_root = os.path.abspath(os.path.join(examplefolder, ".."))
+sys.path.append(package_root)
+
 import sys, time
 from threading import Thread
 

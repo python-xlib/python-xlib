@@ -24,7 +24,7 @@ additional capability is to match against regular expressions for atoms
 '''
 
 import sys,re
-from Xlib import X,display,error
+from Xlib import display, error
 from optparse import OptionParser
 
 parser = OptionParser()
