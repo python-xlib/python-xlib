@@ -40,9 +40,11 @@ def run_example(path):
 
 class TestExamples(unittest.TestCase):
     """ Run some of examples """
-    def test_eventthread(self):
-        """ Run eventthread.py -- Tests multithreaded event handling """
-        self.assertEqual(run_example(examples_folder + "eventthread.py"), 0)
+
+# TODO
+#     def test_eventthread(self):
+#         """ Run eventthread.py -- Tests multithreaded event handling """
+#         self.assertEqual(run_example(examples_folder + "eventthread.py"), 0)
 
     def test_get_selection(self):
         """ Run get_selection.py -- demonstrate getting selections """
@@ -55,9 +57,10 @@ class TestExamples(unittest.TestCase):
         self.assertEqual(run_example(examples_folder + "profilex.py " + examples_folder + "profilex_output"), 0)
         subprocess.call(["rm", examples_folder + "profilex_output"])
 
-    def test_record_demo(self):
-        """ Run record_demo.py -- demonstrate record extension """
-        self.assertEqual(run_example(examples_folder + "record_demo.py"), 0)
+# TODO
+#     def test_record_demo(self):
+#         """ Run record_demo.py -- demonstrate record extension """
+#         self.assertEqual(run_example(examples_folder + "record_demo.py"), 0)
 
     def test_security(self):
         """ Run security.py -- demonstrate the SECURITY extension """
