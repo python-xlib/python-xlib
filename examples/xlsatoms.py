@@ -23,7 +23,13 @@ additional capability is to match against regular expressions for atoms
 
 '''
 
-import sys,re
+import sys
+import os
+
+# Change path so we find Xlib
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+import re
 from Xlib import display, error
 from optparse import OptionParser
 

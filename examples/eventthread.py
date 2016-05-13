@@ -22,14 +22,13 @@
 import sys
 import os
 
-examplefolder = os.path.abspath(os.path.dirname(__file__))
-package_root = os.path.abspath(os.path.join(examplefolder, ".."))
-sys.path.append(package_root)
+# Change path so we find Xlib
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-import sys, time
+import time
 from threading import Thread
 
-from Xlib import X, Xatom, threaded
+from Xlib import Xatom, threaded
 from Xlib.display import Display
 
 
