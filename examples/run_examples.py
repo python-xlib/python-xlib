@@ -26,41 +26,44 @@
 
 import sys
 import os
-
-examples_folder = os.path.abspath(os.path.dirname(__file__)) + "/"
-
 import subprocess
 import unittest
 
-from subprocess import call
+examples_folder = os.path.abspath(os.path.dirname(__file__)) + "/"
+
+def run_example(path):
+    proc = subprocess.Popen(path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    res = proc.communicate()
+    if proc.returncode:
+        print(res[1])
+    return proc.returncode
 
 class TestExamples(unittest.TestCase):
-	def test_eventthread(self):
-		self.assertEqual(subprocess.call(examples_folder + "eventthread.py"), 0)
+    def test_eventthread(self):
+        self.assertEqual(run_example(examples_folder + "eventthread.py"), 0)
 
-	def test_get_selection(self):
-		self.assertEqual(subprocess.call([examples_folder + "get_selection.py", "PRIMARY"]), 0)
-		self.assertEqual(subprocess.call([examples_folder + "get_selection.py", "SECONDARY"]), 0)
-		self.assertEqual(subprocess.call([examples_folder + "get_selection.py", "CLIPBOARD"]), 0)
+    def test_get_selection(self):
+        self.assertEqual(run_example(examples_folder + "get_selection.py PRIMARY"), 0)
+        self.assertEqual(run_example(examples_folder + "get_selection.py SECONDARY"), 0)
+        self.assertEqual(run_example(examples_folder + "get_selection.py CLIPBOARD"), 0)
 
-	def test_profilex(self):
-		self.assertEqual(subprocess.call([examples_folder + "profilex.py", examples_folder + "profilex_output"]), 0)
-		subprocess.call(["rm", examples_folder + "profilex_output"])
+    def test_profilex(self):
+        self.assertEqual(run_example(examples_folder + "profilex.py " + examples_folder + "profilex_output"), 0)
+        subprocess.call(["rm", examples_folder + "profilex_output"])
 
-	def test_record_demo(self):
-		self.assertEqual(subprocess.call(examples_folder + "record_demo.py"), 0)
+    def test_record_demo(self):
+        self.assertEqual(run_example(examples_folder + "record_demo.py"), 0)
 
-	def test_security(self):
-		self.assertEqual(subprocess.call([examples_folder + "security.py", "--generate"]), 0)
-		self.assertEqual(subprocess.call([examples_folder + "security.py", "--revoke"]), 0)
+    def test_security(self):
+        self.assertEqual(run_example(examples_folder + "security.py --generate"), 0)
+        self.assertEqual(run_example(examples_folder + "security.py --revoke"), 0)
 
-	def test_xfixes(self):
-		self.assertEqual(subprocess.call(examples_folder + "xfixes.py"), 0)
+    def test_xfixes(self):
+        self.assertEqual(run_example(examples_folder + "xfixes.py"), 0)
 
-	def test_xlsatoms(self):
-		self.assertEqual(subprocess.call(examples_folder + "xlsatoms.py"), 0)
+    def test_xlsatoms(self):
+        self.assertEqual(run_example(examples_folder + "xlsatoms.py"), 0)
+
 
 if __name__ == '__main__':
-	unittest.main()
-
-
+    unittest.main()
