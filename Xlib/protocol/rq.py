@@ -584,7 +584,7 @@ class Object(ValueField):
         return self.type.pack_value(val)
 
     def check_value(self, val):
-        if type(val) is tuple:
+        if isinstance(val, tuple):
             vals = []
             i = 0
             for f in self.type.fields:
@@ -600,7 +600,7 @@ class Object(ValueField):
                     i = i + 1
             return vals
 
-        if type(val) is dict:
+        if isinstance(val, dict):
             data = val
         elif isinstance(val, DictWrapper):
             data = val._data
@@ -666,7 +666,7 @@ class PropertyData(ValueField):
             dlen = vlen // size
 
         else:
-            if type(val) is tuple:
+            if isinstance(val, tuple):
                 val = list(val)
 
             size = fmt // 8
@@ -1057,7 +1057,7 @@ class Struct(object):
 
         if type(value) is tuple:
             return self.to_binary(*value)
-        elif type(value) is dict:
+        elif isinstance(value, dict):
             return self.to_binary(**value)
         elif isinstance(value, DictWrapper):
             return self.to_binary(**value._data)
@@ -1203,10 +1203,9 @@ class TextElements8(ValueField):
             # A tuple, it should be (delta, string)
             # Encode it as one or more textitems
 
-            if type(v) in (tuple, dict) or \
-               isinstance(v, DictWrapper):
+            if isinstance(v, (tuple, dict, DictWrapper)):
 
-                if type(v) is tuple:
+                if isinstance(v, tuple):
                     delta, str = v
                 else:
                     delta = v['delta']
