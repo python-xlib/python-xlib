@@ -33,7 +33,8 @@ examples_folder = os.path.abspath(os.path.dirname(__file__)) + "/"
 
 def run_example(path):
     """ Returns returncode of example """
-    proc = subprocess.Popen(path, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    cmd = "{} {}".format(sys.executable, path)
+    proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     res = proc.communicate()
     if proc.returncode:
         print(res[1].decode())
