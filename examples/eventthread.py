@@ -19,6 +19,9 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+# Python 2/3 compatibility.
+from __future__ import print_function
+
 import sys
 import os
 
@@ -44,7 +47,7 @@ class EventThread(Thread):
     def run(self):
         while True:
             event = self.display.next_event()
-            print 'event: %r' % event
+            print('event: %r' % event)
 
 
 def main(argv):
@@ -60,7 +63,7 @@ def main(argv):
     # call in the thread.
     atom = display.intern_atom('_XROOTPMAP_ID', True)
     response = screen.root.get_property(atom, Xatom.PIXMAP, 0, 1)
-    print 'get_property response: %r' % response
+    print('get_property response: %r' % response)
 
     display.close()
 

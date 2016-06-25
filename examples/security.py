@@ -19,6 +19,9 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+# Python 2/3 compatibility.
+from __future__ import print_function
+
 import sys, os
 from optparse import OptionParser
 
@@ -51,14 +54,14 @@ def main(argv):
 
     if not display.has_extension('SECURITY'):
         if display.query_extension('SECURITY') is None:
-            print >>sys.stderr, 'SECURITY extension not supported'
+            print('SECURITY extension not supported', file=sys.stderr)
             return 1
 
     security_version = display.security_query_version()
-    print >>sys.stderr, 'Found SECURITY version %s.%s' % (
+    print('SECURITY version %s.%s' % (
       security_version.major_version,
       security_version.minor_version,
-    )
+    ), file=sys.stderr)
 
     if opts.generate:
         kwargs = {}
@@ -67,7 +70,7 @@ def main(argv):
         elif opts.untrusted:
             kwargs['trust_level'] = security.SecurityClientUntrusted
         reply = display.security_generate_authorization(opts.proto, **kwargs)
-        print reply.authid
+        print(reply.authid)
 
     elif opts.revoke:
         for arg in args:

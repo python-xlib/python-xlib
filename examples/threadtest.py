@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# Python 2/3 compatibility.
+from __future__ import print_function
+
 import sys
 import os
 
@@ -17,7 +20,7 @@ def redraw(win, gc):
 def blink(display, win, gc, cols):
     while 1:
         time.sleep(2)
-        print 'Changing color', cols[0]
+        print('Changing color', cols[0])
         gc.change(foreground = cols[0])
         cols = (cols[1], cols[0])
         redraw(win, gc)

@@ -23,6 +23,9 @@ additional capability is to match against regular expressions for atoms
 
 '''
 
+# Python 2/3 compatibility.
+from __future__ import print_function
+
 import sys
 import os
 
@@ -48,7 +51,7 @@ ec = error.CatchError(error.BadAtom)
 d = display.Display(options.display)
 
 def print_atom(print_format,atom,value):
-	print print_format%(atom,value)
+	print(print_format%(atom,value))
 
 def list_atoms(d,re_obj,low,high):
 	while(low <= high):
