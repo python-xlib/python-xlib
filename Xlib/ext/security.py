@@ -72,7 +72,7 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
                          rq.LengthOf('auth_data', 2),
                          rq.Card32('value_mask'),
                          rq.String8('auth_proto'),
-                         rq.String8('auth_data'),
+                         rq.Bytes('auth_data'),
                          rq.List('values', rq.Card32Obj)
                          )
     _reply = rq.Struct(rq.ReplyCode(),
@@ -82,7 +82,7 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
                        AUTHID('authid'),
                        rq.LengthOf('auth_data_return', 2),
                        rq.Pad(18),
-                       rq.String8('auth_data_return')
+                       rq.Bytes('auth_data_return')
                        )
 
 
