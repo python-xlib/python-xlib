@@ -106,10 +106,10 @@ def new_get_auth(sock, dname, host, dno):
         # Convert the prettyprinted IP number into 4-octet string.
         # Sometimes these modules are too damn smart...
         octets = sock.getpeername()[0].split('.')
-        addr = ''.join(map(lambda x: chr(int(x)), octets))
+        addr = bytes(int(x) for x in octets)
     else:
         family = xauth.FamilyLocal
-        addr = socket.gethostname()
+        addr = socket.gethostname().encode()
 
     au = xauth.Xauthority()
     while 1:
@@ -126,12 +126,12 @@ def new_get_auth(sock, dname, host, dno):
             family = xauth.FamilyLocal
             addr = socket.gethostname()
         else:
-            return '', ''
+            return b'', b''
 
 
 def old_get_auth(sock, dname, host, dno):
     # Find authorization cookie
-    auth_name = auth_data = ''
+    auth_name = auth_data = b''
 
     try:
         # We could parse .Xauthority, but xauth is simpler
@@ -148,7 +148,7 @@ def old_get_auth(sock, dname, host, dno):
             if len(parts) == 3:
                 auth_name = parts[1]
                 hexauth = parts[2]
-                auth = ''
+                auth = b''
 
                 # Translate hexcode into binary
                 for i in range(0, len(hexauth), 2):
