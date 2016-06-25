@@ -23,6 +23,9 @@ import struct
 from array import array
 import types
 
+# Python 2/3 compatibility.
+from six import byte2int, indexbytes, string_types
+
 # Xlib modules
 from .. import X
 from ..support import lock
@@ -654,14 +657,15 @@ class PropertyData(ValueField):
         if fmt not in (8, 16, 32):
             raise BadDataError('Invalid property data format {0}'.format(fmt))
 
-        if type(val) in [bytes, str]:
+        if isinstance(val, string_types):
+            val = val.encode()
             size = fmt // 8
             vlen = len(val)
             if vlen % size:
                 vlen = vlen - vlen % size
-                data = val[:vlen].encode()
+                data = val[:vlen]
             else:
-                data = val.encode()
+                data = val
 
             dlen = vlen // size
 
@@ -836,10 +840,10 @@ class EventField(ValueField):
     def parse_binary_value(self, data, display, length, format):
         from . import event
 
-        estruct = display.event_classes.get(_to_ord(data[0]) & 0x7f, event.AnyEvent)
+        estruct = display.event_classes.get(byte2int(data) & 0x7f, event.AnyEvent)
         if type(estruct) == dict:
             # this etype refers to a set of sub-events with individual subcodes
-            estruct = estruct[_to_ord(data[1])]
+            estruct = estruct[indexbytes(data, 1)]
 
         return estruct(display = display, binarydata = data[:32]), data[32:]
 
@@ -887,7 +891,7 @@ class StrClass(object):
         return (chr(len(val)) + val).encode()
 
     def parse_binary(self, data, display):
-        slen = _to_ord(data[0]) + 1
+        slen = byte2int(data) + 1
         return data[1:slen].decode(), data[slen:]
 
 Str = StrClass()
@@ -1239,12 +1243,12 @@ class TextElements8(ValueField):
                 break
 
             # font change
-            if _to_ord(data[0]) == 255:
-                values.append(struct.unpack('>L', data[1:5].decode().encode())[0])
+            if byte2int(data) == 255:
+                values.append(struct.unpack('>L', bytes(data[1:5]))[0])
                 data = data[5:]
 
             # skip null strings
-            elif _to_ord(data[0]) == 0 and _to_ord(data[1]) == 0:
+            elif byte2int(data) == 0 and indexbytes(data, 1) == 0:
                 data = data[2:]
 
             # string with delta
