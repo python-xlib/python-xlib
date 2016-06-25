@@ -23,6 +23,9 @@ A very incomplete implementation of the XInput extension.
 
 import sys, array, struct
 
+# Python 2/3 compatibility.
+from six import integer_types
+
 from Xlib.protocol import rq
 from Xlib import X
 
@@ -208,7 +211,7 @@ class Mask(rq.List):
 
         mask_seq = array.array(rq.struct_to_array_codes['L'])
 
-        if isinstance(val, (int, long)):
+        if isinstance(val, integer_types):
             # We need to build a "binary mask" that (as far as I can tell) is
             # encoded in native byte order from end to end.  The simple case is
             # with a single unsigned 32-bit value, for which we construct an
@@ -303,7 +306,7 @@ class ButtonState(rq.ValueField):
         for b in reversed(struct.unpack('=%uB' % mask_len, mask_data)):
             mask_value <<= 8
             mask_value |= b
-        data = buffer(data, mask_len)
+        data = data[mask_len:]
         assert 0 == (mask_value & 1)
         return ButtonMask(mask_value >> 1, length), data
 
@@ -365,7 +368,7 @@ INFO_CLASSES = {
     TouchClass: TouchInfo,
 }
 
-class ClassInfoClass:
+class ClassInfoClass(object):
 
     structcode = None
 
@@ -373,7 +376,7 @@ class ClassInfoClass:
         class_type, length = struct.unpack('=HH', data[:4])
         class_struct = INFO_CLASSES.get(class_type, AnyInfo)
         class_data, _ = class_struct.parse_binary(data, display)
-        data = buffer(data, length * 4)
+        data = data[length * 4:]
         return class_data, data
 
 ClassInfo = ClassInfoClass()
