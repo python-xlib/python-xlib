@@ -16,10 +16,10 @@
 #    along with this program; if not, write to the Free Software
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import thread
+from six.moves import _thread
 
 # We change the allocate_lock function in Xlib.support.lock to
 # return a basic Python lock, instead of the default dummy lock
 
 from Xlib.support import lock
-lock.allocate_lock = thread.allocate_lock
+lock.allocate_lock = _thread.allocate_lock
