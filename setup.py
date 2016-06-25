@@ -1,6 +1,6 @@
 # Distutils script for python-xlib
 
-from distutils.core import setup
+from setuptools import setup
 import sys
 
 if sys.version < '2.3.3':
