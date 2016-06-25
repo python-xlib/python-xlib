@@ -391,6 +391,39 @@ class FixedString(ValueField):
         self.structcode = '{0}s'.format(size)
 
 
+class Bytes(ValueField):
+    structcode = None
+
+    def __init__(self, name, pad = 1):
+        ValueField.__init__(self, name)
+        self.pad = pad
+
+    def pack_value(self, val):
+        if isinstance(val, bytes):
+            val_bytes = val
+        else:
+            val_bytes = val.encode()
+        slen = len(val_bytes)
+
+        if self.pad:
+            return val_bytes + b'\0' * ((4 - slen % 4) % 4), slen, None
+        else:
+            return val_bytes, slen, None
+
+    def parse_binary_value(self, data, display, length, format):
+        if length is None:
+            return data, b''
+
+        if self.pad:
+            slen = length + ((4 - length % 4) % 4)
+        else:
+            slen = length
+
+        data_bytes = data[:length]
+
+        return data_bytes, data[slen:]
+
+
 class String8(ValueField):
     structcode = None
 
