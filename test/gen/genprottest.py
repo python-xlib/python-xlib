@@ -898,9 +898,9 @@ def build_bin(bin):
     bins2 = []
     for i in range(0, len(bins), 2):
         try:
-            bins2.append("'%s' '%s'" % (bins[i], bins[i + 1]))
+            bins2.append("b'%s' b'%s'" % (bins[i], bins[i + 1]))
         except IndexError:
-            bins2.append("'%s'" % bins[i])
+            bins2.append("b'%s'" % bins[i])
 
     return ' \\\n            '.join(bins2)
 
