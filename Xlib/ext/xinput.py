@@ -21,7 +21,9 @@
 A very incomplete implementation of the XInput extension.
 '''
 
-import sys, array, struct
+import sys
+import array
+import struct
 
 # Python 2/3 compatibility.
 from six import integer_types
@@ -205,7 +207,7 @@ def query_version(self):
 class Mask(rq.List):
 
     def __init__(self, name):
-        rq.List.__init__(self, name, rq.Card32, pad = 0)
+        rq.List.__init__(self, name, rq.Card32, pad=0)
 
     def pack_value(self, val):
 
@@ -219,13 +221,14 @@ class Mask(rq.List):
             # bytes we build a longer array, being careful to maintain native
             # byte order across the entire set of values.
             if sys.byteorder == 'little':
-                f = lambda v: mask_seq.insert(0, v)
+                def fun(val):
+                    mask_seq.insert(0, val)
             elif sys.byteorder == 'big':
-                f = mask_seq.append
+                fun = mask_seq.append
             else:
                 raise AssertionError(sys.byteorder)
             while val:
-                f(val & 0xFFFFFFFF)
+                fun(val & 0xFFFFFFFF)
                 val = val >> 32
         else:
             mask_seq.extend(val)
@@ -233,10 +236,10 @@ class Mask(rq.List):
         return mask_seq.tostring(), len(mask_seq), None
 
 EventMask = rq.Struct(
-        DEVICE('deviceid'),
-        rq.LengthOf('mask', 2),
-        Mask('mask'),
-        )
+    DEVICE('deviceid'),
+    rq.LengthOf('mask', 2),
+    Mask('mask'),
+)
 
 
 class XISelectEvents(rq.Request):
@@ -248,7 +251,7 @@ class XISelectEvents(rq.Request):
         rq.LengthOf('masks', 2),
         rq.Pad(2),
         rq.List('masks', EventMask),
-        )
+    )
 
 def select_events(self, event_masks):
     '''
@@ -264,13 +267,13 @@ def select_events(self, event_masks):
         opcode=self.display.get_extension_major(extname),
         window=self,
         masks=event_masks,
-        )
+    )
 
 AnyInfo = rq.Struct(
-     rq.Card16('type'),
-     rq.Card16('length'),
-     rq.Card16('sourceid'),
-     rq.Pad(2),
+    rq.Card16('type'),
+    rq.Card16('length'),
+    rq.Card16('sourceid'),
+    rq.Pad(2),
 )
 
 class ButtonMask(object):
@@ -286,10 +289,11 @@ class ButtonMask(object):
         return self._value & (1 << key)
 
     def __str__(self):
-        return ('{0:0%ub}' % self._length).format(self._value)
+        return repr(self)
 
     def __repr__(self):
-        return '%#0*x' % ((self._length + 3) / 8, self._value)
+        return '0b{value:0{width}b}'.format(value=self._value,
+                                            width=self._length)
 
 class ButtonState(rq.ValueField):
 
@@ -298,16 +302,16 @@ class ButtonState(rq.ValueField):
     def __init__(self, name):
         rq.ValueField.__init__(self, name)
 
-    def parse_binary_value(self, data, display, length, format):
+    def parse_binary_value(self, data, display, length, fmt):
         # Mask: bitfield of <length> button states.
         mask_len = 4 * ((((length + 7) >> 3) + 3) >> 2)
         mask_data = data[:mask_len]
         mask_value = 0
-        for b in reversed(struct.unpack('=%uB' % mask_len, mask_data)):
+        for byte in reversed(struct.unpack('={0:d}B'.format(mask_len), mask_data)):
             mask_value <<= 8
-            mask_value |= b
+            mask_value |= byte
         data = data[mask_len:]
-        assert 0 == (mask_value & 1)
+        assert (mask_value & 1) == 0
         return ButtonMask(mask_value >> 1, length), data
 
 ButtonInfo = rq.Struct(
@@ -569,23 +573,23 @@ def ungrab_keycode(self, deviceid, keycode, modifiers):
                                  GrabtypeKeycode, modifiers)
 
 HierarchyInfo = rq.Struct(
-        DEVICEID('deviceid'),
-        DEVICEID('attachment'),
-        DEVICEUSE('type'),
-        rq.Bool('enabled'),
-        rq.Pad(2),
-        rq.Card32('flags'),
-        )
+    DEVICEID('deviceid'),
+    DEVICEID('attachment'),
+    DEVICEUSE('type'),
+    rq.Bool('enabled'),
+    rq.Pad(2),
+    rq.Card32('flags'),
+)
 
 
 HierarchyEventData = rq.Struct(
-        DEVICEID('deviceid'),
-        rq.Card32('time'),
-        rq.Card32('flags'),
-        rq.LengthOf('info', 2),
-        rq.Pad(10),
-        rq.List('info', HierarchyInfo),
-        )
+    DEVICEID('deviceid'),
+    rq.Card32('time'),
+    rq.Card32('flags'),
+    rq.LengthOf('info', 2),
+    rq.Pad(10),
+    rq.List('info', HierarchyInfo),
+)
 
 ModifierInfo = rq.Struct(
     rq.Card32('base_mods'),
