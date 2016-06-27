@@ -43,8 +43,10 @@ Record_Range16 = rq.Struct(
         rq.Card16('first'),
         rq.Card16('last'))
 Record_ExtRange = rq.Struct(
-        rq.Object('major_range', Record_Range8),
-        rq.Object('minor_range', Record_Range16))
+        rq.Card8('major_range_first'),
+        rq.Card8('major_range_last'),
+        rq.Card16('minor_range_first'),
+        rq.Card16('minor_range_last'))
 Record_Range = rq.Struct(
         rq.Object('core_requests', Record_Range8),
         rq.Object('core_replies', Record_Range8),
