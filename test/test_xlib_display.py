@@ -40,9 +40,13 @@ class TestXlibDisplay(unittest.TestCase):
         self.assertTrue(isinstance(self.display.get_pointer_mapping(), list))
 
     def test_set_get_pointer_mapping(self):
-        length = len(self.display.get_pointer_mapping())
-        self.display.set_pointer_mapping([0] * length)
-        self.assertEqual(self.display.get_pointer_mapping(), [0] * length)
+        orig_mapping = self.display.get_pointer_mapping()
+        length = len(orig_mapping)
+        try:
+            self.display.set_pointer_mapping([0] * length)
+            self.assertEqual(self.display.get_pointer_mapping(), [0] * length)
+        finally:
+            self.display.set_pointer_mapping(orig_mapping)
 
     def test_can_close_display(self):
         self.display.close()

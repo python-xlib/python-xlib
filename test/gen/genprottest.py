@@ -1,16 +1,20 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import sys
 import os
 
-sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+sys.path.insert(0, os.path.normpath(os.path.join(__file__, '../../..')))
 
 import types
 import struct
-from whrandom import randint, choice
+from random import randint, choice, seed
 
 from Xlib.protocol import request, structs, rq, event
 from Xlib import X, XK
+
+
+
+seed(42)
 
 MINI_DEF = (('CARD8', 'reqType'),
             ('BYTE', 'pad'),
@@ -181,14 +185,14 @@ def build_request(endian):
         elif parts[0] == 'REPLY':
             reply_bins[parts[1]] = parts[2]
 
-    fpy = open('test_requests_%s.py' % endian, 'w')
-    os.chmod('test_requests_%s.py' % endian, 0755)
+    fpy = open('../test_requests_%s.py' % endian, 'w')
+    os.chmod('../test_requests_%s.py' % endian, 0755)
 
     if endian == 'be':
-        e = 'Big-endian'
+        e = 'BigEndian'
         v = 1
     else:
-        e = 'Little-endian'
+        e = 'LittleEndian'
         v = 0
 
     fpy.write(PY_HEADER % { 'endname': e, 'endvalue': v })
@@ -196,7 +200,7 @@ def build_request(endian):
     for code, req in reqlist:
         name = req.__name__
 
-        fpy.write('\n\nclass Test%s(unittest.TestCase):\n' % name)
+        fpy.write('\n\nclass Test%s(EndianTest):\n' % name)
         fpy.write('    def setUp(self):\n')
 
         i = 0
@@ -233,30 +237,29 @@ def build_request(endian):
             fpy.write('''
     def testPackRequest%(n)d(self):
         bin = request.%(req)s._request.to_binary(*(), **self.req_args_%(n)d)
-        self.assert_(bin == self.req_bin_%(n)d, tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_%(n)d)
 
     def testUnpackRequest%(n)d(self):
         args, remain = request.%(req)s._request.parse_binary(self.req_bin_%(n)d, dummy_display, 1)
-        self.assert_(len(remain) == 0, tohex(remain))
-        self.assert_(args == self.req_args_%(n)d, args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_%(n)d)
 ''' % { 'req': req.__name__, 'n': i })
 
         for i in range(0, replies + 1):
             fpy.write('''
     def testPackReply%(n)d(self):
         bin = request.%(req)s._reply.to_binary(*(), **self.reply_args_%(n)d)
-        self.assert_(bin == self.reply_bin_%(n)d, tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_%(n)d)
 
     def testUnpackReply%(n)d(self):
         args, remain = request.%(req)s._reply.parse_binary(self.reply_bin_%(n)d, dummy_display, 1)
-        self.assert_(len(remain) == 0, tohex(remain))
-        self.assert_(args == self.reply_args_%(n)d, args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_%(n)d)
 ''' % { 'req': req.__name__, 'n': i })
 
     fpy.write('''
 
 if __name__ == "__main__":
-    check_endian()
     unittest.main()
 ''')
 
@@ -350,14 +353,14 @@ def build_event(endian):
         if parts[0] == 'EVENT':
             evt_bins[parts[1]] = parts[2]
 
-    fpy = open('test_events_%s.py' % endian, 'w')
-    os.chmod('test_events_%s.py' % endian, 0755)
+    fpy = open('../test_events_%s.py' % endian, 'w')
+    os.chmod('../test_events_%s.py' % endian, 0755)
 
     if endian == 'be':
-        e = 'Big-endian'
+        e = 'BigEndian'
         v = 1
     else:
-        e = 'Little-endian'
+        e = 'LittleEndian'
         v = 0
 
     fpy.write(PY_HEADER % { 'endname': e, 'endvalue': v })
@@ -368,7 +371,7 @@ def build_event(endian):
 
         name = evt.__name__
 
-        fpy.write('\n\nclass Test%s(unittest.TestCase):\n' % name)
+        fpy.write('\n\nclass Test%s(EndianTest):\n' % name)
         fpy.write('    def setUp(self):\n')
 
         i = 0
@@ -395,18 +398,17 @@ def build_event(endian):
             fpy.write('''
     def testPack%(n)d(self):
         bin = event.%(evt)s._fields.to_binary(*(), **self.evt_args_%(n)d)
-        self.assert_(bin == self.evt_bin_%(n)d, tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_%(n)d)
 
     def testUnpack%(n)d(self):
         args, remain = event.%(evt)s._fields.parse_binary(self.evt_bin_%(n)d, dummy_display, 1)
-        self.assert_(len(remain) == 0, tohex(remain))
-        self.assert_(args == self.evt_args_%(n)d, args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_%(n)d)
 ''' % { 'evt': evt.__name__, 'n': i })
 
     fpy.write('''
 
 if __name__ == "__main__":
-    check_endian()
     unittest.main()
 ''')
 
@@ -790,14 +792,14 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
             assert f == 'length'
 
             fc.write('      assert(sizeof(data) % 4 == 0);\n')
-            fc.write('      data.xstruct.length = sizeof(data) // 4;\n')
+            fc.write('      data.xstruct.length = sizeof(data) / 4;\n')
 
         elif isinstance(pyf, rq.ReplyLength):
             assert f == 'length'
 
             fc.write('      assert(sizeof(data) % 4 == 0);\n')
             fc.write('      assert(sizeof(data) >= 32);\n')
-            fc.write('      data.xstruct.length = (sizeof(data) - 32) // 4;\n')
+            fc.write('      data.xstruct.length = (sizeof(data) - 32) / 4;\n')
 
         elif isinstance(pyf, rq.LengthOf):
             fc.write('      data.xstruct.%s = %d;\n' % (f, varfs[pyf.name][1]))
@@ -874,8 +876,17 @@ def cstring(s):
 
 def build_args(args):
     kwlist = []
-    for kw, val in args.items():
-        kwlist.append("            '%s': %s,\n" % (kw, repr(val)))
+    for kw, val in sorted(args.items(), key=lambda i: i[0]):
+        if isinstance(val, rq.Event):
+            members = val._data.keys()
+            members.remove('send_event')
+            kwlist.append("            '%s': event.%s(%s),\n" % (
+                kw, val.__class__.__name__,
+                ', '.join('%s=%s' % (m, val._data[m])
+                          for m in sorted(members)),
+            ))
+        else:
+            kwlist.append("            '%s': %s,\n" % (kw, repr(val)))
 
     return '{\n' + ''.join(kwlist) + '            }'
 
@@ -986,6 +997,7 @@ C_HEADER = r'''
 #include <stdio.h>
 #include <assert.h>
 #include <ctype.h>
+#include <string.h>
 #include <X11/Xproto.h>
 
 void output(char *name, void *data, int length)
@@ -1007,70 +1019,17 @@ void output(char *name, void *data, int length)
 
 '''
 
-PY_HEADER = r'''#!/usr/bin/env python
+PY_HEADER = r'''#!/usr/bin/env python2
 
-import sys, os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+import sys, os, difflib
+sys.path.insert(0, os.path.normpath(os.path.join(__file__, '../..')))
 
 import unittest
 from Xlib.protocol import request, rq, event
-import Xlib.protocol.event
+from . import %(endname)sTest as EndianTest
+from . import DummyDisplay
 
-import struct
-import array
-
-class CmpArray(object):
-    def __init__(self, *args, **kws):
-        self.array = array.array(*args, **kws)
-
-    def __len__(self):
-        return len(self.array)
-
-    def __getitem__(self, key):
-        if isinstance(key, slice):
-            x = key.start
-            y = key.stop
-            return list(self.array[x:y])
-        else:
-            return self.array[key]
-
-    def __getattr__(self, attr):
-        return getattr(self.array, attr)
-
-    def __cmp__(self, other):
-        return cmp(self.array.tolist(), other)
-
-rq.array = CmpArray
-
-def tohex(bin):
-    bin = ''.join(map(lambda c: '\\x%%02x' %% ord(c), bin))
-
-    bins = []
-    for i in range(0, len(bin), 16):
-        bins.append(bin[i:i+16])
-
-    bins2 = []
-    for i in range(0, len(bins), 2):
-        try:
-            bins2.append("'%%s' '%%s'" %% (bins[i], bins[i + 1]))
-        except IndexError:
-            bins2.append("'%%s'" %% bins[i])
-
-    return ' \\\n            '.join(bins2)
-
-class DummyDisplay:
-    def get_resource_class(self, x):
-        return None
-
-    event_classes = Xlib.protocol.event.event_class
 dummy_display = DummyDisplay()
-
-
-def check_endian():
-    if struct.unpack('BB', struct.pack('H', 0x0100))[0] != %(endvalue)d:
-        sys.stderr.write('%(endname)s tests, skipping on this system.\n')
-        sys.exit(0)
-
 '''
 
 if __name__ == '__main__':

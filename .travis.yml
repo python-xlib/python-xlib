@@ -1,7 +1,6 @@
 language: python
 
 python:
-  - "2.6"
   - "2.7"
   - "3.3"
   - "3.4"
@@ -18,7 +17,7 @@ before_script:
 
 # command to run tests
 script: 
-  nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/testall.py examples/run_examples.py
+  nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/ examples/run_examples.py
 
 after_success:
   - codecov
