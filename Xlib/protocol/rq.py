@@ -60,25 +60,6 @@ for c in 'bhil':
 
 # print array_unsigned_codes, struct_to_array_codes
 
-def _method(func, instance):
-    """Dynamically create a new method.
-
-    Exposes a common interface for types.MethodType across Python 3 and 2
-    """
-    if sys.version_info[0] >= 3:
-        return types.MethodType(func, instance)
-    else:
-        return types.MethodType(func, instance, type(instance))
-
-def _to_ord(ch):
-    """Get char code in a cross-Python way"""
-    if isinstance(ch, int):
-        # Python 3: bytes char is already an integer, no need to call ord()
-        return ch
-    else:
-        # Python 2: string char required to call ord()
-        return ord(ch)
-
 
 class Field(object):
     """Field objects represent the data fields of a Struct.
