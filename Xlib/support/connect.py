@@ -17,8 +17,7 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import sys
-import os
-import imp
+import importlib
 
 # List the modules which contain the corresponding functions
 
@@ -49,6 +48,10 @@ platform = _parts[0]
 del _parts
 
 
+def _relative_import(modname):
+    return importlib.import_module('..' + modname, __name__)
+
+
 def get_display(display):
     """dname, host, dno, screen = get_display(display)
 
@@ -62,8 +65,7 @@ def get_display(display):
     """
 
     modname = _display_mods.get(platform, _default_display_mod)
-    mod = imp.load_source(modname, os.path.join(os.path.dirname(__file__), modname + ".py"))
-    # mod = __import__(modname, globals())
+    mod = _relative_import(modname)
     return mod.get_display(display)
 
 
@@ -77,8 +79,7 @@ def get_socket(dname, host, dno):
     """
 
     modname = _socket_mods.get(platform, _default_socket_mod)
-    mod = imp.load_source(modname, os.path.join(os.path.dirname(__file__), modname + ".py"))
-    #mod = __import__(modname, globals())
+    mod = _relative_import(modname)
     return mod.get_socket(dname, host, dno)
 
 
@@ -93,6 +94,5 @@ def get_auth(sock, dname, host, dno):
     """
 
     modname = _auth_mods.get(platform, _default_auth_mod)
-    mod = imp.load_source(modname, os.path.join(os.path.dirname(__file__), modname + ".py"))
-    #mod = __import__(modname, globals())
+    mod = _relative_import(modname)
     return mod.get_auth(sock, dname, host, dno)

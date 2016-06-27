@@ -28,7 +28,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from Xlib import X, display, Xutil
 
 # Application window (only one)
-class Window:
+class Window(object):
     def __init__(self, display):
         self.d = display
         self.objects = []
@@ -117,7 +117,7 @@ class Window:
 # A drawed objects, consisting of either a single
 # romboid, or two romboids connected by a winding line
 
-class Movement:
+class Movement(object):
     def __init__(self, win, ev):
         self.win = win
 
@@ -205,7 +205,7 @@ class Movement:
 
 
 # A romboid, drawed around the Movement endpoints
-class Romboid:
+class Romboid(object):
     def __init__(self, win, ev):
         self.win = win
         self.x = ev.event_x

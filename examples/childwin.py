@@ -19,6 +19,8 @@
 #	along with this program; if not, write to the Free Software
 #	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+# Python 2/3 compatibility.
+from __future__ import print_function
 
 import sys
 import os
@@ -29,7 +31,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from Xlib import X, display, Xutil
 
 # Application window
-class Window:
+class Window(object):
 	def __init__(self, display):
 		self.d = display
 
@@ -127,7 +129,7 @@ class Window:
 			# Button released, add or subtract
 			elif e.type == X.ButtonRelease:
 				if e.detail == 1:
-					print "Moving child window."
+					print("Moving child window.")
 					self.childWindow.configure(
 						x=e.event_x - self.childWidth // 2,
 						y=e.event_y - self.childHeight // 2

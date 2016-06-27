@@ -19,6 +19,9 @@
 #    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
+# Python 2/3 compatibility.
+from __future__ import print_function
+
 import sys
 import os
 
@@ -29,7 +32,7 @@ from Xlib import X, display, Xutil
 from Xlib.ext import shape
 
 # Application window (only one)
-class Window:
+class Window(object):
     def __init__(self, display):
         self.d = display
 
@@ -39,9 +42,9 @@ class Window:
                              % sys.argv[1])
             sys.exit(1)
 
-        # print version
+        # print(version)
         r = self.d.shape_query_version()
-        print 'SHAPE version %d.%d' % (r.major_version, r.minor_version)
+        print('SHAPE version %d.%d' % (r.major_version, r.minor_version))
 
 
         # Find which screen to open the window on
@@ -163,7 +166,7 @@ class Window:
 
             # Shape has changed
             elif e.type == self.d.extension_event.ShapeNotify:
-                print 'Shape change'
+                print('Shape change')
 
             # Somebody wants to tell us something
             elif e.type == X.ClientMessage:

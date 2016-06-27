@@ -25,6 +25,9 @@ import struct
 import errno
 import socket
 
+# Python 2/3 compatibility.
+from six import PY3, byte2int, indexbytes
+
 # Xlib modules
 from .. import error
 from ..ext import ge
@@ -34,6 +37,15 @@ from ..support import lock, connect
 # Xlib.protocol modules
 from . import rq
 from . import event
+
+if PY3:
+    def buffer(object, offset=None, size=None):
+        if offset is None:
+            offset = 0
+        if size is None:
+            size = len(object)-offset
+        return memoryview(object)[offset:offset+size]
+
 
 class Display(object):
     resource_classes = {}
@@ -84,8 +96,8 @@ class Display(object):
         # Data used by the send-and-recieve loop
         self.sent_requests = []
         self.recv_packet_len = 0
-        self.data_send = ''
-        self.data_recv = ''
+        self.data_send = b''
+        self.data_recv = b''
         self.data_sent_bytes = 0
 
         # Resource ID structures
@@ -557,7 +569,7 @@ class Display(object):
                         self.close_internal('server')
                         raise self.socket_error
 
-                    self.data_recv = self.data_recv + bytes_recv
+                    self.data_recv = bytes(self.data_recv) + bytes_recv
                     gotreq = self.parse_response(request)
 
                 # Otherwise return, allowing the calling thread to figure
@@ -642,7 +654,7 @@ class Display(object):
         while 1:
             if self.data_recv:
                 # Check the first byte to find out what kind of response it is
-                rtype = ord(self.data_recv[0])
+                rtype = byte2int(self.data_recv)
 
             # Are we're waiting for additional data for the current packet?
             if self.recv_packet_len:
@@ -681,7 +693,7 @@ class Display(object):
 
     def parse_error_response(self, request):
         # Code is second byte
-        code = ord(self.data_recv[1])
+        code = indexbytes(self.data_recv, 1)
 
         # Fetch error class
         estruct = self.error_classes.get(code, error.XError)

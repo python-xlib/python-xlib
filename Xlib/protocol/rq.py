@@ -23,6 +23,9 @@ import struct
 from array import array
 import types
 
+# Python 2/3 compatibility.
+from six import byte2int, indexbytes, string_types
+
 # Xlib modules
 from .. import X
 from ..support import lock
@@ -388,6 +391,39 @@ class FixedString(ValueField):
         self.structcode = '{0}s'.format(size)
 
 
+class Bytes(ValueField):
+    structcode = None
+
+    def __init__(self, name, pad = 1):
+        ValueField.__init__(self, name)
+        self.pad = pad
+
+    def pack_value(self, val):
+        if isinstance(val, bytes):
+            val_bytes = val
+        else:
+            val_bytes = val.encode()
+        slen = len(val_bytes)
+
+        if self.pad:
+            return val_bytes + b'\0' * ((4 - slen % 4) % 4), slen, None
+        else:
+            return val_bytes, slen, None
+
+    def parse_binary_value(self, data, display, length, format):
+        if length is None:
+            return data, b''
+
+        if self.pad:
+            slen = length + ((4 - length % 4) % 4)
+        else:
+            slen = length
+
+        data_bytes = data[:length]
+
+        return data_bytes, data[slen:]
+
+
 class String8(ValueField):
     structcode = None
 
@@ -443,7 +479,7 @@ class String16(ValueField):
         else:
             pad = b''
 
-        return struct.pack(*('>' + 'H' * slen, ) + tuple(val)) + pad, slen, None
+        return struct.pack('>' + 'H' * slen, *val) + pad, slen, None
 
     def parse_binary_value(self, data, display, length, format):
         if length == 'odd':
@@ -584,7 +620,7 @@ class Object(ValueField):
         return self.type.pack_value(val)
 
     def check_value(self, val):
-        if type(val) is tuple:
+        if isinstance(val, tuple):
             vals = []
             i = 0
             for f in self.type.fields:
@@ -600,7 +636,7 @@ class Object(ValueField):
                     i = i + 1
             return vals
 
-        if type(val) is dict:
+        if isinstance(val, dict):
             data = val
         elif isinstance(val, DictWrapper):
             data = val._data
@@ -654,19 +690,20 @@ class PropertyData(ValueField):
         if fmt not in (8, 16, 32):
             raise BadDataError('Invalid property data format {0}'.format(fmt))
 
-        if type(val) in [bytes, str]:
+        if isinstance(val, string_types):
+            val = val.encode()
             size = fmt // 8
             vlen = len(val)
             if vlen % size:
                 vlen = vlen - vlen % size
-                data = val[:vlen].encode()
+                data = val[:vlen]
             else:
-                data = val.encode()
+                data = val
 
             dlen = vlen // size
 
         else:
-            if type(val) is tuple:
+            if isinstance(val, tuple):
                 val = list(val)
 
             size = fmt // 8
@@ -836,10 +873,10 @@ class EventField(ValueField):
     def parse_binary_value(self, data, display, length, format):
         from . import event
 
-        estruct = display.event_classes.get(_to_ord(data[0]) & 0x7f, event.AnyEvent)
+        estruct = display.event_classes.get(byte2int(data) & 0x7f, event.AnyEvent)
         if type(estruct) == dict:
             # this etype refers to a set of sub-events with individual subcodes
-            estruct = estruct[_to_ord(data[1])]
+            estruct = estruct[indexbytes(data, 1)]
 
         return estruct(display = display, binarydata = data[:32]), data[32:]
 
@@ -887,7 +924,7 @@ class StrClass(object):
         return (chr(len(val)) + val).encode()
 
     def parse_binary(self, data, display):
-        slen = _to_ord(data[0]) + 1
+        slen = byte2int(data) + 1
         return data[1:slen].decode(), data[slen:]
 
 Str = StrClass()
@@ -1057,7 +1094,7 @@ class Struct(object):
 
         if type(value) is tuple:
             return self.to_binary(*value)
-        elif type(value) is dict:
+        elif isinstance(value, dict):
             return self.to_binary(**value)
         elif isinstance(value, DictWrapper):
             return self.to_binary(**value._data)
@@ -1203,10 +1240,9 @@ class TextElements8(ValueField):
             # A tuple, it should be (delta, string)
             # Encode it as one or more textitems
 
-            if type(v) in (tuple, dict) or \
-               isinstance(v, DictWrapper):
+            if isinstance(v, (tuple, dict, DictWrapper)):
 
-                if type(v) is tuple:
+                if isinstance(v, tuple):
                     delta, str = v
                 else:
                     delta = v['delta']
@@ -1240,12 +1276,12 @@ class TextElements8(ValueField):
                 break
 
             # font change
-            if _to_ord(data[0]) == 255:
-                values.append(struct.unpack('>L', data[1:5].decode().encode())[0])
+            if byte2int(data) == 255:
+                values.append(struct.unpack('>L', bytes(data[1:5]))[0])
                 data = data[5:]
 
             # skip null strings
-            elif _to_ord(data[0]) == 0 and _to_ord(data[1]) == 0:
+            elif byte2int(data) == 0 and indexbytes(data, 1) == 0:
                 data = data[2:]
 
             # string with delta

@@ -797,10 +797,9 @@ class Pixmap(Drawable):
 
         self.display.free_resource_id(self.id)
 
-    def create_cursor(self, mask,
-                      fore_red, fore_green, fore_blue,
-                      back_red, back_green, back_blue,
-                      x, y):
+    def create_cursor(self, mask, foreground, background, x, y):
+        fore_red, fore_green, fore_blue = foreground
+        back_red, back_green, back_blue = background
         cid = self.display.allocate_resource_id()
         request.CreateCursor(display = self.display,
                              cid = cid,

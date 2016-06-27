@@ -20,7 +20,7 @@ from Xlib import error
 # We don't want any fancy dictwrapper, just plain mappings
 rq.DictWrapper = lambda x: x
 
-class BugFile:
+class BugFile(object):
     def __init__(self, file):
         self.file = file
         self.cbuf = self.sbuf = ''
@@ -60,7 +60,7 @@ class BugFile:
             raise ValueError('Bad control line: %s' % line)
 
 
-class ParseString:
+class ParseString(object):
     def __init__(self, datafunc):
         self.get_data = datafunc
         self.data = ''
@@ -102,11 +102,11 @@ class ParseString:
 
             return self.data[i:j]
 
-class DummyDisplay:
+class DummyDisplay(object):
     def get_resource_class(self, name):
         return None
 
-class ParseXbug:
+class ParseXbug(object):
     def __init__(self, infile = sys.stdin, outfile = sys.stdout):
         bf = BugFile(infile)
         self.cdata = ParseString(bf.read_client)

@@ -29,8 +29,9 @@ class Cursor(resource.Resource):
                            cursor = self.id)
         self.display.free_resource_id(self.id)
 
-    def recolor(self, fore_red, fore_green, fore_blue,
-                back_red, back_green, back_blue, onerror = None):
+    def recolor(self, foreground, background, onerror=None):
+        fore_red, fore_green, fore_blue = foreground
+        back_red, back_green, back_blue = background
 
         request.RecolorCursor(display = self.display,
                               onerror = onerror,

@@ -22,6 +22,9 @@
 # Not very much unlike the xmacrorec2 program in the xmacro package.
 
 
+# Python 2/3 compatibility.
+from __future__ import print_function
+
 import sys
 import os
 
@@ -45,7 +48,7 @@ def record_callback(reply):
     if reply.category != record.FromServer:
         return
     if reply.client_swapped:
-        print "* received swapped protocol data, cowardly ignored"
+        print("* received swapped protocol data, cowardly ignored")
         return
     if not len(reply.data) or ord(reply.data[0]) < 2:
         # not an event
@@ -60,28 +63,28 @@ def record_callback(reply):
 
             keysym = local_dpy.keycode_to_keysym(event.detail, 0)
             if not keysym:
-                print "KeyCode%s" % pr, event.detail
+                print("KeyCode%s" % pr, event.detail)
             else:
-                print "KeyStr%s" % pr, lookup_keysym(keysym)
+                print("KeyStr%s" % pr, lookup_keysym(keysym))
 
             if event.type == X.KeyPress and keysym == XK.XK_Escape:
                 local_dpy.record_disable_context(ctx)
                 local_dpy.flush()
                 return
         elif event.type == X.ButtonPress:
-            print "ButtonPress", event.detail
+            print("ButtonPress", event.detail)
         elif event.type == X.ButtonRelease:
-            print "ButtonRelease", event.detail
+            print("ButtonRelease", event.detail)
         elif event.type == X.MotionNotify:
-            print "MotionNotify", event.root_x, event.root_y
+            print("MotionNotify", event.root_x, event.root_y)
 
 
 # Check if the extension is present
 if not record_dpy.has_extension("RECORD"):
-    print "RECORD extension not found"
+    print("RECORD extension not found")
     sys.exit(1)
 r = record_dpy.record_get_version(0, 0)
-print "RECORD extension version %d.%d" % (r.major_version, r.minor_version)
+print("RECORD extension version %d.%d" % (r.major_version, r.minor_version))
 
 # Create a recording context; we only want key and mouse events
 ctx = record_dpy.record_create_context(

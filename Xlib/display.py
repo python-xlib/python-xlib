@@ -19,6 +19,9 @@
 # Python modules
 import types
 
+# Python 2/3 compatibility.
+from six import create_unbound_method
+
 # Xlib modules
 from . import error
 from . import ext
@@ -62,7 +65,7 @@ class _BaseDisplay(protocol_display.Display):
     # dealing with some ICCCM properties not defined in Xlib.Xatom
 
     def __init__(self, *args, **keys):
-        protocol_display.Display.__init__(*(self, ) + args, **keys)
+        protocol_display.Display.__init__(self, *args, **keys)
         self._atom_cache = {}
 
     def get_atom(self, atomname, only_if_exists=0):
@@ -124,16 +127,11 @@ class Display(object):
 
 
         # Finalize extensions by creating new classes
-        for type, dict in self.class_extension_dicts.items():
-            origcls = self.display.resource_classes[type]
-            if hasattr(types, 'ClassType'):
-                self.display.resource_classes[type] = types.ClassType(origcls.__name__,
-                                                                      (origcls,),
-                                                                      dict)
-            else:
-                self.display.resource_classes[type] = types.new_class(origcls.__name__,
-                                                                      (origcls,),
-                                                                      dict)
+        for class_name, dictionary in self.class_extension_dicts.items():
+            origcls = self.display.resource_classes[class_name]
+            self.display.resource_classes[class_name] = type(origcls.__name__,
+                                                             (origcls,),
+                                                             dictionary)
 
         # Problem: we have already created some objects without the
         # extensions: the screen roots and default colormaps.
@@ -221,7 +219,7 @@ class Display(object):
     def __getattr__(self, attr):
         try:
             function = self.display_extension_methods[attr]
-            return types.MethodType(function, self, self.__class__)
+            return types.MethodType(function, self)
         except KeyError:
             raise AttributeError(attr)
 
@@ -276,19 +274,19 @@ class Display(object):
             self.display_extension_methods[name] = function
 
         else:
-            types_ = (object, ) + _resource_hierarchy.get(object, ())
-            for type in types_:
-                cls = _resource_baseclasses[type]
+            class_list = (object, ) + _resource_hierarchy.get(object, ())
+            for class_name in class_list:
+                cls = _resource_baseclasses[class_name]
                 if hasattr(cls, name):
-                    raise AssertionError('attempting to replace %s method: %s' % (type, name))
+                    raise AssertionError('attempting to replace %s method: %s' % (class_name, name))
 
-                method = types.MethodType(function, None, cls)
+                method = create_unbound_method(function, cls)
 
                 # Maybe should check extension overrides too
                 try:
-                    self.class_extension_dicts[type][name] = method
+                    self.class_extension_dicts[class_name][name] = method
                 except KeyError:
-                    self.class_extension_dicts[type] = { name: method }
+                    self.class_extension_dicts[class_name] = { name: method }
 
     def extension_add_event(self, code, evt, name = None):
         """extension_add_event(code, evt, [name])
@@ -302,12 +300,8 @@ class Display(object):
         extension_event.
         """
 
-        if hasattr(types, 'ClassType'):
-            newevt = types.ClassType(evt.__name__, evt.__bases__,
-                                     evt.__dict__.copy())
-        else:
-            newevt = types.new_class(evt.__name__, evt.__bases__,
-                                     evt.__dict__.copy())
+        newevt = type(evt.__name__, evt.__bases__,
+                      evt.__dict__.copy())
         newevt._code = code
 
         self.display.add_extension_event(code, newevt)
@@ -330,12 +324,8 @@ class Display(object):
         extension_event.
         """
 
-        if hasattr(types, 'ClassType'):
-            newevt = types.ClassType(evt.__name__, evt.__bases__,
-                                     evt.__dict__.copy())
-        else:
-            newevt = types.new_class(evt.__name__, evt.__bases__,
-                                     evt.__dict__.copy())
+        newevt = type(evt.__name__, evt.__bases__,
+                      evt.__dict__.copy())
         newevt._code = code
 
         self.display.add_extension_event(code, newevt, subcode)

@@ -96,7 +96,7 @@ class Xauthority(object):
         return self.entries[i]
 
     def get_best_auth(self, family, address, dispno,
-                      types = ( "MIT-MAGIC-COOKIE-1", )):
+                      types = ( b"MIT-MAGIC-COOKIE-1", )):
 
         """Find an authentication entry matching FAMILY, ADDRESS and
         DISPNO.
@@ -109,7 +109,7 @@ class Xauthority(object):
         otherwise XNoAuthError is raised.
         """
 
-        num = str(dispno)
+        num = str(dispno).encode()
 
         matches = {}
 

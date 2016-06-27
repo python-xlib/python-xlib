@@ -1,6 +1,6 @@
 # Distutils script for python-xlib
 
-from distutils.core import setup
+from setuptools import setup
 import sys
 
 if sys.version < '2.3.3':
@@ -19,6 +19,8 @@ setup(name='python-xlib',
 
         author='Peter Liljenberg',
         author_email='petli@ctrl-c.liu.se',
+
+        install_requires=['six>=1.10.0'],
 
         packages=[
             'Xlib',
