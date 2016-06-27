@@ -1,10 +1,10 @@
 #!/usr/bin/env python2
 
-import sys, os, difflib
+import sys, os
 sys.path.insert(0, os.path.normpath(os.path.join(__file__, '../..')))
 
 import unittest
-from Xlib.protocol import request, rq, event
+from Xlib.protocol import request, event
 from . import BigEndianTest as EndianTest
 from . import DummyDisplay
 
