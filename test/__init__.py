@@ -45,22 +45,22 @@ class DummyDisplay(object):
 class TestCase(unittest.TestCase):
 
     def assertBinaryEqual(self, bin1, bin2):
-        if bin1 == bin2:
-            return
-        self.fail('binary contents differ:\n' + bindiff(bin1, bin2))
+        if bin1 != bin2:
+            self.fail('binary contents differ:\n' + bindiff(bin1, bin2))
 
     def assertBinaryEmpty(self, bin):
-        if 0 == len(bin):
-            return
-        self.fail('binary content not empty:\n' + ''.join(tohex(bin)))
+        if len(bin) != 0:
+            self.fail('binary content not empty:\n' + ''.join(tohex(bin)))
 
 class BigEndianTest(TestCase):
+
     @classmethod
     def setUpClass(cls):
         if struct.unpack('BB', struct.pack('H', 0x0100))[0] != 1:
             raise unittest.SkipTest('big-endian tests, skipping on this system')
 
 class LittleEndianTest(TestCase):
+
     @classmethod
     def setUpClass(cls):
         if struct.unpack('BB', struct.pack('H', 0x0100))[0] != 0:
