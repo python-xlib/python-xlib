@@ -60,7 +60,7 @@ def get_socket(dname, host, dno):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, 6000 + dno))
 
-    except socket.error, val:
+    except socket.error as val:
         raise error.DisplayConnectionError(dname, str(val))
 
     return s
