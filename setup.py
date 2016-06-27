@@ -13,8 +13,8 @@ setup(name='python-xlib',
         version=Xlib.__version_string__,
 
         description='Python X Library',
-        download_url='http://sourceforge.net/projects/python-xlib/files/',
-        url='http://python-xlib.sourceforge.net/',
+        download_url='https://github.com/python-xlib/python-xlib/releases',
+        url='https://github.com/python-xlib/python-xlib',
         license='GPL',
 
         author='Peter Liljenberg',
