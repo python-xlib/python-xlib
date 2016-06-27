@@ -1,13 +1,9 @@
 # Distutils script for python-xlib
 
 from setuptools import setup
-import sys
-
-if sys.version < '2.3.3':
-    from distutils.dist import DistributionMetadata
-    DistributionMetadata.download_url = None
 
 import Xlib
+
 
 setup(name='python-xlib',
         version=Xlib.__version_string__,
