@@ -28,4 +28,22 @@ setup(
         'Xlib.support',
         'Xlib.xobject'
     ],
+
+    keywords='xlib x11 x windows',
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: X11 Applications',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: User Interfaces',
+    ],
 )
