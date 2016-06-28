@@ -10,34 +10,29 @@ The main part of the code is
 
     Copyright (C) 2000-2002  Peter Liljenberg
 
-Some contributed code is copyrighted by [the contributors](https://github.com/python-xlib/python-xlib/graphs/contributors), in these cases that is indicated in the source files in question.
+Some contributed code is copyrighted by [the contributors](https://github.com/python-xlib/python-xlib/graphs/contributors),
+in these cases that is indicated in the source files in question.
 
 The Python X Library is released under LGPL v2.1 or later (since 2016), see the file LICENSE for details.
 0.15rc1 and before were released under GPL v2.
 
 ### Requirements
 
-The Python X Library requires Python 1.5.2 or newer.  It has been
-tested to various extents with Python 1.5.2 and 2.0 through 2.7.
+The Python X Library requires Python 2.7 or newer.  It has been
+tested to various extents with Python 2.7 and 3.3 through 3.5.
 
 
 ### Installation
 
-The Python Xlib uses the standard distutils to make installation
-easy.  Distutils is shipped with Python 1.6 and newer.  Python 1.5.2
-users must download and install distutils before Python Xlib can be
-installed.  Distutils can be downloaded from
-http://www.python.org/sigs/distutils-sig/.
-
-Install Python Xlib by running this command:
+The Python Xlib uses the standard setuptools package, to install run this
+command:
 ```
 python setup.py install
 ```
-Installation can be modified with the normal install options, see the
-documentation of distutils for details.
+See the command help for details: `python setup.py install -h`.
 
 Alternatively, you can run programs from the distribution directory,
-or changing the module path in programs.
+or change the module path in programs.
 
 There's a simple example program, implemented twice using both the
 high-level interface and the low-level protocol.
@@ -101,7 +96,10 @@ Author email: Peter Liljenberg <petli@ctrl-c.liu.se>
 
 Mailing list: http://sourceforge.net/mail/?group_id=10350
 
-The Python X Library is a SourceForged project (currently migrating to GitHub). The project page is http://sourceforge.net/projects/python-xlib/. Source is available from that page as zip archive and from the [releases list](https://github.com/python-xlib/python-xlib/releases).
+The Python X Library is a SourceForged project (currently migrating to GitHub).
+The project page is http://sourceforge.net/projects/python-xlib/. Source is
+available from that page as zip archive and from the [releases
+list](https://github.com/python-xlib/python-xlib/releases).
 
 There isn't any real web page yet, only a derivative of this file.  It
 is located at http://python-xlib.sourceforge.net/.  It now also
