@@ -12,7 +12,7 @@ setup(
     description='Python X Library',
     download_url='https://github.com/python-xlib/python-xlib/releases',
     url='https://github.com/python-xlib/python-xlib',
-    license='GPL',
+    license='LGPLv2+',
 
     author='Peter Liljenberg',
     author_email='petli@ctrl-c.liu.se',
@@ -34,7 +34,7 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: X11 Applications',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
