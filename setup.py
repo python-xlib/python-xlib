@@ -18,6 +18,7 @@ setup(
     author_email='petli@ctrl-c.liu.se',
 
     install_requires=['six>=1.10.0'],
+    setup_requires=['setuptools-scm'],
 
     packages=[
         'Xlib',
