@@ -29,7 +29,7 @@ class AnyEvent(rq.Event):
     _fields = rq.Struct( rq.Card8('type'),
                          rq.Card8('detail'),
                          rq.Card16('sequence_number'),
-                         rq.FixedString('data', 28),
+                         rq.FixedBinary('data', 28),
                          )
 
 class KeyButtonPointer(rq.Event):

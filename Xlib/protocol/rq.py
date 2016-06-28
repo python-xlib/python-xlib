@@ -364,7 +364,7 @@ class Gravity(Set):
                                     X.SouthEastGravity))
 
 
-class FixedString(ValueField):
+class FixedBinary(ValueField):
     structvalues = 1
 
     def __init__(self, name, size):
@@ -372,7 +372,7 @@ class FixedString(ValueField):
         self.structcode = '{0}s'.format(size)
 
 
-class Bytes(ValueField):
+class Binary(ValueField):
     structcode = None
 
     def __init__(self, name, pad = 1):
@@ -380,10 +380,7 @@ class Bytes(ValueField):
         self.pad = pad
 
     def pack_value(self, val):
-        if isinstance(val, bytes):
-            val_bytes = val
-        else:
-            val_bytes = val.encode()
+        val_bytes = val
         slen = len(val_bytes)
 
         if self.pad:
@@ -400,9 +397,7 @@ class Bytes(ValueField):
         else:
             slen = length
 
-        data_bytes = data[:length]
-
-        return data_bytes, data[slen:]
+        return data[:length], data[slen:]
 
 
 class String8(ValueField):
