@@ -72,7 +72,7 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
                          rq.LengthOf('auth_data', 2),
                          rq.Card32('value_mask'),
                          rq.String8('auth_proto'),
-                         rq.Bytes('auth_data'),
+                         rq.Binary('auth_data'),
                          rq.List('values', rq.Card32Obj)
                          )
     _reply = rq.Struct(rq.ReplyCode(),
@@ -82,11 +82,11 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
                        AUTHID('authid'),
                        rq.LengthOf('auth_data_return', 2),
                        rq.Pad(18),
-                       rq.Bytes('auth_data_return')
+                       rq.Binary('auth_data_return')
                        )
 
 
-def generate_authorization(self, auth_proto, auth_data='', timeout=None,
+def generate_authorization(self, auth_proto, auth_data=b'', timeout=None,
                            trust_level=None, group=None, event_mask=None):
     value_mask = 0
     values = []
