@@ -19,7 +19,7 @@ before_script:
 
 # command to run tests
 script: 
-  nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/ examples/run_examples.py
+  nosetests --exe --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/ examples/run_examples.py
 
 after_success:
   - codecov
