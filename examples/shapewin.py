@@ -122,13 +122,13 @@ class Window(object):
         gc.free()
 
         # Set initial mask
-        self.window.shape_mask(shape.ShapeSet, shape.ShapeBounding,
+        self.window.shape_mask(shape.SO.Set, shape.SK.Bounding,
                                0, 0, self.add_pm)
-        self.window.shape_mask(shape.ShapeUnion, shape.ShapeBounding,
+        self.window.shape_mask(shape.SO.Union, shape.SK.Bounding,
                                400 - self.add_size, 0, self.add_pm)
-        self.window.shape_mask(shape.ShapeUnion, shape.ShapeBounding,
+        self.window.shape_mask(shape.SO.Union, shape.SK.Bounding,
                                0, 300 - self.add_size, self.add_pm)
-        self.window.shape_mask(shape.ShapeUnion, shape.ShapeBounding,
+        self.window.shape_mask(shape.SO.Union, shape.SK.Bounding,
                                400 - self.add_size, 300 - self.add_size,
                                self.add_pm)
 
@@ -165,7 +165,7 @@ class Window(object):
                                            self.sub_pm)
 
             # Shape has changed
-            elif e.type == self.d.extension_event.ShapeNotify:
+            elif e.type == shape.Event.Notify:
                 print('Shape change')
 
             # Somebody wants to tell us something
