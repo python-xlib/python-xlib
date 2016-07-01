@@ -801,7 +801,10 @@ class Display(object):
         # Decrement it by one, so that we don't remove the request
         # that generated these events, if there is such a one.
         # Bug reported by Ilpo Nyyssönen
-        self.get_waiting_request((e.sequence_number - 1) % 65536)
+        # Note: not all events have a sequence_number field!
+        # (e.g. KeymapNotify).
+        if hasattr(e, 'sequence_number'):
+            self.get_waiting_request((e.sequence_number - 1) % 65536)
 
         # print 'recv Event:', e
 
