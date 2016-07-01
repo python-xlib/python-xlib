@@ -31,9 +31,9 @@ class KIND(rq.Set):
 class NotifyEventData(rq.Event):
     _code = None
     _fields = rq.Struct(
-        rq.Card8('response_type'),
+        rq.Card8('type'),
         KIND('shape_kind'),
-        rq.Card16('sequence'),
+        rq.Card16('sequence_number'),
         rq.Window('affected_window'),
         rq.Int16('extents_x'),
         rq.Int16('extents_y'),
@@ -293,5 +293,5 @@ def init(disp, info):
     disp.extension_add_method('display', 'shape_query_version', query_version)
     disp.extension_add_method('window', 'shape_rectangles', rectangles)
     disp.extension_add_method('window', 'shape_select_input', select_input)
-    disp.extension_add_event(info.first_event + Event.Notify, NotifyEventData)
+    disp.extension_add_event(info.first_event + Event.Notify, NotifyEventData, 'ShapeNotify')
 
