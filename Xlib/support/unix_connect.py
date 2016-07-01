@@ -72,7 +72,7 @@ def get_display(display):
 def get_socket(dname, host, dno):
     try:
         # Darwin funky socket
-        if (uname[0] == 'Darwin') and host and host.startswith('/tmp/'):
+        if (uname[0] == 'Darwin') and host and host.startswith('/private/tmp/'):
             s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
             s.connect(dname)
 
@@ -96,7 +96,7 @@ def get_socket(dname, host, dno):
 
 def new_get_auth(sock, dname, host, dno):
     # Translate socket address into the xauth domain
-    if (uname[0] == 'Darwin') and host and host.startswith('/tmp/'):
+    if (uname[0] == 'Darwin') and host and host.startswith('/private/tmp/'):
         family = xauth.FamilyLocal
         addr = socket.gethostname()
 
