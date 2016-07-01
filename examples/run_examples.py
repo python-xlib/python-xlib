@@ -2,10 +2,7 @@
 #
 # examples/run_examples.py -- run some examples.
 #
-# GUI Application automation and testing library
-# Copyright (C) 2016 Intel Corporation
-# Copyright (C) 2012 Michael Herrmann
-# Copyright (C) 2010 Mark Mc Mahon
+#    Copyright (C) 2016 Svetlana Filicheva
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License

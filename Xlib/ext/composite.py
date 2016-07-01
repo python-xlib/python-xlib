@@ -4,19 +4,22 @@
 #
 #    Copyright (C) 2007 Peter Liljenberg <peter.liljenberg@gmail.com>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 """Composite extension, allowing windows to be rendered to off-screen
 storage.
@@ -160,7 +163,7 @@ def create_region_from_border_clip(self):
     """Create a region of the border clip of the window, i.e. the area
     that is not clipped by the parent and any sibling windows.
     """
-    
+
     rid = self.display.allocate_resource_id()
     CreateRegionFromBorderClip(
         display = self.display,
@@ -202,7 +205,7 @@ def name_window_pixmap(self):
 
     cls = self.display.get_resource_class('pixmap', drawable.Pixmap)
     return cls(self.display, pid, owner = 1)
-    
+
 
 def init(disp, info):
     disp.extension_add_method('display',
