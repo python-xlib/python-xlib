@@ -80,7 +80,7 @@ class Window(object):
             # special attribute values
             background_pixmap = bgpm,
             event_mask = (X.StructureNotifyMask |
-                          X.ButtonReleaseMask),
+                          X.ButtonPressMask | X.ButtonReleaseMask),
             colormap = X.CopyFromParent,
             )
 
@@ -155,20 +155,20 @@ class Window(object):
             # Button released, add or subtract
             elif e.type == X.ButtonRelease:
                 if e.detail == 1:
-                    self.window.shape_mask(shape.ShapeUnion,
-                                           shape.ShapeBounding,
+                    self.window.shape_mask(shape.SO.Union,
+                                           shape.SK.Bounding,
                                            e.event_x - self.add_size // 2,
                                            e.event_y - self.add_size // 2,
                                            self.add_pm)
                 elif e.detail == 3:
-                    self.window.shape_mask(shape.ShapeSubtract,
-                                           shape.ShapeBounding,
+                    self.window.shape_mask(shape.SO.Subtract,
+                                           shape.SK.Bounding,
                                            e.event_x - self.sub_size // 2,
                                            e.event_y - self.sub_size // 2,
                                            self.sub_pm)
 
             # Shape has changed
-            elif e.type == shape.Event.Notify:
+            elif e.type == self.d.extension_event.ShapeNotify:
                 print('Shape change')
 
             # Somebody wants to tell us something
