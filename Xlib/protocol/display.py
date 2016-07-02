@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #
 # Xlib.protocol.display -- core display communication
 #
@@ -800,8 +800,11 @@ class Display(object):
 
         # Decrement it by one, so that we don't remove the request
         # that generated these events, if there is such a one.
-        # Bug reported by Ilpo Nyyss�nen
-        self.get_waiting_request((e.sequence_number - 1) % 65536)
+        # Bug reported by Ilpo Nyyssönen
+        # Note: not all events have a sequence_number field!
+        # (e.g. KeymapNotify).
+        if hasattr(e, 'sequence_number'):
+            self.get_waiting_request((e.sequence_number - 1) % 65536)
 
         # print 'recv Event:', e
 
