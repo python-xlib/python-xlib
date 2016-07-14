@@ -2,6 +2,36 @@
 
                       NEWS for Python X Library
 
+* Version 0.16
+
+** Licensing
+
+The project is now licensed under the GNU Lesser General Public License
+v2.1 or later (see the LICENSE file for details).
+
+** Compatibility
+
+Support for Python versions older than 2.7 has been dropped. Support for
+Python 3 (3.3, 3.4 and 3.5) has been added. Note that Python-Xlib now
+depends on the six package (>=1.10) for combined Python 2 / 3 support.
+
+** API Changes
+
+With the change of license, and no way to contact the original author of
+the SHAPE extension, the code had to be rewritten from scratch. This
+resulted in a few minor API changes (see examples/shapewin.py).
+
+Partial support for the SECURITY. XInput, and XFIXES extensions has been
+added.
+
+** Bug Fixes
+
+- fix RECORD extension
+- fixed OS X socket path
+- fix handling of generic events
+- fix handling of KeymapNotify events
+- several fixes for the RandR extension
+
 * Version 0.15rc1 - 14 Nov 2009
 
 Improved support for newer versions of Mac OS X, a couple of new
