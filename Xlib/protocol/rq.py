@@ -27,7 +27,7 @@ from array import array
 import types
 
 # Python 2/3 compatibility.
-from six import byte2int, indexbytes, string_types
+from six import byte2int, indexbytes, iterbytes, string_types
 
 # Xlib modules
 from .. import X
@@ -448,8 +448,8 @@ class String16(ValueField):
 
     def pack_value(self, val):
         """Convert 8-byte string into 16-byte list"""
-        if type(val) is bytes:
-            val = map(lambda c: ord(c), val)
+        if isinstance(val, bytes):
+            val = list(iterbytes(val))
 
         slen = len(val)
 
