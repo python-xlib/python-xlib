@@ -421,8 +421,7 @@ class Window(Drawable):
         return request.QueryTree(display = self.display,
                                  window = self.id)
 
-
-    def change_property(self, property, type, format, data,
+    def change_property(self, property, property_type, format, data,
                         mode = X.PropModeReplace, onerror = None):
 
         request.ChangeProperty(display = self.display,
@@ -430,7 +429,7 @@ class Window(Drawable):
                                mode = mode,
                                window = self.id,
                                property = property,
-                               type = type,
+                               type = property_type,
                                data = (format, data))
 
     def delete_property(self, property, onerror = None):
@@ -439,12 +438,12 @@ class Window(Drawable):
                                window = self.id,
                                property = property)
 
-    def get_property(self, property, type, offset, length, delete = 0):
+    def get_property(self, property, property_type, offset, length, delete = 0):
         r = request.GetProperty(display = self.display,
                                 delete = delete,
                                 window = self.id,
                                 property = property,
-                                type = type,
+                                type = property_type,
                                 long_offset = offset,
                                 long_length = length)
 
@@ -456,12 +455,12 @@ class Window(Drawable):
         else:
             return None
 
-    def get_full_property(self, property, type, sizehint = 10):
-        prop = self.get_property(property, type, 0, sizehint)
+    def get_full_property(self, property, property_type, sizehint = 10):
+        prop = self.get_property(property, property_type, 0, sizehint)
         if prop:
             val = prop.value
             if prop.bytes_after:
-                prop = self.get_property(property, type, sizehint,
+                prop = self.get_property(property, property_type, sizehint,
                                          prop.bytes_after // 4 + 1)
                 val = val + prop.value
 
