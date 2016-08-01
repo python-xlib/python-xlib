@@ -32,6 +32,9 @@ from __future__ import print_function
 import sys
 import os
 
+# Python 2/3 compatibility.
+from six import PY2, MAXSIZE
+
 # Change path so we find Xlib
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -39,8 +42,14 @@ import re
 from Xlib import display, error
 from optparse import OptionParser
 
+
+if PY2:
+    integer_type = long
+else:
+    integer_type = int
+
 parser = OptionParser()
-parser.add_option("-d","--display",dest="display",help="This option specifies the X server to which to connect",metavar="dpy",default=":0.0")
+parser.add_option("-d","--display",dest="display",help="This option specifies the X server to which to connect",metavar="dpy",default=None)
 parser.add_option("-n","--name",dest="name",help="This option specifies the name of an atom to list.  If the atom does  not  exist,  a  message  will  be printed on the standard error.",metavar="string",default=None)
 parser.add_option("-m","--match",dest="match_re",help="This option specifies a regular expression to match against name of an atom to list.  If the atom does  not  exist,  a  message  will  be printed on the standard error.",metavar="reg-exp",default=None)
 parser.add_option("-f","--format",dest="format",help="This  option  specifies a printf-style string used to list each atom <value,name> pair, printed in  that  order  (value  is  an unsigned  long  and  name is a char *).  Xlsatoms will supply a newline at the end of each line.  The default is %ld\\t%s.",metavar="string",default="%ld\t%s")
@@ -54,43 +63,43 @@ ec = error.CatchError(error.BadAtom)
 d = display.Display(options.display)
 
 def print_atom(print_format,atom,value):
-	print(print_format%(atom,value))
+    print(print_format%(atom,value))
 
 def list_atoms(d,re_obj,low,high):
-	while(low <= high):
-		try:
-			val = d.get_atom_name(low)
-			if (re_obj == None) :
-				print_atom(options.format,low,val)
-			elif re_obj.match(val) != None:
-				print_atom(options.format,low,val)
-			low += 1
-		except:
-			sys.exit(0)
+    while(low <= high):
+        try:
+            val = d.get_atom_name(low)
+            if (re_obj == None) :
+                print_atom(options.format,low,val)
+            elif re_obj.match(val) != None:
+                print_atom(options.format,low,val)
+            low += 1
+        except:
+            sys.exit(0)
 
 if options.name != None:
-	try:
-		atom = d.intern_atom(options.name)
-		val = d.get_atom_name(atom)
-		print_atom(options.format,atom,val)
-	except:
-		sys.stderr.write('xlsatoms:  no atom named "%s" on server "%s"'%(options.name,options.display))
-		sys.stderr.write("\n")
-		sys.exit(1)
-	sys.exit(0)
+    try:
+        atom = d.intern_atom(options.name)
+        val = d.get_atom_name(atom)
+        print_atom(options.format,atom,val)
+    except:
+        sys.stderr.write('xlsatoms:  no atom named "%s" on server "%s"'%(options.name,options.display))
+        sys.stderr.write("\n")
+        sys.exit(1)
+    sys.exit(0)
 
 rangeVals = options.range.split("-")
 if rangeVals[0] != "":
-	low = long(rangeVals[0])
+    low = integer_type(rangeVals[0])
 
 if rangeVals[1] != "":
-	high = long(rangeVals[1])
+    high = integer_type(rangeVals[1])
 else:
-	high = sys.maxint
+    high = MAXSIZE
 
 if options.match_re != None:
-	re_obj = re.compile(options.match_re)
+    re_obj = re.compile(options.match_re)
 else:
-	re_obj = None
+    re_obj = None
 
 list_atoms(d,re_obj,low,high)
