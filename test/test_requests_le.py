@@ -483,7 +483,7 @@ class TestGetAtomName(EndianTest):
 class TestChangeProperty(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'data': (8, ''),
+            'data': (8, b''),
             'mode': 1,
             'property': 933688309,
             'type': 974400040,
@@ -494,7 +494,7 @@ class TestChangeProperty(EndianTest):
             b'\x08\x00\x00\x00' b'\x00\x00\x00\x00'
 
         self.req_args_1 = {
-            'data': (8, 'foo'),
+            'data': (8, b'foo'),
             'mode': 2,
             'property': 565671953,
             'type': 1075033221,
@@ -506,7 +506,7 @@ class TestChangeProperty(EndianTest):
             b'\x66\x6f\x6f\x00'
 
         self.req_args_2 = {
-            'data': (8, 'zoom'),
+            'data': (8, b'zoom'),
             'mode': 0,
             'property': 1869432878,
             'type': 640951286,
@@ -688,7 +688,7 @@ class TestGetProperty(EndianTest):
             'bytes_after': 1567532733,
             'property_type': 1158159724,
             'sequence_number': 14082,
-            'value': (8, ''),
+            'value': (8, b''),
             }
         self.reply_bin_0 = b'\x01\x08\x02\x37' b'\x00\x00\x00\x00' \
             b'\x6c\x1d\x08\x45' b'\xbd\xa6\x6e\x5d' \
@@ -699,7 +699,7 @@ class TestGetProperty(EndianTest):
             'bytes_after': 2137067287,
             'property_type': 669450745,
             'sequence_number': 13387,
-            'value': (8, 'foo'),
+            'value': (8, b'foo'),
             }
         self.reply_bin_1 = b'\x01\x08\x4b\x34' b'\x01\x00\x00\x00' \
             b'\xf9\x01\xe7\x27' b'\x17\x0f\x61\x7f' \
@@ -711,7 +711,7 @@ class TestGetProperty(EndianTest):
             'bytes_after': 1111517270,
             'property_type': 940849590,
             'sequence_number': 42680,
-            'value': (8, 'zoom'),
+            'value': (8, b'zoom'),
             }
         self.reply_bin_2 = b'\x01\x08\xb8\xa6' b'\x01\x00\x00\x00' \
             b'\xb6\x39\x14\x38' b'\x56\x68\x40\x42' \

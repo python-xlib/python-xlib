@@ -726,7 +726,7 @@ class TestClientMessage(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 48712,
-            'data': (8, '01234567890123456789'),
+            'data': (8, b'01234567890123456789'),
             'type': 245,
             'client_type': 1340394836,
             'window': 1256861040,

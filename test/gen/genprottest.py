@@ -908,9 +908,9 @@ def build_bin(bin):
 
 request_var_defs = {
     'InternAtom': ('fuzzy_prop', ),
-    'ChangeProperty': [((8, ''), ),
-                       ((8, 'foo'), ),
-                       ((8, 'zoom'), ),
+    'ChangeProperty': [((8, b''), ),
+                       ((8, b'foo'), ),
+                       ((8, b'zoom'), ),
                        ((16, []), ),
                        ((16, [1, 2, 3]), ),
                        ((16, [1, 2, 3, 4]), ),
@@ -951,9 +951,9 @@ request_var_defs = {
 reply_var_defs = {
     'QueryTree': (7, ),
     'GetAtomName': ('WM_CLASS', ),
-    'GetProperty': [((8, ''), ),
-                       ((8, 'foo'), ),
-                       ((8, 'zoom'), ),
+    'GetProperty': [((8, b''), ),
+                       ((8, b'foo'), ),
+                       ((8, b'zoom'), ),
                        ((16, []), ),
                        ((16, [1, 2, 3]), ),
                        ((16, [1, 2, 3, 4]), ),
@@ -980,7 +980,7 @@ reply_var_defs = {
     }
 
 event_var_defs = {
-    'ClientMessage': [((8, '01234567890123456789'), ),
+    'ClientMessage': [((8, b'01234567890123456789'), ),
                       ((16, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), ),
                       ((32, [1, 2, 3, 4, 5]), ) ],
     }
