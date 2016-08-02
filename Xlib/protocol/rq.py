@@ -27,7 +27,7 @@ from array import array
 import types
 
 # Python 2/3 compatibility.
-from six import byte2int, indexbytes, iterbytes, string_types
+from six import binary_type, byte2int, indexbytes, iterbytes
 
 # Xlib modules
 from .. import X
@@ -650,7 +650,7 @@ class PropertyData(ValueField):
             ret = None
 
         elif format == 8:
-            ret = (8, data[:length].decode())
+            ret = (8, data[:length])
             data = data[length + ((4 - length % 4) % 4):]
 
         elif format == 16:
@@ -669,8 +669,7 @@ class PropertyData(ValueField):
         if fmt not in (8, 16, 32):
             raise BadDataError('Invalid property data format {0}'.format(fmt))
 
-        if isinstance(val, string_types):
-            val = val.encode()
+        if isinstance(val, binary_type):
             size = fmt // 8
             vlen = len(val)
             if vlen % size:

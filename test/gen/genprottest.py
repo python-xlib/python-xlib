@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 import sys
 import os
@@ -74,8 +74,8 @@ def build_request(endian):
 
     fc.write(C_HEADER)
 
-    reqlist = request.major_codes.items()
-    reqlist.sort(lambda x, y: cmp(x[0], y[0]))
+    reqlist = list(request.major_codes.items())
+    reqlist.sort(key=lambda x: x[0])
 
     genfuncs = []
     req_args = {}
@@ -185,7 +185,7 @@ def build_request(endian):
             reply_bins[parts[1]] = parts[2]
 
     fpy = open('../test_requests_%s.py' % endian, 'w')
-    os.chmod('../test_requests_%s.py' % endian, 0755)
+    os.chmod('../test_requests_%s.py' % endian, 0o755)
 
     if endian == 'be':
         e = 'BigEndian'
@@ -268,8 +268,8 @@ def build_event(endian):
 
     fc.write(C_HEADER)
 
-    evtlist = event.event_class.items()
-    evtlist.sort(lambda x, y: cmp(x[0], y[0]))
+    evtlist = list(event.event_class.items())
+    evtlist.sort(key=lambda x: x[0])
 
     genfuncs = []
     evt_args = {}
@@ -353,7 +353,7 @@ def build_event(endian):
             evt_bins[parts[1]] = parts[2]
 
     fpy = open('../test_events_%s.py' % endian, 'w')
-    os.chmod('../test_events_%s.py' % endian, 0755)
+    os.chmod('../test_events_%s.py' % endian, 0o755)
 
     if endian == 'be':
         e = 'BigEndian'
@@ -478,7 +478,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                 def rand(x, rmin = rmin, rmax = rmax):
                     return randint(rmin, rmax)
 
-                vfdata = map(rand, range(0, vflen))
+                vfdata = list(map(rand, range(0, vflen)))
 
                 #
                 # Special case for a few in-line coded lists
@@ -631,11 +631,11 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
         #
         elif isinstance(f, rq.TextElements8):
             if isinstance(f, rq.TextElements16):
-                vfstr = '\x02\x02\x10\x23\x00\x12\xff\x01\x02\x03\x04'
+                vfstr = b'\x02\x02\x10\x23\x00\x12\xff\x01\x02\x03\x04'
                 ret = [{'delta': 2, 'string': (0x1023, 0x0012)},
                        0x01020304]
             else:
-                vfstr = '\x03\x02zoo\xff\x01\x02\x03\x04\x02\x00ie'
+                vfstr = b'\x03\x02zoo\xff\x01\x02\x03\x04\x02\x00ie'
                 ret = [{'delta': 2, 'string': 'zoo'},
                        0x01020304,
                        { 'delta': 0, 'string': 'ie'}]
@@ -870,14 +870,16 @@ def pad4(l):
     return l + (4 - l % 4) % 4
 
 def cstring(s):
-    return '"' + ''.join(map(lambda c: '\\x%x' % ord(c), s)) + '"'
+    if not isinstance(s, bytes):
+        s = s.encode('ascii')
+    return '"' + ''.join('\\x%x' % c for c in s) + '"'
 
 
 def build_args(args):
     kwlist = []
     for kw, val in sorted(args.items(), key=lambda i: i[0]):
         if isinstance(val, rq.Event):
-            members = val._data.keys()
+            members = list(val._data.keys())
             members.remove('send_event')
             kwlist.append("            '%s': event.%s(%s),\n" % (
                 kw, val.__class__.__name__,
@@ -906,9 +908,9 @@ def build_bin(bin):
 
 request_var_defs = {
     'InternAtom': ('fuzzy_prop', ),
-    'ChangeProperty': [((8, ''), ),
-                       ((8, 'foo'), ),
-                       ((8, 'zoom'), ),
+    'ChangeProperty': [((8, b''), ),
+                       ((8, b'foo'), ),
+                       ((8, b'zoom'), ),
                        ((16, []), ),
                        ((16, [1, 2, 3]), ),
                        ((16, [1, 2, 3, 4]), ),
@@ -949,9 +951,9 @@ request_var_defs = {
 reply_var_defs = {
     'QueryTree': (7, ),
     'GetAtomName': ('WM_CLASS', ),
-    'GetProperty': [((8, ''), ),
-                       ((8, 'foo'), ),
-                       ((8, 'zoom'), ),
+    'GetProperty': [((8, b''), ),
+                       ((8, b'foo'), ),
+                       ((8, b'zoom'), ),
                        ((16, []), ),
                        ((16, [1, 2, 3]), ),
                        ((16, [1, 2, 3, 4]), ),
@@ -978,7 +980,7 @@ reply_var_defs = {
     }
 
 event_var_defs = {
-    'ClientMessage': [((8, '01234567890123456789'), ),
+    'ClientMessage': [((8, b'01234567890123456789'), ),
                       ((16, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), ),
                       ((32, [1, 2, 3, 4, 5]), ) ],
     }
