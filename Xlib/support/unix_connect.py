@@ -109,7 +109,7 @@ def new_get_auth(sock, dname, host, dno):
         # Convert the prettyprinted IP number into 4-octet string.
         # Sometimes these modules are too damn smart...
         octets = sock.getpeername()[0].split('.')
-        addr = bytes(int(x) for x in octets)
+        addr = bytearray(int(x) for x in octets)
     else:
         family = xauth.FamilyLocal
         addr = socket.gethostname().encode()
