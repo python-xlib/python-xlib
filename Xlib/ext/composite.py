@@ -206,6 +206,29 @@ def name_window_pixmap(self):
     cls = self.display.get_resource_class('pixmap', drawable.Pixmap)
     return cls(self.display, pid, owner = 1)
 
+class GetOverlayWindow(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(7),
+        rq.RequestLength(),
+        rq.Window('window')
+    )
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Window('overlay_window'),
+        rq.Pad(20),
+    )
+
+def get_overlay_window(self):
+    """Return the overlay window of the root window.
+    """
+
+    return GetOverlayWindow(display = self.display,
+                              opcode = self.display.get_extension_major(extname),
+                              window = self)
 
 def init(disp, info):
     disp.extension_add_method('display',
@@ -235,3 +258,7 @@ def init(disp, info):
     disp.extension_add_method('window',
                               'composite_name_window_pixmap',
                               name_window_pixmap)
+
+    disp.extension_add_method('window',
+                              'composite_get_overlay_window',
+                              get_overlay_window)
