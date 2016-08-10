@@ -2,6 +2,31 @@
 
                       NEWS for Python X Library
 
+* Version 0.17
+
+** Bug Fixes
+
+- fix Xauth handling when using Python 2 and DISPLAY contains a remote IP
+- fix String16 request field handling when using Python 3
+- fix RECORD extension and example when using Python 3
+- fix handling of properties: use byte strings for all X11 8-bits
+  strings, as not all of them are text properties (the window
+  getters/setters for wm_name, wm_icon_name, wm_class, and
+  wm_client_machine still return/expect Unicode strings)
+
+** API Changes
+
+Core:
+
+- new window getter/setter for text properties: get_full_text_property
+  and change_text_property; with automatic conversion to/from Unicode
+  when the property type encoding is supported (STRING and UTF8_STRING)
+
+Composite extension:
+
+- support for GetOverlayWindow request
+
+
 * Version 0.16
 
 ** Licensing
