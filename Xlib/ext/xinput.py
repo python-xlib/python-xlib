@@ -639,6 +639,123 @@ DeviceChangedEventData = rq.Struct(
     rq.List('classes', ClassInfo),
 )
 
+AddMasterInfo = rq.Struct(
+    rq.Card16('type', AddMaster),
+    rq.RequestLength(),
+    rq.LengthOf('name', 2),
+    rq.Card8('send_core', 1),
+    rq.Card8('enable', 1),
+    rq.String8('name', pad=2)
+)
+
+RemoveMasterInfo = rq.Struct(
+    rq.Card16('type', RemoveMaster),
+    rq.RequestLength(),
+    DEVICEID('deviceid'),
+    rq.Card8('return_mode', Floating),
+    rq.Pad(1),
+    rq.Card16('return_pointer', 0),
+    rq.Card16('return_keyboard', 0)
+)
+
+AttachSlaveInfo = rq.Struct(
+    rq.Card16('type', AttachSlave),
+    rq.RequestLength(),
+    DEVICEID('deviceid'),
+    rq.Card16('new_master'),
+)
+
+DetachSlaveInfo = rq.Struct(
+    rq.Card16('type', DetachSlave),
+    rq.RequestLength(),
+    DEVICEID('deviceid'),
+    rq.Pad(2),
+)
+
+event_types = {DetachSlave: DetachSlaveInfo,
+               AttachSlave: AttachSlaveInfo,
+               AddMaster: AddMasterInfo,
+               RemoveMaster: RemoveMasterInfo}
+
+class ChangeHierarchyAction(rq.Struct):
+
+    """This class dispatches to different Strucs depending on the first
+    argument (type) that is provided to the to_binary function. This is
+    used to allow XIChangeHierarchy to be called with a list of diifferent
+    actions. The xlib implementation uses union structs for this.
+
+    This is a hack, but the best I could come up with for now.
+    """
+    structcode = None
+
+    def __init__(self):
+        pass
+
+    def to_binary(self, *varargs, **keys):
+        if len(varargs):
+            event_type = varargs[0]
+        elif 'type' in keys:
+            event_type = keys['type']
+        else:
+            raise TypeError("Missing required argument type")
+
+        return event_types[event_type].to_binary(*varargs, **keys)
+
+class XIChangeHierarchy(rq.Request):
+
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(43),
+        rq.RequestLength(),
+        rq.LengthOf('changes', 1),
+        rq.Pad(3),
+        rq.List('changes', ChangeHierarchyAction())
+    )
+
+def _change_hierarchy(self, *changes):
+    return XIChangeHierarchy(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        changes=changes
+    )
+
+def add_master(self, name, send_core=True, enable=True):
+    return _change_hierarchy(self, (AddMaster, send_core, enable, name))
+
+def remove_master(self, deviceid, return_mode=Floating, return_pointer=0, return_keyboard=0):
+    return _change_hierarchy(self, (RemoveMaster, deviceid, return_mode, return_pointer, return_keyboard))
+
+def attach_slave(self, deviceid, new_master):
+    return _change_hierarchy(self, (AttachSlave, deviceid, new_master))
+
+def detach_slave(self, deviceid):
+    return _change_hierarchy(self, (DetachSlave, deviceid))
+
+class ChangeHierarchyContext(object):
+
+    def __init__(self, display):
+        self.display = display
+
+    def __enter__(self):
+        self.events = []
+        return self
+
+    def add_master(self, name, send_core=True, enable=True):
+        self.events.append((AddMaster, send_core, enable, name))
+
+    def remove_master(self, deviceid, return_mode=Floating, return_pointer=0, return_keyboard=0):
+        self.events.append((RemoveMaster, deviceid, return_mode, return_pointer, return_keyboard))
+
+    def attach_slave(self, deviceid, new_master):
+        self.events.append((AttachSlave, deviceid, new_master))
+
+    def detach_slave(self, deviceid):
+        self.events.append((DetachSlave, deviceid))
+
+    def __exit__(self, *exc):
+        _change_hierarchy(self.display, *self.events)
+
+
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
     disp.extension_add_method('window', 'xinput_select_events', select_events)
@@ -647,6 +764,10 @@ def init(disp, info):
     disp.extension_add_method('display', 'xinput_ungrab_device', ungrab_device)
     disp.extension_add_method('window', 'xinput_grab_keycode', grab_keycode)
     disp.extension_add_method('window', 'xinput_ungrab_keycode', ungrab_keycode)
+    disp.extension_add_method('display', 'xinput_add_master', add_master)
+    disp.extension_add_method('display', 'xinput_remove_master', remove_master)
+    disp.extension_add_method('display', 'xinput_attach_slave', attach_slave)
+    disp.extension_add_method('display', 'xinput_detach_slave', detach_slave)
 
     for device_event in (ButtonPress, ButtonRelease, KeyPress, KeyRelease, Motion):
         disp.ge_add_event_data(info.major_opcode, device_event, DeviceEventData)
