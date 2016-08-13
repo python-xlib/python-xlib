@@ -417,10 +417,7 @@ class String8(ValueField):
             val_bytes = val.encode()
         slen = len(val_bytes)
 
-        if self.pad == 2:
-            # explicitly add termination character
-            return val_bytes + b'\0' + b'\0' * ((4 - (slen + 1) % 4) % 4), slen, None
-        elif self.pad:
+        if self.pad:
             return val_bytes + b'\0' * ((4 - slen % 4) % 4), slen, None
         else:
             return val_bytes, slen, None
