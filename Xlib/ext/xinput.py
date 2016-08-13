@@ -645,7 +645,7 @@ AddMasterInfo = rq.Struct(
     rq.LengthOf('name', 2),
     rq.Card8('send_core', 1),
     rq.Card8('enable', 1),
-    rq.String8('name', pad=2)
+    rq.String8('name')
 )
 
 RemoveMasterInfo = rq.Struct(
