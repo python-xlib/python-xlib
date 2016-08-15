@@ -752,8 +752,9 @@ class ChangeHierarchyContext(object):
     def detach_slave(self, deviceid):
         self.events.append((DetachSlave, deviceid))
 
-    def __exit__(self, *exc):
-        _change_hierarchy(self.display, *self.events)
+    def __exit__(self, *exc_info):
+        if exc_info == (None, None, None):
+            _change_hierarchy(self.display, *self.events)
 
 
 def init(disp, info):
