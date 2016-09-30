@@ -163,6 +163,14 @@ def old_get_auth(sock, dname, host, dno):
     except os.error:
         pass
 
+    if not auth_data and host=='localhost':
+        # 127.0.0.1 counts as FamilyLocal, not FamilyInternet
+        # See Xtransutil.c:ConvertAddress.
+        # There might be more ways to spell 127.0.0.1 but
+        # 'localhost', yet this code fixes the case of
+        # OpenSSH tunneling X.
+        return get_auth('unix:%d' % dno, 'unix', dno)
+
     return auth_name, auth_data
 
 get_auth = new_get_auth
