@@ -62,6 +62,8 @@ def get_display(display):
 
     name = display
     host = m.group(1)
+    if host == 'unix':
+        host = ''
     dno = int(m.group(2))
     screen = m.group(4)
     if screen:
