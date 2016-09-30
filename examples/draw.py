@@ -118,7 +118,7 @@ class Window(object):
                         sys.exit(0)
 
 # A drawed objects, consisting of either a single
-# romboid, or two romboids connected by a winding line
+# rhomboid, or two rhomboids connected by a winding line
 
 class Movement(object):
     def __init__(self, win, ev):
@@ -132,7 +132,7 @@ class Movement(object):
         self.time = ev.time
         self.lines = [(ev.event_x, ev.event_y)]
 
-        self.first = Romboid(self.win, ev)
+        self.first = Rhomboid(self.win, ev)
         self.last = None
 
     def motion(self, ev):
@@ -185,7 +185,7 @@ class Movement(object):
     def finish(self, ev):
         self.motion(ev)
         if len(self.lines) > 1:
-            self.last = Romboid(self.win, ev)
+            self.last = Rhomboid(self.win, ev)
 
             self.left = min(ev.event_x - 5, self.left)
             self.right = max(ev.event_x + 5, self.right)
@@ -207,8 +207,8 @@ class Movement(object):
                 self.last.draw()
 
 
-# A romboid, drawed around the Movement endpoints
-class Romboid(object):
+# A rhomboid, drawed around the Movement endpoints
+class Rhomboid(object):
     def __init__(self, win, ev):
         self.win = win
         self.x = ev.event_x
@@ -216,7 +216,7 @@ class Romboid(object):
         self.draw()
 
     def draw(self):
-        # Draw the segments of the romboid
+        # Draw the segments of the rhomboid
         self.win.window.poly_line(self.win.gc, X.CoordModePrevious,
                                   [(self.x, self.y - 5),
                                    (5, 5),
