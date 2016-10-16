@@ -32,9 +32,8 @@ before_deploy:
   # Generate egg distribution.
   - python setup.py bdist_egg
   # Generate wheel distribution.
-  # Note: only do this once for each major Python version, as the minor version
-  # number is not encoded in the resulting filename (and contents are the same).
-  - case "$TRAVIS_PYTHON_VERSION" in 2.7|3.5) python setup.py bdist_wheel;; esac
+  # Note: only do this once, since we create a universal wheel.
+  - case "$TRAVIS_PYTHON_VERSION" in 3.5) python setup.py bdist_wheel;; esac
 
 deploy:
   - provider: releases
