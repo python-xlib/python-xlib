@@ -42,12 +42,36 @@ from . import rq
 from . import event
 
 if PY3:
-    def buffer(object, offset=None, size=None):
-        if offset is None:
-            offset = 0
+
+    class bytesview(object):
+
+        def __init__(self, data, offset=0, size=None):
+            if size is None:
+                size = len(data)-offset
+            if isinstance(data, bytes):
+                view = memoryview(data)
+            elif isinstance(data, bytesview):
+                view = data.view
+            else:
+                raise TypeError('unsupported type: {}'.format(type(data)))
+            self.view = view[offset:offset+size]
+
+        def __len__(self):
+            return len(self.view)
+
+        def __getitem__(self, key):
+            if isinstance(key, slice):
+                return bytes(self.view[key])
+            return self.view[key]
+
+else:
+
+    def bytesview(data, offset=0, size=None):
+        if not isinstance(data, (bytes, buffer)):
+            raise TypeError('unsupported type: {}'.format(type(data)))
         if size is None:
-            size = len(object)-offset
-        return memoryview(object)[offset:offset+size]
+            size = len(data)-offset
+        return buffer(data, offset, size)
 
 
 class Display(object):
@@ -706,7 +730,7 @@ class Display(object):
         estruct = self.error_classes.get(code, error.XError)
 
         e = estruct(self, self.data_recv[:32])
-        self.data_recv = buffer(self.data_recv, 32)
+        self.data_recv = bytesview(self.data_recv, 32)
 
         # print 'recv Error:', e
 
@@ -760,7 +784,7 @@ class Display(object):
         req._parse_response(self.data_recv[:self.recv_packet_len])
         # print 'recv Request:', req
 
-        self.data_recv = buffer(self.data_recv, self.recv_packet_len)
+        self.data_recv = bytesview(self.data_recv, self.recv_packet_len)
         self.recv_packet_len = 0
 
 
@@ -797,7 +821,7 @@ class Display(object):
         if etype == ge.GenericEventCode:
             self.recv_packet_len = 0
 
-        self.data_recv = buffer(self.data_recv, length)
+        self.data_recv = bytesview(self.data_recv, length)
 
         # Drop all requests having an error handler,
         # but which obviously succeded.
