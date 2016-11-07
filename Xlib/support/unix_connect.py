@@ -86,8 +86,12 @@ def get_socket(dname, host, dno):
 
         # Else use Unix socket
         else:
+            address = '/tmp/.X11-unix/X%d' % dno
+            if not os.path.exists(address):
+                # Use abstract address.
+                address = '\0' + address
             s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            s.connect('/tmp/.X11-unix/X%d' % dno)
+            s.connect(address)
     except socket.error as val:
         raise error.DisplayConnectionError(dname, str(val))
 
