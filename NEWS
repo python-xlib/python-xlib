@@ -2,6 +2,15 @@
 
                       NEWS for Python X Library
 
+* Version 0.18
+
+** Bug Fixes
+
+- fix Python 3 buffer abstraction
+- fix interrupted select handling for Python 3.3/3.4
+- fix Unix socket support when only an abstract address is available
+
+
 * Version 0.17
 
 ** Bug Fixes
