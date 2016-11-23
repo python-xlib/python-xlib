@@ -44,7 +44,7 @@ class Xauthority(object):
         try:
             raw = open(filename, 'rb').read()
         except IOError as err:
-            raise error.XauthError('~/.Xauthority: %s' % err)
+            raise error.XauthError('could not read from {0}: {1}'.format(filename, err))
 
         self.entries = []
 
