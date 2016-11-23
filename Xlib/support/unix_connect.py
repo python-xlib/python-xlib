@@ -62,6 +62,8 @@ def get_display(display):
 
     name = display
     host = m.group(1)
+    if host == 'unix':
+        host = ''
     dno = int(m.group(2))
     screen = m.group(4)
     if screen:
@@ -118,7 +120,11 @@ def new_get_auth(sock, dname, host, dno):
         family = xauth.FamilyLocal
         addr = socket.gethostname().encode()
 
-    au = xauth.Xauthority()
+    try:
+        au = xauth.Xauthority()
+    except error.XauthError:
+        return old_get_auth(sock, dname, host, dno)
+
     while 1:
         try:
             return au.get_best_auth(family, addr, dno)
@@ -164,6 +170,14 @@ def old_get_auth(sock, dname, host, dno):
                 auth_data = auth
     except os.error:
         pass
+
+    if not auth_data and host=='localhost':
+        # 127.0.0.1 counts as FamilyLocal, not FamilyInternet
+        # See Xtransutil.c:ConvertAddress.
+        # There might be more ways to spell 127.0.0.1 but
+        # 'localhost', yet this code fixes the case of
+        # OpenSSH tunneling X.
+        return get_auth('unix:%d' % dno, 'unix', dno)
 
     return auth_name, auth_data
 
