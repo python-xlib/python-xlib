@@ -118,7 +118,11 @@ def new_get_auth(sock, dname, host, dno):
         family = xauth.FamilyLocal
         addr = socket.gethostname().encode()
 
-    au = xauth.Xauthority()
+    try:
+        au = xauth.Xauthority()
+    except error.XauthError:
+        return b'', b''
+
     while 1:
         try:
             return au.get_best_auth(family, addr, dno)

@@ -44,7 +44,7 @@ class Xauthority(object):
         try:
             raw = open(filename, 'rb').read()
         except IOError as err:
-            raise error.XauthError('~/.Xauthority: %s' % err)
+            raise error.XauthError('could not read from {0}: {1}'.format(filename, err))
 
         self.entries = []
 
@@ -85,7 +85,7 @@ class Xauthority(object):
                     break
 
                 self.entries.append((family, addr, num, name, data))
-        except struct.error as e:
+        except struct.error:
             print("Xlib.xauth: warning, failed to parse part of xauthority file {0}, aborting all further parsing".format(filename))
 
         if len(self.entries) == 0:
