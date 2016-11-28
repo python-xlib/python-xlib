@@ -45,11 +45,11 @@ from Xlib import error, xauth
 uname = platform.uname()
 if (uname[0] == 'Darwin') and ([int(x) for x in uname[2].split('.')] >= [9, 0]):
 
-    display_re = re.compile(r'^([-:a-zA-Z0-9._/]*):([0-9]+)(\.([0-9]+))?$')
+    display_re = re.compile(r'^(?P<proto>)(?P<host>[-:a-zA-Z0-9._/]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
 
 else:
 
-    display_re = re.compile(r'^([-:a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
+    display_re = re.compile(r'^((?P<proto>tcp|unix)/)?(?P<host>[-:a-zA-Z0-9._]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
 
 def get_display(display):
     # Use $DISPLAY if display isn't provided
@@ -61,9 +61,19 @@ def get_display(display):
         raise error.DisplayNameError(display)
 
     name = display
-    host = m.group(1)
-    dno = int(m.group(2))
-    screen = m.group(4)
+    protocol, host, dno, screen = m.group('proto', 'host', 'dno', 'screen')
+    if protocol == 'tcp':
+        # Host is mandatory when protocol is TCP.
+        if not host:
+            raise error.DisplayNameError(display)
+    elif protocol == 'unix':
+        # Clear host to force Unix socket connection.
+        host = ''
+    else:
+        # Special case: `unix:0.0` is equivalent to `:0.0`.
+        if host == 'unix':
+            host = ''
+    dno = int(dno)
     if screen:
         screen = int(screen)
     else:
