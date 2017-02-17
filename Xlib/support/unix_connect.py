@@ -143,9 +143,9 @@ def new_get_auth(sock, dname, host, dno):
         # $DISPLAY to localhost:10, but stores the xauth cookie as if
         # DISPLAY was :10.  Hence, if localhost and not found, try
         # again as a Unix socket.
-        if family == xauth.FamilyInternet and addr == '\x7f\x00\x00\x01':
+        if family == xauth.FamilyInternet and addr == b'\x7f\x00\x00\x01':
             family = xauth.FamilyLocal
-            addr = socket.gethostname()
+            addr = socket.gethostname().encode()
         else:
             return b'', b''
 
