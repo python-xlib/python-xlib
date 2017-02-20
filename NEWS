@@ -2,6 +2,16 @@
 
                       NEWS for Python X Library
 
+* Version 0.19
+
+** Bug Fixes
+
+- don't throw an exception if $XAUTHFILE / ~/.Xauthority is missing
+- fix authentication work-around for SSH forwarding under Python 3
+- improve $DISPLAY handling: support optional protocol prefix, and
+  correctly handle `unix:0.0` as `:0.0`
+
+
 * Version 0.18
 
 ** Bug Fixes
