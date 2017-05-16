@@ -692,7 +692,7 @@ class Window(Drawable):
 
     def set_wm_transient_for(self, window, onerror = None):
         self.change_property(Xatom.WM_TRANSIENT_FOR, Xatom.WINDOW,
-                             32, window.id,
+                             32, [window.id],
                              onerror = onerror)
 
     def get_wm_transient_for(self):
