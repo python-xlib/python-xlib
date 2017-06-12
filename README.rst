@@ -69,6 +69,14 @@ There are three advantages of implementing a pure Python library:
 
 -  Maintainability: It is much easier to develop and debug native Python
    modules than modules written in C.
+   
+Documentation
+~~~~~~~~~~~~~
+
+The reference manual is not finished by far, but is probably still useful. It can be `browsed online <http://python-xlib.sourceforge.net/doc/html/index.html>`__.
+
+There are also some `example programs <examples/>`__ and, of course, `the standard X11 documentation <http://tronche.com/gui/x/xlib/>`__ applies.
+
 
 Project status
 ~~~~~~~~~~~~~~
