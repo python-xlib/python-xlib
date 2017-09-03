@@ -414,7 +414,7 @@ class String8(ValueField):
         if isinstance(val, bytes):
             val_bytes = val
         else:
-            val_bytes = val.encode()
+            val_bytes = val.encode('latin-1')
         slen = len(val_bytes)
 
         if self.pad:
@@ -424,7 +424,7 @@ class String8(ValueField):
 
     def parse_binary_value(self, data, display, length, format):
         if length is None:
-            return data.decode(), b''
+            return data.decode('latin-1'), b''
 
         if self.pad:
             slen = length + ((4 - length % 4) % 4)
@@ -434,7 +434,7 @@ class String8(ValueField):
         if sys.version_info < (3, 0):
             data_str = data[:length]
         else:
-            data_str = data[:length].decode()
+            data_str = data[:length].decode('latin-1')
 
         return data_str, data[slen:]
 
@@ -720,7 +720,8 @@ class ValueList(Field):
 
     def __init__(self, name, mask, pad, *fields):
         self.name = name
-        self.maskcode = '={0}{1}x'.format(unsigned_codes[mask], pad).encode()
+        self.maskcode = \
+                '={0}{1}x'.format(unsigned_codes[mask], pad).encode('latin-1')
         self.maskcodelen = struct.calcsize(self.maskcode)
         self.fields = []
 
@@ -899,11 +900,11 @@ class StrClass(object):
     structcode = None
 
     def pack_value(self, val):
-        return (chr(len(val)) + val).encode()
+        return (chr(len(val)) + val).encode('latin-1')
 
     def parse_binary(self, data, display):
         slen = byte2int(data) + 1
-        return data[1:slen].decode(), data[slen:]
+        return data[1:slen].decode('latin-1'), data[slen:]
 
 Str = StrClass()
 
