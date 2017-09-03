@@ -2368,7 +2368,7 @@ class TestPolyFillArc(EndianTest):
 class TestPutImage(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'data': 'bit map data',
+            'data': b'\xe9\x10\xf2o\x7f{\xae-\xe6\x18\xce\x83',
             'depth': 172,
             'drawable': 634980240,
             'dst_x': -18991,
@@ -2382,8 +2382,8 @@ class TestPutImage(EndianTest):
         self.req_bin_0 = b'\x48\x02\x00\x09' b'\x25\xd9\x07\x90' \
             b'\x46\xf7\xfc\xfd' b'\x21\x95\x32\x1c' \
             b'\xb5\xd1\xd5\x1c' b'\xe1\xac\x00\x00' \
-            b'\x62\x69\x74\x20' b'\x6d\x61\x70\x20' \
-            b'\x64\x61\x74\x61'
+            b'\xe9\x10\xf2\x6f' b'\x7f\x7b\xae\x2d' \
+            b'\xe6\x18\xce\x83'
 
 
     def testPackRequest0(self):
@@ -2412,7 +2412,7 @@ class TestGetImage(EndianTest):
             b'\x24\xba\x96\xb6'
 
         self.reply_args_0 = {
-            'data': 'this is real ly imag e b-map',
+            'data': b'\xeb?:\xa7\xc6\x8b\xc2\x96o-S\xe6\xd6z6\x94\xd7v\xd2R.\xa2\xeaw\t\x13\x95\x85',
             'depth': 181,
             'sequence_number': 28429,
             'visual': 1687469773,
@@ -2421,10 +2421,10 @@ class TestGetImage(EndianTest):
             b'\x64\x94\xbe\xcd' b'\x00\x00\x00\x00' \
             b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
             b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
-            b'\x74\x68\x69\x73' b'\x20\x69\x73\x20' \
-            b'\x72\x65\x61\x6c' b'\x20\x6c\x79\x20' \
-            b'\x69\x6d\x61\x67' b'\x20\x65\x20\x62' \
-            b'\x2d\x6d\x61\x70'
+            b'\xeb\x3f\x3a\xa7' b'\xc6\x8b\xc2\x96' \
+            b'\x6f\x2d\x53\xe6' b'\xd6\x7a\x36\x94' \
+            b'\xd7\x76\xd2\x52' b'\x2e\xa2\xea\x77' \
+            b'\x09\x13\x95\x85'
 
 
     def testPackRequest0(self):
