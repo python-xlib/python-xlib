@@ -42,7 +42,8 @@ class Xauthority(object):
                     '$HOME not set, cannot find ~/.Xauthority')
 
         try:
-            raw = open(filename, 'rb').read()
+            with open(filename, 'rb') as fp:
+                raw = fp.read()
         except IOError as err:
             raise error.XauthError('could not read from {0}: {1}'.format(filename, err))
 
