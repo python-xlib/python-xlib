@@ -585,7 +585,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
         #
         # byte-char string
         #
-        elif isinstance(f, rq.String8):
+        elif isinstance(f, (rq.String8, rq.Binary)):
             vfstr = vardefs[i]
             vflen = len(vfstr)
 
@@ -933,7 +933,7 @@ request_var_defs = {
     'FillPoly': (('Point', 3), ),
     'PolyFillRectangle': (('Rectangle', 2), ),
     'PolyFillArc': (('Arc', 1), ),
-    'PutImage': ('bit map data', ),
+    'PutImage': (b'\xe9\x10\xf2o\x7f{\xae-\xe6\x18\xce\x83', ),
     'ImageText8': ('showme', ),
     'ImageText16': ('showmore', ),
     'AllocNamedColor': ('octarin', ),
@@ -967,7 +967,7 @@ reply_var_defs = {
     'ListFontsWithInfo': (('FontProp', 1), 'fontfont'),
     'GetFontPath': [(['path1', 'path2232'], ),
                     ([], ) ],
-    'GetImage': ('this is real ly imag e b-map', ),
+    'GetImage': (b'\xeb?:\xa7\xc6\x8b\xc2\x96o-S\xe6\xd6z6\x94\xd7v\xd2R.\xa2\xeaw\t\x13\x95\x85',),
     'ListInstalledColormaps': (2, ),
     'AllocColorCells': [(17, 3),
                         (0, 0) ],
