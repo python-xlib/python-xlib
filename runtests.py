@@ -8,6 +8,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import textwrap
 
 from pkg_resources import load_entry_point
 
@@ -46,7 +47,15 @@ def tests_run(display, authfile=None):
     os.environ['DISPLAY'] = display
     os.environ['XAUTHORITY'] = authfile
     cmd = [
-        'nosetests',
+        sys.executable,
+        '-c', textwrap.dedent(
+            '''
+            from pkg_resources import load_entry_point
+            sys.exit(load_entry_point(
+                'nose', 'console_scripts', 'nosetests',
+            )())
+            '''
+        ).lstrip(),
         '--exe', '--with-xunit', '--verbosity=3',
     ]
     has_custom_tests = False
