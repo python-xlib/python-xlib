@@ -22,11 +22,12 @@
 #    Boston, MA 02111-1307 USA
 
 # Standard modules
-import sys
-import select
-import struct
 import errno
+import math
+import select
 import socket
+import struct
+import sys
 
 # Python 2/3 compatibility.
 from six import PY3, byte2int, indexbytes
@@ -119,6 +120,12 @@ class Display(object):
         self.event_wait_lock = lock.allocate_lock()
         self.request_waiting = 0
         self.request_wait_lock = lock.allocate_lock()
+
+        # Calculate optimal default buffer size for recv.
+        buffer_size = self.socket.getsockopt(socket.SOL_SOCKET,
+                                             socket.SO_RCVBUF)
+        buffer_size = math.pow(2, math.floor(math.log(buffer_size, 2)))
+        self.recv_buffer_size = int(buffer_size)
 
         # Data used by the send-and-recieve loop
         self.sent_requests = []
@@ -590,7 +597,9 @@ class Display(object):
                 # We're the recieving thread, parse the data
                 if recieving:
                     try:
-                        bytes_recv = self.socket.recv(2048)
+                        count = self.recv_packet_len - len(self.data_recv)
+                        count = max(self.recv_buffer_size, count)
+                        bytes_recv = self.socket.recv(count)
                     except socket.error as err:
                         self.close_internal('server: %s' % err[1])
                         raise self.socket_error
