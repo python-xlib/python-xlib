@@ -2,6 +2,20 @@
 
                       NEWS for Python X Library
 
+* In development
+
+** Bug Fixes
+
+- fix unclosed file in Xauth implementation
+- fix support for `Window.set_wm_transient_for`
+- fix support for `Drawable.put_image` / `Drawable.get_image`
+
+** Misc
+
+Improve response processing performance: reduce the number of `socket.recv`
+calls needed to receive a full response.
+
+
 * Version 0.19
 
 ** Bug Fixes
