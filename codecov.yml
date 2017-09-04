@@ -2,6 +2,7 @@ comment:
   layout: header, changes, diff
 coverage:
   ignore:
+  - examples/.*
   - test/.*
   status:
     patch: false
