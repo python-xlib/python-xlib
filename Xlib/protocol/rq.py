@@ -27,7 +27,7 @@ from array import array
 import types
 
 # Python 2/3 compatibility.
-from six import binary_type, byte2int, indexbytes, iterbytes
+from six import PY3, binary_type, byte2int, indexbytes, iterbytes
 
 # Xlib modules
 from .. import X
@@ -36,6 +36,13 @@ from ..support import lock
 
 def decode_string(bs):
     return bs.decode('ascii')
+
+if PY3:
+    def encode_array(a):
+        return a.tobytes()
+else:
+    def encode_array(a):
+        return a.tostring()
 
 
 class BadDataError(Exception): pass
@@ -553,8 +560,8 @@ class List(ValueField):
         if self.type.structcode and len(self.type.structcode) == 1:
             if self.type.check_value is not None:
                 val = [self.type.check_value(v) for v in val]
-            data = array(struct_to_array_codes[self.type.structcode],
-                               val).tostring()
+            a = array(struct_to_array_codes[self.type.structcode], val)
+            data = encode_array(a)
         else:
             data = []
             for v in val:
@@ -686,7 +693,8 @@ class PropertyData(ValueField):
                 val = list(val)
 
             size = fmt // 8
-            data = array(array_unsigned_codes[size], val).tostring()
+            a = array(array_unsigned_codes[size], val)
+            data = encode_array(a)
             dlen = len(val)
 
         dl = len(data)
@@ -807,7 +815,7 @@ class KeyboardMapping(ValueField):
             for i in range(len(v), keycodes):
                 a.append(X.NoSymbol)
 
-        return a.tostring(), len(value), keycodes
+        return encode_array(a), len(value), keycodes
 
 
 class ModifierMapping(ValueField):
@@ -838,7 +846,7 @@ class ModifierMapping(ValueField):
             for i in range(len(v), keycodes):
                 a.append(0)
 
-        return a.tostring(), len(value), keycodes
+        return encode_array(a), len(value), keycodes
 
 class EventField(ValueField):
     structcode = None
