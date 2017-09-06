@@ -34,6 +34,10 @@ from .. import X
 from ..support import lock
 
 
+def decode_string(bs):
+    return bs.decode('ascii')
+
+
 class BadDataError(Exception): pass
 
 # These are struct codes, we know their byte sizes
@@ -424,17 +428,14 @@ class String8(ValueField):
 
     def parse_binary_value(self, data, display, length, format):
         if length is None:
-            return data.decode(), b''
+            return decode_string(data), b''
 
         if self.pad:
             slen = length + ((4 - length % 4) % 4)
         else:
             slen = length
 
-        if sys.version_info < (3, 0):
-            data_str = data[:length]
-        else:
-            data_str = data[:length].decode()
+        data_str = decode_string(data[:length])
 
         return data_str, data[slen:]
 
@@ -903,7 +904,7 @@ class StrClass(object):
 
     def parse_binary(self, data, display):
         slen = byte2int(data) + 1
-        return data[1:slen].decode(), data[slen:]
+        return decode_string(data[1:slen]), data[slen:]
 
 Str = StrClass()
 

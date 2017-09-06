@@ -9,6 +9,7 @@
 - fix unclosed file in Xauth implementation
 - fix support for `Window.set_wm_transient_for`
 - fix support for `Drawable.put_image` / `Drawable.get_image`
+- use ASCII for decoding strings in Python 3 (same as Python 2)
 
 ** Misc
 
