@@ -41,3 +41,4 @@ deploy:
     - dist/*.whl
     on:
       tags: true
+    skip_cleanup: true
