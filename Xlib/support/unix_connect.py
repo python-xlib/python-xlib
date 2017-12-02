@@ -62,50 +62,57 @@ def get_display(display):
 
     name = display
     protocol, host, dno, screen = m.group('proto', 'host', 'dno', 'screen')
-    if protocol == 'tcp':
+    if protocol == 'tcp' and not host:
         # Host is mandatory when protocol is TCP.
-        if not host:
-            raise error.DisplayNameError(display)
-    elif protocol == 'unix':
-        # Clear host to force Unix socket connection.
-        host = ''
-    else:
-        # Special case: `unix:0.0` is equivalent to `:0.0`.
-        if host == 'unix':
-            host = ''
+        raise error.DisplayNameError(display)
     dno = int(dno)
     if screen:
         screen = int(screen)
     else:
         screen = 0
 
-    return name, host, dno, screen
+    return name, protocol, host, dno, screen
 
 
-def get_socket(dname, host, dno):
+def _get_tcp_socket(host, dno):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, 6000 + dno))
+    return s
+
+def _get_unix_socket(address):
+    s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.connect(address)
+    return s
+
+def get_socket(dname, protocol, host, dno):
+    assert protocol in (None, 'tcp', 'unix')
     try:
-        # Darwin funky socket
-        if (uname[0] == 'Darwin') and host and host.startswith('/private/tmp/'):
-            s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            s.connect(dname)
+        # Darwin funky socket.
+        if uname[0] == 'Darwin' and host and host.startswith('/private/tmp/'):
+            s = _get_unix_socket(dname)
 
-        # If hostname (or IP) is provided, use TCP socket
-        elif host:
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect((host, 6000 + dno))
+        # TCP socket, note the special case: `unix:0.0` is equivalent to `:0.0`.
+        elif (not protocol or protocol != 'unix') and host and host != 'unix':
+            s = _get_tcp_socket(host, dno)
 
-        # Else use Unix socket
+        # Unix socket.
         else:
             address = '/tmp/.X11-unix/X%d' % dno
             if not os.path.exists(address):
                 # Use abstract address.
                 address = '\0' + address
-            s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-            s.connect(address)
+            try:
+                s = _get_unix_socket(address)
+            except socket.error:
+                if not protocol and not host:
+                    # If no protocol/host was specified, fallback to TCP.
+                    s = _get_tcp_socket(host, dno)
+                else:
+                    raise
     except socket.error as val:
         raise error.DisplayConnectionError(dname, str(val))
 
-    # Make sure that the connection isn't inherited in child processes
+    # Make sure that the connection isn't inherited in child processes.
     fcntl.fcntl(s.fileno(), F_SETFD, FD_CLOEXEC)
 
     return s
