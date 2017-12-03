@@ -82,12 +82,12 @@ class Display(object):
     event_classes = event.event_class.copy()
 
     def __init__(self, display = None):
-        name, host, displayno, screenno = connect.get_display(display)
+        name, protocol, host, displayno, screenno = connect.get_display(display)
 
         self.display_name = name
         self.default_screen = screenno
 
-        self.socket = connect.get_socket(name, host, displayno)
+        self.socket = connect.get_socket(name, protocol, host, displayno)
 
         auth_name, auth_data = connect.get_auth(self.socket,
                                                 name, host, displayno)
