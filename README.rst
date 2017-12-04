@@ -1,7 +1,9 @@
-|Build Status| |codecov.io| |Code Health|
-
 The Python X Library
 ====================
+
+|Build Status| |codecov.io| |Code Health|
+
+`Homepage`_ | `Releases`_ | `Changelog`_
 
 Copyright
 ~~~~~~~~~
@@ -12,8 +14,7 @@ The main part of the code is
 
     Copyright (C) 2000-2002  Peter Liljenberg
 
-Some contributed code is copyrighted by `the
-contributors <https://github.com/python-xlib/python-xlib/graphs/contributors>`__,
+Some contributed code is copyrighted by `the contributors <Contributors_>`_,
 in these cases that is indicated in the source files in question.
 
 The Python X Library is released under LGPL v2.1 or later (since 2016),
@@ -24,7 +25,7 @@ Requirements
 ~~~~~~~~~~~~
 
 The Python X Library requires Python 2.7 or newer. It has been tested to
-various extents with Python 2.7 and 3.3 through 3.5.
+various extents with Python 2.7 and 3.3 through 3.6.
 
 Installation
 ~~~~~~~~~~~~
@@ -73,9 +74,11 @@ There are three advantages of implementing a pure Python library:
 Documentation
 ~~~~~~~~~~~~~
 
-The reference manual is not finished by far, but is probably still useful. It can be `browsed online <http://python-xlib.sourceforge.net/doc/html/index.html>`__.
+The reference manual is not finished by far, but is probably still useful. It
+can be `browsed online <http://python-xlib.sourceforge.net/doc/html/index.html>`__.
 
-There are also some `example programs <examples/>`__ and, of course, `the standard X11 documentation <http://tronche.com/gui/x/xlib/>`__ applies.
+There are also some `example programs <Examples_>`_ and, of course,
+`the standard X11 documentation <http://tronche.com/gui/x/xlib/>`__ applies.
 
 
 Project status
@@ -104,22 +107,11 @@ http://www.rahul.net/kenton/xsites.html
 See the file TODO for a detailed list of what is missing, approximately
 ordered by importance.
 
-Contact information
-~~~~~~~~~~~~~~~~~~~
-
-Author email: Peter Liljenberg petli@ctrl-c.liu.se
-
-Mailing list: http://sourceforge.net/mail/?group\_id=10350
-
-The Python X Library is a SourceForged project (currently migrating to
-GitHub). The project page is
-http://sourceforge.net/projects/python-xlib/. Source is available from
-that page as zip archive and from the `releases
-list <https://github.com/python-xlib/python-xlib/releases>`__.
-
-There isn't any real web page yet, only a derivative of this file. It is
-located at http://python-xlib.sourceforge.net/. It now also features the
-documentation for downloading or browsing.
+.. _Homepage:     https://github.com/python-xlib/python-xlib
+.. _Releases:     https://github.com/python-xlib/python-xlib/releases
+.. _Changelog:    https://github.com/python-xlib/python-xlib/tree/master/CHANGELOG.md
+.. _Contributors: https://github.com/python-xlib/python-xlib/graphs/contributors
+.. _Examples:     https://github.com/python-xlib/python-xlib/tree/master/examples
 
 .. |Build Status| image:: https://travis-ci.org/python-xlib/python-xlib.svg?branch=master
    :target: https://travis-ci.org/python-xlib/python-xlib
