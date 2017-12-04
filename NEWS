@@ -2,6 +2,20 @@
 
                       NEWS for Python X Library
 
+* Version 0.21
+
+** Bug Fixes
+
+- fix use under Windows Subsystem for Linux: when DISPLAY does not
+  specify a protocol, and the implicit Unix socket connection fails,
+  fallback to TCP (mimicking XCB's behavior).
+
+** Misc
+
+- don't bundle a copy of texi2html to build the HTML documentation,
+  but use the currently installed version instead.
+
+
 * Version 0.20
 
 ** Bug Fixes
