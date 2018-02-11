@@ -814,7 +814,7 @@ class Display(object):
         request.ChangePointerControl(display = self.display,
                                      onerror = onerror,
                                      do_accel = do_accel,
-                                     do_thres = do_threshold,
+                                     do_thresh = do_threshold,
                                      accel_num = accel_num,
                                      accel_denum = accel_denum,
                                      threshold = threshold)
