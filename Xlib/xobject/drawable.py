@@ -249,7 +249,7 @@ class Drawable(resource.Resource):
             else:
                 subimage = image
             w, h = subimage.size
-            data = subimage.tostring("raw", rawmode, stride, 0)
+            data = subimage.tobytes("raw", rawmode, stride, 0)
             self.put_image(gc, x, y, w, h, format, depth, 0, data)
             y1 = y1 + h
             y = y + h
