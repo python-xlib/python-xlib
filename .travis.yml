@@ -24,8 +24,6 @@ before_deploy:
   # Note: only do this with Python 3.5 because the contents
   # of the distribution are the same for all versions.
   - case "$TRAVIS_PYTHON_VERSION" in 3.5) python setup.py sdist --formats=bztar;; esac
-  # Generate egg distribution.
-  - python setup.py bdist_egg
   # Generate wheel distribution.
   # Note: only do this once, since we create a universal wheel.
   - case "$TRAVIS_PYTHON_VERSION" in 3.5) python setup.py bdist_wheel;; esac
@@ -37,7 +35,6 @@ deploy:
     file_glob: true
     file:
     - dist/*.tar.*
-    - dist/*.egg
     - dist/*.whl
     on:
       tags: true
