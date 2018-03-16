@@ -35,7 +35,7 @@ from ..support import lock
 
 
 def decode_string(bs):
-    return bs.decode('ascii')
+    return bs.decode('latin1')
 
 if PY3:
     def encode_array(a):
