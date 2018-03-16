@@ -1,5 +1,15 @@
 NEWS for Python X Library
 
+Version 0.22
+============
+
+Bug Fixes
+---------
+
+- fix `Display.change_pointer_control` implementation
+- fix `Drawable.put_pil_image` implementation
+
+---
 Version 0.21
 ============
 
