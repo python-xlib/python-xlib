@@ -1,5 +1,14 @@
 NEWS for Python X Library
 
+Version 0.23
+============
+
+Bug Fixes
+---------
+
+- fix strings decoding: use Latin-1
+
+---
 Version 0.22
 ============
 
