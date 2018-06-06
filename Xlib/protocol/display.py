@@ -89,8 +89,8 @@ class Display(object):
 
         self.socket = connect.get_socket(name, protocol, host, displayno)
 
-        auth_name, auth_data = connect.get_auth(self.socket,
-                                                name, host, displayno)
+        auth_name, auth_data = connect.get_auth(self.socket, name,
+                                                protocol, host, displayno)
 
         # Internal structures for communication, grouped
         # by their function and locks

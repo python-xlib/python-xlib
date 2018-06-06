@@ -87,11 +87,11 @@ def get_socket(dname, protocol, host, dno):
     return mod.get_socket(dname, protocol, host, dno)
 
 
-def get_auth(sock, dname, host, dno):
-    """auth_name, auth_data = get_auth(sock, dname, host, dno)
+def get_auth(sock, dname, protocol, host, dno):
+    """auth_name, auth_data = get_auth(sock, dname, protocol, host, dno)
 
     Return authentication data for the display on the other side of
-    SOCK, which was opened with DNAME, HOST and DNO.
+    SOCK, which was opened with DNAME, HOST and DNO, using PROTOCOL.
 
     Return AUTH_NAME and AUTH_DATA, two strings to be used in the
     connection setup request.
@@ -99,4 +99,4 @@ def get_auth(sock, dname, host, dno):
 
     modname = _auth_mods.get(platform, _default_auth_mod)
     mod = _relative_import(modname)
-    return mod.get_auth(sock, dname, host, dno)
+    return mod.get_auth(sock, dname, protocol, host, dno)
