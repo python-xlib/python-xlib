@@ -42,36 +42,50 @@ else:
 
 from Xlib import error, xauth
 
+
+SUPPORTED_PROTOCOLS = (None, 'tcp', 'unix')
+
+# Darwin funky socket.
 uname = platform.uname()
 if (uname[0] == 'Darwin') and ([int(x) for x in uname[2].split('.')] >= [9, 0]):
+    SUPPORTED_PROTOCOLS += ('darwin',)
+    DARWIN_DISPLAY_RE = re.compile(r'^/private/tmp/[-:a-zA-Z0-9._]*:(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
 
-    display_re = re.compile(r'^(?P<proto>)(?P<host>[-:a-zA-Z0-9._/]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
+DISPLAY_RE = re.compile(r'^((?P<proto>tcp|unix)/)?(?P<host>[-:a-zA-Z0-9._]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
 
-else:
-
-    display_re = re.compile(r'^((?P<proto>tcp|unix)/)?(?P<host>[-:a-zA-Z0-9._]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
 
 def get_display(display):
     # Use $DISPLAY if display isn't provided
     if display is None:
         display = os.environ.get('DISPLAY', '')
 
-    m = display_re.match(display)
-    if not m:
+    re_list = [(DISPLAY_RE, {})]
+
+    if 'darwin' in SUPPORTED_PROTOCOLS:
+        re_list.insert(0, (DARWIN_DISPLAY_RE, {'protocol': 'darwin'}))
+
+    for re, defaults in re_list:
+        m = re.match(display)
+        if m is not None:
+            protocol, host, dno, screen = [
+                m.groupdict().get(field, defaults.get(field))
+                for field in ('proto', 'host', 'dno', 'screen')
+            ]
+            break
+    else:
         raise error.DisplayNameError(display)
 
-    name = display
-    protocol, host, dno, screen = m.group('proto', 'host', 'dno', 'screen')
     if protocol == 'tcp' and not host:
         # Host is mandatory when protocol is TCP.
         raise error.DisplayNameError(display)
+
     dno = int(dno)
     if screen:
         screen = int(screen)
     else:
         screen = 0
 
-    return name, protocol, host, dno, screen
+    return display, protocol, host, dno, screen
 
 
 def _get_tcp_socket(host, dno):
@@ -85,14 +99,14 @@ def _get_unix_socket(address):
     return s
 
 def get_socket(dname, protocol, host, dno):
-    assert protocol in (None, 'tcp', 'unix')
+    assert protocol in SUPPORTED_PROTOCOLS
     try:
         # Darwin funky socket.
-        if uname[0] == 'Darwin' and host and host.startswith('/private/tmp/'):
+        if protocol == 'darwin':
             s = _get_unix_socket(dname)
 
         # TCP socket, note the special case: `unix:0.0` is equivalent to `:0.0`.
-        elif (not protocol or protocol != 'unix') and host and host != 'unix':
+        elif (protocol is None or protocol != 'unix') and host and host != 'unix':
             s = _get_tcp_socket(host, dno)
 
         # Unix socket.
@@ -118,13 +132,14 @@ def get_socket(dname, protocol, host, dno):
     return s
 
 
-def new_get_auth(sock, dname, host, dno):
+def new_get_auth(sock, dname, protocol, host, dno):
+    assert protocol in SUPPORTED_PROTOCOLS
     # Translate socket address into the xauth domain
-    if (uname[0] == 'Darwin') and host and host.startswith('/private/tmp/'):
+    if protocol == 'darwin':
         family = xauth.FamilyLocal
         addr = socket.gethostname()
 
-    elif host:
+    elif protocol == 'tcp':
         family = xauth.FamilyInternet
 
         # Convert the prettyprinted IP number into 4-octet string.
