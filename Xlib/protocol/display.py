@@ -822,8 +822,14 @@ class Display(object):
 
         estruct = self.event_classes.get(etype, event.AnyEvent)
         if type(estruct) == dict:
+            subcode = self.data_recv[1]
+
+            # Python2 compatibility
+            if type(subcode) == str:
+                subcode = ord(subcode)
+
             # this etype refers to a set of sub-events with individual subcodes
-            estruct = estruct[ord(self.data_recv[1])]
+            estruct = estruct[subcode]
 
         e = estruct(display = self, binarydata = self.data_recv[:length])
 
