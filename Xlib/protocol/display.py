@@ -485,7 +485,7 @@ class Display(object):
         # There's no thread doing what we need to do.  Find out exactly
         # what to do
 
-        # There must always be some thread recieving data, but it must not
+        # There must always be some thread receiving data, but it must not
         # necessarily be us
 
         if not self.recv_active:
@@ -497,7 +497,7 @@ class Display(object):
         flush_bytes = None
         sending = 0
 
-        # Loop, recieving and sending data.
+        # Loop, receiving and sending data.
         while 1:
 
             # We might want to start sending data
@@ -542,9 +542,9 @@ class Display(object):
             try:
                 # We're only checking for the socket to be writable
                 # if we're the sending thread.  We always check for it
-                # to become readable: either we are the recieving thread
-                # and should take care of the data, or the recieving thread
-                # might finish recieving after having read the data
+                # to become readable: either we are the receiving thread
+                # and should take care of the data, or the receiving thread
+                # might finish receiving after having read the data
 
                 if sending:
                     writeset = [self.socket]
@@ -594,7 +594,7 @@ class Display(object):
             gotreq = 0
             if rs:
 
-                # We're the recieving thread, parse the data
+                # We're the receiving thread, parse the data
                 if recieving:
                     try:
                         count = self.recv_packet_len - len(self.data_recv)
