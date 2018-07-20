@@ -110,7 +110,7 @@ class Display(object):
         self.request_serial = 1
         self.request_queue = []
 
-        # Send-and-recieve loop, see function send_and_recive
+        # Send-and-receive loop, see function send_and_receive
         # for a detailed explanation
         self.send_recv_lock = lock.allocate_lock()
         self.send_active = 0
@@ -127,7 +127,7 @@ class Display(object):
         buffer_size = math.pow(2, math.floor(math.log(buffer_size, 2)))
         self.recv_buffer_size = int(buffer_size)
 
-        # Data used by the send-and-recieve loop
+        # Data used by the send-and-receive loop
         self.sent_requests = []
         self.recv_packet_len = 0
         self.data_send = b''
@@ -146,7 +146,7 @@ class Display(object):
         # Right, now we're all set up for the connection setup
         # request with the server.
 
-        # Figure out which endianess the hardware uses
+        # Figure out which endianness the hardware uses
         self.big_endian = struct.unpack('BB', struct.pack('H', 0x0100))[0]
 
         if self.big_endian:
@@ -204,7 +204,7 @@ class Display(object):
 
         while not self.event_queue:
 
-            # Lock send_recv so no send_and_recieve
+            # Lock send_recv so no send_and_receive
             # can start or stop while we're checking
             # whether there are one active.
             self.send_recv_lock.acquire()
@@ -400,7 +400,7 @@ class Display(object):
         be true.  Will return immediately if another thread is
         already doing send_and_recv.
 
-        To wait for an event to be recieved, event should be true.
+        To wait for an event to be received, event should be true.
 
         To wait for a response to a certain request (either an error
         or a response), request should be set the that request's
@@ -561,7 +561,7 @@ class Display(object):
 
                 rs, ws, es = select.select([self.socket], writeset, [], timeout)
 
-            # Ignore errors caused by a signal recieved while blocking.
+            # Ignore errors caused by a signal received while blocking.
             # All other errors are re-raised.
             except select.error as err:
                 if isinstance(err, OSError):
@@ -627,7 +627,7 @@ class Display(object):
 
             # There are three different end of send-recv-loop conditions.
             # However, we don't leave the loop immediately, instead we
-            # try to send and recieve any data that might be left.  We
+            # try to send and receive any data that might be left.  We
             # do this by giving a timeout of 0 to select to poll
             # the socket.
 
@@ -643,7 +643,7 @@ class Display(object):
             if request is not None and gotreq:
                 break
 
-            # Always break if we just want to recieve as much as possible
+            # Always break if we just want to receive as much as possible
             if recv:
                 break
 
@@ -678,9 +678,9 @@ class Display(object):
     def parse_response(self, request):
         """Internal method.
 
-        Parse data recieved from server.  If REQUEST is not None
+        Parse data received from server.  If REQUEST is not None
         true is returned if the request with that serial number
-        was recieved, otherwise false is returned.
+        was received, otherwise false is returned.
 
         If REQUEST is -1, we're parsing the server connection setup
         response.
@@ -711,11 +711,11 @@ class Display(object):
                     raise AssertionError(rtype)
 
             # Every response is at least 32 bytes long, so don't bother
-            # until we have recieved that much
+            # until we have received that much
             if len(self.data_recv) < 32:
                 return gotreq
 
-            # Error resposne
+            # Error response
             if rtype == 0:
                 gotreq = self.parse_error_response(request) or gotreq
 

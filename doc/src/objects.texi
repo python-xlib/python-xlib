@@ -475,7 +475,7 @@ The name of the font.
 @itemx font_ascent
 @itemx font_descent
 @itemx replies_hint
-See the descripton of XFontStruct in XGetFontProperty(3X11) for details
+See the description of XFontStruct in XGetFontProperty(3X11) for details
 on these values.
 
 @item properties
