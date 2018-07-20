@@ -205,7 +205,7 @@ list items have the following attributes:
 The ID of this visual.
 
 @item visual_class
-One of @code{X.StaticGrey}, @code{X.StaticColor}, @code{X.TrueColor},
+One of @code{X.StaticGray}, @code{X.StaticColor}, @code{X.TrueColor},
 @code{X.GrayScale}, @code{X.PseudoColor}, or @code{X.DirectColor}.
 
 @item bits_per_rgb_value
