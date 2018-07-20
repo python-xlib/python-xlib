@@ -489,10 +489,10 @@ class Display(object):
         # necessarily be us
 
         if not self.recv_active:
-            recieving = 1
+            receiving = 1
             self.recv_active = 1
         else:
-            recieving = 0
+            receiving = 0
 
         flush_bytes = None
         sending = 0
@@ -529,7 +529,7 @@ class Display(object):
             self.send_recv_lock.release()
 
             # There's no longer anything useful we can do here.
-            if not (sending or recieving):
+            if not (sending or receiving):
                 break
 
             # If we're flushing, figure out how many bytes we
@@ -595,7 +595,7 @@ class Display(object):
             if rs:
 
                 # We're the receiving thread, parse the data
-                if recieving:
+                if receiving:
                     try:
                         count = self.recv_packet_len - len(self.data_recv)
                         count = max(self.recv_buffer_size, count)
@@ -661,7 +661,7 @@ class Display(object):
 
         if sending:
             self.send_active = 0
-        if recieving:
+        if receiving:
             self.recv_active = 0
 
         if self.event_waiting:
