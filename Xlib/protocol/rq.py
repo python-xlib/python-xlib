@@ -1058,7 +1058,7 @@ class Struct(object):
                         pack_items.append(field_args[f.name])
 
                 # Multivalue field.  Handled like single valuefield,
-                # but the value are tuple unpacked into seperate arguments
+                # but the value are tuple unpacked into separate arguments
                 # which are appended to pack_items
                 else:
                     if f.check_value is not None:

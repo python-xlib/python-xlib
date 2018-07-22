@@ -142,7 +142,7 @@ Forget any caught error.
 
 
 Since the X protocol is mostly asynchronous any error we're watching for
-might not have been recieved when we call @code{get_error}.  To make
+might not have been received when we call @code{get_error}.  To make
 sure that the request has been processed by the server and any error
 generated has been received by the Xlib, we must synchronize with the
 server.

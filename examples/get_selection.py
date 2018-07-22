@@ -83,7 +83,7 @@ def main():
     # since we don't have an event here we have to.
     w.convert_selection(sel_atom, target_atom, data_atom, X.CurrentTime)
 
-    # Wait for the notificiaton that we got the selection
+    # Wait for the notification that we got the selection
     while True:
         e = d.next_event()
         if e.type == X.SelectionNotify:
