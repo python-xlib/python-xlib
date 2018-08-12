@@ -58,7 +58,7 @@ def main(argv):
     time.sleep(5)
 
     print('Showing cursor ...', file=sys.stderr)
-    screen.root.xfixes_hide_cursor()
+    screen.root.xfixes_show_cursor()
     display.sync()
 
 
