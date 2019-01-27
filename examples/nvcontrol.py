@@ -50,6 +50,8 @@ if __name__ == '__main__':
     gpu = Gpu(0)
     fan = Cooler(0)
 
+    perf_level = 3
+
     dic = {
         'get_gpu_count': display.nvcontrol_get_gpu_count(),
         'get_vram': display.nvcontrol_get_vram(gpu),
@@ -70,8 +72,8 @@ if __name__ == '__main__':
         'get_video_encoder_utilization': display.nvcontrol_get_video_encoder_utilization(gpu),
         'get_video_decoder_utilization': display.nvcontrol_get_video_decoder_utilization(gpu),
         'get_current_performance_level': display.nvcontrol_get_current_performance_level(gpu),
-        'get_gpu_nvclock_offset': display.nvcontrol_get_gpu_nvclock_offset(gpu),
-        'get_mem_transfer_rate_offset': display.nvcontrol_get_mem_transfer_rate_offset(gpu),
+        'get_gpu_nvclock_offset': display.nvcontrol_get_gpu_nvclock_offset(gpu, perf_level),
+        'get_mem_transfer_rate_offset': display.nvcontrol_get_mem_transfer_rate_offset(gpu, perf_level),
         'get_cooler_manual_control_enabled': display.nvcontrol_get_cooler_manual_control_enabled(gpu),
         'get_fan_duty': display.nvcontrol_get_fan_duty(fan),
         'get_fan_rpm': display.nvcontrol_get_fan_rpm(fan),
