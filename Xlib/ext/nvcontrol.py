@@ -27,6 +27,19 @@ from Xlib.protocol import rq
 extname = 'NV-CONTROL'
 
 
+def query_target_count(self, target):
+    """return the target count"""
+    reply = NVCtrlQueryTargetCountRequest(display=self.display,
+                                          opcode=self.display.get_extension_major(extname),
+                                          target_type=target.type())
+    return int(reply._data.get('count'))
+
+
+def get_gpu_count(self):
+    """Return the number of GPU's present in the system."""
+    return int(query_target_count(self, Gpu()))
+
+
 def query_int_attribute(self, target, displays, attr):
     """return the value of an integer attribute"""
     display_mask = _displays2mask(displays)
@@ -52,10 +65,6 @@ def set_int_attribute(self, target, displays, attr, value):
                                                   attr=attr,
                                                   value=value)
     return reply._data.get('flags')
-
-
-def set_cooler_manual_control_enabled(self, target, enabled):
-    return set_int_attribute(self, target, [], NV_CTRL_GPU_COOLER_MANUAL_CONTROL, 1 if enabled else 0) == 1
 
 
 def query_string_attribute(self, target, displays, attr):
@@ -200,6 +209,10 @@ def get_cooler_manual_control_enabled(self, target):
     return query_int_attribute(self, target, [], NV_CTRL_GPU_COOLER_MANUAL_CONTROL) == 1
 
 
+def set_cooler_manual_control_enabled(self, target, enabled):
+    return set_int_attribute(self, target, [], NV_CTRL_GPU_COOLER_MANUAL_CONTROL, 1 if enabled else 0) == 1
+
+
 def get_fan_duty(self, target):
     return query_int_attribute(self, target, [], NV_CTRL_THERMAL_COOLER_CURRENT_LEVEL)
 
@@ -259,8 +272,10 @@ def _displays2mask(displays):
 
 
 def init(disp, info):
+    disp.extension_add_method('display', 'nvcontrol_query_target_count', query_target_count)
     disp.extension_add_method('display', 'nvcontrol_query_int_attribute', query_int_attribute)
     disp.extension_add_method('display', 'nvcontrol_query_string_attribute', query_string_attribute)
+    disp.extension_add_method('display', 'nvcontrol_get_gpu_count', get_gpu_count)
     disp.extension_add_method('display', 'nvcontrol_get_vram', get_vram)
     disp.extension_add_method('display', 'nvcontrol_get_irq', get_irq)
     disp.extension_add_method('display', 'nvcontrol_supports_framelock', supports_framelock)
@@ -5185,4 +5200,25 @@ class NVCtrlQueryStringAttributeRequest(rq.ReplyRequest):
         rq.Card32('pad6'),
         rq.Card32('pad7'),
         rq.String8('string'),
+    )
+
+
+class NVCtrlQueryTargetCountRequest(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(X_nvCtrlQueryTargetCount),
+        rq.RequestLength(),
+        rq.Card32('target_type'),
+    )
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Card8('padb1'),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card32('count'),
+        rq.Card32('pad4'),
+        rq.Card32('pad5'),
+        rq.Card32('pad6'),
+        rq.Card32('pad7'),
+        rq.Card32('pad8'),
     )
