@@ -29,9 +29,9 @@ extname = 'NV-CONTROL'
 
 def query_target_count(self, target):
     """return the target count"""
-    reply = NVCtrlQueryTargetCountRequest(display=self.display,
-                                          opcode=self.display.get_extension_major(extname),
-                                          target_type=target.type())
+    reply = NVCtrlQueryTargetCountReplyRequest(display=self.display,
+                                               opcode=self.display.get_extension_major(extname),
+                                               target_type=target.type())
     return int(reply._data.get('count'))
 
 
@@ -43,12 +43,12 @@ def get_gpu_count(self):
 def query_int_attribute(self, target, displays, attr):
     """return the value of an integer attribute"""
     display_mask = _displays2mask(displays)
-    reply = NVCtrlQueryAttributeRequest(display=self.display,
-                                        opcode=self.display.get_extension_major(extname),
-                                        target_id=target.id(),
-                                        target_type=target.type(),
-                                        display_mask=display_mask,
-                                        attr=attr)
+    reply = NVCtrlQueryAttributeReplyRequest(display=self.display,
+                                             opcode=self.display.get_extension_major(extname),
+                                             target_id=target.id(),
+                                             target_type=target.type(),
+                                             display_mask=display_mask,
+                                             attr=attr)
     if not reply._data.get('flags'):
         return None
     return int(reply._data.get('value'))
@@ -57,28 +57,42 @@ def query_int_attribute(self, target, displays, attr):
 def set_int_attribute(self, target, displays, attr, value):
     """return the value of an integer attribute"""
     display_mask = _displays2mask(displays)
-    reply = NVCtrlSetAttributeAndGetStatusRequest(display=self.display,
-                                                  opcode=self.display.get_extension_major(extname),
-                                                  target_id=target.id(),
-                                                  target_type=target.type(),
-                                                  display_mask=display_mask,
-                                                  attr=attr,
-                                                  value=value)
+    reply = NVCtrlSetAttributeAndGetStatusReplyRequest(display=self.display,
+                                                       opcode=self.display.get_extension_major(extname),
+                                                       target_id=target.id(),
+                                                       target_type=target.type(),
+                                                       display_mask=display_mask,
+                                                       attr=attr,
+                                                       value=value)
     return reply._data.get('flags')
 
 
 def query_string_attribute(self, target, displays, attr):
     """return the value of an integer attribute"""
     display_mask = _displays2mask(displays)
-    reply = NVCtrlQueryStringAttributeRequest(display=self.display,
-                                              opcode=self.display.get_extension_major(extname),
-                                              target_id=target.id(),
-                                              target_type=target.type(),
-                                              display_mask=display_mask,
-                                              attr=attr)
+    reply = NVCtrlQueryStringAttributeReplyRequest(display=self.display,
+                                                   opcode=self.display.get_extension_major(extname),
+                                                   target_id=target.id(),
+                                                   target_type=target.type(),
+                                                   display_mask=display_mask,
+                                                   attr=attr)
     if not reply._data.get('flags'):
         return None
     return str(reply._data.get('string')).strip('\0')
+
+
+def query_valid_attr_values(self, target, displays, attr):
+    """return the value of an integer attribute"""
+    display_mask = _displays2mask(displays)
+    reply = NVCtrlQueryValidAttributeValuesReplyRequest(display=self.display,
+                                                        opcode=self.display.get_extension_major(extname),
+                                                        target_id=target.id(),
+                                                        target_type=target.type(),
+                                                        display_mask=display_mask,
+                                                        attr=attr)
+    if not reply._data.get('flags'):
+        return None
+    return int(reply._data.get('min')), int(reply._data.get('max'))
 
 
 def get_name(self, target):
@@ -201,8 +215,16 @@ def get_gpu_nvclock_offset(self, target):
     return query_int_attribute(self, target, [], NV_CTRL_GPU_NVCLOCK_OFFSET)
 
 
+def get_gpu_nvclock_offset_range(self, target):
+    return query_valid_attr_values(self, target, [], NV_CTRL_GPU_NVCLOCK_OFFSET)
+
+
 def get_mem_transfer_rate_offset(self, target):
     return query_int_attribute(self, target, [], NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
+
+
+def get_mem_transfer_rate_offset_range(self, target):
+    return query_valid_attr_values(self, target, [], NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
 
 
 def get_cooler_manual_control_enabled(self, target):
@@ -309,6 +331,10 @@ def init(disp, info):
     disp.extension_add_method('display', 'nvcontrol_get_performance_modes', get_performance_modes)
     disp.extension_add_method('display', 'nvcontrol_set_cooler_manual_control_enabled',
                               set_cooler_manual_control_enabled)
+    disp.extension_add_method('display', 'nvcontrol_get_gpu_nvclock_offset_range',
+                              get_gpu_nvclock_offset_range)
+    disp.extension_add_method('display', 'nvcontrol_get_mem_transfer_rate_offset_range',
+                              get_mem_transfer_rate_offset_range)
 
 
 ############################################################################
@@ -5129,7 +5155,7 @@ class Cooler(Target):
         self._name = 'Cooler'
 
 
-class NVCtrlQueryAttributeRequest(rq.ReplyRequest):
+class NVCtrlQueryAttributeReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
         rq.Card8('opcode'),
         rq.Opcode(X_nvCtrlQueryAttribute),
@@ -5153,7 +5179,7 @@ class NVCtrlQueryAttributeRequest(rq.ReplyRequest):
     )
 
 
-class NVCtrlSetAttributeAndGetStatusRequest(rq.ReplyRequest):
+class NVCtrlSetAttributeAndGetStatusReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
         rq.Card8('opcode'),
         rq.Opcode(X_nvCtrlSetAttributeAndGetStatus),
@@ -5178,7 +5204,7 @@ class NVCtrlSetAttributeAndGetStatusRequest(rq.ReplyRequest):
     )
 
 
-class NVCtrlQueryStringAttributeRequest(rq.ReplyRequest):
+class NVCtrlQueryStringAttributeReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
         rq.Card8('opcode'),
         rq.Opcode(X_nvCtrlQueryStringAttribute),
@@ -5203,7 +5229,7 @@ class NVCtrlQueryStringAttributeRequest(rq.ReplyRequest):
     )
 
 
-class NVCtrlQueryTargetCountRequest(rq.ReplyRequest):
+class NVCtrlQueryTargetCountReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
         rq.Card8('opcode'),
         rq.Opcode(X_nvCtrlQueryTargetCount),
@@ -5221,4 +5247,28 @@ class NVCtrlQueryTargetCountRequest(rq.ReplyRequest):
         rq.Card32('pad6'),
         rq.Card32('pad7'),
         rq.Card32('pad8'),
+    )
+
+
+class NVCtrlQueryValidAttributeValuesReplyRequest(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(X_nvCtrlQueryValidAttributeValues),
+        rq.RequestLength(),
+        rq.Card16('target_id'),
+        rq.Card16('target_type'),
+        rq.Card32('display_mask'),
+        rq.Card32('attr'),
+    )
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Card8('pad0'),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card32('flags'),
+        rq.Int32('attr_type'),
+        rq.Int32('min'),
+        rq.Int32('max'),
+        rq.Card32('bits'),
+        rq.Card32('perms'),
     )

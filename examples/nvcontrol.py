@@ -81,7 +81,9 @@ if __name__ == '__main__':
         'get_vbios_version': display.nvcontrol_get_vbios_version(gpu),
         'get_gpu_uuid': display.nvcontrol_get_gpu_uuid(gpu),
         'get_gpu_utilization': display.nvcontrol_get_gpu_utilization(gpu),
-        'get_performance_modes': display.nvcontrol_get_performance_modes(gpu)
+        'get_performance_modes': display.nvcontrol_get_performance_modes(gpu),
+        'get_gpu_nvclock_offset_range': display.nvcontrol_get_gpu_nvclock_offset_range(gpu),
+        'get_mem_transfer_rate_offset_range': display.nvcontrol_get_mem_transfer_rate_offset_range(gpu)
     }
 
     pprint(dic)
