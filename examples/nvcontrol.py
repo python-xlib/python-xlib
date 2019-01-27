@@ -89,9 +89,4 @@ if __name__ == '__main__':
 
     pprint(dic)
 
-    # display.nvcontrol_set_cooler_manual_control_enabled(gpu, True)
-    # print(str(display.nvcontrol_get_cooler_manual_control_enabled(gpu)))
-    # display.nvcontrol_set_cooler_manual_control_enabled(gpu, False)
-    # print(str(display.nvcontrol_get_cooler_manual_control_enabled(gpu)))
-
     display.close()

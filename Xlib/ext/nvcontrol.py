@@ -294,21 +294,6 @@ def get_max_displays(self, target):
     return query_int_attribute(self, target, [], NV_CTRL_MAX_DISPLAYS)
 
 
-# def get_connected_displays(self, target):
-#     """Return an array with connected display numbers"""
-#     return query_int_attribute(self, target, [], NV_CTRL_CONNECTED_DISPLAYS)
-#
-#
-# def get_enabled_displays(self, target):
-#     """returns an array of displays that are enabled on the specified X
-#     screen or GPU."""
-#     return query_int_attribute(self, target, [], NV_CTRL_ENABLED_DISPLAYS)
-
-# def get_current_clocks(self, target):
-#     """return the current (GPU, memory) clocks of the graphics device
-#     driving the X screen."""
-#     return query_int_attribute(self, target, [], NV_CTRL_GPU_CURRENT_CLOCK_FREQS)
-
 def _displaystr2num(st):
     """return a display number from a string"""
     num = None
