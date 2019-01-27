@@ -142,11 +142,26 @@ def get_gpu_uuid(self, target):
 
 
 def get_gpu_utilization(self, target):
-    return query_string_attribute(self, target, [], NV_CTRL_STRING_GPU_UTILIZATION)
+    string = query_string_attribute(self, target, [], NV_CTRL_STRING_GPU_UTILIZATION)
+    result = {}
+    if string is not None and string != '':
+        for line in string.split(','):
+            key_value = line.split('=')
+            result[key_value[0].strip()] = int(key_value[1]) if key_value[1].isdigit else key_value[1]
+    return result
 
 
 def get_performance_modes(self, target):
-    return query_string_attribute(self, target, [], NV_CTRL_STRING_PERFORMANCE_MODES)
+    string = query_string_attribute(self, target, [], NV_CTRL_STRING_PERFORMANCE_MODES)
+    result = []
+    if string is not None and string != '':
+        for perf in string.split(';'):
+            perf_dict = {}
+            for line in perf.split(','):
+                key_value = line.split('=')
+                perf_dict[key_value[0].strip()] = int(key_value[1]) if key_value[1].isdigit else key_value[1]
+            result.append(perf_dict)
+    return result
 
 
 def get_vram(self, target):
