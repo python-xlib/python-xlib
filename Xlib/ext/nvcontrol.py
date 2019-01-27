@@ -35,11 +35,6 @@ def query_target_count(self, target):
     return int(reply._data.get('count'))
 
 
-def get_gpu_count(self):
-    """Return the number of GPU's present in the system."""
-    return int(query_target_count(self, Gpu()))
-
-
 def query_int_attribute(self, target, displays, attr):
     """return the value of an integer attribute"""
     display_mask = _displays2mask(displays)
@@ -55,7 +50,7 @@ def query_int_attribute(self, target, displays, attr):
 
 
 def set_int_attribute(self, target, displays, attr, value):
-    """return the value of an integer attribute"""
+    """set the value of an integer attribute"""
     display_mask = _displays2mask(displays)
     reply = NVCtrlSetAttributeAndGetStatusReplyRequest(display=self.display,
                                                        opcode=self.display.get_extension_major(extname),
@@ -68,7 +63,7 @@ def set_int_attribute(self, target, displays, attr, value):
 
 
 def query_string_attribute(self, target, displays, attr):
-    """return the value of an integer attribute"""
+    """return the value of a string attribute"""
     display_mask = _displays2mask(displays)
     reply = NVCtrlQueryStringAttributeReplyRequest(display=self.display,
                                                    opcode=self.display.get_extension_major(extname),
@@ -93,6 +88,38 @@ def query_valid_attr_values(self, target, displays, attr):
     if not reply._data.get('flags'):
         return None
     return int(reply._data.get('min')), int(reply._data.get('max'))
+
+
+def query_binary_data(self, target, displays, attr):
+    """return binary data"""
+    display_mask = _displays2mask(displays)
+    reply = NVCtrlQueryBinaryDataReplyRequest(display=self.display,
+                                              opcode=self.display.get_extension_major(extname),
+                                              target_id=target.id(),
+                                              target_type=target.type(),
+                                              display_mask=display_mask,
+                                              attr=attr)
+    if not reply._data.get('flags'):
+        return None
+    return reply._data.get('data')
+
+
+def get_coolers_used_by_gpu(self, target):
+    display_mask = _displays2mask([])
+    reply = NVCtrlQueryListCard32ReplyRequest(display=self.display,
+                                              opcode=self.display.get_extension_major(extname),
+                                              target_id=target.id(),
+                                              target_type=target.type(),
+                                              display_mask=display_mask,
+                                              attr=NV_CTRL_BINARY_DATA_COOLERS_USED_BY_GPU)
+    if not reply._data.get('flags'):
+        return None
+    return reply._data.get('list')
+
+
+def get_gpu_count(self):
+    """Return the number of GPU's present in the system."""
+    return int(query_target_count(self, Gpu()))
 
 
 def get_name(self, target):
@@ -297,6 +324,8 @@ def init(disp, info):
     disp.extension_add_method('display', 'nvcontrol_query_target_count', query_target_count)
     disp.extension_add_method('display', 'nvcontrol_query_int_attribute', query_int_attribute)
     disp.extension_add_method('display', 'nvcontrol_query_string_attribute', query_string_attribute)
+    disp.extension_add_method('display', 'nvcontrol_query_valid_attr_values', query_valid_attr_values)
+    disp.extension_add_method('display', 'nvcontrol_query_binary_data', query_binary_data)
     disp.extension_add_method('display', 'nvcontrol_get_gpu_count', get_gpu_count)
     disp.extension_add_method('display', 'nvcontrol_get_vram', get_vram)
     disp.extension_add_method('display', 'nvcontrol_get_irq', get_irq)
@@ -322,6 +351,7 @@ def init(disp, info):
                               get_cooler_manual_control_enabled)
     disp.extension_add_method('display', 'nvcontrol_get_fan_duty', get_fan_duty)
     disp.extension_add_method('display', 'nvcontrol_get_fan_rpm', get_fan_rpm)
+    disp.extension_add_method('display', 'nvcontrol_get_coolers_used_by_gpu', get_coolers_used_by_gpu)
     disp.extension_add_method('display', 'nvcontrol_get_max_displays', get_max_displays)
     disp.extension_add_method('display', 'nvcontrol_get_name', get_name)
     disp.extension_add_method('display', 'nvcontrol_get_driver_version', get_driver_version)
@@ -5155,6 +5185,27 @@ class Cooler(Target):
         self._name = 'Cooler'
 
 
+class NVCtrlQueryTargetCountReplyRequest(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(X_nvCtrlQueryTargetCount),
+        rq.RequestLength(),
+        rq.Card32('target_type'),
+    )
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Card8('padb1'),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card32('count'),
+        rq.Card32('pad4'),
+        rq.Card32('pad5'),
+        rq.Card32('pad6'),
+        rq.Card32('pad7'),
+        rq.Card32('pad8'),
+    )
+
+
 class NVCtrlQueryAttributeReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
         rq.Card8('opcode'),
@@ -5229,27 +5280,6 @@ class NVCtrlQueryStringAttributeReplyRequest(rq.ReplyRequest):
     )
 
 
-class NVCtrlQueryTargetCountReplyRequest(rq.ReplyRequest):
-    _request = rq.Struct(
-        rq.Card8('opcode'),
-        rq.Opcode(X_nvCtrlQueryTargetCount),
-        rq.RequestLength(),
-        rq.Card32('target_type'),
-    )
-    _reply = rq.Struct(
-        rq.ReplyCode(),
-        rq.Card8('padb1'),
-        rq.Card16('sequence_number'),
-        rq.ReplyLength(),
-        rq.Card32('count'),
-        rq.Card32('pad4'),
-        rq.Card32('pad5'),
-        rq.Card32('pad6'),
-        rq.Card32('pad7'),
-        rq.Card32('pad8'),
-    )
-
-
 class NVCtrlQueryValidAttributeValuesReplyRequest(rq.ReplyRequest):
     _request = rq.Struct(
         rq.Card8('opcode'),
@@ -5271,4 +5301,54 @@ class NVCtrlQueryValidAttributeValuesReplyRequest(rq.ReplyRequest):
         rq.Int32('max'),
         rq.Card32('bits'),
         rq.Card32('perms'),
+    )
+
+
+class NVCtrlQueryBinaryDataReplyRequest(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(X_nvCtrlQueryBinaryData),
+        rq.RequestLength(),
+        rq.Card16('target_id'),
+        rq.Card16('target_type'),
+        rq.Card32('display_mask'),
+        rq.Card32('attr'),
+    )
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Card8('pad0'),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card32('flags'),
+        rq.Card32('data', 4),
+        rq.Card32('pad4'),
+        rq.Card32('pad5'),
+        rq.Card32('pad6'),
+        rq.Card32('pad7'),
+        rq.Binary('data'),
+    )
+
+
+class NVCtrlQueryListCard32ReplyRequest(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(X_nvCtrlQueryBinaryData),
+        rq.RequestLength(),
+        rq.Card16('target_id'),
+        rq.Card16('target_type'),
+        rq.Card32('display_mask'),
+        rq.Card32('attr'),
+    )
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Card8('pad0'),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card32('flags'),
+        rq.Card32('list', 4),
+        rq.Card32('pad4'),
+        rq.Card32('pad5'),
+        rq.Card32('pad6'),
+        rq.Card32('pad7'),
+        rq.List('list', rq.Card32),
     )

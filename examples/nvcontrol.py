@@ -75,6 +75,7 @@ if __name__ == '__main__':
         'get_cooler_manual_control_enabled': display.nvcontrol_get_cooler_manual_control_enabled(gpu),
         'get_fan_duty': display.nvcontrol_get_fan_duty(fan),
         'get_fan_rpm': display.nvcontrol_get_fan_rpm(fan),
+        'get_coolers_used_by_gpu': display.nvcontrol_get_coolers_used_by_gpu(gpu),
         'get_max_displays': display.nvcontrol_get_max_displays(gpu),
         'get_name': display.nvcontrol_get_name(gpu),
         'get_driver_version': display.nvcontrol_get_driver_version(gpu),
