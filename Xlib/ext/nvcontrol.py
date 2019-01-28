@@ -140,8 +140,8 @@ def get_gpu_utilization(self, target):
     result = {}
     if string is not None and string != '':
         for line in string.split(','):
-            key_value = line.split('=')
-            result[key_value[0].strip()] = int(key_value[1]) if key_value[1].isdigit else key_value[1]
+            [key, value] = line.split('=')[:2]
+            result[key.strip()] = int(value) if value.isdigit() else value
     return result
 
 
@@ -152,8 +152,8 @@ def get_performance_modes(self, target):
         for perf in string.split(';'):
             perf_dict = {}
             for line in perf.split(','):
-                key_value = line.split('=')
-                perf_dict[key_value[0].strip()] = int(key_value[1]) if key_value[1].isdigit else key_value[1]
+                [key, value] = line.split('=')[:2]
+                perf_dict[key.strip()] = int(value) if value.isdigit() else value
             result.append(perf_dict)
     return result
 
@@ -288,11 +288,11 @@ def get_fan_rpm(self, target):
 
 
 def get_max_displays(self, target):
-    """return the maximum number of display devices that can be driven
-    simultaneously on a GPU (e.g., that can be used in a MetaMode at once).
-    Note that this does not indicate the maximum number of bits that can be
-    set in NV_CTRL_CONNECTED_DISPLAYS, because more display devices can be
-    connected than are actively in use."""
+    """return the maximum number of display devices that can be driven simultaneously on a GPU.
+
+    Note that this does not indicate the maximum number of bits that can be set in
+    NV_CTRL_CONNECTED_DISPLAYS, because more display devices can be connected than are actively
+    in use."""
     return query_int_attribute(self, target, 0, NV_CTRL_MAX_DISPLAYS)
 
 
@@ -5159,7 +5159,7 @@ class Target(object):
         return self._type
 
     def __str__(self):
-        return '<nVidia %s #%d>' % (self._name, self.id())
+        return '<nVidia {} #{}>'.format(self._name, self.id())
 
 
 class Gpu(Target):
