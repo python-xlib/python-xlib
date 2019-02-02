@@ -168,14 +168,16 @@ def get_irq(self, target):
 
 
 def supports_framelock(self, target):
-    """returns whether the underlying GPU supports Frame Lock. All of the
-    other frame lock attributes are only applicable if this returns True."""
+    """returns whether the underlying GPU supports Frame Lock.
+
+    All of the other frame lock attributes are only applicable if this returns True."""
     return query_int_attribute(self, target, 0, NV_CTRL_FRAMELOCK) == 1
 
 
 def gvo_supported(self, screen):
-    """returns whether this X screen supports GVO; if this screen does not
-    support GVO output, then all other GVO attributes are unavailable."""
+    """returns whether this X screen supports GVO
+
+    If this screen does not support GVO output, then all other GVO attributes are unavailable."""
     return query_int_attribute(self, screen, [], NV_CTRL_GVO_SUPPORTED)
 
 
@@ -185,9 +187,9 @@ def get_core_temp(self, target):
 
 
 def get_core_threshold(self, target):
-    """return the current GPU core slowdown threshold temperature. It
-    reflects the temperature at which the GPU is throttled to prevent
-    overheating."""
+    """return the current GPU core slowdown threshold temperature.
+
+    Itreflects the temperature at which the GPU is throttled to prevent overheating."""
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_CORE_THRESHOLD)
 
 
@@ -202,8 +204,7 @@ def get_max_core_threshold(self, target):
 
 
 def get_ambient_temp(self, target):
-    """return the current temperature in the immediate neighbourhood of
-    the GPU driving the X screen."""
+    """return the current temperature in the immediate neighbourhood of the GPU driving the X screen."""
     return query_int_attribute(self, target, 0, NV_CTRL_AMBIENT_TEMPERATURE)
 
 
