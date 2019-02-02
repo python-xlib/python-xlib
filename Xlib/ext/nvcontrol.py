@@ -108,7 +108,11 @@ def get_coolers_used_by_gpu(self, target):
                                               attr=NV_CTRL_BINARY_DATA_COOLERS_USED_BY_GPU)
     if not reply._data.get('flags'):
         return None
-    return reply._data.get('list')
+    fans = reply._data.get('list')
+    if len(fans) > 1:
+        return fans[1:]
+    else:
+        return None
 
 
 def get_gpu_count(self):
@@ -284,6 +288,10 @@ def get_fan_duty(self, target):
     return query_int_attribute(self, target, 0, NV_CTRL_THERMAL_COOLER_CURRENT_LEVEL)
 
 
+def set_fan_duty(self, cooler, speed):
+    return set_int_attribute(self, cooler, 0, NV_CTRL_THERMAL_COOLER_LEVEL, speed)
+
+
 def get_fan_rpm(self, target):
     return query_int_attribute(self, target, 0, NV_CTRL_THERMAL_COOLER_SPEED)
 
@@ -355,6 +363,7 @@ def init(disp, info):
     disp.extension_add_method('display', 'nvcontrol_get_cooler_manual_control_enabled',
                               get_cooler_manual_control_enabled)
     disp.extension_add_method('display', 'nvcontrol_get_fan_duty', get_fan_duty)
+    disp.extension_add_method('display', 'nvcontrol_set_fan_duty', set_fan_duty)
     disp.extension_add_method('display', 'nvcontrol_get_fan_rpm', get_fan_rpm)
     disp.extension_add_method('display', 'nvcontrol_get_coolers_used_by_gpu', get_coolers_used_by_gpu)
     disp.extension_add_method('display', 'nvcontrol_get_max_displays', get_max_displays)
