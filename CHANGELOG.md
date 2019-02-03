@@ -1,7 +1,7 @@
 NEWS for Python X Library
 
 Version 0.25
-==============
+============
 
 Bug Fixes
 ---------
