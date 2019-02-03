@@ -1,17 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import sys
 import os
 
-sys.path.insert(1, os.path.join(sys.path[0], '../..'))
+sys.path.insert(0, os.path.normpath(os.path.join(__file__, '../../..')))
 
-import types
-import string
 import struct
-from whrandom import randint, choice
+from random import randint, choice, seed
 
 from Xlib.protocol import request, structs, rq, event
-from Xlib import X, XK
+from Xlib import X
+
+
+
+seed(42)
 
 MINI_DEF = (('CARD8', 'reqType'),
             ('BYTE', 'pad'),
@@ -35,11 +37,11 @@ def read_defs():
     event_defs = {}
 
     for line in sys.stdin.readlines():
-        parts = string.split(string.strip(line))
+        parts = line.strip().split()
 
         fields = []
         for f in parts[2:]:
-            fields.append(string.split(f, ':'))
+            fields.append(f.split(':'))
 
         if parts[0] == 'REQUEST':
             request_defs[parts[1]] = fields
@@ -97,7 +99,7 @@ def build_request(endian):
             sys.stderr.write('missing def for request: %s\n' % name)
         else:
             vardefs = request_var_defs.get(name, [()])
-            if type(vardefs) is not types.ListType:
+            if type(vardefs) is not list:
                 vardefs = [vardefs]
 
             i = 0
@@ -129,7 +131,7 @@ def build_request(endian):
                 sys.stderr.write('missing def for reply: %s\n' % name)
             else:
                 vardefs = reply_var_defs.get(name, ())
-                if type(vardefs) is not types.ListType:
+                if type(vardefs) is not list:
                     vardefs = [vardefs]
 
                 i = 0
@@ -176,20 +178,20 @@ def build_request(endian):
     reply_bins = {}
     pc = os.popen('./genrequest', 'r')
     for line in pc.readlines():
-        parts = string.split(string.strip(line))
+        parts = line.strip().split()
         if parts[0] == 'REQUEST':
             req_bins[parts[1]] = parts[2]
         elif parts[0] == 'REPLY':
             reply_bins[parts[1]] = parts[2]
 
-    fpy = open('test_requests_%s.py' % endian, 'w')
-    os.chmod('test_requests_%s.py' % endian, 0755)
+    fpy = open('../test_requests_%s.py' % endian, 'w')
+    os.chmod('../test_requests_%s.py' % endian, 0755)
 
     if endian == 'be':
-        e = 'Big-endian'
+        e = 'BigEndian'
         v = 1
     else:
-        e = 'Little-endian'
+        e = 'LittleEndian'
         v = 0
 
     fpy.write(PY_HEADER % { 'endname': e, 'endvalue': v })
@@ -197,7 +199,7 @@ def build_request(endian):
     for code, req in reqlist:
         name = req.__name__
 
-        fpy.write('\n\nclass Test%s(unittest.TestCase):\n' % name)
+        fpy.write('\n\nclass Test%s(EndianTest):\n' % name)
         fpy.write('    def setUp(self):\n')
 
         i = 0
@@ -233,31 +235,30 @@ def build_request(endian):
         for i in range(0, reqs + 1):
             fpy.write('''
     def testPackRequest%(n)d(self):
-        bin = apply(request.%(req)s._request.to_binary, (), self.req_args_%(n)d)
-        self.assert_(bin == self.req_bin_%(n)d, tohex(bin))
+        bin = request.%(req)s._request.to_binary(*(), **self.req_args_%(n)d)
+        self.assertBinaryEqual(bin, self.req_bin_%(n)d)
 
     def testUnpackRequest%(n)d(self):
         args, remain = request.%(req)s._request.parse_binary(self.req_bin_%(n)d, dummy_display, 1)
-        self.assert_(len(remain) == 0, tohex(remain))
-        self.assert_(args == self.req_args_%(n)d, args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_%(n)d)
 ''' % { 'req': req.__name__, 'n': i })
 
         for i in range(0, replies + 1):
             fpy.write('''
     def testPackReply%(n)d(self):
-        bin = apply(request.%(req)s._reply.to_binary, (), self.reply_args_%(n)d)
-        self.assert_(bin == self.reply_bin_%(n)d, tohex(bin))
+        bin = request.%(req)s._reply.to_binary(*(), **self.reply_args_%(n)d)
+        self.assertBinaryEqual(bin, self.reply_bin_%(n)d)
 
     def testUnpackReply%(n)d(self):
         args, remain = request.%(req)s._reply.parse_binary(self.reply_bin_%(n)d, dummy_display, 1)
-        self.assert_(len(remain) == 0, tohex(remain))
-        self.assert_(args == self.reply_args_%(n)d, args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_%(n)d)
 ''' % { 'req': req.__name__, 'n': i })
 
     fpy.write('''
 
 if __name__ == "__main__":
-    check_endian()
     unittest.main()
 ''')
 
@@ -302,7 +303,7 @@ def build_event(endian):
             sys.stderr.write('missing def for event: %s\n' % name)
         else:
             vardefs = event_var_defs.get(name, [()])
-            if type(vardefs) is not types.ListType:
+            if type(vardefs) is not list:
                 vardefs = [vardefs]
 
             i = 0
@@ -347,18 +348,18 @@ def build_event(endian):
     evt_bins = {}
     pc = os.popen('./genevent', 'r')
     for line in pc.readlines():
-        parts = string.split(string.strip(line))
+        parts = line.strip().split()
         if parts[0] == 'EVENT':
             evt_bins[parts[1]] = parts[2]
 
-    fpy = open('test_events_%s.py' % endian, 'w')
-    os.chmod('test_events_%s.py' % endian, 0755)
+    fpy = open('../test_events_%s.py' % endian, 'w')
+    os.chmod('../test_events_%s.py' % endian, 0755)
 
     if endian == 'be':
-        e = 'Big-endian'
+        e = 'BigEndian'
         v = 1
     else:
-        e = 'Little-endian'
+        e = 'LittleEndian'
         v = 0
 
     fpy.write(PY_HEADER % { 'endname': e, 'endvalue': v })
@@ -369,7 +370,7 @@ def build_event(endian):
 
         name = evt.__name__
 
-        fpy.write('\n\nclass Test%s(unittest.TestCase):\n' % name)
+        fpy.write('\n\nclass Test%s(EndianTest):\n' % name)
         fpy.write('    def setUp(self):\n')
 
         i = 0
@@ -395,19 +396,18 @@ def build_event(endian):
         for i in range(0, evts + 1):
             fpy.write('''
     def testPack%(n)d(self):
-        bin = apply(event.%(evt)s._fields.to_binary, (), self.evt_args_%(n)d)
-        self.assert_(bin == self.evt_bin_%(n)d, tohex(bin))
+        bin = event.%(evt)s._fields.to_binary(*(), **self.evt_args_%(n)d)
+        self.assertBinaryEqual(bin, self.evt_bin_%(n)d)
 
     def testUnpack%(n)d(self):
         args, remain = event.%(evt)s._fields.parse_binary(self.evt_bin_%(n)d, dummy_display, 1)
-        self.assert_(len(remain) == 0, tohex(remain))
-        self.assert_(args == self.evt_args_%(n)d, args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_%(n)d)
 ''' % { 'evt': evt.__name__, 'n': i })
 
     fpy.write('''
 
 if __name__ == "__main__":
-    check_endian()
     unittest.main()
 ''')
 
@@ -488,7 +488,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                                   'xKeymapEvent'):
                     extra_vars.append('%s %s_def[%d] = { %s };'
                                       % (ctype, f.name, vflen,
-                                         string.join(map(str, vfdata), ', ')))
+                                         ', '.join(map(str, vfdata))))
                     varfs[f.name] = ('memcpy(data.xstruct.map, %s_def, sizeof(%s_def));'
                                      % (f.name, f.name),
                                      vflen, 0)
@@ -497,7 +497,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                              % (ctype, f.name, deflen))
                     extra_vars.append('%s %s_def[%d] = { %s };'
                                       % (ctype, f.name, vflen,
-                                         string.join(map(str, vfdata), ', ')))
+                                         ', '.join(map(str, vfdata))))
                     varfs[f.name] = ('memcpy(data.%s, %s_def, sizeof(%s_def));'
                                      % (f.name, f.name, f.name),
                                      vflen, 0)
@@ -522,7 +522,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
 
                 extra_vars.append('struct { xHostEntry e; CARD8 name[4]; } %s_def[%d] = { %s };'
                                   % (f.name, len(pydata),
-                                     string.join(cdata, ', ')))
+                                     ', '.join(cdata)))
 
                 varfs[f.name] = ('memcpy(data.%s, %s_def, sizeof(%s_def));'
                                  % (f.name, f.name, f.name),
@@ -551,13 +551,13 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                         pyd[f.type.fields[sj].name] = d[sj]
 
                     pydata.append(pyd)
-                    defdata.append('{ ' + string.join(map(str, d), ', ') + ' }')
+                    defdata.append('{ ' + ', '.join(map(str, d)) + ' }')
 
                 fc.write('x%s %s[%d];\n        ' % (vfname, f.name, vflen))
 
                 extra_vars.append('x%s %s_def[%d] = { %s };'
                                   % (vfname, f.name, vflen,
-                                     string.join(defdata, ', ')))
+                                     ', '.join(defdata)))
                 varfs[f.name] = ('memcpy(data.%s, %s_def, sizeof(%s_def));'
                                  % (f.name, f.name, f.name),
                                  vflen, 0)
@@ -623,7 +623,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
 
             # vlcode.append('data.%s_flags = %d;' % (f.name, flags))
 
-            varfs[f.name] = (string.join(vlcode, ' '), 0, 0)
+            varfs[f.name] = (' '.join(vlcode), 0, 0)
             args[f.name] = vlargs
 
         #
@@ -679,7 +679,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
             fc.write('%s %s[%d];\n      ' % (ctype, f.name, len(cdata)))
             extra_vars.append('%s %s_def[%d] = { %s };'
                               % (ctype, f.name, len(cdata),
-                                 string.join(cdata, ', ')))
+                                 ', '.join(cdata)))
             varfs[f.name] = ('memcpy(data.%s, %s_def, sizeof(%s_def));'
                              % (f.name, f.name, f.name),
                              length, format)
@@ -699,11 +699,11 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
             elif format == 16:
                 ctype = 'CARD16'
                 clen = length + length % 2
-                cdata = string.join(map(str, data), ', ')
+                cdata = ', '.join(map(str, data))
             elif format == 32:
                 ctype = 'CARD32'
                 clen = length
-                cdata = string.join(map(str, data), ', ')
+                cdata = ', '.join(map(str, data))
 
             if not isinstance(f, rq.FixedPropertyData):
                 fc.write('%s %s[%d];\n        ' %
@@ -825,7 +825,7 @@ def gen_func(fc, funcname, structname, outputname, pydef, cdef, vardefs):
                 pyd[pyf.type.fields[sj].name] = d[sj]
 
             fc.write('{ %s def = { %s };\n      '
-                     % (t, string.join(map(str, d), ', ')))
+                     % (t, ', '.join(map(str, d))))
             fc.write('memcpy(&data.xstruct.%s, &def, sizeof(def)); }\n        ' % f)
             args[pyf.name] = pyd
 
@@ -870,15 +870,24 @@ def pad4(l):
     return l + (4 - l % 4) % 4
 
 def cstring(s):
-    return '"' + string.join(map(lambda c: '\\x%x' % ord(c), s), '') + '"'
+    return '"' + ''.join(map(lambda c: '\\x%x' % ord(c), s)) + '"'
 
 
 def build_args(args):
     kwlist = []
-    for kw, val in args.items():
-        kwlist.append("            '%s': %s,\n" % (kw, repr(val)))
+    for kw, val in sorted(args.items(), key=lambda i: i[0]):
+        if isinstance(val, rq.Event):
+            members = val._data.keys()
+            members.remove('send_event')
+            kwlist.append("            '%s': event.%s(%s),\n" % (
+                kw, val.__class__.__name__,
+                ', '.join('%s=%s' % (m, val._data[m])
+                          for m in sorted(members)),
+            ))
+        else:
+            kwlist.append("            '%s': %s,\n" % (kw, repr(val)))
 
-    return '{\n' + string.join(kwlist, '') + '            }'
+    return '{\n' + ''.join(kwlist) + '            }'
 
 def build_bin(bin):
     bins = []
@@ -888,11 +897,11 @@ def build_bin(bin):
     bins2 = []
     for i in range(0, len(bins), 2):
         try:
-            bins2.append("'%s' '%s'" % (bins[i], bins[i + 1]))
+            bins2.append("b'%s' b'%s'" % (bins[i], bins[i + 1]))
         except IndexError:
-            bins2.append("'%s'" % bins[i])
+            bins2.append("b'%s'" % bins[i])
 
-    return string.join(bins2, ' \\\n            ')
+    return ' \\\n            '.join(bins2)
 
 
 request_var_defs = {
@@ -987,6 +996,7 @@ C_HEADER = r'''
 #include <stdio.h>
 #include <assert.h>
 #include <ctype.h>
+#include <string.h>
 #include <X11/Xproto.h>
 
 void output(char *name, void *data, int length)
@@ -1008,66 +1018,17 @@ void output(char *name, void *data, int length)
 
 '''
 
-PY_HEADER = r'''#!/usr/bin/env python
+PY_HEADER = r'''#!/usr/bin/env python2
 
 import sys, os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.insert(0, os.path.normpath(os.path.join(__file__, '../..')))
 
-import string
 import unittest
-from Xlib.protocol import request, rq, event
-import Xlib.protocol.event
+from Xlib.protocol import request, event
+from . import %(endname)sTest as EndianTest
+from . import DummyDisplay
 
-import struct
-import array
-
-class CmpArray:
-    def __init__(self, *args, **kws):
-        self.array = apply(array.array, args, kws)
-
-    def __len__(self):
-        return len(self.array)
-
-    def __getslice__(self, x, y):
-        return list(self.array[x:y])
-
-    def __getattr__(self, attr):
-        return getattr(self.array, attr)
-
-    def __cmp__(self, other):
-        return cmp(self.array.tolist(), other)
-
-rq.array = CmpArray
-
-def tohex(bin):
-    bin = string.join(map(lambda c: '\\x%%02x' %% ord(c), bin), '')
-
-    bins = []
-    for i in range(0, len(bin), 16):
-        bins.append(bin[i:i+16])
-
-    bins2 = []
-    for i in range(0, len(bins), 2):
-        try:
-            bins2.append("'%%s' '%%s'" %% (bins[i], bins[i + 1]))
-        except IndexError:
-            bins2.append("'%%s'" %% bins[i])
-
-    return string.join(bins2, ' \\\n            ')
-
-class DummyDisplay:
-    def get_resource_class(self, x):
-        return None
-
-    event_classes = Xlib.protocol.event.event_class
 dummy_display = DummyDisplay()
-
-
-def check_endian():
-    if struct.unpack('BB', struct.pack('H', 0x0100))[0] != %(endvalue)d:
-        sys.stderr.write('%(endname)s tests, skipping on this system.\n')
-        sys.exit(0)
-
 '''
 
 if __name__ == '__main__':

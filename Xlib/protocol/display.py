@@ -4,19 +4,22 @@
 #
 #    Copyright (C) 2000-2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 # Standard modules
 import sys
@@ -25,17 +28,29 @@ import struct
 import errno
 import socket
 
-# Xlib modules
-from Xlib import error
-from Xlib.ext import ge
+# Python 2/3 compatibility.
+from six import PY3, byte2int, indexbytes
 
-from Xlib.support import lock, connect
+# Xlib modules
+from .. import error
+from ..ext import ge
+
+from ..support import lock, connect
 
 # Xlib.protocol modules
-import rq
-import event
+from . import rq
+from . import event
 
-class Display:
+if PY3:
+    def buffer(object, offset=None, size=None):
+        if offset is None:
+            offset = 0
+        if size is None:
+            size = len(object)-offset
+        return memoryview(object)[offset:offset+size]
+
+
+class Display(object):
     resource_classes = {}
     extension_major_opcodes = {}
     error_classes = error.xerror_class.copy()
@@ -84,8 +99,8 @@ class Display:
         # Data used by the send-and-recieve loop
         self.sent_requests = []
         self.recv_packet_len = 0
-        self.data_send = ''
-        self.data_recv = ''
+        self.data_send = b''
+        self.data_recv = b''
         self.data_sent_bytes = 0
 
         # Resource ID structures
@@ -228,7 +243,7 @@ class Display:
         self.resource_id_lock.acquire()
         try:
             i = self.last_resource_id
-            while self.resource_ids.has_key(i):
+            while i in self.resource_ids:
                 i = i + 1
                 if i > self.info.resource_id_mask:
                     i = 0
@@ -517,7 +532,7 @@ class Display:
 
             # Ignore errors caused by a signal recieved while blocking.
             # All other errors are re-raised.
-            except select.error, err:
+            except select.error as err:
                 if err[0] != errno.EINTR:
                     raise err
 
@@ -532,7 +547,7 @@ class Display:
             if ws:
                 try:
                     i = self.socket.send(self.data_send)
-                except socket.error, err:
+                except socket.error as err:
                     self.close_internal('server: %s' % err[1])
                     raise self.socket_error
 
@@ -548,7 +563,7 @@ class Display:
                 if recieving:
                     try:
                         bytes_recv = self.socket.recv(2048)
-                    except socket.error, err:
+                    except socket.error as err:
                         self.close_internal('server: %s' % err[1])
                         raise self.socket_error
 
@@ -557,7 +572,7 @@ class Display:
                         self.close_internal('server')
                         raise self.socket_error
 
-                    self.data_recv = self.data_recv + bytes_recv
+                    self.data_recv = bytes(self.data_recv) + bytes_recv
                     gotreq = self.parse_response(request)
 
                 # Otherwise return, allowing the calling thread to figure
@@ -642,7 +657,7 @@ class Display:
         while 1:
             if self.data_recv:
                 # Check the first byte to find out what kind of response it is
-                rtype = ord(self.data_recv[0])
+                rtype = byte2int(self.data_recv)
 
             # Are we're waiting for additional data for the current packet?
             if self.recv_packet_len:
@@ -651,8 +666,10 @@ class Display:
 
                 if rtype == 1:
                     gotreq = self.parse_request_response(request) or gotreq
+                    continue
                 elif rtype & 0x7f == ge.GenericEventCode:
                     self.parse_event_response(rtype)
+                    continue
                 else:
                     raise AssertionError(rtype)
 
@@ -679,7 +696,7 @@ class Display:
 
     def parse_error_response(self, request):
         # Code is second byte
-        code = ord(self.data_recv[1])
+        code = indexbytes(self.data_recv, 1)
 
         # Fetch error class
         estruct = self.error_classes.get(code, error.XError)
@@ -783,7 +800,7 @@ class Display:
 
         # Decrement it by one, so that we don't remove the request
         # that generated these events, if there is such a one.
-        # Bug reported by Ilpo Nyyssönen
+        # Bug reported by Ilpo Nyyssï¿½nen
         self.get_waiting_request((e.sequence_number - 1) % 65536)
 
         # print 'recv Event:', e
@@ -998,7 +1015,7 @@ class ConnectionSetupRequest(rq.GetAttrData):
 
 
     def __init__(self, display, *args, **keys):
-        self._binary = apply(self._request.to_binary, args, keys)
+        self._binary = self._request.to_binary(*args, **keys)
         self._data = None
 
         # Don't bother about locking, since no other threads have

@@ -5,25 +5,28 @@
 #
 #	Copyright (C) 2013 Peter Liljenberg <peter.liljenberg@gmail.com>
 #
-#	This program is free software; you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation; either version 2 of the License, or
-#	(at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program; if not, write to the Free Software
-#	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 import sys
 import os
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import X, display, Xutil, Xatom
 
@@ -78,7 +81,7 @@ def main():
     # Ask for the selection.  We shouldn't use X.CurrentTime, but
     # since we don't have an event here we have to.
     w.convert_selection(sel_atom, target_atom, data_atom, X.CurrentTime)
-    
+
     # Wait for the notificiaton that we got the selection
     while True:
         e = d.next_event()
@@ -112,7 +115,7 @@ def main():
 
     # Tell selection owner that we're done
     w.delete_property(data_atom)
-        
+
 
 def handle_incr(d, w, data_atom, target_name):
     # This works by us removing the data property, the selection owner
@@ -140,7 +143,7 @@ def handle_incr(d, w, data_atom, target_name):
         # End of data
         if len(r.value) == 0:
             return
-        
+
         output_data(d, r, target_name)
         # loop around
 

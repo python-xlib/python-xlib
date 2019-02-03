@@ -7,7 +7,7 @@ import struct
 
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 def dummy_buffer(str, x, y = sys.maxint):
     return str[x:y]
@@ -20,7 +20,7 @@ from Xlib import error
 # We don't want any fancy dictwrapper, just plain mappings
 rq.DictWrapper = lambda x: x
 
-class BugFile:
+class BugFile(object):
     def __init__(self, file):
         self.file = file
         self.cbuf = self.sbuf = ''
@@ -60,49 +60,53 @@ class BugFile:
             raise ValueError('Bad control line: %s' % line)
 
 
-class ParseString:
+class ParseString(object):
     def __init__(self, datafunc):
         self.get_data = datafunc
         self.data = ''
 
-    def __getitem__(self, i):
-        if i < 0:
-            raise ValueError('bad string index: %d' % i)
+    def __getitem__(self, key):
+        if not isinstance(key, slice):
+            if key < 0:
+                raise ValueError('bad string index: {0}'.format(key))
 
-        if len(self.data) <= i:
-            if not self.get_data:
-                raise RuntimeError('attempt to allocate more data after returning a new ParseString')
+            if len(self.data) <= key:
+                if not self.get_data:
+                    raise RuntimeError('attempt to allocate more data after returning a new ParseString')
 
-            self.data = self.data + self.get_data(i - len(self.data) + 1)
+                self.data = self.data + self.get_data(key - len(self.data) + 1)
 
-        return self.data[i]
+            return self.data[key]
 
-    def __getslice__(self, i, j):
-        if j == sys.maxint:
-            if self.get_data:
-                ps = ParseString(self.get_data)
-                self.get_data = None
-                return ps
-            else:
-                raise RuntimeError('attempt to allocate another ParseString')
+        else:
+            # replacement of __getslice__
+            i = key.start
+            j = key.stop
+            if j == sys.maxint:
+                if self.get_data:
+                    ps = ParseString(self.get_data)
+                    self.get_data = None
+                    return ps
+                else:
+                    raise RuntimeError('attempt to allocate another ParseString')
 
 
-        if i < 0 or j < 0 or i > j:
-            raise ValueError('bad slice indices: [%d:%d]' % (i, j))
+            if i < 0 or j < 0 or i > j:
+                raise ValueError('bad slice indices: [%d:%d]' % (i, j))
 
-        if len(self.data) < j:
-            if not self.get_data:
-                raise RuntimeError('attempt to allocate more data after returning a new ParseString')
+            if len(self.data) < j:
+                if not self.get_data:
+                    raise RuntimeError('attempt to allocate more data after returning a new ParseString')
 
-            self.data = self.data + self.get_data(j - len(self.data))
+                self.data = self.data + self.get_data(j - len(self.data))
 
-        return self.data[i:j]
+            return self.data[i:j]
 
-class DummyDisplay:
+class DummyDisplay(object):
     def get_resource_class(self, name):
         return None
 
-class ParseXbug:
+class ParseXbug(object):
     def __init__(self, infile = sys.stdin, outfile = sys.stdout):
         bf = BugFile(infile)
         self.cdata = ParseString(bf.read_client)

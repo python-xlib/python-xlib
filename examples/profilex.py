@@ -3,11 +3,15 @@
 # Program to generate profiling data.  Run with one argument,
 # the profile stats file to generate.
 
+
+# Python 2/3 compatibility.
+from __future__ import print_function
+
 import sys
 import os
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import X, display, Xatom
 
@@ -18,9 +22,9 @@ def dostuff():
     r = d.screen().root
     cm = d.screen().default_colormap
 
-    for i in xrange(0, 1000):
+    for i in range(0, 1000):
         if i % 50 == 0:
-            print 'Iteration', i
+            print('Iteration', i)
 
         r.delete_property(Xatom.WM_NORMAL_HINTS)
         r.delete_property(Xatom.WM_NORMAL_HINTS)
@@ -39,4 +43,4 @@ if __name__ == '__main__':
     if len(sys.argv) == 2:
         main(sys.argv[1])
     else:
-        print sys.argv[0], "<filename to write profile output to>"
+        print(sys.argv[0], "<filename to write profile output to>")

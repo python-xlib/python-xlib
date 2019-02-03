@@ -3,19 +3,22 @@
 #    Copyright (C) 2010-2013 Outpost Embedded, LLC
 #      Forest Bond <forest.bond@rapidrollout.com>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 '''
 A partial implementation of the SECURITY extension.  Support for the
@@ -72,7 +75,7 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
                          rq.LengthOf('auth_data', 2),
                          rq.Card32('value_mask'),
                          rq.String8('auth_proto'),
-                         rq.String8('auth_data'),
+                         rq.Binary('auth_data'),
                          rq.List('values', rq.Card32Obj)
                          )
     _reply = rq.Struct(rq.ReplyCode(),
@@ -82,11 +85,11 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
                        AUTHID('authid'),
                        rq.LengthOf('auth_data_return', 2),
                        rq.Pad(18),
-                       rq.String8('auth_data_return')
+                       rq.Binary('auth_data_return')
                        )
 
 
-def generate_authorization(self, auth_proto, auth_data='', timeout=None,
+def generate_authorization(self, auth_proto, auth_data=b'', timeout=None,
                            trust_level=None, group=None, event_mask=None):
     value_mask = 0
     values = []

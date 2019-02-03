@@ -2,23 +2,26 @@
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 from Xlib.protocol import request
 
-class Resource:
+class Resource(object):
     def __init__(self, display, rid, owner = 0):
         self.display = display
         self.id = rid
@@ -27,14 +30,17 @@ class Resource:
     def __resource__(self):
         return self.id
 
-    def __cmp__(self, obj):
+    def __eq__(self, obj):
         if isinstance(obj, Resource):
             if self.display == obj.display:
-                return cmp(self.id, obj.id)
+                return self.id == obj.id
             else:
-                return cmp(self.display, obj.display)
+                return False
         else:
-            return cmp(id(self), id(obj))
+            return id(self) == id(obj)
+
+    def __ne__(self, obj):
+        return not self == obj
 
     def __hash__(self):
         return int(self.id)

@@ -2,33 +2,34 @@
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-import string
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 from Xlib import X, Xatom, Xutil
 from Xlib.protocol import request, rq
 
 # Other X resource objects
-import resource
-import colormap
-import cursor
-import fontable
+from . import resource
+from . import colormap
+from . import cursor
+from . import fontable
 
 # Inter-client communication conventions
-import icccm
+from . import icccm
 
 class Drawable(resource.Resource):
     __drawable__ = resource.Resource.__resource__
@@ -231,11 +232,11 @@ class Drawable(resource.Resource):
             unit = self.display.info.bitmap_format_scanline_unit
             stride = roundup(width * unit, pad) >> 3
         else:
-            raise ValueError, 'Unknown data format'
+            raise ValueError('Unknown data format')
 
         maxlen = (self.display.info.max_request_length << 2) \
                  - request.PutImage._request.static_size
-        split = maxlen / stride
+        split = maxlen // stride
 
         x1 = 0
         x2 = width
@@ -461,7 +462,7 @@ class Window(Drawable):
             val = prop.value
             if prop.bytes_after:
                 prop = self.get_property(property, type, sizehint,
-                                         prop.bytes_after / 4 + 1)
+                                         prop.bytes_after // 4 + 1)
                 val = val + prop.value
 
             prop.value = val
@@ -668,7 +669,7 @@ class Window(Drawable):
         if d is None or d.format != 8:
             return None
         else:
-            parts = string.split(d.value, '\0')
+            parts = d.value.split('\0')
             if len(parts) < 2:
                 return None
             else:
@@ -765,7 +766,7 @@ class Window(Drawable):
     # Returns a DictWrapper, or None
 
     def _get_struct_prop(self, pname, ptype, pstruct):
-        r = self.get_property(pname, ptype, 0, pstruct.static_size / 4)
+        r = self.get_property(pname, ptype, 0, pstruct.static_size // 4)
         if r and r.format == 32:
             value = r.value.tostring()
             if len(value) == pstruct.static_size:
@@ -784,7 +785,7 @@ class Window(Drawable):
         else:
             keys.update(hints)
 
-        value = apply(pstruct.to_binary, (), keys)
+        value = pstruct.to_binary(*(), **keys)
 
         self.change_property(pname, ptype, 32, value, onerror = onerror)
 
@@ -799,10 +800,9 @@ class Pixmap(Drawable):
 
         self.display.free_resource_id(self.id)
 
-    def create_cursor(self, mask,
-                      (fore_red, fore_green, fore_blue),
-                      (back_red, back_green, back_blue),
-                      x, y):
+    def create_cursor(self, mask, foreground, background, x, y):
+        fore_red, fore_green, fore_blue = foreground
+        back_red, back_green, back_blue = background
         cid = self.display.allocate_resource_id()
         request.CreateCursor(display = self.display,
                              cid = cid,

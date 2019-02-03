@@ -1,30 +1,42 @@
 #!/usr/bin/python
 #    Copyright (C) 2011 Arun Balasubramanian <med.diagnostix@gmail.com>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 
 '''
 xlsatoms - list atoms on X server (see man xlsatoms)
-sample program using python Xlib that mimics the standard xlsatoms utility 
+sample program using python Xlib that mimics the standard xlsatoms utility
 additional capability is to match against regular expressions for atoms
 
 '''
 
-import sys,re
-from Xlib import X,display,error
+# Python 2/3 compatibility.
+from __future__ import print_function
+
+import sys
+import os
+
+# Change path so we find Xlib
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+import re
+from Xlib import display, error
 from optparse import OptionParser
 
 parser = OptionParser()
@@ -42,7 +54,7 @@ ec = error.CatchError(error.BadAtom)
 d = display.Display(options.display)
 
 def print_atom(print_format,atom,value):
-	print print_format%(atom,value)
+	print(print_format%(atom,value))
 
 def list_atoms(d,re_obj,low,high):
 	while(low <= high):
@@ -50,7 +62,7 @@ def list_atoms(d,re_obj,low,high):
 			val = d.get_atom_name(low)
 			if (re_obj == None) :
 				print_atom(options.format,low,val)
-			elif re_obj.match(val) != None: 
+			elif re_obj.match(val) != None:
 				print_atom(options.format,low,val)
 			low += 1
 		except:

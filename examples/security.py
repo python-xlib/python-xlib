@@ -5,26 +5,31 @@
 #    Copyright (C) 2011 Outpost Embedded, LLC
 #      Forest Bond <forest.bond@rapidrollout.com>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
+# Python 2/3 compatibility.
+from __future__ import print_function
 
 import sys, os
 from optparse import OptionParser
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib.display import Display
 from Xlib.ext import security
@@ -52,14 +57,14 @@ def main(argv):
 
     if not display.has_extension('SECURITY'):
         if display.query_extension('SECURITY') is None:
-            print >>sys.stderr, 'SECURITY extension not supported'
+            print('SECURITY extension not supported', file=sys.stderr)
             return 1
 
     security_version = display.security_query_version()
-    print >>sys.stderr, 'Found SECURITY version %s.%s' % (
+    print('SECURITY version %s.%s' % (
       security_version.major_version,
       security_version.minor_version,
-    )
+    ), file=sys.stderr)
 
     if opts.generate:
         kwargs = {}
@@ -68,7 +73,7 @@ def main(argv):
         elif opts.untrusted:
             kwargs['trust_level'] = security.SecurityClientUntrusted
         reply = display.security_generate_authorization(opts.proto, **kwargs)
-        print reply.authid
+        print(reply.authid)
 
     elif opts.revoke:
         for arg in args:

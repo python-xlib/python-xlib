@@ -1,19 +1,49 @@
 language: python
 
 python:
-  - "2.6"
   - "2.7"
+  - "3.3"
+  - "3.4"
+  - "3.5"
 
 # command to install dependencies
-install: pip install -r dev-requirements.txt
+install:
+  - pip install -r requirements.txt
+  - pip install -r dev-requirements.txt
 
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
+  - xauth generate :99.0 . trusted
 
 # command to run tests
-script: nosetests --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/testall.py
+script: 
+  nosetests --exe --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/ examples/run_examples.py
 
 after_success:
   - codecov
+
+before_deploy:
+  # Generate source distribution.
+  # Note: only do this with Python 3.5 so we get support for tar.xz, and
+  # because the contents of the distribution are the same for all versions.
+  - case "$TRAVIS_PYTHON_VERSION" in 3.5) python setup.py sdist --formats=xztar;; esac
+  # Generate egg distribution.
+  - python setup.py bdist_egg
+  # Generate wheel distribution.
+  # Note: only do this once for each major Python version, as the minor version
+  # number is not encoded in the resulting filename (and contents are the same).
+  - case "$TRAVIS_PYTHON_VERSION" in 2.7|3.5) python setup.py bdist_wheel;; esac
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: "lBEbXUeBQyDspP0XBGM/NgfzO2AhW3sMRqCKvOxWQNw4VrC+nfXCkF3OyuRkqQbw+25TKHJadjg+NxX/FtCxdKAJo2MeRrCxNmLqVhq3PnRyBSkVROxYfDFZFL12hmeFA0CrZp45uuSWdruU7a0xh9SkFVBdHSYt55jIzbHKZBdqy1fnL/ot+hnafmsUWc+EiP0s6BgLeqihfevxq87imKyzMKpyH8ofwKKWx6LTgq9khJdQt5x4LUm+Kq8HDcdDeJtz2eLFziDGA7ds+aIpbrk0bG8tmT4SaM06EmJCZoegifGWWnkf5xEe5CVmQXS8Xl3R2bgeII5O4eXUWUXk1tT2nuPLPPv4iTSsZkEd1UH/eHupIID/IKuVqo2GrhvzLBcIzDCFaZg/U8ufARmsx1FGfuzqWwzpqXb+tvDBp6Xz6xSpjrUwwJ41oDRWnDzGLN3uvH06VeMcy6pVFftRLbiMVpOEd76tNvGEEEj4ropb7VyvRL+IHGwbb0Ns62toJYDbgzHyBhisN43tFmaT8fpqLvZP7yuRCMIqs8mtH9Iw4YpOJUG8scsFtX445C4xEGw1j/E6TZkjBrfG0O1FVP1Q6wHYCyutCNjvGKnWvyd+4pg1Nzx/HC/O+ioNefVm+jOTjKtKla/kY6P3ctDWGjXgHGqRe6gn0MtwmR/T+mY="
+    file_glob: true
+    file:
+    - dist/*.tar.*
+    - dist/*.egg
+    - dist/*.whl
+    on:
+      tags: true

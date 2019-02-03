@@ -5,25 +5,28 @@
 #
 #	Copyright (C) 2013 Peter Liljenberg <peter.liljenberg@gmail.com>
 #
-#	This program is free software; you can redistribute it and/or modify
-#	it under the terms of the GNU General Public License as published by
-#	the Free Software Foundation; either version 2 of the License, or
-#	(at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#	This program is distributed in the hope that it will be useful,
-#	but WITHOUT ANY WARRANTY; without even the implied warranty of
-#	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#	GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#	You should have received a copy of the GNU General Public License
-#	along with this program; if not, write to the Free Software
-#	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 import sys
 import os
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import X, display, Xutil, Xatom
 from Xlib.protocol import event
@@ -88,7 +91,7 @@ def main():
     # We must have a window to own a selection
     w = d.screen().root.create_window(
         0, 0, 10, 10, 0, X.CopyFromParent)
-    
+
     # And to grab the selection we must have a timestamp, get one with
     # a property notify when we're anyway setting wm_name
     w.change_attributes(event_mask = X.PropertyChangeMask)
@@ -97,7 +100,7 @@ def main():
     e = d.next_event()
     sel_time = e.time
     w.change_attributes(event_mask = 0)
-    
+
     # Grab the selection and make sure we actually got it
     w.set_selection_owner(sel_atom, sel_time)
     if d.get_selection_owner(sel_atom) != w:
@@ -105,7 +108,7 @@ def main():
         return
 
     log('took ownership of selection {0}', sel_name)
-    
+
     # The event loop, waiting for and processing requests
     while True:
         e = d.next_event()
@@ -123,7 +126,7 @@ def main():
                 client_prop = e.property
 
             target_name = d.get_atom_name(e.target)
-            
+
             log('got request for {0}, dest {1} on 0x{2:08x} {3}',
                 target_name, d.get_atom_name(client_prop),
                 client.id, client.get_wm_name())
@@ -162,7 +165,7 @@ def main():
             client.send_event(ev)
 
             # Done!
-            
+
         elif (e.type == X.SelectionClear
               and e.window == w
               and e.atom == sel_atom):

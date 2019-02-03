@@ -4,28 +4,38 @@
 #
 #    Copyright (C) 2006 Alex Badea <vamposdecampos@gmail.com>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
-# Simple demo for the RECORD extension
-# Not very much unlike the xmacrorec2 program in the xmacro package.
+'''
+Simple demo for the RECORD extension
+
+Not very much unlike the xmacrorec2 program in the xmacro package.
+'''
+
+
+# Python 2/3 compatibility.
+from __future__ import print_function
 
 import sys
 import os
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import X, XK, display
 from Xlib.ext import record
@@ -44,7 +54,7 @@ def record_callback(reply):
     if reply.category != record.FromServer:
         return
     if reply.client_swapped:
-        print "* received swapped protocol data, cowardly ignored"
+        print("* received swapped protocol data, cowardly ignored")
         return
     if not len(reply.data) or ord(reply.data[0]) < 2:
         # not an event
@@ -59,28 +69,28 @@ def record_callback(reply):
 
             keysym = local_dpy.keycode_to_keysym(event.detail, 0)
             if not keysym:
-                print "KeyCode%s" % pr, event.detail
+                print("KeyCode%s" % pr, event.detail)
             else:
-                print "KeyStr%s" % pr, lookup_keysym(keysym)
+                print("KeyStr%s" % pr, lookup_keysym(keysym))
 
             if event.type == X.KeyPress and keysym == XK.XK_Escape:
                 local_dpy.record_disable_context(ctx)
                 local_dpy.flush()
                 return
         elif event.type == X.ButtonPress:
-            print "ButtonPress", event.detail
+            print("ButtonPress", event.detail)
         elif event.type == X.ButtonRelease:
-            print "ButtonRelease", event.detail
+            print("ButtonRelease", event.detail)
         elif event.type == X.MotionNotify:
-            print "MotionNotify", event.root_x, event.root_y
+            print("MotionNotify", event.root_x, event.root_y)
 
 
 # Check if the extension is present
 if not record_dpy.has_extension("RECORD"):
-    print "RECORD extension not found"
+    print("RECORD extension not found")
     sys.exit(1)
 r = record_dpy.record_get_version(0, 0)
-print "RECORD extension version %d.%d" % (r.major_version, r.minor_version)
+print("RECORD extension version %d.%d" % (r.major_version, r.minor_version))
 
 # Create a recording context; we only want key and mouse events
 ctx = record_dpy.record_create_context(

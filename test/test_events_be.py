@@ -1,66 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import sys, os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.insert(0, os.path.normpath(os.path.join(__file__, '../..')))
 
-import string
 import unittest
-from Xlib.protocol import request, rq, event
-import Xlib.protocol.event
+from Xlib.protocol import request, event
+from . import BigEndianTest as EndianTest
+from . import DummyDisplay
 
-import struct
-import array
-
-class CmpArray:
-    def __init__(self, *args, **kws):
-        self.array = apply(array.array, args, kws)
-
-    def __len__(self):
-        return len(self.array)
-
-    def __getslice__(self, x, y):
-        return list(self.array[x:y])
-
-    def __getattr__(self, attr):
-        return getattr(self.array, attr)
-
-    def __cmp__(self, other):
-        return cmp(self.array.tolist(), other)
-
-rq.array = CmpArray
-
-def tohex(bin):
-    bin = string.join(map(lambda c: '\\x%02x' % ord(c), bin), '')
-
-    bins = []
-    for i in range(0, len(bin), 16):
-        bins.append(bin[i:i+16])
-
-    bins2 = []
-    for i in range(0, len(bins), 2):
-        try:
-            bins2.append("'%s' '%s'" % (bins[i], bins[i + 1]))
-        except IndexError:
-            bins2.append("'%s'" % bins[i])
-
-    return string.join(bins2, ' \\\n            ')
-
-class DummyDisplay:
-    def get_resource_class(self, x):
-        return None
-
-    event_classes = Xlib.protocol.event.event_class
 dummy_display = DummyDisplay()
 
 
-def check_endian():
-    if struct.unpack('BB', struct.pack('H', 0x0100))[0] != 1:
-        sys.stderr.write('Big-endian tests, skipping on this system.\n')
-        sys.exit(0)
-
-
-
-class TestKeymapNotify(unittest.TestCase):
+class TestKeymapNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'type': 154,
@@ -73,7 +24,7 @@ class TestKeymapNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.KeymapNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.KeymapNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -91,7 +42,7 @@ class TestKeymapNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestExpose(unittest.TestCase):
+class TestExpose(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'height': 22214,
@@ -110,7 +61,7 @@ class TestExpose(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.Expose._fields.to_binary, (), self.evt_args_0)
+        bin = event.Expose._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -128,7 +79,7 @@ class TestExpose(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGraphicsExpose(unittest.TestCase):
+class TestGraphicsExpose(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'height': 352,
@@ -149,7 +100,7 @@ class TestGraphicsExpose(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.GraphicsExpose._fields.to_binary, (), self.evt_args_0)
+        bin = event.GraphicsExpose._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -167,7 +118,7 @@ class TestGraphicsExpose(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestNoExpose(unittest.TestCase):
+class TestNoExpose(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 46171,
@@ -183,7 +134,7 @@ class TestNoExpose(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.NoExpose._fields.to_binary, (), self.evt_args_0)
+        bin = event.NoExpose._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -201,7 +152,7 @@ class TestNoExpose(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestVisibilityNotify(unittest.TestCase):
+class TestVisibilityNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'state': 238,
@@ -216,7 +167,7 @@ class TestVisibilityNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.VisibilityNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.VisibilityNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -234,7 +185,7 @@ class TestVisibilityNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCreateNotify(unittest.TestCase):
+class TestCreateNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'height': 15506,
@@ -255,7 +206,7 @@ class TestCreateNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.CreateNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.CreateNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -273,7 +224,7 @@ class TestCreateNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestDestroyNotify(unittest.TestCase):
+class TestDestroyNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 49137,
@@ -288,7 +239,7 @@ class TestDestroyNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.DestroyNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.DestroyNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -306,7 +257,7 @@ class TestDestroyNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUnmapNotify(unittest.TestCase):
+class TestUnmapNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'from_configure': 0,
@@ -322,7 +273,7 @@ class TestUnmapNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.UnmapNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.UnmapNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -340,7 +291,7 @@ class TestUnmapNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestMapNotify(unittest.TestCase):
+class TestMapNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 65096,
@@ -356,7 +307,7 @@ class TestMapNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.MapNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.MapNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -374,7 +325,7 @@ class TestMapNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestMapRequest(unittest.TestCase):
+class TestMapRequest(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'parent': 1664235152,
@@ -389,7 +340,7 @@ class TestMapRequest(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.MapRequest._fields.to_binary, (), self.evt_args_0)
+        bin = event.MapRequest._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -407,7 +358,7 @@ class TestMapRequest(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestReparentNotify(unittest.TestCase):
+class TestReparentNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 9256,
@@ -426,7 +377,7 @@ class TestReparentNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ReparentNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.ReparentNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -444,7 +395,7 @@ class TestReparentNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestConfigureNotify(unittest.TestCase):
+class TestConfigureNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'height': 16243,
@@ -466,7 +417,7 @@ class TestConfigureNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ConfigureNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.ConfigureNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -484,7 +435,7 @@ class TestConfigureNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestConfigureRequest(unittest.TestCase):
+class TestConfigureRequest(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 31377,
@@ -507,7 +458,7 @@ class TestConfigureRequest(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ConfigureRequest._fields.to_binary, (), self.evt_args_0)
+        bin = event.ConfigureRequest._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -525,7 +476,7 @@ class TestConfigureRequest(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGravityNotify(unittest.TestCase):
+class TestGravityNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 43376,
@@ -542,7 +493,7 @@ class TestGravityNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.GravityNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.GravityNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -560,7 +511,7 @@ class TestGravityNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestResizeRequest(unittest.TestCase):
+class TestResizeRequest(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'height': 59752,
@@ -576,7 +527,7 @@ class TestResizeRequest(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ResizeRequest._fields.to_binary, (), self.evt_args_0)
+        bin = event.ResizeRequest._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -594,7 +545,7 @@ class TestResizeRequest(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPropertyNotify(unittest.TestCase):
+class TestPropertyNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'atom': 762586168,
@@ -611,7 +562,7 @@ class TestPropertyNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.PropertyNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.PropertyNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -629,7 +580,7 @@ class TestPropertyNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSelectionClear(unittest.TestCase):
+class TestSelectionClear(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'time': 578079299,
@@ -645,7 +596,7 @@ class TestSelectionClear(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.SelectionClear._fields.to_binary, (), self.evt_args_0)
+        bin = event.SelectionClear._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -663,7 +614,7 @@ class TestSelectionClear(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSelectionRequest(unittest.TestCase):
+class TestSelectionRequest(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 13254,
@@ -682,7 +633,7 @@ class TestSelectionRequest(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.SelectionRequest._fields.to_binary, (), self.evt_args_0)
+        bin = event.SelectionRequest._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -700,7 +651,7 @@ class TestSelectionRequest(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSelectionNotify(unittest.TestCase):
+class TestSelectionNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 39736,
@@ -718,7 +669,7 @@ class TestSelectionNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.SelectionNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.SelectionNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -736,7 +687,7 @@ class TestSelectionNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestColormapNotify(unittest.TestCase):
+class TestColormapNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'state': 209,
@@ -753,7 +704,7 @@ class TestColormapNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ColormapNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.ColormapNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -771,7 +722,7 @@ class TestColormapNotify(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestClientMessage(unittest.TestCase):
+class TestClientMessage(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 48712,
@@ -811,7 +762,7 @@ class TestClientMessage(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.ClientMessage._fields.to_binary, (), self.evt_args_0)
+        bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:
@@ -829,7 +780,7 @@ class TestClientMessage(unittest.TestCase):
             raise AssertionError(args)
 
     def testPack1(self):
-        bin = apply(event.ClientMessage._fields.to_binary, (), self.evt_args_1)
+        bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_1)
         try:
             assert bin == self.evt_bin_1
         except AssertionError:
@@ -847,7 +798,7 @@ class TestClientMessage(unittest.TestCase):
             raise AssertionError(args)
 
     def testPack2(self):
-        bin = apply(event.ClientMessage._fields.to_binary, (), self.evt_args_2)
+        bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_2)
         try:
             assert bin == self.evt_bin_2
         except AssertionError:
@@ -865,7 +816,7 @@ class TestClientMessage(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestMappingNotify(unittest.TestCase):
+class TestMappingNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
             'sequence_number': 53541,
@@ -881,7 +832,7 @@ class TestMappingNotify(unittest.TestCase):
 
 
     def testPack0(self):
-        bin = apply(event.MappingNotify._fields.to_binary, (), self.evt_args_0)
+        bin = event.MappingNotify._fields.to_binary(*(), **self.evt_args_0)
         try:
             assert bin == self.evt_bin_0
         except AssertionError:

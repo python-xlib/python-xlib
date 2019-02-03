@@ -1,66 +1,17 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import sys, os
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.insert(0, os.path.normpath(os.path.join(__file__, '../..')))
 
-import string
 import unittest
-from Xlib.protocol import request, rq, event
-import Xlib.protocol.event
+from Xlib.protocol import request, event
+from . import BigEndianTest as EndianTest
+from . import DummyDisplay
 
-import struct
-import array
-
-class CmpArray:
-    def __init__(self, *args, **kws):
-        self.array = apply(array.array, args, kws)
-
-    def __len__(self):
-        return len(self.array)
-
-    def __getslice__(self, x, y):
-        return list(self.array[x:y])
-
-    def __getattr__(self, attr):
-        return getattr(self.array, attr)
-
-    def __cmp__(self, other):
-        return cmp(self.array.tolist(), other)
-
-rq.array = CmpArray
-
-def tohex(bin):
-    bin = string.join(map(lambda c: '\\x%02x' % ord(c), bin), '')
-
-    bins = []
-    for i in range(0, len(bin), 16):
-        bins.append(bin[i:i+16])
-
-    bins2 = []
-    for i in range(0, len(bins), 2):
-        try:
-            bins2.append("'%s' '%s'" % (bins[i], bins[i + 1]))
-        except IndexError:
-            bins2.append("'%s'" % bins[i])
-
-    return string.join(bins2, ' \\\n            ')
-
-class DummyDisplay:
-    def get_resource_class(self, x):
-        return None
-
-    event_classes = Xlib.protocol.event.event_class
 dummy_display = DummyDisplay()
 
 
-def check_endian():
-    if struct.unpack('BB', struct.pack('H', 0x0100))[0] != 1:
-        sys.stderr.write('Big-endian tests, skipping on this system.\n')
-        sys.exit(0)
-
-
-
-class TestCreateWindow(unittest.TestCase):
+class TestCreateWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'height': 38608,
@@ -90,7 +41,7 @@ class TestCreateWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateWindow._request.to_binary, (), self.req_args_0)
+        bin = request.CreateWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -108,7 +59,7 @@ class TestCreateWindow(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangeWindowAttributes(unittest.TestCase):
+class TestChangeWindowAttributes(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 1813552124,
@@ -126,7 +77,7 @@ class TestChangeWindowAttributes(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeWindowAttributes._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeWindowAttributes._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -144,7 +95,7 @@ class TestChangeWindowAttributes(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetWindowAttributes(unittest.TestCase):
+class TestGetWindowAttributes(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 1931593850,
@@ -178,7 +129,7 @@ class TestGetWindowAttributes(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetWindowAttributes._request.to_binary, (), self.req_args_0)
+        bin = request.GetWindowAttributes._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -196,7 +147,7 @@ class TestGetWindowAttributes(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetWindowAttributes._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetWindowAttributes._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -214,7 +165,7 @@ class TestGetWindowAttributes(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestDestroyWindow(unittest.TestCase):
+class TestDestroyWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 1622184267,
@@ -223,7 +174,7 @@ class TestDestroyWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.DestroyWindow._request.to_binary, (), self.req_args_0)
+        bin = request.DestroyWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -241,7 +192,7 @@ class TestDestroyWindow(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestDestroySubWindows(unittest.TestCase):
+class TestDestroySubWindows(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 1000376476,
@@ -250,7 +201,7 @@ class TestDestroySubWindows(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.DestroySubWindows._request.to_binary, (), self.req_args_0)
+        bin = request.DestroySubWindows._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -268,7 +219,7 @@ class TestDestroySubWindows(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangeSaveSet(unittest.TestCase):
+class TestChangeSaveSet(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 1577523459,
@@ -278,7 +229,7 @@ class TestChangeSaveSet(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeSaveSet._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeSaveSet._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -296,7 +247,7 @@ class TestChangeSaveSet(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestReparentWindow(unittest.TestCase):
+class TestReparentWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'parent': 72188776,
@@ -309,7 +260,7 @@ class TestReparentWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ReparentWindow._request.to_binary, (), self.req_args_0)
+        bin = request.ReparentWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -327,7 +278,7 @@ class TestReparentWindow(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestMapWindow(unittest.TestCase):
+class TestMapWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 61469476,
@@ -336,7 +287,7 @@ class TestMapWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.MapWindow._request.to_binary, (), self.req_args_0)
+        bin = request.MapWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -354,7 +305,7 @@ class TestMapWindow(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestMapSubwindows(unittest.TestCase):
+class TestMapSubwindows(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 818738118,
@@ -363,7 +314,7 @@ class TestMapSubwindows(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.MapSubwindows._request.to_binary, (), self.req_args_0)
+        bin = request.MapSubwindows._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -381,7 +332,7 @@ class TestMapSubwindows(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUnmapWindow(unittest.TestCase):
+class TestUnmapWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 1923663468,
@@ -390,7 +341,7 @@ class TestUnmapWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UnmapWindow._request.to_binary, (), self.req_args_0)
+        bin = request.UnmapWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -408,7 +359,7 @@ class TestUnmapWindow(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUnmapSubwindows(unittest.TestCase):
+class TestUnmapSubwindows(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 999740194,
@@ -417,7 +368,7 @@ class TestUnmapSubwindows(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UnmapSubwindows._request.to_binary, (), self.req_args_0)
+        bin = request.UnmapSubwindows._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -435,7 +386,7 @@ class TestUnmapSubwindows(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestConfigureWindow(unittest.TestCase):
+class TestConfigureWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 190634459,
@@ -449,7 +400,7 @@ class TestConfigureWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ConfigureWindow._request.to_binary, (), self.req_args_0)
+        bin = request.ConfigureWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -467,7 +418,7 @@ class TestConfigureWindow(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCirculateWindow(unittest.TestCase):
+class TestCirculateWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 1712979067,
@@ -477,7 +428,7 @@ class TestCirculateWindow(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CirculateWindow._request.to_binary, (), self.req_args_0)
+        bin = request.CirculateWindow._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -495,7 +446,7 @@ class TestCirculateWindow(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetGeometry(unittest.TestCase):
+class TestGetGeometry(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'drawable': 680179490,
@@ -519,7 +470,7 @@ class TestGetGeometry(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetGeometry._request.to_binary, (), self.req_args_0)
+        bin = request.GetGeometry._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -537,7 +488,7 @@ class TestGetGeometry(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetGeometry._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetGeometry._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -555,7 +506,7 @@ class TestGetGeometry(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestQueryTree(unittest.TestCase):
+class TestQueryTree(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 2052496265,
@@ -579,7 +530,7 @@ class TestQueryTree(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryTree._request.to_binary, (), self.req_args_0)
+        bin = request.QueryTree._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -597,7 +548,7 @@ class TestQueryTree(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryTree._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryTree._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -615,7 +566,7 @@ class TestQueryTree(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestInternAtom(unittest.TestCase):
+class TestInternAtom(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'only_if_exists': 0,
@@ -636,7 +587,7 @@ class TestInternAtom(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.InternAtom._request.to_binary, (), self.req_args_0)
+        bin = request.InternAtom._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -654,7 +605,7 @@ class TestInternAtom(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.InternAtom._reply.to_binary, (), self.reply_args_0)
+        bin = request.InternAtom._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -672,7 +623,7 @@ class TestInternAtom(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetAtomName(unittest.TestCase):
+class TestGetAtomName(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'atom': 1022286544,
@@ -691,7 +642,7 @@ class TestGetAtomName(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetAtomName._request.to_binary, (), self.req_args_0)
+        bin = request.GetAtomName._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -709,7 +660,7 @@ class TestGetAtomName(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetAtomName._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetAtomName._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -727,7 +678,7 @@ class TestGetAtomName(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangeProperty(unittest.TestCase):
+class TestChangeProperty(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'mode': 0,
@@ -825,7 +776,7 @@ class TestChangeProperty(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -843,7 +794,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest1(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_1)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_1)
         try:
             assert bin == self.req_bin_1
         except AssertionError:
@@ -861,7 +812,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest2(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_2)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_2)
         try:
             assert bin == self.req_bin_2
         except AssertionError:
@@ -879,7 +830,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest3(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_3)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_3)
         try:
             assert bin == self.req_bin_3
         except AssertionError:
@@ -897,7 +848,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest4(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_4)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_4)
         try:
             assert bin == self.req_bin_4
         except AssertionError:
@@ -915,7 +866,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest5(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_5)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_5)
         try:
             assert bin == self.req_bin_5
         except AssertionError:
@@ -933,7 +884,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest6(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_6)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_6)
         try:
             assert bin == self.req_bin_6
         except AssertionError:
@@ -951,7 +902,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest7(self):
-        bin = apply(request.ChangeProperty._request.to_binary, (), self.req_args_7)
+        bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_7)
         try:
             assert bin == self.req_bin_7
         except AssertionError:
@@ -969,7 +920,7 @@ class TestChangeProperty(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestDeleteProperty(unittest.TestCase):
+class TestDeleteProperty(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'property': 506897017,
@@ -980,7 +931,7 @@ class TestDeleteProperty(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.DeleteProperty._request.to_binary, (), self.req_args_0)
+        bin = request.DeleteProperty._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -998,7 +949,7 @@ class TestDeleteProperty(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetProperty(unittest.TestCase):
+class TestGetProperty(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'delete': 0,
@@ -1108,7 +1059,7 @@ class TestGetProperty(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetProperty._request.to_binary, (), self.req_args_0)
+        bin = request.GetProperty._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1126,7 +1077,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1144,7 +1095,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply1(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_1)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_1)
         try:
             assert bin == self.reply_bin_1
         except AssertionError:
@@ -1162,7 +1113,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply2(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_2)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_2)
         try:
             assert bin == self.reply_bin_2
         except AssertionError:
@@ -1180,7 +1131,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply3(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_3)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_3)
         try:
             assert bin == self.reply_bin_3
         except AssertionError:
@@ -1198,7 +1149,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply4(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_4)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_4)
         try:
             assert bin == self.reply_bin_4
         except AssertionError:
@@ -1216,7 +1167,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply5(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_5)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_5)
         try:
             assert bin == self.reply_bin_5
         except AssertionError:
@@ -1234,7 +1185,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply6(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_6)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_6)
         try:
             assert bin == self.reply_bin_6
         except AssertionError:
@@ -1252,7 +1203,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply7(self):
-        bin = apply(request.GetProperty._reply.to_binary, (), self.reply_args_7)
+        bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_7)
         try:
             assert bin == self.reply_bin_7
         except AssertionError:
@@ -1270,7 +1221,7 @@ class TestGetProperty(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestListProperties(unittest.TestCase):
+class TestListProperties(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 91262675,
@@ -1300,7 +1251,7 @@ class TestListProperties(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListProperties._request.to_binary, (), self.req_args_0)
+        bin = request.ListProperties._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1318,7 +1269,7 @@ class TestListProperties(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListProperties._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListProperties._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1336,7 +1287,7 @@ class TestListProperties(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetSelectionOwner(unittest.TestCase):
+class TestSetSelectionOwner(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'selection': 2071258139,
@@ -1348,7 +1299,7 @@ class TestSetSelectionOwner(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetSelectionOwner._request.to_binary, (), self.req_args_0)
+        bin = request.SetSelectionOwner._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1366,7 +1317,7 @@ class TestSetSelectionOwner(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetSelectionOwner(unittest.TestCase):
+class TestGetSelectionOwner(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'selection': 819576555,
@@ -1384,7 +1335,7 @@ class TestGetSelectionOwner(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetSelectionOwner._request.to_binary, (), self.req_args_0)
+        bin = request.GetSelectionOwner._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1402,7 +1353,7 @@ class TestGetSelectionOwner(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetSelectionOwner._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetSelectionOwner._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1420,7 +1371,7 @@ class TestGetSelectionOwner(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestConvertSelection(unittest.TestCase):
+class TestConvertSelection(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'property': 2137791927,
@@ -1435,7 +1386,7 @@ class TestConvertSelection(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ConvertSelection._request.to_binary, (), self.req_args_0)
+        bin = request.ConvertSelection._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1453,7 +1404,7 @@ class TestConvertSelection(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSendEvent(unittest.TestCase):
+class TestSendEvent(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'event': Xlib.protocol.event.Expose(height = 64784, sequence_number = 0, type = 12, x = 52546, y = 56316, window = 1322187412, width = 16612, count = 14164),
@@ -1470,7 +1421,7 @@ class TestSendEvent(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SendEvent._request.to_binary, (), self.req_args_0)
+        bin = request.SendEvent._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1488,7 +1439,7 @@ class TestSendEvent(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGrabPointer(unittest.TestCase):
+class TestGrabPointer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'owner_events': 1,
@@ -1515,7 +1466,7 @@ class TestGrabPointer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabPointer._request.to_binary, (), self.req_args_0)
+        bin = request.GrabPointer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1533,7 +1484,7 @@ class TestGrabPointer(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GrabPointer._reply.to_binary, (), self.reply_args_0)
+        bin = request.GrabPointer._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1551,7 +1502,7 @@ class TestGrabPointer(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUngrabPointer(unittest.TestCase):
+class TestUngrabPointer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'time': 209008422,
@@ -1560,7 +1511,7 @@ class TestUngrabPointer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabPointer._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabPointer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1578,7 +1529,7 @@ class TestUngrabPointer(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGrabButton(unittest.TestCase):
+class TestGrabButton(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'owner_events': 1,
@@ -1597,7 +1548,7 @@ class TestGrabButton(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabButton._request.to_binary, (), self.req_args_0)
+        bin = request.GrabButton._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1615,7 +1566,7 @@ class TestGrabButton(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUngrabButton(unittest.TestCase):
+class TestUngrabButton(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'grab_window': 795414150,
@@ -1627,7 +1578,7 @@ class TestUngrabButton(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabButton._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabButton._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1645,7 +1596,7 @@ class TestUngrabButton(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangeActivePointerGrab(unittest.TestCase):
+class TestChangeActivePointerGrab(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'time': 891337572,
@@ -1657,7 +1608,7 @@ class TestChangeActivePointerGrab(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeActivePointerGrab._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeActivePointerGrab._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1675,7 +1626,7 @@ class TestChangeActivePointerGrab(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGrabKeyboard(unittest.TestCase):
+class TestGrabKeyboard(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'owner_events': 0,
@@ -1698,7 +1649,7 @@ class TestGrabKeyboard(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabKeyboard._request.to_binary, (), self.req_args_0)
+        bin = request.GrabKeyboard._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1716,7 +1667,7 @@ class TestGrabKeyboard(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GrabKeyboard._reply.to_binary, (), self.reply_args_0)
+        bin = request.GrabKeyboard._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1734,7 +1685,7 @@ class TestGrabKeyboard(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUngrabKeyboard(unittest.TestCase):
+class TestUngrabKeyboard(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'time': 1352311886,
@@ -1743,7 +1694,7 @@ class TestUngrabKeyboard(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabKeyboard._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabKeyboard._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1761,7 +1712,7 @@ class TestUngrabKeyboard(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGrabKey(unittest.TestCase):
+class TestGrabKey(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'owner_events': 1,
@@ -1776,7 +1727,7 @@ class TestGrabKey(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabKey._request.to_binary, (), self.req_args_0)
+        bin = request.GrabKey._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1794,7 +1745,7 @@ class TestGrabKey(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUngrabKey(unittest.TestCase):
+class TestUngrabKey(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'grab_window': 769929659,
@@ -1806,7 +1757,7 @@ class TestUngrabKey(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabKey._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabKey._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1824,7 +1775,7 @@ class TestUngrabKey(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestAllowEvents(unittest.TestCase):
+class TestAllowEvents(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'time': 342147129,
@@ -1834,7 +1785,7 @@ class TestAllowEvents(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllowEvents._request.to_binary, (), self.req_args_0)
+        bin = request.AllowEvents._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1852,7 +1803,7 @@ class TestAllowEvents(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGrabServer(unittest.TestCase):
+class TestGrabServer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -1860,7 +1811,7 @@ class TestGrabServer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GrabServer._request.to_binary, (), self.req_args_0)
+        bin = request.GrabServer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1878,7 +1829,7 @@ class TestGrabServer(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUngrabServer(unittest.TestCase):
+class TestUngrabServer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -1886,7 +1837,7 @@ class TestUngrabServer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UngrabServer._request.to_binary, (), self.req_args_0)
+        bin = request.UngrabServer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1904,7 +1855,7 @@ class TestUngrabServer(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestQueryPointer(unittest.TestCase):
+class TestQueryPointer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 561336799,
@@ -1929,7 +1880,7 @@ class TestQueryPointer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryPointer._request.to_binary, (), self.req_args_0)
+        bin = request.QueryPointer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -1947,7 +1898,7 @@ class TestQueryPointer(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryPointer._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryPointer._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -1965,7 +1916,7 @@ class TestQueryPointer(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetMotionEvents(unittest.TestCase):
+class TestGetMotionEvents(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 843681780,
@@ -1991,7 +1942,7 @@ class TestGetMotionEvents(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetMotionEvents._request.to_binary, (), self.req_args_0)
+        bin = request.GetMotionEvents._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2009,7 +1960,7 @@ class TestGetMotionEvents(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetMotionEvents._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetMotionEvents._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2027,7 +1978,7 @@ class TestGetMotionEvents(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestTranslateCoords(unittest.TestCase):
+class TestTranslateCoords(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'src_y': -27247,
@@ -2052,7 +2003,7 @@ class TestTranslateCoords(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.TranslateCoords._request.to_binary, (), self.req_args_0)
+        bin = request.TranslateCoords._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2070,7 +2021,7 @@ class TestTranslateCoords(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.TranslateCoords._reply.to_binary, (), self.reply_args_0)
+        bin = request.TranslateCoords._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2088,7 +2039,7 @@ class TestTranslateCoords(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestWarpPointer(unittest.TestCase):
+class TestWarpPointer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'src_height': 56634,
@@ -2106,7 +2057,7 @@ class TestWarpPointer(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.WarpPointer._request.to_binary, (), self.req_args_0)
+        bin = request.WarpPointer._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2124,7 +2075,7 @@ class TestWarpPointer(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetInputFocus(unittest.TestCase):
+class TestSetInputFocus(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'revert_to': 1,
@@ -2136,7 +2087,7 @@ class TestSetInputFocus(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetInputFocus._request.to_binary, (), self.req_args_0)
+        bin = request.SetInputFocus._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2154,7 +2105,7 @@ class TestSetInputFocus(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetInputFocus(unittest.TestCase):
+class TestGetInputFocus(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -2172,7 +2123,7 @@ class TestGetInputFocus(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetInputFocus._request.to_binary, (), self.req_args_0)
+        bin = request.GetInputFocus._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2190,7 +2141,7 @@ class TestGetInputFocus(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetInputFocus._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetInputFocus._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2208,7 +2159,7 @@ class TestGetInputFocus(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestQueryKeymap(unittest.TestCase):
+class TestQueryKeymap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -2226,7 +2177,7 @@ class TestQueryKeymap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryKeymap._request.to_binary, (), self.req_args_0)
+        bin = request.QueryKeymap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2244,7 +2195,7 @@ class TestQueryKeymap(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryKeymap._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryKeymap._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2262,7 +2213,7 @@ class TestQueryKeymap(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestOpenFont(unittest.TestCase):
+class TestOpenFont(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'fid': 1728036313,
@@ -2274,7 +2225,7 @@ class TestOpenFont(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.OpenFont._request.to_binary, (), self.req_args_0)
+        bin = request.OpenFont._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2292,7 +2243,7 @@ class TestOpenFont(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCloseFont(unittest.TestCase):
+class TestCloseFont(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'font': 1139770507,
@@ -2301,7 +2252,7 @@ class TestCloseFont(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CloseFont._request.to_binary, (), self.req_args_0)
+        bin = request.CloseFont._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2319,7 +2270,7 @@ class TestCloseFont(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestQueryFont(unittest.TestCase):
+class TestQueryFont(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'font': 1867659050,
@@ -2358,7 +2309,7 @@ class TestQueryFont(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryFont._request.to_binary, (), self.req_args_0)
+        bin = request.QueryFont._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2376,7 +2327,7 @@ class TestQueryFont(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryFont._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryFont._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2394,7 +2345,7 @@ class TestQueryFont(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestQueryTextExtents(unittest.TestCase):
+class TestQueryTextExtents(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'font': 1562125736,
@@ -2421,7 +2372,7 @@ class TestQueryTextExtents(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryTextExtents._request.to_binary, (), self.req_args_0)
+        bin = request.QueryTextExtents._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2439,7 +2390,7 @@ class TestQueryTextExtents(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryTextExtents._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryTextExtents._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2457,7 +2408,7 @@ class TestQueryTextExtents(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestListFonts(unittest.TestCase):
+class TestListFonts(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'max_names': 53961,
@@ -2480,7 +2431,7 @@ class TestListFonts(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListFonts._request.to_binary, (), self.req_args_0)
+        bin = request.ListFonts._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2498,7 +2449,7 @@ class TestListFonts(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListFonts._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListFonts._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2516,7 +2467,7 @@ class TestListFonts(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestListFontsWithInfo(unittest.TestCase):
+class TestListFontsWithInfo(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'max_names': 46571,
@@ -2555,7 +2506,7 @@ class TestListFontsWithInfo(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListFontsWithInfo._request.to_binary, (), self.req_args_0)
+        bin = request.ListFontsWithInfo._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2573,7 +2524,7 @@ class TestListFontsWithInfo(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListFontsWithInfo._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListFontsWithInfo._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2591,7 +2542,7 @@ class TestListFontsWithInfo(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetFontPath(unittest.TestCase):
+class TestSetFontPath(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'path': ['foo', 'bar', 'gazonk'],
@@ -2607,7 +2558,7 @@ class TestSetFontPath(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetFontPath._request.to_binary, (), self.req_args_0)
+        bin = request.SetFontPath._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2625,7 +2576,7 @@ class TestSetFontPath(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest1(self):
-        bin = apply(request.SetFontPath._request.to_binary, (), self.req_args_1)
+        bin = request.SetFontPath._request.to_binary(*(), **self.req_args_1)
         try:
             assert bin == self.req_bin_1
         except AssertionError:
@@ -2643,7 +2594,7 @@ class TestSetFontPath(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetFontPath(unittest.TestCase):
+class TestGetFontPath(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -2671,7 +2622,7 @@ class TestGetFontPath(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetFontPath._request.to_binary, (), self.req_args_0)
+        bin = request.GetFontPath._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2689,7 +2640,7 @@ class TestGetFontPath(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetFontPath._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetFontPath._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -2707,7 +2658,7 @@ class TestGetFontPath(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply1(self):
-        bin = apply(request.GetFontPath._reply.to_binary, (), self.reply_args_1)
+        bin = request.GetFontPath._reply.to_binary(*(), **self.reply_args_1)
         try:
             assert bin == self.reply_bin_1
         except AssertionError:
@@ -2725,7 +2676,7 @@ class TestGetFontPath(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCreatePixmap(unittest.TestCase):
+class TestCreatePixmap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'height': 65515,
@@ -2739,7 +2690,7 @@ class TestCreatePixmap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreatePixmap._request.to_binary, (), self.req_args_0)
+        bin = request.CreatePixmap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2757,7 +2708,7 @@ class TestCreatePixmap(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestFreePixmap(unittest.TestCase):
+class TestFreePixmap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'pixmap': 213012851,
@@ -2766,7 +2717,7 @@ class TestFreePixmap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreePixmap._request.to_binary, (), self.req_args_0)
+        bin = request.FreePixmap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2784,7 +2735,7 @@ class TestFreePixmap(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCreateGC(unittest.TestCase):
+class TestCreateGC(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cid': 1060658282,
@@ -2808,7 +2759,7 @@ class TestCreateGC(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateGC._request.to_binary, (), self.req_args_0)
+        bin = request.CreateGC._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2826,7 +2777,7 @@ class TestCreateGC(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangeGC(unittest.TestCase):
+class TestChangeGC(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'attrs': {'dashes': 249, 'fill_rule': 1, 'clip_mask': 496525721, 'plane_mask': 1467281901, 'line_style': 2, 'tile': 1713935374, 'arc_mode': 0, 'clip_y_origin': -24572, 'dash_offset': 46636, 'line_width': 61036, 'background': 1598773587, 'clip_x_origin': -19725, 'join_style': 1, 'graphics_exposures': 0, 'font': 429323306, 'tile_stipple_y_origin': -11767, 'stipple': 1365263649, 'fill_style': 2, 'cap_style': 1, 'subwindow_mode': 1, 'tile_stipple_x_origin': -23501, 'foreground': 1272378077, 'function': 11},
@@ -2848,7 +2799,7 @@ class TestChangeGC(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeGC._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeGC._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2866,7 +2817,7 @@ class TestChangeGC(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCopyGC(unittest.TestCase):
+class TestCopyGC(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'mask': 1039948946,
@@ -2878,7 +2829,7 @@ class TestCopyGC(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CopyGC._request.to_binary, (), self.req_args_0)
+        bin = request.CopyGC._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2896,7 +2847,7 @@ class TestCopyGC(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetDashes(unittest.TestCase):
+class TestSetDashes(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'dashes': [169, 241, 158, 238, 173, 159, 182, 139, 139],
@@ -2909,7 +2860,7 @@ class TestSetDashes(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetDashes._request.to_binary, (), self.req_args_0)
+        bin = request.SetDashes._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2927,7 +2878,7 @@ class TestSetDashes(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetClipRectangles(unittest.TestCase):
+class TestSetClipRectangles(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'rectangles': [{'height': 59391, 'x': -15430, 'width': 46673, 'y': -3009}, {'height': 9883, 'x': -14046, 'width': 7782, 'y': -24857}],
@@ -2953,7 +2904,7 @@ class TestSetClipRectangles(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetClipRectangles._request.to_binary, (), self.req_args_0)
+        bin = request.SetClipRectangles._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -2971,7 +2922,7 @@ class TestSetClipRectangles(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest1(self):
-        bin = apply(request.SetClipRectangles._request.to_binary, (), self.req_args_1)
+        bin = request.SetClipRectangles._request.to_binary(*(), **self.req_args_1)
         try:
             assert bin == self.req_bin_1
         except AssertionError:
@@ -2989,7 +2940,7 @@ class TestSetClipRectangles(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestFreeGC(unittest.TestCase):
+class TestFreeGC(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'gc': 371787524,
@@ -2998,7 +2949,7 @@ class TestFreeGC(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreeGC._request.to_binary, (), self.req_args_0)
+        bin = request.FreeGC._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3016,7 +2967,7 @@ class TestFreeGC(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestClearArea(unittest.TestCase):
+class TestClearArea(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'exposures': 0,
@@ -3031,7 +2982,7 @@ class TestClearArea(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ClearArea._request.to_binary, (), self.req_args_0)
+        bin = request.ClearArea._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3049,7 +3000,7 @@ class TestClearArea(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCopyArea(unittest.TestCase):
+class TestCopyArea(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'src_drawable': 321720617,
@@ -3069,7 +3020,7 @@ class TestCopyArea(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CopyArea._request.to_binary, (), self.req_args_0)
+        bin = request.CopyArea._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3087,7 +3038,7 @@ class TestCopyArea(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCopyPlane(unittest.TestCase):
+class TestCopyPlane(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'src_drawable': 1988650265,
@@ -3108,7 +3059,7 @@ class TestCopyPlane(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CopyPlane._request.to_binary, (), self.req_args_0)
+        bin = request.CopyPlane._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3126,7 +3077,7 @@ class TestCopyPlane(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolyPoint(unittest.TestCase):
+class TestPolyPoint(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'gc': 206266633,
@@ -3140,7 +3091,7 @@ class TestPolyPoint(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyPoint._request.to_binary, (), self.req_args_0)
+        bin = request.PolyPoint._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3158,7 +3109,7 @@ class TestPolyPoint(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolyLine(unittest.TestCase):
+class TestPolyLine(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'gc': 1355594189,
@@ -3173,7 +3124,7 @@ class TestPolyLine(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyLine._request.to_binary, (), self.req_args_0)
+        bin = request.PolyLine._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3191,7 +3142,7 @@ class TestPolyLine(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolySegment(unittest.TestCase):
+class TestPolySegment(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'segments': [{'y1': -24252, 'y2': -22523, 'x1': -12610, 'x2': -25770}],
@@ -3204,7 +3155,7 @@ class TestPolySegment(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolySegment._request.to_binary, (), self.req_args_0)
+        bin = request.PolySegment._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3222,7 +3173,7 @@ class TestPolySegment(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolyRectangle(unittest.TestCase):
+class TestPolyRectangle(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'drawable': 1927481661,
@@ -3237,7 +3188,7 @@ class TestPolyRectangle(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyRectangle._request.to_binary, (), self.req_args_0)
+        bin = request.PolyRectangle._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3255,7 +3206,7 @@ class TestPolyRectangle(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolyArc(unittest.TestCase):
+class TestPolyArc(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'arcs': [{'height': 37549, 'angle1': -16979, 'x': -4943, 'angle2': -25650, 'width': 65448, 'y': -9205}, {'height': 9322, 'angle1': -20781, 'x': -13865, 'angle2': -8498, 'width': 62173, 'y': -22862}, {'height': 63266, 'angle1': -1231, 'x': -12693, 'angle2': -809, 'width': 63732, 'y': -7550}],
@@ -3271,7 +3222,7 @@ class TestPolyArc(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyArc._request.to_binary, (), self.req_args_0)
+        bin = request.PolyArc._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3289,7 +3240,7 @@ class TestPolyArc(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestFillPoly(unittest.TestCase):
+class TestFillPoly(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'shape': 1,
@@ -3305,7 +3256,7 @@ class TestFillPoly(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FillPoly._request.to_binary, (), self.req_args_0)
+        bin = request.FillPoly._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3323,7 +3274,7 @@ class TestFillPoly(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolyFillRectangle(unittest.TestCase):
+class TestPolyFillRectangle(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'drawable': 1708671692,
@@ -3337,7 +3288,7 @@ class TestPolyFillRectangle(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyFillRectangle._request.to_binary, (), self.req_args_0)
+        bin = request.PolyFillRectangle._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3355,7 +3306,7 @@ class TestPolyFillRectangle(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolyFillArc(unittest.TestCase):
+class TestPolyFillArc(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'arcs': [{'height': 64114, 'angle1': -28360, 'x': -10754, 'angle2': -6712, 'width': 53819, 'y': -19555}],
@@ -3368,7 +3319,7 @@ class TestPolyFillArc(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyFillArc._request.to_binary, (), self.req_args_0)
+        bin = request.PolyFillArc._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3386,7 +3337,7 @@ class TestPolyFillArc(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPutImage(unittest.TestCase):
+class TestPutImage(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'height': 9883,
@@ -3408,7 +3359,7 @@ class TestPutImage(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PutImage._request.to_binary, (), self.req_args_0)
+        bin = request.PutImage._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3426,7 +3377,7 @@ class TestPutImage(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetImage(unittest.TestCase):
+class TestGetImage(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'height': 42657,
@@ -3458,7 +3409,7 @@ class TestGetImage(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetImage._request.to_binary, (), self.req_args_0)
+        bin = request.GetImage._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3476,7 +3427,7 @@ class TestGetImage(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetImage._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetImage._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -3494,7 +3445,7 @@ class TestGetImage(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolyText8(unittest.TestCase):
+class TestPolyText8(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'gc': 1481564777,
@@ -3510,7 +3461,7 @@ class TestPolyText8(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyText8._request.to_binary, (), self.req_args_0)
+        bin = request.PolyText8._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3528,7 +3479,7 @@ class TestPolyText8(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestPolyText16(unittest.TestCase):
+class TestPolyText16(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'gc': 400697368,
@@ -3544,7 +3495,7 @@ class TestPolyText16(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.PolyText16._request.to_binary, (), self.req_args_0)
+        bin = request.PolyText16._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3562,7 +3513,7 @@ class TestPolyText16(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestImageText8(unittest.TestCase):
+class TestImageText8(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'string': 'showme',
@@ -3577,7 +3528,7 @@ class TestImageText8(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ImageText8._request.to_binary, (), self.req_args_0)
+        bin = request.ImageText8._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3595,7 +3546,7 @@ class TestImageText8(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestImageText16(unittest.TestCase):
+class TestImageText16(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'string': (115, 104, 111, 119, 109, 111, 114, 101),
@@ -3611,7 +3562,7 @@ class TestImageText16(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ImageText16._request.to_binary, (), self.req_args_0)
+        bin = request.ImageText16._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3629,7 +3580,7 @@ class TestImageText16(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCreateColormap(unittest.TestCase):
+class TestCreateColormap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'mid': 157536683,
@@ -3642,7 +3593,7 @@ class TestCreateColormap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateColormap._request.to_binary, (), self.req_args_0)
+        bin = request.CreateColormap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3660,7 +3611,7 @@ class TestCreateColormap(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestFreeColormap(unittest.TestCase):
+class TestFreeColormap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cmap': 1296514923,
@@ -3669,7 +3620,7 @@ class TestFreeColormap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreeColormap._request.to_binary, (), self.req_args_0)
+        bin = request.FreeColormap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3687,7 +3638,7 @@ class TestFreeColormap(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCopyColormapAndFree(unittest.TestCase):
+class TestCopyColormapAndFree(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'src_cmap': 1049336329,
@@ -3698,7 +3649,7 @@ class TestCopyColormapAndFree(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CopyColormapAndFree._request.to_binary, (), self.req_args_0)
+        bin = request.CopyColormapAndFree._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3716,7 +3667,7 @@ class TestCopyColormapAndFree(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestInstallColormap(unittest.TestCase):
+class TestInstallColormap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cmap': 1539075582,
@@ -3725,7 +3676,7 @@ class TestInstallColormap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.InstallColormap._request.to_binary, (), self.req_args_0)
+        bin = request.InstallColormap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3743,7 +3694,7 @@ class TestInstallColormap(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestUninstallColormap(unittest.TestCase):
+class TestUninstallColormap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cmap': 959493342,
@@ -3752,7 +3703,7 @@ class TestUninstallColormap(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.UninstallColormap._request.to_binary, (), self.req_args_0)
+        bin = request.UninstallColormap._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3770,7 +3721,7 @@ class TestUninstallColormap(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestListInstalledColormaps(unittest.TestCase):
+class TestListInstalledColormaps(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'window': 1517864638,
@@ -3789,7 +3740,7 @@ class TestListInstalledColormaps(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListInstalledColormaps._request.to_binary, (), self.req_args_0)
+        bin = request.ListInstalledColormaps._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3807,7 +3758,7 @@ class TestListInstalledColormaps(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListInstalledColormaps._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListInstalledColormaps._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -3825,7 +3776,7 @@ class TestListInstalledColormaps(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestAllocColor(unittest.TestCase):
+class TestAllocColor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'red': 39725,
@@ -3850,7 +3801,7 @@ class TestAllocColor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllocColor._request.to_binary, (), self.req_args_0)
+        bin = request.AllocColor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3868,7 +3819,7 @@ class TestAllocColor(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.AllocColor._reply.to_binary, (), self.reply_args_0)
+        bin = request.AllocColor._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -3886,7 +3837,7 @@ class TestAllocColor(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestAllocNamedColor(unittest.TestCase):
+class TestAllocNamedColor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cmap': 128217824,
@@ -3913,7 +3864,7 @@ class TestAllocNamedColor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllocNamedColor._request.to_binary, (), self.req_args_0)
+        bin = request.AllocNamedColor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -3931,7 +3882,7 @@ class TestAllocNamedColor(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.AllocNamedColor._reply.to_binary, (), self.reply_args_0)
+        bin = request.AllocNamedColor._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -3949,7 +3900,7 @@ class TestAllocNamedColor(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestAllocColorCells(unittest.TestCase):
+class TestAllocColorCells(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'planes': 32867,
@@ -3992,7 +3943,7 @@ class TestAllocColorCells(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllocColorCells._request.to_binary, (), self.req_args_0)
+        bin = request.AllocColorCells._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4010,7 +3961,7 @@ class TestAllocColorCells(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.AllocColorCells._reply.to_binary, (), self.reply_args_0)
+        bin = request.AllocColorCells._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4028,7 +3979,7 @@ class TestAllocColorCells(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply1(self):
-        bin = apply(request.AllocColorCells._reply.to_binary, (), self.reply_args_1)
+        bin = request.AllocColorCells._reply.to_binary(*(), **self.reply_args_1)
         try:
             assert bin == self.reply_bin_1
         except AssertionError:
@@ -4046,7 +3997,7 @@ class TestAllocColorCells(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestAllocColorPlanes(unittest.TestCase):
+class TestAllocColorPlanes(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'red': 22876,
@@ -4075,7 +4026,7 @@ class TestAllocColorPlanes(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.AllocColorPlanes._request.to_binary, (), self.req_args_0)
+        bin = request.AllocColorPlanes._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4093,7 +4044,7 @@ class TestAllocColorPlanes(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.AllocColorPlanes._reply.to_binary, (), self.reply_args_0)
+        bin = request.AllocColorPlanes._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4111,7 +4062,7 @@ class TestAllocColorPlanes(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestFreeColors(unittest.TestCase):
+class TestFreeColors(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cmap': 727008216,
@@ -4131,7 +4082,7 @@ class TestFreeColors(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreeColors._request.to_binary, (), self.req_args_0)
+        bin = request.FreeColors._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4149,7 +4100,7 @@ class TestFreeColors(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestStoreColors(unittest.TestCase):
+class TestStoreColors(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cmap': 501035281,
@@ -4165,7 +4116,7 @@ class TestStoreColors(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.StoreColors._request.to_binary, (), self.req_args_0)
+        bin = request.StoreColors._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4183,7 +4134,7 @@ class TestStoreColors(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestStoreNamedColor(unittest.TestCase):
+class TestStoreNamedColor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'name': 'blue',
@@ -4197,7 +4148,7 @@ class TestStoreNamedColor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.StoreNamedColor._request.to_binary, (), self.req_args_0)
+        bin = request.StoreNamedColor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4215,7 +4166,7 @@ class TestStoreNamedColor(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestQueryColors(unittest.TestCase):
+class TestQueryColors(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cmap': 596369797,
@@ -4249,7 +4200,7 @@ class TestQueryColors(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryColors._request.to_binary, (), self.req_args_0)
+        bin = request.QueryColors._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4267,7 +4218,7 @@ class TestQueryColors(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackRequest1(self):
-        bin = apply(request.QueryColors._request.to_binary, (), self.req_args_1)
+        bin = request.QueryColors._request.to_binary(*(), **self.req_args_1)
         try:
             assert bin == self.req_bin_1
         except AssertionError:
@@ -4285,7 +4236,7 @@ class TestQueryColors(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryColors._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryColors._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4303,7 +4254,7 @@ class TestQueryColors(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestLookupColor(unittest.TestCase):
+class TestLookupColor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cmap': 789574750,
@@ -4329,7 +4280,7 @@ class TestLookupColor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.LookupColor._request.to_binary, (), self.req_args_0)
+        bin = request.LookupColor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4347,7 +4298,7 @@ class TestLookupColor(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.LookupColor._reply.to_binary, (), self.reply_args_0)
+        bin = request.LookupColor._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4365,7 +4316,7 @@ class TestLookupColor(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCreateCursor(unittest.TestCase):
+class TestCreateCursor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'x': 14199,
@@ -4387,7 +4338,7 @@ class TestCreateCursor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateCursor._request.to_binary, (), self.req_args_0)
+        bin = request.CreateCursor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4405,7 +4356,7 @@ class TestCreateCursor(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestCreateGlyphCursor(unittest.TestCase):
+class TestCreateGlyphCursor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'fore_red': 56306,
@@ -4427,7 +4378,7 @@ class TestCreateGlyphCursor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.CreateGlyphCursor._request.to_binary, (), self.req_args_0)
+        bin = request.CreateGlyphCursor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4445,7 +4396,7 @@ class TestCreateGlyphCursor(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestFreeCursor(unittest.TestCase):
+class TestFreeCursor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'cursor': 553262138,
@@ -4454,7 +4405,7 @@ class TestFreeCursor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.FreeCursor._request.to_binary, (), self.req_args_0)
+        bin = request.FreeCursor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4472,7 +4423,7 @@ class TestFreeCursor(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestRecolorCursor(unittest.TestCase):
+class TestRecolorCursor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'fore_red': 44718,
@@ -4489,7 +4440,7 @@ class TestRecolorCursor(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.RecolorCursor._request.to_binary, (), self.req_args_0)
+        bin = request.RecolorCursor._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4507,7 +4458,7 @@ class TestRecolorCursor(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestQueryBestSize(unittest.TestCase):
+class TestQueryBestSize(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'height': 34743,
@@ -4530,7 +4481,7 @@ class TestQueryBestSize(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryBestSize._request.to_binary, (), self.req_args_0)
+        bin = request.QueryBestSize._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4548,7 +4499,7 @@ class TestQueryBestSize(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryBestSize._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryBestSize._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4566,7 +4517,7 @@ class TestQueryBestSize(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestQueryExtension(unittest.TestCase):
+class TestQueryExtension(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'name': 'XTRA',
@@ -4588,7 +4539,7 @@ class TestQueryExtension(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.QueryExtension._request.to_binary, (), self.req_args_0)
+        bin = request.QueryExtension._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4606,7 +4557,7 @@ class TestQueryExtension(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.QueryExtension._reply.to_binary, (), self.reply_args_0)
+        bin = request.QueryExtension._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4624,7 +4575,7 @@ class TestQueryExtension(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestListExtensions(unittest.TestCase):
+class TestListExtensions(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -4643,7 +4594,7 @@ class TestListExtensions(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListExtensions._request.to_binary, (), self.req_args_0)
+        bin = request.ListExtensions._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4661,7 +4612,7 @@ class TestListExtensions(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListExtensions._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListExtensions._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4679,7 +4630,7 @@ class TestListExtensions(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangeKeyboardMapping(unittest.TestCase):
+class TestChangeKeyboardMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'keysyms': [[707837223, 99294840, 1205405602], [67157514, 879853050, 2059131033], [1139736188, 578113249, 1525786315], [1335349176, 246731334, 277761436], [1386594542, 1676932187, 1862777168], [535892916, 342718655, 195574000], [5712156, 1820472637, 848853860], [1123197289, 1664064022, 94999154], [380150420, 402902535, 1061375041], [510686316, 502245882, 422893644], [1423643601, 194077695, 403885178], [1571826296, 529249772, 623556591], [720045879, 37553034, 955963792], [513407882, 861125615, 219940695], [184890179, 472466494, 1649347894], [1679171989, 1991748404, 1674460475], [1762342934, 276695222, 1941684480], [886658026, 1860690072, 577030090], [227169721, 1390318675, 321524615], [2144591365, 545119116, 404205206]],
@@ -4719,7 +4670,7 @@ class TestChangeKeyboardMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeKeyboardMapping._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeKeyboardMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4737,7 +4688,7 @@ class TestChangeKeyboardMapping(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetKeyboardMapping(unittest.TestCase):
+class TestGetKeyboardMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'count': 131,
@@ -4786,7 +4737,7 @@ class TestGetKeyboardMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetKeyboardMapping._request.to_binary, (), self.req_args_0)
+        bin = request.GetKeyboardMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4804,7 +4755,7 @@ class TestGetKeyboardMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetKeyboardMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetKeyboardMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4822,7 +4773,7 @@ class TestGetKeyboardMapping(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangeKeyboardControl(unittest.TestCase):
+class TestChangeKeyboardControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'attrs': {'key_click_percent': -35, 'bell_percent': -53, 'led_mode': 1, 'bell_pitch': -17390, 'auto_repeat_mode': 2, 'bell_duration': -30281, 'key': 235, 'led': 192},
@@ -4835,7 +4786,7 @@ class TestChangeKeyboardControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeKeyboardControl._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeKeyboardControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4853,7 +4804,7 @@ class TestChangeKeyboardControl(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetKeyboardControl(unittest.TestCase):
+class TestGetKeyboardControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -4879,7 +4830,7 @@ class TestGetKeyboardControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetKeyboardControl._request.to_binary, (), self.req_args_0)
+        bin = request.GetKeyboardControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4897,7 +4848,7 @@ class TestGetKeyboardControl(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetKeyboardControl._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetKeyboardControl._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -4915,7 +4866,7 @@ class TestGetKeyboardControl(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestBell(unittest.TestCase):
+class TestBell(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'percent': -19,
@@ -4924,7 +4875,7 @@ class TestBell(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.Bell._request.to_binary, (), self.req_args_0)
+        bin = request.Bell._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4942,7 +4893,7 @@ class TestBell(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangePointerControl(unittest.TestCase):
+class TestChangePointerControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'accel_denum': -32484,
@@ -4956,7 +4907,7 @@ class TestChangePointerControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangePointerControl._request.to_binary, (), self.req_args_0)
+        bin = request.ChangePointerControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -4974,7 +4925,7 @@ class TestChangePointerControl(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetPointerControl(unittest.TestCase):
+class TestGetPointerControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -4993,7 +4944,7 @@ class TestGetPointerControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetPointerControl._request.to_binary, (), self.req_args_0)
+        bin = request.GetPointerControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5011,7 +4962,7 @@ class TestGetPointerControl(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetPointerControl._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetPointerControl._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5029,7 +4980,7 @@ class TestGetPointerControl(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetScreenSaver(unittest.TestCase):
+class TestSetScreenSaver(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'allow_exposures': 0,
@@ -5042,7 +4993,7 @@ class TestSetScreenSaver(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetScreenSaver._request.to_binary, (), self.req_args_0)
+        bin = request.SetScreenSaver._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5060,7 +5011,7 @@ class TestSetScreenSaver(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetScreenSaver(unittest.TestCase):
+class TestGetScreenSaver(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -5080,7 +5031,7 @@ class TestGetScreenSaver(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetScreenSaver._request.to_binary, (), self.req_args_0)
+        bin = request.GetScreenSaver._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5098,7 +5049,7 @@ class TestGetScreenSaver(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetScreenSaver._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetScreenSaver._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5116,7 +5067,7 @@ class TestGetScreenSaver(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestChangeHosts(unittest.TestCase):
+class TestChangeHosts(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'host': [188, 226, 135, 199],
@@ -5128,7 +5079,7 @@ class TestChangeHosts(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ChangeHosts._request.to_binary, (), self.req_args_0)
+        bin = request.ChangeHosts._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5146,7 +5097,7 @@ class TestChangeHosts(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestListHosts(unittest.TestCase):
+class TestListHosts(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -5166,7 +5117,7 @@ class TestListHosts(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ListHosts._request.to_binary, (), self.req_args_0)
+        bin = request.ListHosts._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5184,7 +5135,7 @@ class TestListHosts(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.ListHosts._reply.to_binary, (), self.reply_args_0)
+        bin = request.ListHosts._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5202,7 +5153,7 @@ class TestListHosts(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetAccessControl(unittest.TestCase):
+class TestSetAccessControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'mode': 0,
@@ -5211,7 +5162,7 @@ class TestSetAccessControl(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetAccessControl._request.to_binary, (), self.req_args_0)
+        bin = request.SetAccessControl._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5229,7 +5180,7 @@ class TestSetAccessControl(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetCloseDownMode(unittest.TestCase):
+class TestSetCloseDownMode(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'mode': 0,
@@ -5238,7 +5189,7 @@ class TestSetCloseDownMode(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetCloseDownMode._request.to_binary, (), self.req_args_0)
+        bin = request.SetCloseDownMode._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5256,7 +5207,7 @@ class TestSetCloseDownMode(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestKillClient(unittest.TestCase):
+class TestKillClient(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'resource': 1679944210,
@@ -5265,7 +5216,7 @@ class TestKillClient(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.KillClient._request.to_binary, (), self.req_args_0)
+        bin = request.KillClient._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5283,7 +5234,7 @@ class TestKillClient(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestRotateProperties(unittest.TestCase):
+class TestRotateProperties(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'delta': -27095,
@@ -5301,7 +5252,7 @@ class TestRotateProperties(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.RotateProperties._request.to_binary, (), self.req_args_0)
+        bin = request.RotateProperties._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5319,7 +5270,7 @@ class TestRotateProperties(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestForceScreenSaver(unittest.TestCase):
+class TestForceScreenSaver(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'mode': 1,
@@ -5328,7 +5279,7 @@ class TestForceScreenSaver(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.ForceScreenSaver._request.to_binary, (), self.req_args_0)
+        bin = request.ForceScreenSaver._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5346,7 +5297,7 @@ class TestForceScreenSaver(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetPointerMapping(unittest.TestCase):
+class TestSetPointerMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'map': [218, 142, 195, 250, 194],
@@ -5365,7 +5316,7 @@ class TestSetPointerMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetPointerMapping._request.to_binary, (), self.req_args_0)
+        bin = request.SetPointerMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5383,7 +5334,7 @@ class TestSetPointerMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.SetPointerMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.SetPointerMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5401,7 +5352,7 @@ class TestSetPointerMapping(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetPointerMapping(unittest.TestCase):
+class TestGetPointerMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -5419,7 +5370,7 @@ class TestGetPointerMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetPointerMapping._request.to_binary, (), self.req_args_0)
+        bin = request.GetPointerMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5437,7 +5388,7 @@ class TestGetPointerMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetPointerMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetPointerMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5455,7 +5406,7 @@ class TestGetPointerMapping(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestSetModifierMapping(unittest.TestCase):
+class TestSetModifierMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             'keycodes': [[72, 169], [161, 154], [26, 10], [108, 187], [110, 198], [225, 88], [33, 66], [189, 147]],
@@ -5475,7 +5426,7 @@ class TestSetModifierMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.SetModifierMapping._request.to_binary, (), self.req_args_0)
+        bin = request.SetModifierMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5493,7 +5444,7 @@ class TestSetModifierMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.SetModifierMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.SetModifierMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5511,7 +5462,7 @@ class TestSetModifierMapping(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestGetModifierMapping(unittest.TestCase):
+class TestGetModifierMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -5530,7 +5481,7 @@ class TestGetModifierMapping(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.GetModifierMapping._request.to_binary, (), self.req_args_0)
+        bin = request.GetModifierMapping._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:
@@ -5548,7 +5499,7 @@ class TestGetModifierMapping(unittest.TestCase):
             raise AssertionError(args)
 
     def testPackReply0(self):
-        bin = apply(request.GetModifierMapping._reply.to_binary, (), self.reply_args_0)
+        bin = request.GetModifierMapping._reply.to_binary(*(), **self.reply_args_0)
         try:
             assert bin == self.reply_bin_0
         except AssertionError:
@@ -5566,7 +5517,7 @@ class TestGetModifierMapping(unittest.TestCase):
             raise AssertionError(args)
 
 
-class TestNoOperation(unittest.TestCase):
+class TestNoOperation(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
@@ -5574,7 +5525,7 @@ class TestNoOperation(unittest.TestCase):
 
 
     def testPackRequest0(self):
-        bin = apply(request.NoOperation._request.to_binary, (), self.req_args_0)
+        bin = request.NoOperation._request.to_binary(*(), **self.req_args_0)
         try:
             assert bin == self.req_bin_0
         except AssertionError:

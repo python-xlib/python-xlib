@@ -2,19 +2,22 @@
 #
 #    Copyright (C) 2000 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 import os
 import struct
@@ -26,7 +29,7 @@ FamilyDECnet = X.FamilyDECnet
 FamilyChaos = X.FamilyChaos
 FamilyLocal = 256
 
-class Xauthority:
+class Xauthority(object):
     def __init__(self, filename = None):
         if filename is None:
             filename = os.environ.get('XAUTHORITY')
@@ -40,7 +43,7 @@ class Xauthority:
 
         try:
             raw = open(filename, 'rb').read()
-        except IOError, err:
+        except IOError as err:
             raise error.XauthError('~/.Xauthority: %s' % err)
 
         self.entries = []
@@ -82,12 +85,11 @@ class Xauthority:
                     break
 
                 self.entries.append((family, addr, num, name, data))
-        except struct.error, e:
-            print "Xlib.xauth: warning, failed to parse part of xauthority file (%s), aborting all further parsing" % filename
-            #pass
+        except struct.error as e:
+            print("Xlib.xauth: warning, failed to parse part of xauthority file {0}, aborting all further parsing".format(filename))
 
         if len(self.entries) == 0:
-            print "Xlib.xauth: warning, no xauthority details available"
+            print("Xlib.xauth: warning, no xauthority details available")
             # raise an error?  this should get partially caught by the XNoAuthError in get_best_auth..
 
     def __len__(self):
@@ -97,7 +99,7 @@ class Xauthority:
         return self.entries[i]
 
     def get_best_auth(self, family, address, dispno,
-                      types = ( "MIT-MAGIC-COOKIE-1", )):
+                      types = ( b"MIT-MAGIC-COOKIE-1", )):
 
         """Find an authentication entry matching FAMILY, ADDRESS and
         DISPNO.
@@ -110,7 +112,7 @@ class Xauthority:
         otherwise XNoAuthError is raised.
         """
 
-        num = str(dispno)
+        num = str(dispno).encode()
 
         matches = {}
 

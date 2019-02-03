@@ -4,31 +4,39 @@
 #
 #    Copyright (C) 2009 David H. Bronke <whitelynx@gmail.com>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
 
-import sys, os, pprint
+# Python 2/3 compatibility.
+from __future__ import print_function
+
+import sys
+import os
+import pprint
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import X, display, Xutil
 from Xlib.ext import xinerama
 
 # Application window (only one)
-class Window:
+class Window(object):
     def __init__(self, display):
         self.d = display
 
@@ -36,14 +44,14 @@ class Window:
         if not self.d.has_extension('XINERAMA'):
             sys.stderr.write('%s: server does not have the XINERAMA extension\n'
                              % sys.argv[0])
-            print self.d.query_extension('XINERAMA')
+            print(self.d.query_extension('XINERAMA'))
             sys.stderr.write("\n".join(self.d.list_extensions()))
             if self.d.query_extension('XINERAMA') is None:
                 sys.exit(1)
 
         # print version
         r = self.d.xinerama_query_version()
-        print 'XINERAMA version %d.%d' % (r.major_version, r.minor_version)
+        print('XINERAMA version %d.%d' % (r.major_version, r.minor_version))
 
 
         # Grab the current screen
@@ -93,23 +101,23 @@ class Window:
 
         self.pp = pprint.PrettyPrinter(indent=4)
 
-        print "Xinerama active:", bool(self.d.xinerama_is_active())
+        print("Xinerama active:", bool(self.d.xinerama_is_active()))
 
-        print "Screen info:"
+        print("Screen info:")
         self.pp.pprint(self.d.xinerama_query_screens()._data)
 
         # FIXME: This doesn't work!
-        #print "Xinerama info:"
+        #print("Xinerama info:")
         #self.pp.pprint(self.d.xinerama_get_info(self.d.screen().root_visual)._data)
 
-        print "Xinerama state:"
+        print("Xinerama state:")
         self.pp.pprint(self.window.xinerama_get_state()._data)
 
-        print "Screen count:"
+        print("Screen count:")
         self.pp.pprint(self.window.xinerama_get_screen_count()._data)
 
         for screennum in range(self.window.xinerama_get_screen_count().screen_count):
-            print "Screen %d size:" % (screennum, )
+            print("Screen %d size:" % (screennum, ))
             self.pp.pprint(self.window.xinerama_get_screen_size(screennum)._data)
 
     def parseModes(self, mode_names, modes):
@@ -142,4 +150,3 @@ class Window:
 
 if __name__ == '__main__':
     Window(display.Display()).loop()
-

@@ -4,32 +4,38 @@
 #
 #    Copyright (C) 2002 Peter Liljenberg <petli@ctrl-c.liu.se>
 #
-#    This program is free software; you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation; either version 2 of the License, or
-#    (at your option) any later version.
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public License
+# as published by the Free Software Foundation; either version 2.1
+# of the License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU Lesser General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program; if not, write to the Free Software
-#    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the
+#    Free Software Foundation, Inc.,
+#    59 Temple Place,
+#    Suite 330,
+#    Boston, MA 02111-1307 USA
 
+
+# Python 2/3 compatibility.
+from __future__ import print_function
 
 import sys
 import os
 
 # Change path so we find Xlib
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import X, display, Xutil
 from Xlib.ext import shape
 
 # Application window (only one)
-class Window:
+class Window(object):
     def __init__(self, display):
         self.d = display
 
@@ -39,9 +45,9 @@ class Window:
                              % sys.argv[1])
             sys.exit(1)
 
-        # print version
+        # print(version)
         r = self.d.shape_query_version()
-        print 'SHAPE version %d.%d' % (r.major_version, r.minor_version)
+        print('SHAPE version %d.%d' % (r.major_version, r.minor_version))
 
 
         # Find which screen to open the window on
@@ -59,10 +65,10 @@ class Window:
 
         bggc.change(foreground = self.screen.white_pixel)
 
-        bgpm.arc(bggc, -bgsize / 2, 0, bgsize, bgsize, 0, 360 * 64)
-        bgpm.arc(bggc, bgsize / 2, 0, bgsize, bgsize, 0, 360 * 64)
-        bgpm.arc(bggc, 0, -bgsize / 2, bgsize, bgsize, 0, 360 * 64)
-        bgpm.arc(bggc, 0, bgsize / 2, bgsize, bgsize, 0, 360 * 64)
+        bgpm.arc(bggc, -bgsize // 2, 0, bgsize, bgsize, 0, 360 * 64)
+        bgpm.arc(bggc, bgsize // 2, 0, bgsize, bgsize, 0, 360 * 64)
+        bgpm.arc(bggc, 0, -bgsize // 2, bgsize, bgsize, 0, 360 * 64)
+        bgpm.arc(bggc, 0, bgsize // 2, bgsize, bgsize, 0, 360 * 64)
 
         # Actual window
         self.window = self.screen.root.create_window(
@@ -112,20 +118,20 @@ class Window:
         self.sub_pm.fill_rectangle(gc, 0, 0, self.sub_size, self.sub_size)
         gc.change(foreground = 1)
         self.sub_pm.fill_poly(gc, X.Convex, X.CoordModeOrigin,
-                              [(self.sub_size / 2, 0),
-                               (self.sub_size, self.sub_size / 2),
-                               (self.sub_size / 2, self.sub_size),
-                               (0, self.sub_size / 2)])
+                              [(self.sub_size // 2, 0),
+                               (self.sub_size, self.sub_size // 2),
+                               (self.sub_size // 2, self.sub_size),
+                               (0, self.sub_size // 2)])
         gc.free()
 
         # Set initial mask
-        self.window.shape_mask(shape.ShapeSet, shape.ShapeBounding,
+        self.window.shape_mask(shape.SO.Set, shape.SK.Bounding,
                                0, 0, self.add_pm)
-        self.window.shape_mask(shape.ShapeUnion, shape.ShapeBounding,
+        self.window.shape_mask(shape.SO.Union, shape.SK.Bounding,
                                400 - self.add_size, 0, self.add_pm)
-        self.window.shape_mask(shape.ShapeUnion, shape.ShapeBounding,
+        self.window.shape_mask(shape.SO.Union, shape.SK.Bounding,
                                0, 300 - self.add_size, self.add_pm)
-        self.window.shape_mask(shape.ShapeUnion, shape.ShapeBounding,
+        self.window.shape_mask(shape.SO.Union, shape.SK.Bounding,
                                400 - self.add_size, 300 - self.add_size,
                                self.add_pm)
 
@@ -151,19 +157,19 @@ class Window:
                 if e.detail == 1:
                     self.window.shape_mask(shape.ShapeUnion,
                                            shape.ShapeBounding,
-                                           e.event_x - self.add_size / 2,
-                                           e.event_y - self.add_size / 2,
+                                           e.event_x - self.add_size // 2,
+                                           e.event_y - self.add_size // 2,
                                            self.add_pm)
                 elif e.detail == 3:
                     self.window.shape_mask(shape.ShapeSubtract,
                                            shape.ShapeBounding,
-                                           e.event_x - self.sub_size / 2,
-                                           e.event_y - self.sub_size / 2,
+                                           e.event_x - self.sub_size // 2,
+                                           e.event_y - self.sub_size // 2,
                                            self.sub_pm)
 
             # Shape has changed
-            elif e.type == self.d.extension_event.ShapeNotify:
-                print 'Shape change'
+            elif e.type == shape.Event.Notify:
+                print('Shape change')
 
             # Somebody wants to tell us something
             elif e.type == X.ClientMessage:
