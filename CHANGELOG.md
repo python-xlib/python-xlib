@@ -1,5 +1,19 @@
 NEWS for Python X Library
 
+Version 0.25
+============
+
+Bug Fixes
+---------
+
+- fix increasing memory usage on display instantiation
+
+NV-CONTROL extension
+--------------------
+
+- add first implementation by Roberto Leinardi (@leinardi)
+
+---
 Version 0.24
 ============
 
