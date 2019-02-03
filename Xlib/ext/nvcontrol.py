@@ -28,7 +28,7 @@ extname = 'NV-CONTROL'
 
 
 def query_target_count(self, target):
-    """return the target count"""
+    """Return the target count"""
     reply = NVCtrlQueryTargetCountReplyRequest(display=self.display,
                                                opcode=self.display.get_extension_major(extname),
                                                target_type=target.type())
@@ -36,7 +36,7 @@ def query_target_count(self, target):
 
 
 def query_int_attribute(self, target, display_mask, attr):
-    """return the value of an integer attribute"""
+    """Return the value of an integer attribute"""
     reply = NVCtrlQueryAttributeReplyRequest(display=self.display,
                                              opcode=self.display.get_extension_major(extname),
                                              target_id=target.id(),
@@ -49,7 +49,7 @@ def query_int_attribute(self, target, display_mask, attr):
 
 
 def set_int_attribute(self, target, display_mask, attr, value):
-    """set the value of an integer attribute"""
+    """Set the value of an integer attribute"""
     reply = NVCtrlSetAttributeAndGetStatusReplyRequest(display=self.display,
                                                        opcode=self.display.get_extension_major(extname),
                                                        target_id=target.id(),
@@ -61,7 +61,7 @@ def set_int_attribute(self, target, display_mask, attr, value):
 
 
 def query_string_attribute(self, target, display_mask, attr):
-    """return the value of a string attribute"""
+    """Return the value of a string attribute"""
     reply = NVCtrlQueryStringAttributeReplyRequest(display=self.display,
                                                    opcode=self.display.get_extension_major(extname),
                                                    target_id=target.id(),
@@ -74,7 +74,7 @@ def query_string_attribute(self, target, display_mask, attr):
 
 
 def query_valid_attr_values(self, target, display_mask, attr):
-    """return the value of an integer attribute"""
+    """Return the value of an integer attribute"""
     reply = NVCtrlQueryValidAttributeValuesReplyRequest(display=self.display,
                                                         opcode=self.display.get_extension_major(extname),
                                                         target_id=target.id(),
@@ -87,7 +87,7 @@ def query_valid_attr_values(self, target, display_mask, attr):
 
 
 def query_binary_data(self, target, display_mask, attr):
-    """return binary data"""
+    """Return binary data"""
     reply = NVCtrlQueryBinaryDataReplyRequest(display=self.display,
                                               opcode=self.display.get_extension_major(extname),
                                               target_id=target.id(),
@@ -121,17 +121,17 @@ def get_gpu_count(self):
 
 
 def get_name(self, target):
-    """the GPU product name on which the specified X screen is running"""
+    """Return the GPU product name on which the specified X screen is running"""
     return query_string_attribute(self, target, 0, NV_CTRL_STRING_PRODUCT_NAME)
 
 
 def get_driver_version(self, target):
-    """the NVIDIA (kernel level) driver version for the specified screen or GPU"""
+    """Return the NVIDIA (kernel level) driver version for the specified screen or GPU"""
     return query_string_attribute(self, target, 0, NV_CTRL_STRING_NVIDIA_DRIVER_VERSION)
 
 
 def get_vbios_version(self, target):
-    """the version of the VBIOS for the specified screen or GPU"""
+    """Return the version of the VBIOS for the specified screen or GPU"""
     return query_string_attribute(self, target, 0, NV_CTRL_STRING_VBIOS_VERSION)
 
 
@@ -172,43 +172,46 @@ def get_irq(self, target):
 
 
 def supports_framelock(self, target):
-    """returns whether the underlying GPU supports Frame Lock.
+    """Return whether the underlying GPU supports Frame Lock.
 
-    All of the other frame lock attributes are only applicable if this returns True."""
+    All of the other frame lock attributes are only applicable if this returns True.
+    """
     return query_int_attribute(self, target, 0, NV_CTRL_FRAMELOCK) == 1
 
 
 def gvo_supported(self, screen):
-    """returns whether this X screen supports GVO
+    """Return whether this X screen supports GVO
 
-    If this screen does not support GVO output, then all other GVO attributes are unavailable."""
+    If this screen does not support GVO output, then all other GVO attributes are unavailable.
+    """
     return query_int_attribute(self, screen, [], NV_CTRL_GVO_SUPPORTED)
 
 
 def get_core_temp(self, target):
-    """return the current core temperature of the GPU driving the X screen."""
+    """Return the current core temperature of the GPU driving the X screen."""
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_CORE_TEMPERATURE)
 
 
 def get_core_threshold(self, target):
-    """return the current GPU core slowdown threshold temperature.
+    """Return the current GPU core slowdown threshold temperature.
 
-    Itreflects the temperature at which the GPU is throttled to prevent overheating."""
+    It reflects the temperature at which the GPU is throttled to prevent overheating.
+    """
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_CORE_THRESHOLD)
 
 
 def get_default_core_threshold(self, target):
-    """return the default core threshold temperature."""
+    """Return the default core threshold temperature."""
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_DEFAULT_CORE_THRESHOLD)
 
 
 def get_max_core_threshold(self, target):
-    """return the maximum core threshold temperature."""
+    """Return the maximum core threshold temperature."""
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_MAX_CORE_THRESHOLD)
 
 
 def get_ambient_temp(self, target):
-    """return the current temperature in the immediate neighbourhood of the GPU driving the X screen."""
+    """Return the current temperature in the immediate neighbourhood of the GPU driving the X screen."""
     return query_int_attribute(self, target, 0, NV_CTRL_AMBIENT_TEMPERATURE)
 
 
@@ -297,16 +300,17 @@ def get_fan_rpm(self, target):
 
 
 def get_max_displays(self, target):
-    """return the maximum number of display devices that can be driven simultaneously on a GPU.
+    """Return the maximum number of display devices that can be driven simultaneously on a GPU.
 
     Note that this does not indicate the maximum number of bits that can be set in
     NV_CTRL_CONNECTED_DISPLAYS, because more display devices can be connected than are actively
-    in use."""
+    in use.
+    """
     return query_int_attribute(self, target, 0, NV_CTRL_MAX_DISPLAYS)
 
 
 def _displaystr2num(st):
-    """return a display number from a string"""
+    """Return a display number from a string"""
     num = None
     for s, n in [('DFP-', 16), ('TV-', 8), ('CRT-', 0)]:
         if st.startswith(s):
@@ -324,7 +328,7 @@ def _displaystr2num(st):
 
 
 def _displays2mask(displays):
-    """return a display mask from an array of display numbers."""
+    """Return a display mask from an array of display numbers."""
     mask = 0
     for d in displays:
         mask += (1 << _displaystr2num(d))
