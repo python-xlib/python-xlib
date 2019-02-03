@@ -7,7 +7,11 @@ Bug Fixes
 ---------
 
 - fix increasing memory usage on display instantiation
-- implement NV-CONTROL extension by Roberto Leinardi (@leinardi)
+
+NV-CONTROL extension
+--------------------
+
+- add first implementation by Roberto Leinardi (@leinardi)
 
 ---
 Version 0.24
