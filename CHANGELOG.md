@@ -1,5 +1,14 @@
 NEWS for Python X Library
 
+In development
+==============
+
+Bug Fixes
+---------
+
+- fix increasing memory usage on display instantiation
+
+---
 Version 0.24
 ============
 
