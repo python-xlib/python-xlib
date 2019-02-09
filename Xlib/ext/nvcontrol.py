@@ -280,7 +280,7 @@ def get_mem_transfer_rate_offset_range(self, target):
 
 
 def get_cooler_manual_control_enabled(self, target):
-    return query_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL) == 1
+    return query_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL)
 
 
 def set_cooler_manual_control_enabled(self, target, enabled):
