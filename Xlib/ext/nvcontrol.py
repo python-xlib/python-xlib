@@ -263,8 +263,8 @@ def set_gpu_nvclock_offset(self, target, perf_level, offset):
     return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET, offset)
 
 
-def get_gpu_nvclock_offset_range(self, target):
-    return query_valid_attr_values(self, target, 0, NV_CTRL_GPU_NVCLOCK_OFFSET)
+def get_gpu_nvclock_offset_range(self, target, perf_level):
+    return query_valid_attr_values(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET)
 
 
 def get_mem_transfer_rate_offset(self, target, perf_level):
@@ -275,8 +275,8 @@ def set_mem_transfer_rate_offset(self, target, perf_level, offset):
     return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET, offset)
 
 
-def get_mem_transfer_rate_offset_range(self, target):
-    return query_valid_attr_values(self, target, 0, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
+def get_mem_transfer_rate_offset_range(self, target, perf_level):
+    return query_valid_attr_values(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
 
 
 def get_cooler_manual_control_enabled(self, target):
