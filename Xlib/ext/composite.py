@@ -78,11 +78,12 @@ class RedirectWindow(rq.Request):
         rq.Pad(3),
         )
 
-def redirect_window(self, update):
+def redirect_window(self, update, onerror = None):
     """Redirect the hierarchy starting at this window to off-screen
     storage.
     """
     RedirectWindow(display = self.display,
+                   onerror = onerror,
                    opcode = self.display.get_extension_major(extname),
                    window = self,
                    update = update,
@@ -99,11 +100,12 @@ class RedirectSubwindows(rq.Request):
         rq.Pad(3),
         )
 
-def redirect_subwindows(self, update):
+def redirect_subwindows(self, update, onerror = None):
     """Redirect the hierarchies starting at all current and future
     children to this window to off-screen storage.
     """
     RedirectSubwindows(display = self.display,
+                       onerror = onerror,
                        opcode = self.display.get_extension_major(extname),
                        window = self,
                        update = update,
@@ -120,10 +122,11 @@ class UnredirectWindow(rq.Request):
         rq.Pad(3),
         )
 
-def unredirect_window(self, update):
+def unredirect_window(self, update, onerror = None):
     """Stop redirecting this window hierarchy.
     """
     UnredirectWindow(display = self.display,
+                     onerror = onerror,
                      opcode = self.display.get_extension_major(extname),
                      window = self,
                      update = update,
@@ -140,10 +143,11 @@ class UnredirectSubindows(rq.Request):
         rq.Pad(3),
         )
 
-def unredirect_subwindows(self, update):
+def unredirect_subwindows(self, update, onerror = None):
     """Stop redirecting the hierarchies of children to this window.
     """
     RedirectWindow(display = self.display,
+                   onerror = onerror,
                    opcode = self.display.get_extension_major(extname),
                    window = self,
                    update = update,
@@ -159,7 +163,7 @@ class CreateRegionFromBorderClip(rq.Request):
         rq.Window('window'),
         )
 
-def create_region_from_border_clip(self):
+def create_region_from_border_clip(self, onerror = None):
     """Create a region of the border clip of the window, i.e. the area
     that is not clipped by the parent and any sibling windows.
     """
@@ -167,6 +171,7 @@ def create_region_from_border_clip(self):
     rid = self.display.allocate_resource_id()
     CreateRegionFromBorderClip(
         display = self.display,
+        onerror = onerror,
         opcode = self.display.get_extension_major(extname),
         region = rid,
         window = self,
@@ -185,7 +190,7 @@ class NameWindowPixmap(rq.Request):
         rq.Pixmap('pixmap'),
         )
 
-def name_window_pixmap(self):
+def name_window_pixmap(self, onerror = None):
     """Create a new pixmap that refers to the off-screen storage of
     the window, including its border.
 
@@ -198,6 +203,7 @@ def name_window_pixmap(self):
 
     pid = self.display.allocate_resource_id()
     NameWindowPixmap(display = self.display,
+                     onerror = onerror,
                      opcode = self.display.get_extension_major(extname),
                      window = self,
                      pixmap = pid,

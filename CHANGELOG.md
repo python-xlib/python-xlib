@@ -1,5 +1,38 @@
 NEWS for Python X Library
 
+Version 0.25
+============
+
+Bug Fixes
+---------
+
+- fix increasing memory usage on display instantiation
+
+NV-CONTROL extension
+--------------------
+
+- add first implementation by Roberto Leinardi (@leinardi)
+
+---
+Version 0.24
+============
+
+Bug Fixes
+---------
+
+- fix protocol handling: correctly support explicit Unix
+  connections and fix support fox macOS
+- improve Python 3 support: fix events sub-code handling
+  and possible crashes when unpacking text data
+- add support for error handlers to the Composite extension
+
+Misc
+----
+
+- fix `xfixes` example
+- fix a bunch of typos in the code / documentation
+
+---
 Version 0.23
 ============
 

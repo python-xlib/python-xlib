@@ -62,12 +62,12 @@ _resource_hierarchy = {
     }
 
 class _BaseDisplay(protocol_display.Display):
-    resource_classes = _resource_baseclasses.copy()
 
     # Implement a cache of atom names, used by Window objects when
     # dealing with some ICCCM properties not defined in Xlib.Xatom
 
     def __init__(self, *args, **keys):
+        self.resource_classes = _resource_baseclasses.copy()
         protocol_display.Display.__init__(self, *args, **keys)
         self._atom_cache = {}
 

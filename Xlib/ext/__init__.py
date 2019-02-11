@@ -36,6 +36,7 @@ __extensions__ = [
     ('XFIXES', 'xfixes'),
     ('SECURITY', 'security'),
     ('XInputExtension', 'xinput'),
+    ('NV-CONTROL', 'nvcontrol'),
     ('DAMAGE', 'damage'),
     ]
 

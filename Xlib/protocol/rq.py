@@ -1221,7 +1221,7 @@ class TextElements8(ValueField):
 
         for v in value:
             # Let values be simple strings, meaning a delta of 0
-            if type(v) is bytes:
+            if type(v) in (str, bytes):
                 v = (0, v)
 
             # A tuple, it should be (delta, string)
@@ -1230,19 +1230,19 @@ class TextElements8(ValueField):
             if isinstance(v, (tuple, dict, DictWrapper)):
 
                 if isinstance(v, tuple):
-                    delta, str = v
+                    delta, m_str = v
                 else:
                     delta = v['delta']
-                    str = v['string']
+                    m_str = v['string']
 
-                while delta or str:
+                while delta or m_str:
                     args['delta'] = delta
-                    args['string'] = str[:254]
+                    args['string'] = m_str[:254]
 
                     data = data + self.string_textitem.to_binary(*(), **args)
 
                     delta = 0
-                    str = str[254:]
+                    m_str = m_str[254:]
 
             # Else an integer, i.e. a font change
             else:
