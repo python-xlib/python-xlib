@@ -76,7 +76,6 @@ else:
 
 
 class Display(object):
-    resource_classes = {}
     extension_major_opcodes = {}
     error_classes = error.xerror_class.copy()
     event_classes = event.event_class.copy()
