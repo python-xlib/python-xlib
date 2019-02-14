@@ -70,7 +70,7 @@ def checkExt(disp):
             sys.exit(1)
     else:
         r = disp.damage_query_version()
-        print('DAMAGE version %d.%d'.format(r.major_version, r.minor_version))
+        print('DAMAGE version {}.{}'.format(r.major_version, r.minor_version))
     
 def main():
     d = display.Display()
