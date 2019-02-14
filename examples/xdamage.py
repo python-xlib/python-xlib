@@ -2,7 +2,7 @@
 #
 # examples/xdamage.py -- demonstrate damage extension
 #
-#    Copyright (C) 2002 Peter Liljenberg <petli@ctrl-c.liu.se>
+#    Copyright (C) 2019 Mohit Garg <mrmohitgarg1990@gmail.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -36,6 +36,7 @@ import time
 import thread
 from Xlib.ext import damage
 from PIL import Image, ImageTk
+import traceback
 
 def redraw(win, gc):
     # win.clear_area()
@@ -50,14 +51,14 @@ def blink(display, win, gc, cols):
         redraw(win, gc)
         display.flush()
 
-def getImageFromWin(win,ptW,ptH,ptX=0,ptY=0):
+def get_image_from_win(win, pt_w, pt_h, pt_x=0, pt_y=0):
     try:
         raw = win.get_image(ptX,ptY, ptW,ptH, X.ZPixmap, 0xffffffff)
         image = Image.frombytes("RGB", (ptW, ptH), raw.data, "raw", "BGRX")
         return image
 
     except Exception:
-        print("exception thrown in getImageFromWin")
+        traceback.print_exc()
 
 def checkExt(disp):
     # Check for extension
@@ -69,7 +70,7 @@ def checkExt(disp):
             sys.exit(1)
     else:
         r = disp.damage_query_version()
-        print('DAMAGE version %d.%d' % (r.major_version, r.minor_version))
+        print('DAMAGE version %d.%d'.format(r.major_version, r.minor_version))
     
 def main():
     d = display.Display()
@@ -120,9 +121,9 @@ def main():
             if event.count == 0:
                 redraw(window1, gc)
         elif event.type == d.extension_event.DamageNotify:
-            image = getImageFromWin(window1, event.area.width, event.area.height, event.area.x, event.area.y)
-            bgpm = window2.create_pixmap(image.width,image.height,d.screen().root_depth)
-            bggc = window2.create_gc(foreground=0,background=0)
+            image = get_image_from_win(window1, event.area.width, event.area.height, event.area.x, event.area.y)
+            bgpm = window2.create_pixmap(image.width, image.height, d.screen().root_depth)
+            bggc = window2.create_gc(foreground=0, background=0)
             bgpm.put_pil_image(bggc, 0, 0, image)
             window2.copy_area(bggc, bgpm, 0, 0, image.width, image.height, 0, 0)
             # bggc.free()
