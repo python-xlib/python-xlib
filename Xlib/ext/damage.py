@@ -94,7 +94,6 @@ def damage_create(self, level):
                  drawable=self.id,
                  level=level,
                  )
-    print('damage create')
     return did
 
 class DamageDestroy(rq.Request):
@@ -111,7 +110,6 @@ def damage_destroy(self, damage):
                   )
 
     self.display.free_resource_id(damage)
-    print('damage destroy')
 
 class DamageSubtract(rq.Request):
     _request = rq.Struct(rq.Card8('opcode'),
@@ -128,7 +126,6 @@ def damage_subtract(self, damage, repair=X.NONE, parts=X.NONE):
                    damage=damage,
                    repair=repair,
                    parts=parts)
-    print('damage subtract')
 
 class DamageAdd(rq.Request):
     _request = rq.Struct(rq.Card8('opcode'),
@@ -143,7 +140,6 @@ def damage_add(self, repair, parts):
               opcode=self.display.get_extension_major(extname),
               repair=repair,
               parts=parts)
-    print('damage add')
 
 # Events #
 
