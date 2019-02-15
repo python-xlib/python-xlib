@@ -60,7 +60,7 @@ def get_image_from_win(win, pt_w, pt_h, pt_x=0, pt_y=0):
     except Exception:
         traceback.print_exc()
 
-def checkExt(disp):
+def check_ext(disp):
     # Check for extension
     if not disp.has_extension('DAMAGE'):
         sys.stderr.write('server does not have the DAMAGE extension\n')
