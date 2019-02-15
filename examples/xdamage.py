@@ -76,7 +76,7 @@ def main():
     d = display.Display()
     root = d.screen().root
 
-    checkExt(d)
+    check_ext(d)
     colormap = d.screen().default_colormap
 
     red = colormap.alloc_named_color("red").pixel
