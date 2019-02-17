@@ -65,6 +65,8 @@ def query_version(self):
     return QueryVersion(
         display = self.display,
         opcode = self.display.get_extension_major(extname),
+        major_version=0,
+        minor_version=4
         )
 
 
