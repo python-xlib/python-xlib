@@ -66,11 +66,11 @@ if __name__ == '__main__':
         'get_memory_bus_width': display.nvcontrol_get_memory_bus_width(gpu),
         'get_total_dedicated_gpu_memory': display.nvcontrol_get_total_dedicated_gpu_memory(gpu),
         'get_used_dedicated_gpu_memory': display.nvcontrol_get_used_dedicated_gpu_memory(gpu),
-        'get_pcie_current_link_width': display.nvcontrol_get_pcie_current_link_width(gpu),
-        'get_pcie_max_link_width': display.nvcontrol_get_pcie_max_link_width(gpu),
-        'get_pcie_generation': display.nvcontrol_get_pcie_generation(gpu),
-        'get_video_encoder_utilization': display.nvcontrol_get_video_encoder_utilization(gpu),
-        'get_video_decoder_utilization': display.nvcontrol_get_video_decoder_utilization(gpu),
+        'get_curr_pcie_link_width': display.nvcontrol_get_curr_pcie_link_width(gpu),
+        'get_max_pcie_link_width': display.nvcontrol_get_max_pcie_link_width(gpu),
+        'get_curr_pcie_link_generation': display.nvcontrol_get_curr_pcie_link_generation(gpu),
+        'get_encoder_utilization': display.nvcontrol_get_encoder_utilization(gpu),
+        'get_decoder_utilization': display.nvcontrol_get_decoder_utilization(gpu),
         'get_current_performance_level': display.nvcontrol_get_current_performance_level(gpu),
         'get_gpu_nvclock_offset': display.nvcontrol_get_gpu_nvclock_offset(gpu, perf_level),
         'get_mem_transfer_rate_offset': display.nvcontrol_get_mem_transfer_rate_offset(gpu, perf_level),
@@ -83,10 +83,11 @@ if __name__ == '__main__':
         'get_driver_version': display.nvcontrol_get_driver_version(gpu),
         'get_vbios_version': display.nvcontrol_get_vbios_version(gpu),
         'get_gpu_uuid': display.nvcontrol_get_gpu_uuid(gpu),
-        'get_gpu_utilization': display.nvcontrol_get_gpu_utilization(gpu),
+        'get_utilization_rates': display.nvcontrol_get_utilization_rates(gpu),
         'get_performance_modes': display.nvcontrol_get_performance_modes(gpu),
-        'get_gpu_nvclock_offset_range': display.nvcontrol_get_gpu_nvclock_offset_range(gpu),
-        'get_mem_transfer_rate_offset_range': display.nvcontrol_get_mem_transfer_rate_offset_range(gpu)
+        'get_gpu_nvclock_offset_range': display.nvcontrol_get_gpu_nvclock_offset_range(gpu, perf_level),
+        'get_mem_transfer_rate_offset_range': display.nvcontrol_get_mem_transfer_rate_offset_range(gpu, perf_level),
+        'get_clock_info': display.nvcontrol_get_clock_info(gpu)
     }
 
     pprint(dic)

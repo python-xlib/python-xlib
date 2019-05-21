@@ -139,7 +139,7 @@ def get_gpu_uuid(self, target):
     return query_string_attribute(self, target, 0, NV_CTRL_STRING_GPU_UUID)
 
 
-def get_gpu_utilization(self, target):
+def get_utilization_rates(self, target):
     string = query_string_attribute(self, target, 0, NV_CTRL_STRING_GPU_UTILIZATION)
     result = {}
     if string is not None and string != '':
@@ -159,6 +159,16 @@ def get_performance_modes(self, target):
                 [key, value] = line.split('=')[:2]
                 perf_dict[key.strip()] = int(value) if value.isdigit() else value
             result.append(perf_dict)
+    return result
+
+
+def get_clock_info(self, target):
+    string = query_string_attribute(self, target, 0, NV_CTRL_STRING_GPU_CURRENT_CLOCK_FREQS)
+    result = {}
+    if string is not None and string != '':
+        for line in string.split(','):
+            [key, value] = line.split('=')[:2]
+            result[key.strip()] = int(value) if value.isdigit() else value
     return result
 
 
@@ -231,23 +241,23 @@ def get_used_dedicated_gpu_memory(self, target):
     return query_int_attribute(self, target, 0, NV_CTRL_USED_DEDICATED_GPU_MEMORY)
 
 
-def get_pcie_current_link_width(self, target):
+def get_curr_pcie_link_width(self, target):
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_PCIE_CURRENT_LINK_WIDTH)
 
 
-def get_pcie_max_link_width(self, target):
+def get_max_pcie_link_width(self, target):
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_PCIE_MAX_LINK_WIDTH)
 
 
-def get_pcie_generation(self, target):
+def get_curr_pcie_link_generation(self, target):
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_PCIE_GENERATION)
 
 
-def get_video_encoder_utilization(self, target):
+def get_encoder_utilization(self, target):
     return query_int_attribute(self, target, 0, NV_CTRL_VIDEO_ENCODER_UTILIZATION)
 
 
-def get_video_decoder_utilization(self, target):
+def get_decoder_utilization(self, target):
     return query_int_attribute(self, target, 0, NV_CTRL_VIDEO_DECODER_UTILIZATION)
 
 
@@ -263,8 +273,8 @@ def set_gpu_nvclock_offset(self, target, perf_level, offset):
     return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET, offset)
 
 
-def get_gpu_nvclock_offset_range(self, target):
-    return query_valid_attr_values(self, target, 0, NV_CTRL_GPU_NVCLOCK_OFFSET)
+def get_gpu_nvclock_offset_range(self, target, perf_level):
+    return query_valid_attr_values(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET)
 
 
 def get_mem_transfer_rate_offset(self, target, perf_level):
@@ -275,12 +285,12 @@ def set_mem_transfer_rate_offset(self, target, perf_level, offset):
     return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET, offset)
 
 
-def get_mem_transfer_rate_offset_range(self, target):
-    return query_valid_attr_values(self, target, 0, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
+def get_mem_transfer_rate_offset_range(self, target, perf_level):
+    return query_valid_attr_values(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
 
 
 def get_cooler_manual_control_enabled(self, target):
-    return query_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL) == 1
+    return query_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL)
 
 
 def set_cooler_manual_control_enabled(self, target, enabled):
@@ -354,11 +364,11 @@ def init(disp, info):
     disp.extension_add_method('display', 'nvcontrol_get_memory_bus_width', get_memory_bus_width)
     disp.extension_add_method('display', 'nvcontrol_get_total_dedicated_gpu_memory', get_total_dedicated_gpu_memory)
     disp.extension_add_method('display', 'nvcontrol_get_used_dedicated_gpu_memory', get_used_dedicated_gpu_memory)
-    disp.extension_add_method('display', 'nvcontrol_get_pcie_current_link_width', get_pcie_current_link_width)
-    disp.extension_add_method('display', 'nvcontrol_get_pcie_max_link_width', get_pcie_max_link_width)
-    disp.extension_add_method('display', 'nvcontrol_get_pcie_generation', get_pcie_generation)
-    disp.extension_add_method('display', 'nvcontrol_get_video_encoder_utilization', get_video_encoder_utilization)
-    disp.extension_add_method('display', 'nvcontrol_get_video_decoder_utilization', get_video_decoder_utilization)
+    disp.extension_add_method('display', 'nvcontrol_get_curr_pcie_link_width', get_curr_pcie_link_width)
+    disp.extension_add_method('display', 'nvcontrol_get_max_pcie_link_width', get_max_pcie_link_width)
+    disp.extension_add_method('display', 'nvcontrol_get_curr_pcie_link_generation', get_curr_pcie_link_generation)
+    disp.extension_add_method('display', 'nvcontrol_get_encoder_utilization', get_encoder_utilization)
+    disp.extension_add_method('display', 'nvcontrol_get_decoder_utilization', get_decoder_utilization)
     disp.extension_add_method('display', 'nvcontrol_get_current_performance_level', get_current_performance_level)
     disp.extension_add_method('display', 'nvcontrol_get_gpu_nvclock_offset', get_gpu_nvclock_offset)
     disp.extension_add_method('display', 'nvcontrol_set_gpu_nvclock_offset', set_gpu_nvclock_offset)
@@ -375,8 +385,9 @@ def init(disp, info):
     disp.extension_add_method('display', 'nvcontrol_get_driver_version', get_driver_version)
     disp.extension_add_method('display', 'nvcontrol_get_vbios_version', get_vbios_version)
     disp.extension_add_method('display', 'nvcontrol_get_gpu_uuid', get_gpu_uuid)
-    disp.extension_add_method('display', 'nvcontrol_get_gpu_utilization', get_gpu_utilization)
+    disp.extension_add_method('display', 'nvcontrol_get_utilization_rates', get_utilization_rates)
     disp.extension_add_method('display', 'nvcontrol_get_performance_modes', get_performance_modes)
+    disp.extension_add_method('display', 'nvcontrol_get_clock_info', get_clock_info)
     disp.extension_add_method('display', 'nvcontrol_set_cooler_manual_control_enabled',
                               set_cooler_manual_control_enabled)
     disp.extension_add_method('display', 'nvcontrol_get_gpu_nvclock_offset_range',
