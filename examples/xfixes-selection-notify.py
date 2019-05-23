@@ -37,7 +37,7 @@ from Xlib.display import Display
 from Xlib.ext import xfixes
 
 def main(argv):
-    if len(sys.argv) < 2 or len(sys.argv) > 3:
+    if len(sys.argv) != 2:
         sys.exit('usage: {0} SELECTION\n\n'
                  'SELECTION is typically PRIMARY, SECONDARY or CLIPBOARD.\n'
                  .format(sys.argv[0]))
