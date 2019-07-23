@@ -33,7 +33,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import display, X, threaded,Xutil
 import time
-import thread
+
+try:
+    import thread
+except ModuleNotFoundError:
+    import _thread as thread
+
 from Xlib.ext import damage
 from PIL import Image, ImageTk
 import traceback
