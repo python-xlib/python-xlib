@@ -33,7 +33,12 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib import display, X, threaded,Xutil
 import time
-import thread
+
+try:
+    import thread
+except ModuleNotFoundError:
+    import _thread as thread
+
 from Xlib.ext import damage
 from PIL import Image, ImageTk
 import traceback
@@ -53,8 +58,8 @@ def blink(display, win, gc, cols):
 
 def get_image_from_win(win, pt_w, pt_h, pt_x=0, pt_y=0):
     try:
-        raw = win.get_image(ptX,ptY, ptW,ptH, X.ZPixmap, 0xffffffff)
-        image = Image.frombytes("RGB", (ptW, ptH), raw.data, "raw", "BGRX")
+        raw = win.get_image(pt_x, pt_y, pt_w, pt_h, X.ZPixmap, 0xffffffff)
+        image = Image.frombytes("RGB", (pt_w, pt_h), raw.data, "raw", "BGRX")
         return image
 
     except Exception:
