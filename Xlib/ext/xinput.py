@@ -647,8 +647,8 @@ def init(disp, info):
     disp.extension_add_method('display', 'xinput_ungrab_device', ungrab_device)
     disp.extension_add_method('window', 'xinput_grab_keycode', grab_keycode)
     disp.extension_add_method('window', 'xinput_ungrab_keycode', ungrab_keycode)
-
-    for device_event in (ButtonPress, ButtonRelease, KeyPress, KeyRelease, Motion):
-        disp.ge_add_event_data(info.major_opcode, device_event, DeviceEventData)
-    disp.ge_add_event_data(info.major_opcode, DeviceChanged, DeviceEventData)
-    disp.ge_add_event_data(info.major_opcode, HierarchyChanged, HierarchyEventData)
+    if hasattr(disp,"ge_add_event_data"):
+        for device_event in (ButtonPress, ButtonRelease, KeyPress, KeyRelease, Motion):
+            disp.ge_add_event_data(info.major_opcode, device_event, DeviceEventData)
+        disp.ge_add_event_data(info.major_opcode, DeviceChanged, DeviceEventData)
+        disp.ge_add_event_data(info.major_opcode, HierarchyChanged, HierarchyEventData)
