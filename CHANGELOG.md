@@ -1,5 +1,24 @@
 NEWS for Python X Library
 
+Version 0.26
+============
+
+Bug Fixes
+---------
+
+- support legacy X servers like RealVNC's one (by @Gerardwx)
+
+Extensions
+--------------------
+
+- enrich XFixes extension with XFixesSelectionNotify events (by @acrisci)
+- add example xfixes-selection-notify.py (by @acrisci)
+- fix two issues in NV-CONTROL extension (by @leinardi)
+- add method get_clock_info into NV-CONTROL extension (by @leinardi)
+- add default client version into Composite extension (by @jakogut)
+- add Damage extension with the example (by @mgarg1 and @jakogut)
+
+---
 Version 0.25
 ============
 
