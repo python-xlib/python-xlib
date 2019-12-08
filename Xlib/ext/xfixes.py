@@ -22,13 +22,22 @@
 
 '''
 A partial implementation of the XFIXES extension.  Only the HideCursor and
-ShowCursor requests are provided.
+ShowCursor requests and SelectionNotify events are provided.
 '''
 
 from Xlib.protocol import rq
 
 extname = 'XFIXES'
 
+XFixesSelectionNotify                   = 0
+
+XFixesSetSelectionOwnerNotifyMask       = (1 << 0)
+XFixesSelectionWindowDestroyNotifyMask  = (1 << 1)
+XFixesSelectionClientCloseNotifyMask    = (1 << 2)
+
+XFixesSetSelectionOwnerNotify           = 0
+XFixesSelectionWindowDestroyNotify      = 1
+XFixesSelectionClientCloseNotify        = 2
 
 class QueryVersion(rq.ReplyRequest):
     _request = rq.Struct(rq.Card8('opcode'),
@@ -80,8 +89,54 @@ def show_cursor(self):
                opcode=self.display.get_extension_major(extname),
                window=self)
 
+class SelectSelectionInput(rq.Request):
+    _request = rq.Struct(rq.Card8('opcode'),
+                         rq.Opcode(2),
+                         rq.RequestLength(),
+                         rq.Window('window'),
+                         rq.Card32('selection'),
+                         rq.Card32('mask')
+                         )
+
+def select_selection_input(self, window, selection, mask):
+    return SelectSelectionInput(opcode=self.display.get_extension_major(extname),
+                                display=self.display,
+                                window=window,
+                                selection=selection,
+                                mask=mask)
+
+
+class SelectionNotify(rq.Event):
+    _code = None
+    _fields = rq.Struct(rq.Card8('type'),
+                        rq.Card8('sub_code'),
+                        rq.Card16('sequence_number'),
+                        rq.Window('window'),
+                        rq.Window('owner'),
+                        rq.Card32('selection'),
+                        rq.Card32('timestamp'),
+                        rq.Card32('selection_timestamp'),
+                        rq.Pad(8))
+
+
+class SetSelectionOwnerNotify(SelectionNotify):
+    pass
+
+
+class SelectionWindowDestroyNotify(SelectionNotify):
+    pass
+
+
+class SelectionClientCloseNotify(SelectionNotify):
+    pass
+
 
 def init(disp, info):
+    disp.extension_add_method('display', 'xfixes_select_selection_input', select_selection_input)
     disp.extension_add_method('display', 'xfixes_query_version', query_version)
     disp.extension_add_method('window', 'xfixes_hide_cursor', hide_cursor)
     disp.extension_add_method('window', 'xfixes_show_cursor', show_cursor)
+
+    disp.extension_add_subevent(info.first_event + XFixesSelectionNotify, XFixesSetSelectionOwnerNotify, SetSelectionOwnerNotify)
+    disp.extension_add_subevent(info.first_event + XFixesSelectionNotify, XFixesSelectionWindowDestroyNotify, SelectionWindowDestroyNotify)
+    disp.extension_add_subevent(info.first_event + XFixesSelectionNotify, XFixesSelectionClientCloseNotify, SelectionClientCloseNotify)

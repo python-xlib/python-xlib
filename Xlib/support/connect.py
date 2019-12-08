@@ -56,15 +56,16 @@ def _relative_import(modname):
 
 
 def get_display(display):
-    """dname, host, dno, screen = get_display(display)
+    """dname, protocol, host, dno, screen = get_display(display)
 
     Parse DISPLAY into its components.  If DISPLAY is None, use
     the default display.  The return values are:
 
-      DNAME  -- the full display name (string)
-      HOST   -- the host name (string, possibly empty)
-      DNO    -- display number (integer)
-      SCREEN -- default screen number (integer)
+      DNAME    -- the full display name (string)
+      PROTOCOL -- the protocol to use (None if automatic)
+      HOST     -- the host name (string, possibly empty)
+      DNO      -- display number (integer)
+      SCREEN   -- default screen number (integer)
     """
 
     modname = _display_mods.get(platform, _default_display_mod)
@@ -72,10 +73,10 @@ def get_display(display):
     return mod.get_display(display)
 
 
-def get_socket(dname, host, dno):
-    """socket = get_socket(dname, host, dno)
+def get_socket(dname, protocol, host, dno):
+    """socket = get_socket(dname, protocol, host, dno)
 
-    Connect to the display specified by DNAME, HOST and DNO, which
+    Connect to the display specified by DNAME, PROTOCOL, HOST and DNO, which
     are the corresponding values from a previous call to get_display().
 
     Return SOCKET, a new socket object connected to the X server.
@@ -83,14 +84,14 @@ def get_socket(dname, host, dno):
 
     modname = _socket_mods.get(platform, _default_socket_mod)
     mod = _relative_import(modname)
-    return mod.get_socket(dname, host, dno)
+    return mod.get_socket(dname, protocol, host, dno)
 
 
-def get_auth(sock, dname, host, dno):
-    """auth_name, auth_data = get_auth(sock, dname, host, dno)
+def get_auth(sock, dname, protocol, host, dno):
+    """auth_name, auth_data = get_auth(sock, dname, protocol, host, dno)
 
     Return authentication data for the display on the other side of
-    SOCK, which was opened with DNAME, HOST and DNO.
+    SOCK, which was opened with DNAME, HOST and DNO, using PROTOCOL.
 
     Return AUTH_NAME and AUTH_DATA, two strings to be used in the
     connection setup request.
@@ -98,4 +99,4 @@ def get_auth(sock, dname, host, dno):
 
     modname = _auth_mods.get(platform, _default_auth_mod)
     mod = _relative_import(modname)
-    return mod.get_auth(sock, dname, host, dno)
+    return mod.get_auth(sock, dname, protocol, host, dno)

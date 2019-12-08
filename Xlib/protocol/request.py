@@ -1066,7 +1066,7 @@ class PutImage(rq.Request):
         rq.Card8('left_pad'),
         rq.Card8('depth'),
         rq.Pad(2),
-        rq.String8('data'),
+        rq.Binary('data'),
         )
 
 class GetImage(rq.ReplyRequest):
@@ -1089,7 +1089,7 @@ class GetImage(rq.ReplyRequest):
         rq.ReplyLength(),
         rq.Card32('visual'),
         rq.Pad(20),
-        rq.String8('data'),
+        rq.Binary('data'),
         )
 
 class PolyText8(rq.Request):

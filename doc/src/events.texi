@@ -22,7 +22,7 @@ typically by doing one or more X requests.
 @section Getting Events
 
 Events can be sent at any time, not necessarily when the client is ready
-to recieve an event. Therefore they must be stored temporarily from that
+to receive an event. Therefore they must be stored temporarily from that
 they are read from the network until the client is ready to handle them.
 Read but unhandled events are stored on an event queue in the Display
 object.  There are two functions to access this queue:
@@ -72,7 +72,7 @@ while 1:
     if not readable:
         handle_timeout()
 
-    # if display is readable, handle as many events as have been recieved
+    # if display is readable, handle as many events as have been received
     elif disp in readable:
         i = disp.pending_events()
         while i > 0:

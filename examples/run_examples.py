@@ -73,10 +73,9 @@ class TestExamples(unittest.TestCase):
         """ Run xfixes.py -- demonstrate the XFIXES extension """
         self.assertEqual(run_example(examples_folder + "xfixes.py"), 0)
 
-# TODO
-#     def test_xlsatoms(self):
-#         """ Run xlsatoms.py -- show list atoms on X server """
-#         self.assertEqual(run_example(examples_folder + "xlsatoms.py"), 0)
+    def test_xlsatoms(self):
+        """ Run xlsatoms.py -- show list atoms on X server """
+        self.assertEqual(run_example(examples_folder + "xlsatoms.py"), 0)
 
 
 if __name__ == '__main__':

@@ -32,7 +32,7 @@ def get_display(display):
     # check DECW$DISPLAY instead, but that has to wait
 
     if display is None:
-        return ':0.0', 'localhost', 0, 0
+        return ':0.0', None, 'localhost', 0, 0
 
     m = display_re.match(display)
     if not m:
@@ -52,10 +52,10 @@ def get_display(display):
     else:
         screen = 0
 
-    return name, host, dno, screen
+    return name, None, host, dno, screen
 
 
-def get_socket(dname, host, dno):
+def get_socket(dname, protocol, host, dno):
     try:
         # Always use TCP/IP sockets.  Later it would be nice to
         # be able to use DECNET och LOCAL connections.

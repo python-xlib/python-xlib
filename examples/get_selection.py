@@ -22,6 +22,7 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+import binascii
 import sys
 import os
 
@@ -82,7 +83,7 @@ def main():
     # since we don't have an event here we have to.
     w.convert_selection(sel_atom, target_atom, data_atom, X.CurrentTime)
 
-    # Wait for the notificiaton that we got the selection
+    # Wait for the notification that we got the selection
     while True:
         e = d.next_event()
         if e.type == X.SelectionNotify:
@@ -155,7 +156,13 @@ def output_data(d, r, target_name):
         len(r.value))
 
     if r.format == 8:
-        sys.stdout.write(r.value)
+        if r.property_type == Xatom.STRING:
+            value = r.value.decode('ISO-8859-1')
+        elif r.property_type == d.get_atom('UTF8_STRING'):
+            value = r.value.decode('UTF-8')
+        else:
+            value = binascii.hexlify(r.value).decode('ascii')
+        sys.stdout.write(value)
 
     elif r.format == 32 and r.property_type == Xatom.ATOM:
         for v in r.value:

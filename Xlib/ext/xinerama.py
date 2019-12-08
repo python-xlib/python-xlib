@@ -30,7 +30,7 @@ provide code for the lone Sun 1.0 request that isn't part of 1.1, but
 this is untested because I don't have a server that implements it.
 
 The functions loosely follow the libXineram functions. Mostly, they
-return an rq.Struct in lieue of passing in pointers that get data from
+return an rq.Struct in lieu of passing in pointers that get data from
 the rq.Struct crammed into them. The exception is isActive, which
 returns the state information - because that's what libXinerama does."""
 

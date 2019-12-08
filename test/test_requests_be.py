@@ -14,2532 +14,1785 @@ dummy_display = DummyDisplay()
 class TestCreateWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'height': 38608,
-            'window_class': 0,
-            'border_width': 34451,
-            'visual': 398069779,
-            'x': -20771,
-            'y': -4049,
-            'parent': 1960526158,
-            'attrs': {'backing_pixel': 561400151, 'cursor': 1442692293, 'background_pixmap': 1583833923, 'border_pixmap': 1992559786, 'backing_planes': 1454152605, 'win_gravity': 3, 'backing_store': 2, 'event_mask': 368242204, 'save_under': 0, 'background_pixel': 209127175, 'colormap': 377416705, 'border_pixel': 2135465356, 'bit_gravity': 0, 'do_not_propagate_mask': 597142897, 'override_redirect': 0},
-            'wid': 1828913444,
-            'depth': 186,
-            'width': 51466,
+            'attrs': {'cursor': 64054583, 'override_redirect': 0, 'bit_gravity': 3, 'event_mask': 1268138548, 'border_pixel': 1592533117, 'background_pixel': 239147199, 'save_under': 0, 'colormap': 68318329, 'do_not_propagate_mask': 906135756, 'backing_store': 0, 'win_gravity': 2, 'backing_planes': 299720948, 'border_pixmap': 53775720, 'backing_pixel': 1581625428, 'background_pixmap': 1373224142},
+            'border_width': 13287,
+            'depth': 151,
+            'height': 37037,
+            'parent': 499701004,
+            'visual': 1395681732,
+            'wid': 469587013,
+            'width': 1995,
+            'window_class': 2,
+            'x': -16209,
+            'y': -13042,
             }
-        self.req_bin_0 = '\x01\xba\x00\x17' '\x6d\x03\x01\x24' \
-            '\x74\xdb\x41\x4e' '\xae\xdd\xf0\x2f' \
-            '\xc9\x0a\x96\xd0' '\x86\x93\x00\x00' \
-            '\x17\xba\x10\x13' '\x00\x00\x7f\xff' \
-            '\x5e\x67\x63\x43' '\x0c\x77\x07\x07' \
-            '\x76\xc4\x0c\xaa' '\x7f\x48\x9d\x8c' \
-            '\x00\x00\x00\x00' '\x03\x00\x00\x00' \
-            '\x02\x00\x00\x00' '\x56\xac\x9b\x9d' \
-            '\x21\x76\x49\x57' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x15\xf2\xee\x1c' \
-            '\x23\x97\xad\x71' '\x16\x7e\xec\x01' \
-            '\x55\xfd\xbc\xc5'
+        self.req_bin_0 = b'\x01\x97\x00\x17' b'\x1b\xfd\x54\x45' \
+            b'\x1d\xc8\xd5\x0c' b'\xc0\xaf\xcd\x0e' \
+            b'\x07\xcb\x90\xad' b'\x33\xe7\x00\x02' \
+            b'\x53\x30\x69\xc4' b'\x00\x00\x7f\xff' \
+            b'\x51\xd9\xbc\xce' b'\x0e\x41\x18\xbf' \
+            b'\x03\x34\x8d\x68' b'\x5e\xec\x20\x7d' \
+            b'\x03\x00\x00\x00' b'\x02\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x11\xdd\x60\xf4' \
+            b'\x5e\x45\xb0\x54' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x4b\x96\x42\x34' \
+            b'\x36\x02\x88\xcc' b'\x04\x12\x74\x79' \
+            b'\x03\xd1\x65\x37'
 
 
     def testPackRequest0(self):
         bin = request.CreateWindow._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CreateWindow._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestChangeWindowAttributes(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1813552124,
-            'attrs': {'backing_pixel': 59516078, 'cursor': 1682969315, 'background_pixmap': 370313360, 'border_pixmap': 1158771722, 'backing_planes': 1432315664, 'win_gravity': 3, 'backing_store': 1, 'event_mask': 1054128649, 'save_under': 0, 'background_pixel': 1953340842, 'colormap': 1462101672, 'border_pixel': 287436510, 'bit_gravity': 10, 'do_not_propagate_mask': 1283834625, 'override_redirect': 0},
+            'attrs': {'cursor': 596789700, 'override_redirect': 0, 'bit_gravity': 6, 'event_mask': 1499308477, 'border_pixel': 473458160, 'background_pixel': 1170318459, 'save_under': 0, 'colormap': 730747963, 'do_not_propagate_mask': 907623048, 'backing_store': 1, 'win_gravity': 8, 'backing_planes': 1738304197, 'border_pixmap': 900977490, 'backing_pixel': 1866873765, 'background_pixmap': 1506149446},
+            'window': 333955224,
             }
-        self.req_bin_0 = '\x02\x00\x00\x12' '\x6c\x18\x9b\xfc' \
-            '\x00\x00\x7f\xff' '\x16\x12\x88\x90' \
-            '\x74\x6d\x9d\xaa' '\x45\x11\x74\x0a' \
-            '\x11\x21\xee\xde' '\x0a\x00\x00\x00' \
-            '\x03\x00\x00\x00' '\x01\x00\x00\x00' \
-            '\x55\x5f\x67\x10' '\x03\x8c\x24\xae' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x3e\xd4\xba\x09' '\x4c\x85\xc3\x01' \
-            '\x57\x25\xe6\xa8' '\x64\x50\x12\xe3'
+        self.req_bin_0 = b'\x02\x00\x00\x12' b'\x13\xe7\xc0\x98' \
+            b'\x00\x00\x7f\xff' b'\x59\xc6\x04\x46' \
+            b'\x45\xc1\xa4\x7b' b'\x35\xb3\xd3\x52' \
+            b'\x1c\x38\x65\xf0' b'\x06\x00\x00\x00' \
+            b'\x08\x00\x00\x00' b'\x01\x00\x00\x00' \
+            b'\x67\x9c\x6a\xc5' b'\x6f\x46\x3b\xa5' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x59\x5d\xa1\xbd' b'\x36\x19\x3a\x88' \
+            b'\x2b\x8e\x54\x3b' b'\x23\x92\x49\xc4'
 
 
     def testPackRequest0(self):
         bin = request.ChangeWindowAttributes._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangeWindowAttributes._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetWindowAttributes(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1931593850,
+            'window': 462448317,
             }
-        self.req_bin_0 = '\x03\x00\x00\x02' '\x73\x21\xc8\x7a'
+        self.req_bin_0 = b'\x03\x00\x00\x02' b'\x1b\x90\x66\xbd'
 
         self.reply_args_0 = {
-            'sequence_number': 60057,
-            'backing_pixel': 136561993,
-            'your_event_mask': 1332399119,
+            'all_event_masks': 1980679760,
+            'backing_bit_planes': 1820045833,
+            'backing_pixel': 738704824,
+            'backing_store': 214,
+            'bit_gravity': 152,
+            'colormap': 2089815718,
+            'do_not_propagate_mask': 5420,
             'map_is_installed': 0,
-            'visual': 687387929,
-            'backing_bit_planes': 990144409,
-            'backing_store': 147,
-            'win_class': 18284,
-            'map_state': 185,
-            'save_under': 0,
-            'all_event_masks': 270223628,
-            'colormap': 1161384334,
-            'win_gravity': 157,
-            'bit_gravity': 253,
-            'do_not_propagate_mask': 33787,
+            'map_state': 245,
             'override_redirect': 0,
+            'save_under': 1,
+            'sequence_number': 6954,
+            'visual': 199235720,
+            'win_class': 25154,
+            'win_gravity': 219,
+            'your_event_mask': 812961929,
             }
-        self.reply_bin_0 = '\x01\x93\xea\x99' '\x00\x00\x00\x03' \
-            '\x28\xf8\xb5\x19' '\x47\x6c\xfd\x9d' \
-            '\x3b\x04\x67\x99' '\x08\x23\xc5\x49' \
-            '\x00\x00\xb9\x00' '\x45\x39\x51\x8e' \
-            '\x10\x1b\x49\x0c' '\x4f\x6a\xcc\x0f' \
-            '\x83\xfb\x00\x00'
+        self.reply_bin_0 = b'\x01\xd6\x1b\x2a' b'\x00\x00\x00\x03' \
+            b'\x0b\xe0\x18\x88' b'\x62\x42\x98\xdb' \
+            b'\x6c\x7b\xb2\x09' b'\x2c\x07\xbd\xb8' \
+            b'\x01\x00\xf5\x00' b'\x7c\x90\x0e\xa6' \
+            b'\x76\x0e\xc6\x50' b'\x30\x74\xd0\x89' \
+            b'\x15\x2c\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GetWindowAttributes._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetWindowAttributes._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetWindowAttributes._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetWindowAttributes._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestDestroyWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1622184267,
+            'window': 1185563768,
             }
-        self.req_bin_0 = '\x04\x00\x00\x02' '\x60\xb0\x91\x4b'
+        self.req_bin_0 = b'\x04\x00\x00\x02' b'\x46\xaa\x44\x78'
 
 
     def testPackRequest0(self):
         bin = request.DestroyWindow._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.DestroyWindow._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestDestroySubWindows(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1000376476,
+            'window': 629661088,
             }
-        self.req_bin_0 = '\x05\x00\x00\x02' '\x3b\xa0\x88\x9c'
+        self.req_bin_0 = b'\x05\x00\x00\x02' b'\x25\x87\xdd\xa0'
 
 
     def testPackRequest0(self):
         bin = request.DestroySubWindows._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.DestroySubWindows._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestChangeSaveSet(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1577523459,
-            'mode': 0,
+            'mode': 1,
+            'window': 1239919839,
             }
-        self.req_bin_0 = '\x06\x00\x00\x02' '\x5e\x07\x19\x03'
+        self.req_bin_0 = b'\x06\x01\x00\x02' b'\x49\xe7\xac\xdf'
 
 
     def testPackRequest0(self):
         bin = request.ChangeSaveSet._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangeSaveSet._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestReparentWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'parent': 72188776,
-            'window': 1300734112,
-            'x': -5207,
-            'y': -22675,
+            'parent': 1513122040,
+            'window': 413002134,
+            'x': -30489,
+            'y': -31267,
             }
-        self.req_bin_0 = '\x07\x00\x00\x04' '\x4d\x87\xa0\xa0' \
-            '\x04\x4d\x83\x68' '\xeb\xa9\xa7\x6d'
+        self.req_bin_0 = b'\x07\x00\x00\x04' b'\x18\x9d\xe9\x96' \
+            b'\x5a\x30\x68\xf8' b'\x88\xe7\x85\xdd'
 
 
     def testPackRequest0(self):
         bin = request.ReparentWindow._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ReparentWindow._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestMapWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 61469476,
+            'window': 1420117708,
             }
-        self.req_bin_0 = '\x08\x00\x00\x02' '\x03\xa9\xf3\x24'
+        self.req_bin_0 = b'\x08\x00\x00\x02' b'\x54\xa5\x46\xcc'
 
 
     def testPackRequest0(self):
         bin = request.MapWindow._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.MapWindow._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestMapSubwindows(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 818738118,
+            'window': 489473351,
             }
-        self.req_bin_0 = '\x09\x00\x00\x02' '\x30\xcc\xf3\xc6'
+        self.req_bin_0 = b'\x09\x00\x00\x02' b'\x1d\x2c\xc5\x47'
 
 
     def testPackRequest0(self):
         bin = request.MapSubwindows._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.MapSubwindows._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestUnmapWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1923663468,
+            'window': 1660217157,
             }
-        self.req_bin_0 = '\x0a\x00\x00\x02' '\x72\xa8\xc6\x6c'
+        self.req_bin_0 = b'\x0a\x00\x00\x02' b'\x62\xf4\xe7\x45'
 
 
     def testPackRequest0(self):
         bin = request.UnmapWindow._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.UnmapWindow._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestUnmapSubwindows(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 999740194,
+            'window': 621521446,
             }
-        self.req_bin_0 = '\x0b\x00\x00\x02' '\x3b\x96\xd3\x22'
+        self.req_bin_0 = b'\x0b\x00\x00\x02' b'\x25\x0b\xaa\x26'
 
 
     def testPackRequest0(self):
         bin = request.UnmapSubwindows._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.UnmapSubwindows._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestConfigureWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 190634459,
-            'attrs': {'height': 57788, 'stack_mode': 2, 'border_width': -320, 'width': 53674, 'x': -2248, 'y': -29960, 'sibling': 1012823324},
+            'attrs': {'width': 39387, 'stack_mode': 2, 'height': 57679, 'sibling': 973756745, 'y': -17512, 'x': -27539, 'border_width': -14551},
+            'window': 349362548,
             }
-        self.req_bin_0 = '\x0c\x00\x00\x0a' '\x0b\x5c\xd9\xdb' \
-            '\x00\x7f\x00\x00' '\xf7\x38\x00\x00' \
-            '\x8a\xf8\x00\x00' '\xd1\xaa\x00\x00' \
-            '\xe1\xbc\x00\x00' '\xfe\xc0\x00\x00' \
-            '\x3c\x5e\x75\x1c' '\x02\x00\x00\x00'
+        self.req_bin_0 = b'\x0c\x00\x00\x0a' b'\x14\xd2\xd9\x74' \
+            b'\x00\x7f\x00\x00' b'\x94\x6d\x00\x00' \
+            b'\xbb\x98\x00\x00' b'\x99\xdb\x00\x00' \
+            b'\xe1\x4f\x00\x00' b'\xc7\x29\x00\x00' \
+            b'\x3a\x0a\x59\x49' b'\x02\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.ConfigureWindow._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ConfigureWindow._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCirculateWindow(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1712979067,
             'direction': 1,
+            'window': 763003561,
             }
-        self.req_bin_0 = '\x0d\x01\x00\x02' '\x66\x19\xfc\x7b'
+        self.req_bin_0 = b'\x0d\x01\x00\x02' b'\x2d\x7a\x82\xa9'
 
 
     def testPackRequest0(self):
         bin = request.CirculateWindow._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CirculateWindow._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetGeometry(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'drawable': 680179490,
+            'drawable': 449978455,
             }
-        self.req_bin_0 = '\x0e\x00\x00\x02' '\x28\x8a\xb7\x22'
+        self.req_bin_0 = b'\x0e\x00\x00\x02' b'\x1a\xd2\x20\x57'
 
         self.reply_args_0 = {
-            'height': 64954,
-            'sequence_number': 39469,
-            'root': 609586545,
-            'border_width': 496,
-            'x': -1253,
-            'y': -11180,
-            'depth': 204,
-            'width': 38433,
+            'border_width': 41869,
+            'depth': 196,
+            'height': 40176,
+            'root': 2011515940,
+            'sequence_number': 46250,
+            'width': 4935,
+            'x': -10370,
+            'y': -11534,
             }
-        self.reply_bin_0 = '\x01\xcc\x9a\x2d' '\x00\x00\x00\x00' \
-            '\x24\x55\x8d\x71' '\xfb\x1b\xd4\x54' \
-            '\x96\x21\xfd\xba' '\x01\xf0\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\xc4\xb4\xaa' b'\x00\x00\x00\x00' \
+            b'\x77\xe5\x4c\x24' b'\xd7\x7e\xd2\xf2' \
+            b'\x13\x47\x9c\xf0' b'\xa3\x8d\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GetGeometry._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetGeometry._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetGeometry._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetGeometry._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestQueryTree(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 2052496265,
+            'window': 367582976,
             }
-        self.req_bin_0 = '\x0f\x00\x00\x02' '\x7a\x56\x9b\x89'
+        self.req_bin_0 = b'\x0f\x00\x00\x02' b'\x15\xe8\xdf\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 33887,
-            'children': [1795767666, 1494491557, 748301378, 729512097, 1262057849, 64238195, 1088261715],
-            'root': 1856577120,
-            'parent': 2105827407,
+            'children': [1147122179, 1565853418, 525792997, 350969719, 992761785, 814939899, 579774073],
+            'parent': 1374454548,
+            'root': 1987327953,
+            'sequence_number': 65105,
             }
-        self.reply_bin_0 = '\x01\x00\x84\x5f' '\x00\x00\x00\x07' \
-            '\x6e\xa9\x1e\x60' '\x7d\x84\x60\x4f' \
-            '\x00\x07\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x6b\x09\x3d\x72' '\x59\x14\x21\xa5' \
-            '\x2c\x9a\x2c\x42' '\x2b\x7b\x78\xa1' \
-            '\x4b\x39\x79\x79' '\x03\xd4\x32\x73' \
-            '\x40\xdd\x8e\x53'
+        self.reply_bin_0 = b'\x01\x00\xfe\x51' b'\x00\x00\x00\x07' \
+            b'\x76\x74\x37\xd1' b'\x51\xec\x83\x14' \
+            b'\x00\x07\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x44\x5f\xb2\x03' b'\x5d\x55\x06\xea' \
+            b'\x1f\x56\xf6\xe5' b'\x14\xeb\x5f\x77' \
+            b'\x3b\x2c\x57\xb9' b'\x30\x92\xfe\xfb' \
+            b'\x22\x8e\xa6\x79'
 
 
     def testPackRequest0(self):
         bin = request.QueryTree._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.QueryTree._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.QueryTree._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.QueryTree._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestInternAtom(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'only_if_exists': 0,
             'name': 'fuzzy_prop',
+            'only_if_exists': 0,
             }
-        self.req_bin_0 = '\x10\x00\x00\x05' '\x00\x0a\x00\x00' \
-            '\x66\x75\x7a\x7a' '\x79\x5f\x70\x72' \
-            '\x6f\x70\x00\x00'
+        self.req_bin_0 = b'\x10\x00\x00\x05' b'\x00\x0a\x00\x00' \
+            b'\x66\x75\x7a\x7a' b'\x79\x5f\x70\x72' \
+            b'\x6f\x70\x00\x00'
 
         self.reply_args_0 = {
-            'atom': 48723297,
-            'sequence_number': 35223,
+            'atom': 696457407,
+            'sequence_number': 45122,
             }
-        self.reply_bin_0 = '\x01\x00\x89\x97' '\x00\x00\x00\x00' \
-            '\x02\xe7\x75\x61' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\xb0\x42' b'\x00\x00\x00\x00' \
+            b'\x29\x83\x18\xbf' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.InternAtom._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.InternAtom._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.InternAtom._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.InternAtom._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestGetAtomName(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'atom': 1022286544,
+            'atom': 1810076242,
             }
-        self.req_bin_0 = '\x11\x00\x00\x02' '\x3c\xee\xda\xd0'
+        self.req_bin_0 = b'\x11\x00\x00\x02' b'\x6b\xe3\x92\x52'
 
         self.reply_args_0 = {
-            'sequence_number': 22699,
             'name': 'WM_CLASS',
+            'sequence_number': 50608,
             }
-        self.reply_bin_0 = '\x01\x00\x58\xab' '\x00\x00\x00\x02' \
-            '\x00\x08\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x57\x4d\x5f\x43' '\x4c\x41\x53\x53'
+        self.reply_bin_0 = b'\x01\x00\xc5\xb0' b'\x00\x00\x00\x02' \
+            b'\x00\x08\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x57\x4d\x5f\x43' b'\x4c\x41\x53\x53'
 
 
     def testPackRequest0(self):
         bin = request.GetAtomName._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetAtomName._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetAtomName._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetAtomName._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestChangeProperty(EndianTest):
     def setUp(self):
         self.req_args_0 = {
+            'data': (8, b''),
             'mode': 0,
-            'data': (8, ''),
-            'property': 2085394193,
-            'window': 266197951,
-            'type': 1343008022,
+            'property': 1764873173,
+            'type': 69000273,
+            'window': 491942524,
             }
-        self.req_bin_0 = '\x12\x00\x00\x06' '\x0f\xdd\xdb\xbf' \
-            '\x7c\x4c\x97\x11' '\x50\x0c\xad\x16' \
-            '\x08\x00\x00\x00' '\x00\x00\x00\x00'
+        self.req_bin_0 = b'\x12\x00\x00\x06' b'\x1d\x52\x72\x7c' \
+            b'\x69\x31\xd3\xd5' b'\x04\x1c\xdc\x51' \
+            b'\x08\x00\x00\x00' b'\x00\x00\x00\x00'
 
         self.req_args_1 = {
-            'mode': 2,
-            'data': (8, 'foo'),
-            'property': 449719979,
-            'window': 1522118044,
-            'type': 121096013,
+            'data': (8, b'foo'),
+            'mode': 1,
+            'property': 575034703,
+            'type': 142204480,
+            'window': 861560365,
             }
-        self.req_bin_1 = '\x12\x02\x00\x07' '\x5a\xb9\xad\x9c' \
-            '\x1a\xce\x2e\xab' '\x07\x37\xc7\x4d' \
-            '\x08\x00\x00\x00' '\x00\x00\x00\x03' \
-            '\x66\x6f\x6f\x00'
+        self.req_bin_1 = b'\x12\x01\x00\x07' b'\x33\x5a\x5e\x2d' \
+            b'\x22\x46\x55\x4f' b'\x08\x79\xde\x40' \
+            b'\x08\x00\x00\x00' b'\x00\x00\x00\x03' \
+            b'\x66\x6f\x6f\x00'
 
         self.req_args_2 = {
-            'mode': 2,
-            'data': (8, 'zoom'),
-            'property': 1009841498,
-            'window': 286324270,
-            'type': 1547457396,
+            'data': (8, b'zoom'),
+            'mode': 0,
+            'property': 2024948722,
+            'type': 1218075423,
+            'window': 1961010416,
             }
-        self.req_bin_2 = '\x12\x02\x00\x07' '\x11\x10\xf6\x2e' \
-            '\x3c\x30\xf5\x5a' '\x5c\x3c\x53\x74' \
-            '\x08\x00\x00\x00' '\x00\x00\x00\x04' \
-            '\x7a\x6f\x6f\x6d'
+        self.req_bin_2 = b'\x12\x00\x00\x07' b'\x74\xe2\xa4\xf0' \
+            b'\x78\xb2\x43\xf2' b'\x48\x9a\x5b\x1f' \
+            b'\x08\x00\x00\x00' b'\x00\x00\x00\x04' \
+            b'\x7a\x6f\x6f\x6d'
 
         self.req_args_3 = {
-            'mode': 0,
             'data': (16, []),
-            'property': 426983104,
-            'window': 1964921608,
-            'type': 692879036,
+            'mode': 2,
+            'property': 456677559,
+            'type': 1407609354,
+            'window': 675831147,
             }
-        self.req_bin_3 = '\x12\x00\x00\x06' '\x75\x1e\x53\x08' \
-            '\x19\x73\x3e\xc0' '\x29\x4c\x7e\xbc' \
-            '\x10\x00\x00\x00' '\x00\x00\x00\x00'
+        self.req_bin_3 = b'\x12\x02\x00\x06' b'\x28\x48\x5d\x6b' \
+            b'\x1b\x38\x58\xb7' b'\x53\xe6\x6a\x0a' \
+            b'\x10\x00\x00\x00' b'\x00\x00\x00\x00'
 
         self.req_args_4 = {
-            'mode': 0,
             'data': (16, [1, 2, 3]),
-            'property': 801006756,
-            'window': 560040176,
-            'type': 2030208993,
+            'mode': 1,
+            'property': 1899908134,
+            'type': 1964041522,
+            'window': 849678568,
             }
-        self.req_bin_4 = '\x12\x00\x00\x08' '\x21\x61\x88\xf0' \
-            '\x2f\xbe\x64\xa4' '\x79\x02\x87\xe1' \
-            '\x10\x00\x00\x00' '\x00\x00\x00\x03' \
-            '\x00\x01\x00\x02' '\x00\x03\x00\x00'
+        self.req_bin_4 = b'\x12\x01\x00\x08' b'\x32\xa5\x10\xe8' \
+            b'\x71\x3e\x4c\x26' b'\x75\x10\xe5\x32' \
+            b'\x10\x00\x00\x00' b'\x00\x00\x00\x03' \
+            b'\x00\x01\x00\x02' b'\x00\x03\x00\x00'
 
         self.req_args_5 = {
-            'mode': 0,
             'data': (16, [1, 2, 3, 4]),
-            'property': 1401687842,
-            'window': 2016421454,
-            'type': 434059096,
+            'mode': 2,
+            'property': 306879937,
+            'type': 568891375,
+            'window': 985442388,
             }
-        self.req_bin_5 = '\x12\x00\x00\x08' '\x78\x30\x26\x4e' \
-            '\x53\x8c\x0f\x22' '\x19\xdf\x37\x58' \
-            '\x10\x00\x00\x00' '\x00\x00\x00\x04' \
-            '\x00\x01\x00\x02' '\x00\x03\x00\x04'
+        self.req_bin_5 = b'\x12\x02\x00\x08' b'\x3a\xbc\xa8\x54' \
+            b'\x12\x4a\x9d\xc1' b'\x21\xe8\x97\xef' \
+            b'\x10\x00\x00\x00' b'\x00\x00\x00\x04' \
+            b'\x00\x01\x00\x02' b'\x00\x03\x00\x04'
 
         self.req_args_6 = {
-            'mode': 2,
             'data': (32, []),
-            'property': 1008934075,
-            'window': 461926013,
-            'type': 613217208,
+            'mode': 0,
+            'property': 1599917196,
+            'type': 1205594429,
+            'window': 529694076,
             }
-        self.req_bin_6 = '\x12\x02\x00\x06' '\x1b\x88\x6e\x7d' \
-            '\x3c\x23\x1c\xbb' '\x24\x8c\xf3\xb8' \
-            '\x20\x00\x00\x00' '\x00\x00\x00\x00'
+        self.req_bin_6 = b'\x12\x00\x00\x06' b'\x1f\x92\x7d\x7c' \
+            b'\x5f\x5c\xcc\x8c' b'\x47\xdb\xe9\x3d' \
+            b'\x20\x00\x00\x00' b'\x00\x00\x00\x00'
 
         self.req_args_7 = {
-            'mode': 1,
             'data': (32, [1, 2, 3]),
-            'property': 1472503640,
-            'window': 367636986,
-            'type': 1085552939,
+            'mode': 2,
+            'property': 1604265475,
+            'type': 1255454396,
+            'window': 564298846,
             }
-        self.req_bin_7 = '\x12\x01\x00\x09' '\x15\xe9\xb1\xfa' \
-            '\x57\xc4\x9f\x58' '\x40\xb4\x39\x2b' \
-            '\x20\x00\x00\x00' '\x00\x00\x00\x03' \
-            '\x00\x00\x00\x01' '\x00\x00\x00\x02' \
-            '\x00\x00\x00\x03'
+        self.req_bin_7 = b'\x12\x02\x00\x09' b'\x21\xa2\x84\x5e' \
+            b'\x5f\x9f\x26\x03' b'\x4a\xd4\xb6\xbc' \
+            b'\x20\x00\x00\x00' b'\x00\x00\x00\x03' \
+            b'\x00\x00\x00\x01' b'\x00\x00\x00\x02' \
+            b'\x00\x00\x00\x03'
 
 
     def testPackRequest0(self):
         bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangeProperty._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackRequest1(self):
         bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_1)
-        try:
-            assert bin == self.req_bin_1
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_1)
 
     def testUnpackRequest1(self):
         args, remain = request.ChangeProperty._request.parse_binary(self.req_bin_1, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_1
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_1)
 
     def testPackRequest2(self):
         bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_2)
-        try:
-            assert bin == self.req_bin_2
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_2)
 
     def testUnpackRequest2(self):
         args, remain = request.ChangeProperty._request.parse_binary(self.req_bin_2, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_2
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_2)
 
     def testPackRequest3(self):
         bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_3)
-        try:
-            assert bin == self.req_bin_3
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_3)
 
     def testUnpackRequest3(self):
         args, remain = request.ChangeProperty._request.parse_binary(self.req_bin_3, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_3
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_3)
 
     def testPackRequest4(self):
         bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_4)
-        try:
-            assert bin == self.req_bin_4
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_4)
 
     def testUnpackRequest4(self):
         args, remain = request.ChangeProperty._request.parse_binary(self.req_bin_4, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_4
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_4)
 
     def testPackRequest5(self):
         bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_5)
-        try:
-            assert bin == self.req_bin_5
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_5)
 
     def testUnpackRequest5(self):
         args, remain = request.ChangeProperty._request.parse_binary(self.req_bin_5, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_5
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_5)
 
     def testPackRequest6(self):
         bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_6)
-        try:
-            assert bin == self.req_bin_6
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_6)
 
     def testUnpackRequest6(self):
         args, remain = request.ChangeProperty._request.parse_binary(self.req_bin_6, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_6
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_6)
 
     def testPackRequest7(self):
         bin = request.ChangeProperty._request.to_binary(*(), **self.req_args_7)
-        try:
-            assert bin == self.req_bin_7
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_7)
 
     def testUnpackRequest7(self):
         args, remain = request.ChangeProperty._request.parse_binary(self.req_bin_7, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_7
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_7)
 
 
 class TestDeleteProperty(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'property': 506897017,
-            'window': 381870530,
+            'property': 1928125498,
+            'window': 920120163,
             }
-        self.req_bin_0 = '\x13\x00\x00\x03' '\x16\xc2\xe1\xc2' \
-            '\x1e\x36\xa2\x79'
+        self.req_bin_0 = b'\x13\x00\x00\x03' b'\x36\xd7\xeb\x63' \
+            b'\x72\xec\xdc\x3a'
 
 
     def testPackRequest0(self):
         bin = request.DeleteProperty._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.DeleteProperty._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetProperty(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'delete': 0,
-            'long_offset': 1563462862,
-            'type': 1556454304,
-            'property': 1007774483,
-            'window': 1477792536,
-            'long_length': 1346507413,
+            'delete': 1,
+            'long_length': 297130690,
+            'long_offset': 2142261240,
+            'property': 471053276,
+            'type': 2141806322,
+            'window': 777446987,
             }
-        self.req_bin_0 = '\x14\x00\x00\x06' '\x58\x15\x53\x18' \
-            '\x3c\x11\x6b\x13' '\x5c\xc5\x9b\xa0' \
-            '\x5d\x30\x8c\xce' '\x50\x42\x12\x95'
+        self.req_bin_0 = b'\x14\x01\x00\x06' b'\x2e\x56\xe6\x4b' \
+            b'\x1c\x13\xb3\xdc' b'\x7f\xa9\x5e\xf2' \
+            b'\x7f\xb0\x4f\xf8' b'\x11\xb5\xda\xc2'
 
         self.reply_args_0 = {
-            'value': (8, ''),
-            'sequence_number': 30606,
-            'property_type': 1392423916,
-            'bytes_after': 2046056935,
+            'bytes_after': 195292012,
+            'property_type': 1059882735,
+            'sequence_number': 33648,
+            'value': (8, b''),
             }
-        self.reply_bin_0 = '\x01\x08\x77\x8e' '\x00\x00\x00\x00' \
-            '\x52\xfe\xb3\xec' '\x79\xf4\x59\xe7' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x08\x83\x70' b'\x00\x00\x00\x00' \
+            b'\x3f\x2c\x86\xef' b'\x0b\xa3\xeb\x6c' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
         self.reply_args_1 = {
-            'value': (8, 'foo'),
-            'sequence_number': 44279,
-            'property_type': 186441230,
-            'bytes_after': 469299413,
+            'bytes_after': 1849269963,
+            'property_type': 101247178,
+            'sequence_number': 49786,
+            'value': (8, b'foo'),
             }
-        self.reply_bin_1 = '\x01\x08\xac\xf7' '\x00\x00\x00\x01' \
-            '\x0b\x1c\xde\x0e' '\x1b\xf8\xf0\xd5' \
-            '\x00\x00\x00\x03' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x66\x6f\x6f\x00'
+        self.reply_bin_1 = b'\x01\x08\xc2\x7a' b'\x00\x00\x00\x01' \
+            b'\x06\x08\xe8\xca' b'\x6e\x39\x9e\xcb' \
+            b'\x00\x00\x00\x03' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x66\x6f\x6f\x00'
 
         self.reply_args_2 = {
-            'value': (8, 'zoom'),
-            'sequence_number': 12674,
-            'property_type': 1802804296,
-            'bytes_after': 1968158856,
+            'bytes_after': 1347495650,
+            'property_type': 328289775,
+            'sequence_number': 7441,
+            'value': (8, b'zoom'),
             }
-        self.reply_bin_2 = '\x01\x08\x31\x82' '\x00\x00\x00\x01' \
-            '\x6b\x74\x9c\x48' '\x75\x4f\xb8\x88' \
-            '\x00\x00\x00\x04' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x7a\x6f\x6f\x6d'
+        self.reply_bin_2 = b'\x01\x08\x1d\x11' b'\x00\x00\x00\x01' \
+            b'\x13\x91\x4d\xef' b'\x50\x51\x26\xe2' \
+            b'\x00\x00\x00\x04' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x7a\x6f\x6f\x6d'
 
         self.reply_args_3 = {
+            'bytes_after': 1461387818,
+            'property_type': 1701043014,
+            'sequence_number': 10740,
             'value': (16, []),
-            'sequence_number': 25311,
-            'property_type': 536196393,
-            'bytes_after': 1874157309,
             }
-        self.reply_bin_3 = '\x01\x10\x62\xdf' '\x00\x00\x00\x00' \
-            '\x1f\xf5\xb5\x29' '\x6f\xb5\x5e\xfd' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_3 = b'\x01\x10\x29\xf4' b'\x00\x00\x00\x00' \
+            b'\x65\x63\xdb\x46' b'\x57\x1b\x02\x2a' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
         self.reply_args_4 = {
+            'bytes_after': 136490248,
+            'property_type': 1280844186,
+            'sequence_number': 27922,
             'value': (16, [1, 2, 3]),
-            'sequence_number': 22665,
-            'property_type': 1046879880,
-            'bytes_after': 1952710167,
             }
-        self.reply_bin_4 = '\x01\x10\x58\x89' '\x00\x00\x00\x02' \
-            '\x3e\x66\x1e\x88' '\x74\x63\xfe\x17' \
-            '\x00\x00\x00\x03' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x01\x00\x02' '\x00\x03\x00\x00'
+        self.reply_bin_4 = b'\x01\x10\x6d\x12' b'\x00\x00\x00\x02' \
+            b'\x4c\x58\x21\x9a' b'\x08\x22\xad\x08' \
+            b'\x00\x00\x00\x03' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x01\x00\x02' b'\x00\x03\x00\x00'
 
         self.reply_args_5 = {
+            'bytes_after': 1279726180,
+            'property_type': 819586705,
+            'sequence_number': 25472,
             'value': (16, [1, 2, 3, 4]),
-            'sequence_number': 19028,
-            'property_type': 1014173132,
-            'bytes_after': 1791090668,
             }
-        self.reply_bin_5 = '\x01\x10\x4a\x54' '\x00\x00\x00\x02' \
-            '\x3c\x73\x0d\xcc' '\x6a\xc1\xdf\xec' \
-            '\x00\x00\x00\x04' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x01\x00\x02' '\x00\x03\x00\x04'
+        self.reply_bin_5 = b'\x01\x10\x63\x80' b'\x00\x00\x00\x02' \
+            b'\x30\xd9\xe6\x91' b'\x4c\x47\x12\x64' \
+            b'\x00\x00\x00\x04' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x01\x00\x02' b'\x00\x03\x00\x04'
 
         self.reply_args_6 = {
+            'bytes_after': 539973238,
+            'property_type': 1136329940,
+            'sequence_number': 30930,
             'value': (32, []),
-            'sequence_number': 47226,
-            'property_type': 2053870497,
-            'bytes_after': 1727548898,
             }
-        self.reply_bin_6 = '\x01\x20\xb8\x7a' '\x00\x00\x00\x00' \
-            '\x7a\x6b\x93\xa1' '\x66\xf8\x4d\xe2' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_6 = b'\x01\x20\x78\xd2' b'\x00\x00\x00\x00' \
+            b'\x43\xbb\x04\xd4' b'\x20\x2f\x56\x76' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
         self.reply_args_7 = {
+            'bytes_after': 1848575862,
+            'property_type': 1188109101,
+            'sequence_number': 63896,
             'value': (32, [1, 2, 3]),
-            'sequence_number': 37094,
-            'property_type': 704363625,
-            'bytes_after': 1957409055,
             }
-        self.reply_bin_7 = '\x01\x20\x90\xe6' '\x00\x00\x00\x03' \
-            '\x29\xfb\xbc\x69' '\x74\xab\xb1\x1f' \
-            '\x00\x00\x00\x03' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x01' '\x00\x00\x00\x02' \
-            '\x00\x00\x00\x03'
+        self.reply_bin_7 = b'\x01\x20\xf9\x98' b'\x00\x00\x00\x03' \
+            b'\x46\xd1\x1b\x2d' b'\x6e\x2f\x07\x76' \
+            b'\x00\x00\x00\x03' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x01' b'\x00\x00\x00\x02' \
+            b'\x00\x00\x00\x03'
 
 
     def testPackRequest0(self):
         bin = request.GetProperty._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetProperty._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetProperty._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
     def testPackReply1(self):
         bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_1)
-        try:
-            assert bin == self.reply_bin_1
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_1)
 
     def testUnpackReply1(self):
         args, remain = request.GetProperty._reply.parse_binary(self.reply_bin_1, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_1
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_1)
 
     def testPackReply2(self):
         bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_2)
-        try:
-            assert bin == self.reply_bin_2
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_2)
 
     def testUnpackReply2(self):
         args, remain = request.GetProperty._reply.parse_binary(self.reply_bin_2, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_2
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_2)
 
     def testPackReply3(self):
         bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_3)
-        try:
-            assert bin == self.reply_bin_3
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_3)
 
     def testUnpackReply3(self):
         args, remain = request.GetProperty._reply.parse_binary(self.reply_bin_3, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_3
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_3)
 
     def testPackReply4(self):
         bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_4)
-        try:
-            assert bin == self.reply_bin_4
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_4)
 
     def testUnpackReply4(self):
         args, remain = request.GetProperty._reply.parse_binary(self.reply_bin_4, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_4
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_4)
 
     def testPackReply5(self):
         bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_5)
-        try:
-            assert bin == self.reply_bin_5
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_5)
 
     def testUnpackReply5(self):
         args, remain = request.GetProperty._reply.parse_binary(self.reply_bin_5, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_5
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_5)
 
     def testPackReply6(self):
         bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_6)
-        try:
-            assert bin == self.reply_bin_6
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_6)
 
     def testUnpackReply6(self):
         args, remain = request.GetProperty._reply.parse_binary(self.reply_bin_6, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_6
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_6)
 
     def testPackReply7(self):
         bin = request.GetProperty._reply.to_binary(*(), **self.reply_args_7)
-        try:
-            assert bin == self.reply_bin_7
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_7)
 
     def testUnpackReply7(self):
         args, remain = request.GetProperty._reply.parse_binary(self.reply_bin_7, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_7
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_7)
 
 
 class TestListProperties(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 91262675,
+            'window': 2023920407,
             }
-        self.req_bin_0 = '\x15\x00\x00\x02' '\x05\x70\x8e\xd3'
+        self.req_bin_0 = b'\x15\x00\x00\x02' b'\x78\xa2\x93\x17'
 
         self.reply_args_0 = {
-            'atoms': [580972634, 926488735, 714741529, 408777797, 679906858, 705092899, 2063243279, 893967755, 1591182471, 571137996, 1677110101, 1783836762, 1678219148, 1992402577, 871298793, 1182885899, 1155013854, 1822076326, 2117552706, 1972668469, 1660227078, 1523268962, 694042433],
-            'sequence_number': 42191,
+            'atoms': [24720840, 1460963027, 1547803868, 246063525, 1464027403, 1900134270, 1153200538, 1612563336, 573068260, 1650618737, 1376520521, 730586807, 239622004, 630352260, 933716813, 339706725, 974429777, 7034796, 2048369638, 1550746425, 1880945398, 1545568005, 565689201],
+            'sequence_number': 63949,
             }
-        self.reply_bin_0 = '\x01\x00\xa4\xcf' '\x00\x00\x00\x17' \
-            '\x00\x17\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x22\xa0\xf0\x5a' '\x37\x39\x18\x9f' \
-            '\x2a\x9a\x17\x19' '\x18\x5d\x74\x45' \
-            '\x28\x86\x8e\x2a' '\x2a\x06\xdd\x23' \
-            '\x7a\xfa\x98\x0f' '\x35\x48\xdd\x8b' \
-            '\x5e\xd7\x84\x87' '\x22\x0a\xdf\xcc' \
-            '\x63\xf6\xab\x55' '\x6a\x53\x30\x5a' \
-            '\x64\x07\x97\x8c' '\x76\xc1\xa6\x91' \
-            '\x33\xee\xf6\xe9' '\x46\x81\x68\x0b' \
-            '\x44\xd8\x1c\xde' '\x6c\x9a\xad\xa6' \
-            '\x7e\x37\x4a\x42' '\x75\x94\x88\x35' \
-            '\x62\xf5\x0e\x06' '\x5a\xcb\x3d\x62' \
-            '\x29\x5e\x3f\x41'
+        self.reply_bin_0 = b'\x01\x00\xf9\xcd' b'\x00\x00\x00\x17' \
+            b'\x00\x17\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x01\x79\x35\xc8' b'\x57\x14\x86\xd3' \
+            b'\x5c\x41\x9c\xdc' b'\x0e\xaa\xa1\xa5' \
+            b'\x57\x43\x49\x0b' b'\x71\x41\xbf\x7e' \
+            b'\x44\xbc\x71\x9a' b'\x60\x1d\xc3\x88' \
+            b'\x22\x28\x53\xe4' b'\x62\x62\x71\x71' \
+            b'\x52\x0c\x09\x49' b'\x2b\x8b\xde\xb7' \
+            b'\x0e\x48\x57\x74' b'\x25\x92\x69\x84' \
+            b'\x37\xa7\x63\x4d' b'\x14\x3f\x83\x65' \
+            b'\x3a\x14\x9e\x51' b'\x00\x6b\x57\xac' \
+            b'\x7a\x17\xa3\xe6' b'\x5c\x6e\x83\x39' \
+            b'\x70\x1c\xf2\xf6' b'\x5c\x1f\x7f\x05' \
+            b'\x21\xb7\xbb\x71'
 
 
     def testPackRequest0(self):
         bin = request.ListProperties._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ListProperties._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.ListProperties._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.ListProperties._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestSetSelectionOwner(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'selection': 2071258139,
-            'window': 1190911777,
-            'time': 1606660593,
+            'selection': 1636366903,
+            'time': 383717530,
+            'window': 1075066031,
             }
-        self.req_bin_0 = '\x16\x00\x00\x04' '\x46\xfb\xdf\x21' \
-            '\x7b\x74\xe4\x1b' '\x5f\xc3\xb1\xf1'
+        self.req_bin_0 = b'\x16\x00\x00\x04' b'\x40\x14\x34\xaf' \
+            b'\x61\x88\xfa\x37' b'\x16\xdf\x10\x9a'
 
 
     def testPackRequest0(self):
         bin = request.SetSelectionOwner._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetSelectionOwner._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetSelectionOwner(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'selection': 819576555,
+            'selection': 1090303630,
             }
-        self.req_bin_0 = '\x17\x00\x00\x02' '\x30\xd9\xbe\xeb'
+        self.req_bin_0 = b'\x17\x00\x00\x02' b'\x40\xfc\xb6\x8e'
 
         self.reply_args_0 = {
-            'sequence_number': 14152,
-            'owner': 1922331178,
+            'owner': 228581038,
+            'sequence_number': 60065,
             }
-        self.reply_bin_0 = '\x01\x00\x37\x48' '\x00\x00\x00\x00' \
-            '\x72\x94\x72\x2a' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\xea\xa1' b'\x00\x00\x00\x00' \
+            b'\x0d\x9f\xde\xae' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GetSelectionOwner._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetSelectionOwner._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetSelectionOwner._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetSelectionOwner._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestConvertSelection(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'property': 2137791927,
-            'time': 1594653142,
-            'target': 1972273672,
-            'selection': 125139929,
-            'requestor': 300355135,
+            'property': 1807536699,
+            'requestor': 1869489931,
+            'selection': 1342887479,
+            'target': 640970836,
+            'time': 1372199123,
             }
-        self.req_bin_0 = '\x18\x00\x00\x06' '\x11\xe7\x0e\x3f' \
-            '\x07\x75\x7b\xd9' '\x75\x8e\x82\x08' \
-            '\x7f\x6c\x1d\xb7' '\x5f\x0c\x79\xd6'
+        self.req_bin_0 = b'\x18\x00\x00\x06' b'\x6f\x6e\x27\x0b' \
+            b'\x50\x0a\xd6\x37' b'\x26\x34\x70\x54' \
+            b'\x6b\xbc\xd2\x3b' b'\x51\xca\x18\xd3'
 
 
     def testPackRequest0(self):
         bin = request.ConvertSelection._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ConvertSelection._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestSendEvent(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'event': Xlib.protocol.event.Expose(height = 64784, sequence_number = 0, type = 12, x = 52546, y = 56316, window = 1322187412, width = 16612, count = 14164),
-            'propagate': 1,
-            'destination': 1369243800,
-            'event_mask': 1594482936,
+            'destination': 1158373169,
+            'event': event.Expose(count=50227, height=24760, sequence_number=0, type=12, width=10272, window=1090263274, x=40165, y=13291),
+            'event_mask': 2047690655,
+            'propagate': 0,
             }
-        self.req_bin_0 = '\x19\x01\x00\x0b' '\x51\x9d\x00\x98' \
-            '\x5f\x09\xe0\xf8' '\x0c\x00\x00\x00' \
-            '\x4e\xce\xfa\x94' '\xcd\x42\xdb\xfc' \
-            '\x40\xe4\xfd\x10' '\x37\x54\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00'
+        self.req_bin_0 = b'\x19\x00\x00\x0b' b'\x45\x0b\x5f\x31' \
+            b'\x7a\x0d\x47\x9f' b'\x0c\x00\x00\x00' \
+            b'\x40\xfc\x18\xea' b'\x9c\xe5\x33\xeb' \
+            b'\x28\x20\x60\xb8' b'\xc4\x33\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.SendEvent._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SendEvent._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGrabPointer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'owner_events': 1,
-            'grab_window': 2104857020,
-            'confine_to': 1988278615,
-            'event_mask': 2075,
-            'pointer_mode': 0,
-            'time': 1316427724,
-            'keyboard_mode': 1,
-            'cursor': 17101598,
+            'confine_to': 240299645,
+            'cursor': 1995289624,
+            'event_mask': 21499,
+            'grab_window': 1286289242,
+            'keyboard_mode': 0,
+            'owner_events': 0,
+            'pointer_mode': 1,
+            'time': 779560794,
             }
-        self.req_bin_0 = '\x1a\x01\x00\x06' '\x7d\x75\x91\xbc' \
-            '\x08\x1b\x00\x01' '\x76\x82\xb9\x57' \
-            '\x01\x04\xf3\x1e' '\x4e\x77\x17\xcc'
+        self.req_bin_0 = b'\x1a\x00\x00\x06' b'\x4c\xab\x37\x5a' \
+            b'\x53\xfb\x01\x00' b'\x0e\x52\xae\x7d' \
+            b'\x76\xed\xb4\x18' b'\x2e\x77\x27\x5a'
 
         self.reply_args_0 = {
-            'sequence_number': 47539,
-            'status': 149,
+            'sequence_number': 15948,
+            'status': 206,
             }
-        self.reply_bin_0 = '\x01\x95\xb9\xb3' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\xce\x3e\x4c' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GrabPointer._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GrabPointer._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GrabPointer._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GrabPointer._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestUngrabPointer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'time': 209008422,
+            'time': 124458893,
             }
-        self.req_bin_0 = '\x1b\x00\x00\x02' '\x0c\x75\x37\x26'
+        self.req_bin_0 = b'\x1b\x00\x00\x02' b'\x07\x6b\x17\x8d'
 
 
     def testPackRequest0(self):
         bin = request.UngrabPointer._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.UngrabPointer._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGrabButton(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'owner_events': 1,
-            'grab_window': 526402184,
-            'confine_to': 1843948635,
-            'event_mask': 16279,
-            'pointer_mode': 1,
-            'modifiers': 15589,
-            'button': 208,
-            'keyboard_mode': 1,
-            'cursor': 1070323643,
+            'button': 145,
+            'confine_to': 1571825127,
+            'cursor': 1043722096,
+            'event_mask': 37438,
+            'grab_window': 1885576796,
+            'keyboard_mode': 0,
+            'modifiers': 64349,
+            'owner_events': 0,
+            'pointer_mode': 0,
             }
-        self.req_bin_0 = '\x1c\x01\x00\x06' '\x1f\x60\x42\x88' \
-            '\x3f\x97\x01\x01' '\x6d\xe8\x6c\x5b' \
-            '\x3f\xcb\xd7\xbb' '\xd0\x00\x3c\xe5'
+        self.req_bin_0 = b'\x1c\x00\x00\x06' b'\x70\x63\x9e\x5c' \
+            b'\x92\x3e\x00\x00' b'\x5d\xb0\x25\xe7' \
+            b'\x3e\x35\xef\x70' b'\x91\x00\xfb\x5d'
 
 
     def testPackRequest0(self):
         bin = request.GrabButton._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GrabButton._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestUngrabButton(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'grab_window': 795414150,
-            'button': 240,
-            'modifiers': 51717,
+            'button': 160,
+            'grab_window': 275784110,
+            'modifiers': 43493,
             }
-        self.req_bin_0 = '\x1d\xf0\x00\x03' '\x2f\x69\x0e\x86' \
-            '\xca\x05\x00\x00'
+        self.req_bin_0 = b'\x1d\xa0\x00\x03' b'\x10\x70\x21\xae' \
+            b'\xa9\xe5\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.UngrabButton._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.UngrabButton._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestChangeActivePointerGrab(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'time': 891337572,
-            'event_mask': 23423,
-            'cursor': 1696594928,
+            'cursor': 1020726671,
+            'event_mask': 36287,
+            'time': 2033407590,
             }
-        self.req_bin_0 = '\x1e\x00\x00\x04' '\x65\x1f\xfb\xf0' \
-            '\x35\x20\xbb\x64' '\x5b\x7f\x00\x00'
+        self.req_bin_0 = b'\x1e\x00\x00\x04' b'\x3c\xd7\x0d\x8f' \
+            b'\x79\x33\x56\x66' b'\x8d\xbf\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.ChangeActivePointerGrab._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangeActivePointerGrab._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGrabKeyboard(EndianTest):
     def setUp(self):
         self.req_args_0 = {
+            'grab_window': 569270305,
+            'keyboard_mode': 0,
             'owner_events': 0,
-            'grab_window': 76132199,
-            'time': 1562605785,
             'pointer_mode': 1,
-            'keyboard_mode': 1,
+            'time': 1133236353,
             }
-        self.req_bin_0 = '\x1f\x00\x00\x04' '\x04\x89\xaf\x67' \
-            '\x5d\x23\x78\xd9' '\x01\x01\x00\x00'
+        self.req_bin_0 = b'\x1f\x00\x00\x04' b'\x21\xee\x60\x21' \
+            b'\x43\x8b\xd0\x81' b'\x01\x00\x00\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 9648,
-            'status': 129,
+            'sequence_number': 46979,
+            'status': 179,
             }
-        self.reply_bin_0 = '\x01\x81\x25\xb0' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\xb3\xb7\x83' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GrabKeyboard._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GrabKeyboard._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GrabKeyboard._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GrabKeyboard._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestUngrabKeyboard(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'time': 1352311886,
+            'time': 669471181,
             }
-        self.req_bin_0 = '\x20\x00\x00\x02' '\x50\x9a\xa4\x4e'
+        self.req_bin_0 = b'\x20\x00\x00\x02' b'\x27\xe7\x51\xcd'
 
 
     def testPackRequest0(self):
         bin = request.UngrabKeyboard._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.UngrabKeyboard._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGrabKey(EndianTest):
     def setUp(self):
         self.req_args_0 = {
+            'grab_window': 2137132511,
+            'key': 223,
+            'keyboard_mode': 1,
+            'modifiers': 44275,
             'owner_events': 1,
-            'grab_window': 1467490800,
-            'pointer_mode': 0,
-            'keyboard_mode': 0,
-            'modifiers': 28819,
-            'key': 193,
+            'pointer_mode': 1,
             }
-        self.req_bin_0 = '\x21\x01\x00\x04' '\x57\x78\x21\xf0' \
-            '\x70\x93\xc1\x00' '\x00\x00\x00\x00'
+        self.req_bin_0 = b'\x21\x01\x00\x04' b'\x7f\x62\x0d\xdf' \
+            b'\xac\xf3\xdf\x01' b'\x01\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GrabKey._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GrabKey._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestUngrabKey(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'grab_window': 769929659,
-            'key': 215,
-            'modifiers': 60588,
+            'grab_window': 532438798,
+            'key': 158,
+            'modifiers': 14981,
             }
-        self.req_bin_0 = '\x22\xd7\x00\x03' '\x2d\xe4\x31\xbb' \
-            '\xec\xac\x00\x00'
+        self.req_bin_0 = b'\x22\x9e\x00\x03' b'\x1f\xbc\x5f\x0e' \
+            b'\x3a\x85\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.UngrabKey._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.UngrabKey._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestAllowEvents(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'time': 342147129,
             'mode': 1,
+            'time': 726098765,
             }
-        self.req_bin_0 = '\x23\x01\x00\x02' '\x14\x64\xc0\x39'
+        self.req_bin_0 = b'\x23\x01\x00\x02' b'\x2b\x47\x63\x4d'
 
 
     def testPackRequest0(self):
         bin = request.AllowEvents._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.AllowEvents._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGrabServer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x24\x00\x00\x01'
+        self.req_bin_0 = b'\x24\x00\x00\x01'
 
 
     def testPackRequest0(self):
         bin = request.GrabServer._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GrabServer._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestUngrabServer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x25\x00\x00\x01'
+        self.req_bin_0 = b'\x25\x00\x00\x01'
 
 
     def testPackRequest0(self):
         bin = request.UngrabServer._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.UngrabServer._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestQueryPointer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 561336799,
+            'window': 45236268,
             }
-        self.req_bin_0 = '\x26\x00\x00\x02' '\x21\x75\x51\xdf'
+        self.req_bin_0 = b'\x26\x00\x00\x02' b'\x02\xb2\x40\x2c'
 
         self.reply_args_0 = {
-            'win_y': -25733,
+            'child': 15507755,
+            'mask': 15259,
+            'root': 472978779,
+            'root_x': -30442,
+            'root_y': -9574,
             'same_screen': 0,
-            'sequence_number': 41448,
-            'root': 1599238998,
-            'root_x': -4185,
-            'root_y': -6112,
-            'mask': 35955,
-            'child': 1075058918,
-            'win_x': -18858,
+            'sequence_number': 38820,
+            'win_x': -12089,
+            'win_y': -30839,
             }
-        self.reply_bin_0 = '\x01\x00\xa1\xe8' '\x00\x00\x00\x00' \
-            '\x5f\x52\x73\x56' '\x40\x14\x18\xe6' \
-            '\xef\xa7\xe8\x20' '\xb6\x56\x9b\x7b' \
-            '\x8c\x73\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\x97\xa4' b'\x00\x00\x00\x00' \
+            b'\x1c\x31\x15\x5b' b'\x00\xec\xa1\x2b' \
+            b'\x89\x16\xda\x9a' b'\xd0\xc7\x87\x89' \
+            b'\x3b\x9b\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.QueryPointer._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.QueryPointer._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.QueryPointer._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.QueryPointer._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestGetMotionEvents(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 843681780,
-            'start': 1520150500,
-            'stop': 11115313,
+            'start': 1944440211,
+            'stop': 67524349,
+            'window': 144806627,
             }
-        self.req_bin_0 = '\x27\x00\x00\x04' '\x32\x49\x8f\xf4' \
-            '\x5a\x9b\xa7\xe4' '\x00\xa9\x9b\x31'
+        self.req_bin_0 = b'\x27\x00\x00\x04' b'\x08\xa1\x92\xe3' \
+            b'\x73\xe5\xcd\x93' b'\x04\x06\x56\xfd'
 
         self.reply_args_0 = {
-            'sequence_number': 52222,
-            'events': [{'time': 2107444516, 'x': -649, 'y': -11631}, {'time': 1827536960, 'x': -18061, 'y': -2301}, {'time': 554175146, 'x': -32111, 'y': -13522}, {'time': 608168588, 'x': -5963, 'y': -24618}, {'time': 590416221, 'x': -3325, 'y': -19656}],
+            'events': [{'y': -30447, 'x': -21941, 'time': 1846118496}, {'y': -23643, 'x': -24970, 'time': 1104207400}, {'y': -25748, 'x': -16862, 'time': 1436684371}, {'y': -9066, 'x': -28433, 'time': 1158061593}, {'y': -14057, 'x': -3855, 'time': 2009067067}],
+            'sequence_number': 38018,
             }
-        self.reply_bin_0 = '\x01\x00\xcb\xfe' '\x00\x00\x00\x0a' \
-            '\x00\x00\x00\x05' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x7d\x9d\x0d\x24' '\xfd\x77\xd2\x91' \
-            '\x6c\xee\x00\x40' '\xb9\x73\xf7\x03' \
-            '\x21\x08\x0a\xaa' '\x82\x91\xcb\x2e' \
-            '\x24\x3f\xea\x8c' '\xe8\xb5\x9f\xd6' \
-            '\x23\x31\x09\x5d' '\xf3\x03\xb3\x38'
+        self.reply_bin_0 = b'\x01\x00\x94\x82' b'\x00\x00\x00\x0a' \
+            b'\x00\x00\x00\x05' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x6e\x09\x88\x60' b'\xaa\x4b\x89\x11' \
+            b'\x41\xd0\xde\x28' b'\x9e\x76\xa3\xa5' \
+            b'\x55\xa2\x10\x53' b'\xbe\x22\x9b\x6c' \
+            b'\x45\x06\x9e\x19' b'\x90\xef\xdc\x96' \
+            b'\x77\xbf\xee\x3b' b'\xf0\xf1\xc9\x17'
 
 
     def testPackRequest0(self):
         bin = request.GetMotionEvents._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetMotionEvents._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetMotionEvents._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetMotionEvents._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestTranslateCoords(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'src_y': -27247,
-            'src_x': -25331,
-            'src_wid': 257619448,
-            'dst_wid': 1238981863,
+            'dst_wid': 521898132,
+            'src_wid': 1015118844,
+            'src_x': -7058,
+            'src_y': -17270,
             }
-        self.req_bin_0 = '\x28\x00\x00\x04' '\x0f\x5a\xf5\xf8' \
-            '\x49\xd9\x5c\xe7' '\x9d\x0d\x95\x91'
+        self.req_bin_0 = b'\x28\x00\x00\x04' b'\x3c\x81\x7b\xfc' \
+            b'\x1f\x1b\x88\x94' b'\xe4\x6e\xbc\x8a'
 
         self.reply_args_0 = {
-            'child': 2050350678,
+            'child': 202628650,
             'same_screen': 1,
-            'sequence_number': 38657,
-            'x': -18096,
-            'y': -5252,
+            'sequence_number': 12734,
+            'x': -29592,
+            'y': -11175,
             }
-        self.reply_bin_0 = '\x01\x01\x97\x01' '\x00\x00\x00\x00' \
-            '\x7a\x35\xde\x56' '\xb9\x50\xeb\x7c' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x01\x31\xbe' b'\x00\x00\x00\x00' \
+            b'\x0c\x13\xde\x2a' b'\x8c\x68\xd4\x59' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.TranslateCoords._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.TranslateCoords._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.TranslateCoords._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.TranslateCoords._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestWarpPointer(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'src_height': 56634,
-            'src_window': 1335081711,
-            'dst_window': 675547124,
-            'src_width': 21809,
-            'src_y': -26071,
-            'src_x': -27119,
-            'dst_x': -30516,
-            'dst_y': -24204,
+            'dst_window': 760913775,
+            'dst_x': -8878,
+            'dst_y': -30993,
+            'src_height': 56868,
+            'src_width': 30862,
+            'src_window': 925740905,
+            'src_x': -18889,
+            'src_y': -19298,
             }
-        self.req_bin_0 = '\x29\x00\x00\x06' '\x4f\x93\xba\xef' \
-            '\x28\x44\x07\xf4' '\x96\x11\x9a\x29' \
-            '\x55\x31\xdd\x3a' '\x88\xcc\xa1\x74'
+        self.req_bin_0 = b'\x29\x00\x00\x06' b'\x37\x2d\xaf\x69' \
+            b'\x2d\x5a\x9f\x6f' b'\xb6\x37\xb4\x9e' \
+            b'\x78\x8e\xde\x24' b'\xdd\x52\x86\xef'
 
 
     def testPackRequest0(self):
         bin = request.WarpPointer._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.WarpPointer._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestSetInputFocus(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'revert_to': 1,
-            'time': 1079702500,
-            'focus': 1026400247,
+            'focus': 1403350503,
+            'revert_to': 2,
+            'time': 2113544232,
             }
-        self.req_bin_0 = '\x2a\x01\x00\x03' '\x3d\x2d\x9f\xf7' \
-            '\x40\x5a\xf3\xe4'
+        self.req_bin_0 = b'\x2a\x02\x00\x03' b'\x53\xa5\x6d\xe7' \
+            b'\x7d\xfa\x20\x28'
 
 
     def testPackRequest0(self):
         bin = request.SetInputFocus._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetInputFocus._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetInputFocus(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x2b\x00\x00\x01'
+        self.req_bin_0 = b'\x2b\x00\x00\x01'
 
         self.reply_args_0 = {
-            'revert_to': 152,
-            'sequence_number': 16002,
-            'focus': 2024022965,
+            'focus': 864688157,
+            'revert_to': 153,
+            'sequence_number': 4228,
             }
-        self.reply_bin_0 = '\x01\x98\x3e\x82' '\x00\x00\x00\x00' \
-            '\x78\xa4\x23\xb5' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x99\x10\x84' b'\x00\x00\x00\x00' \
+            b'\x33\x8a\x18\x1d' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GetInputFocus._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetInputFocus._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetInputFocus._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetInputFocus._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestQueryKeymap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x2c\x00\x00\x01'
+        self.req_bin_0 = b'\x2c\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 16233,
-            'map': [186, 167, 191, 213, 241, 231, 234, 175, 154, 169, 132, 146, 215, 191, 196, 212, 158, 156, 177, 233, 220, 192, 130, 226, 181, 233, 238, 141, 129, 215, 245, 215],
+            'map': [214, 155, 191, 177, 176, 242, 163, 236, 174, 199, 246, 191, 147, 241, 153, 140, 131, 151, 188, 170, 232, 252, 251, 182, 230, 143, 170, 225, 128, 227, 195, 244],
+            'sequence_number': 18950,
             }
-        self.reply_bin_0 = '\x01\x00\x3f\x69' '\x00\x00\x00\x02' \
-            '\xba\xa7\xbf\xd5' '\xf1\xe7\xea\xaf' \
-            '\x9a\xa9\x84\x92' '\xd7\xbf\xc4\xd4' \
-            '\x9e\x9c\xb1\xe9' '\xdc\xc0\x82\xe2' \
-            '\xb5\xe9\xee\x8d' '\x81\xd7\xf5\xd7'
+        self.reply_bin_0 = b'\x01\x00\x4a\x06' b'\x00\x00\x00\x02' \
+            b'\xd6\x9b\xbf\xb1' b'\xb0\xf2\xa3\xec' \
+            b'\xae\xc7\xf6\xbf' b'\x93\xf1\x99\x8c' \
+            b'\x83\x97\xbc\xaa' b'\xe8\xfc\xfb\xb6' \
+            b'\xe6\x8f\xaa\xe1' b'\x80\xe3\xc3\xf4'
 
 
     def testPackRequest0(self):
         bin = request.QueryKeymap._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.QueryKeymap._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.QueryKeymap._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.QueryKeymap._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestOpenFont(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'fid': 1728036313,
+            'fid': 908467189,
             'name': 'foofont',
             }
-        self.req_bin_0 = '\x2d\x00\x00\x05' '\x66\xff\xbd\xd9' \
-            '\x00\x07\x00\x00' '\x66\x6f\x6f\x66' \
-            '\x6f\x6e\x74\x00'
+        self.req_bin_0 = b'\x2d\x00\x00\x05' b'\x36\x26\x1b\xf5' \
+            b'\x00\x07\x00\x00' b'\x66\x6f\x6f\x66' \
+            b'\x6f\x6e\x74\x00'
 
 
     def testPackRequest0(self):
         bin = request.OpenFont._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.OpenFont._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCloseFont(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'font': 1139770507,
+            'font': 1495984396,
             }
-        self.req_bin_0 = '\x2e\x00\x00\x02' '\x43\xef\x84\x8b'
+        self.req_bin_0 = b'\x2e\x00\x00\x02' b'\x59\x2a\xe9\x0c'
 
 
     def testPackRequest0(self):
         bin = request.CloseFont._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CloseFont._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestQueryFont(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'font': 1867659050,
+            'font': 2055889505,
             }
-        self.req_bin_0 = '\x2f\x00\x00\x02' '\x6f\x52\x37\x2a'
+        self.req_bin_0 = b'\x2f\x00\x00\x02' b'\x7a\x8a\x62\x61'
 
         self.reply_args_0 = {
-            'sequence_number': 8877,
-            'properties': [{'value': 2110348825, 'name': 1450586355}],
-            'min_byte1': 190,
-            'max_byte1': 168,
-            'char_infos': [{'descent': -331, 'ascent': -14454, 'character_width': -28521, 'left_side_bearing': -4521, 'right_side_bearing': -9875, 'attributes': 55191}, {'descent': -18739, 'ascent': -6278, 'character_width': -4532, 'left_side_bearing': -20397, 'right_side_bearing': -25187, 'attributes': 29476}, {'descent': -18381, 'ascent': -2378, 'character_width': -21855, 'left_side_bearing': -20068, 'right_side_bearing': -906, 'attributes': 34385}],
-            'max_char_or_byte2': 2516,
-            'default_char': 8994,
-            'min_char_or_byte2': 49360,
-            'draw_direction': 143,
-            'min_bounds': {'descent': -29813, 'ascent': -27033, 'character_width': -5286, 'left_side_bearing': -20740, 'right_side_bearing': -21698, 'attributes': 11392},
-            'all_chars_exist': 1,
-            'font_ascent': -15646,
-            'font_descent': -23067,
-            'max_bounds': {'descent': -24292, 'ascent': -26972, 'character_width': -19286, 'left_side_bearing': -16363, 'right_side_bearing': -3149, 'attributes': 35968},
+            'all_chars_exist': 0,
+            'char_infos': [{'descent': -16821, 'right_side_bearing': -14557, 'character_width': -11080, 'left_side_bearing': -7099, 'attributes': 10400, 'ascent': -9228}, {'descent': -30852, 'right_side_bearing': -23046, 'character_width': -25635, 'left_side_bearing': -26546, 'attributes': 38213, 'ascent': -1026}, {'descent': -22492, 'right_side_bearing': -15002, 'character_width': -30771, 'left_side_bearing': -8660, 'attributes': 4002, 'ascent': -8259}],
+            'default_char': 39252,
+            'draw_direction': 145,
+            'font_ascent': -1914,
+            'font_descent': -3596,
+            'max_bounds': {'descent': -30143, 'right_side_bearing': -30905, 'character_width': -1286, 'left_side_bearing': -27610, 'attributes': 56049, 'ascent': -16128},
+            'max_byte1': 231,
+            'max_char_or_byte2': 4746,
+            'min_bounds': {'descent': -4827, 'right_side_bearing': -17145, 'character_width': -16291, 'left_side_bearing': -13626, 'attributes': 35063, 'ascent': -2642},
+            'min_byte1': 188,
+            'min_char_or_byte2': 12434,
+            'properties': [{'name': 1568813755, 'value': 2137719486}],
+            'sequence_number': 3542,
             }
-        self.reply_bin_0 = '\x01\x00\x22\xad' '\x00\x00\x00\x12' \
-            '\xae\xfc\xab\x3e' '\xeb\x5a\x96\x67' \
-            '\x8b\x8b\x2c\x80' '\x00\x00\x00\x00' \
-            '\xc0\x15\xf3\xb3' '\xb4\xaa\x96\xa4' \
-            '\xa1\x1c\x8c\x80' '\x00\x00\x00\x00' \
-            '\xc0\xd0\x09\xd4' '\x23\x22\x00\x01' \
-            '\x8f\xbe\xa8\x01' '\xc2\xe2\xa5\xe5' \
-            '\x00\x00\x00\x03' '\x56\x76\x30\xf3' \
-            '\x7d\xc9\x5e\x19' '\xee\x57\xd9\x6d' \
-            '\x90\x97\xc7\x8a' '\xfe\xb5\xd7\x97' \
-            '\xb0\x53\x9d\x9d' '\xee\x4c\xe7\x7a' \
-            '\xb6\xcd\x73\x24' '\xb1\x9c\xfc\x76' \
-            '\xaa\xa1\xf6\xb6' '\xb8\x33\x86\x51'
+        self.reply_bin_0 = b'\x01\x00\x0d\xd6' b'\x00\x00\x00\x12' \
+            b'\xca\xc6\xbd\x07' b'\xc0\x5d\xf5\xae' \
+            b'\xed\x25\x88\xf7' b'\x00\x00\x00\x00' \
+            b'\x94\x26\x87\x47' b'\xfa\xfa\xc1\x00' \
+            b'\x8a\x41\xda\xf1' b'\x00\x00\x00\x00' \
+            b'\x30\x92\x12\x8a' b'\x99\x54\x00\x01' \
+            b'\x91\xbc\xe7\x00' b'\xf8\x86\xf1\xf4' \
+            b'\x00\x00\x00\x03' b'\x5d\x82\x32\xbb' \
+            b'\x7f\x6b\x02\xbe' b'\xe4\x45\xc7\x23' \
+            b'\xd4\xb8\xdb\xf4' b'\xbe\x4b\x28\xa0' \
+            b'\x98\x4e\xa5\xfa' b'\x9b\xdd\xfb\xfe' \
+            b'\x87\x7c\x95\x45' b'\xde\x2c\xc5\x66' \
+            b'\x87\xcd\xdf\xbd' b'\xa8\x24\x0f\xa2'
 
 
     def testPackRequest0(self):
         bin = request.QueryFont._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.QueryFont._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.QueryFont._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.QueryFont._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestQueryTextExtents(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'font': 1562125736,
+            'font': 1223434172,
             'string': (102, 111, 111),
             }
-        self.req_bin_0 = '\x30\x01\x00\x04' '\x5d\x1c\x25\xa8' \
-            '\x00\x66\x00\x6f' '\x00\x6f\x00\x00'
+        self.req_bin_0 = b'\x30\x01\x00\x04' b'\x48\xec\x1f\xbc' \
+            b'\x00\x66\x00\x6f' b'\x00\x6f\x00\x00'
 
         self.reply_args_0 = {
-            'overall_width': -1378352414,
-            'draw_direction': 219,
-            'sequence_number': 6791,
-            'font_ascent': -16915,
-            'overall_ascent': -22910,
-            'overall_descent': -1795,
-            'overall_right': -530284310,
-            'overall_left': -1046976699,
-            'font_descent': -14179,
+            'draw_direction': 191,
+            'font_ascent': -13287,
+            'font_descent': -31466,
+            'overall_ascent': -12473,
+            'overall_descent': -30082,
+            'overall_left': -735785526,
+            'overall_right': -894056953,
+            'overall_width': -1247205006,
+            'sequence_number': 38196,
             }
-        self.reply_bin_0 = '\x01\xdb\x1a\x87' '\x00\x00\x00\x00' \
-            '\xbd\xed\xc8\x9d' '\xa6\x82\xf8\xfd' \
-            '\xad\xd8\x02\xe2' '\xc1\x98\x67\x45' \
-            '\xe0\x64\x80\xea' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\xbf\x95\x34' b'\x00\x00\x00\x00' \
+            b'\xcc\x19\x85\x16' b'\xcf\x47\x8a\x7e' \
+            b'\xb5\xa9\x29\x72' b'\xd4\x24\xcd\xca' \
+            b'\xca\xb5\xc6\x07' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.QueryTextExtents._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.QueryTextExtents._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.QueryTextExtents._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.QueryTextExtents._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestListFonts(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'max_names': 53961,
+            'max_names': 37298,
             'pattern': 'bhazr',
             }
-        self.req_bin_0 = '\x31\x00\x00\x04' '\xd2\xc9\x00\x05' \
-            '\x62\x68\x61\x7a' '\x72\x00\x00\x00'
+        self.req_bin_0 = b'\x31\x00\x00\x04' b'\x91\xb2\x00\x05' \
+            b'\x62\x68\x61\x7a' b'\x72\x00\x00\x00'
 
         self.reply_args_0 = {
             'fonts': ['fie', 'fuzzy', 'foozooom'],
-            'sequence_number': 38267,
+            'sequence_number': 34517,
             }
-        self.reply_bin_0 = '\x01\x00\x95\x7b' '\x00\x00\x00\x05' \
-            '\x00\x03\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x03\x66\x69\x65' '\x05\x66\x75\x7a' \
-            '\x7a\x79\x08\x66' '\x6f\x6f\x7a\x6f' \
-            '\x6f\x6f\x6d\x00'
+        self.reply_bin_0 = b'\x01\x00\x86\xd5' b'\x00\x00\x00\x05' \
+            b'\x00\x03\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x03\x66\x69\x65' b'\x05\x66\x75\x7a' \
+            b'\x7a\x79\x08\x66' b'\x6f\x6f\x7a\x6f' \
+            b'\x6f\x6f\x6d\x00'
 
 
     def testPackRequest0(self):
         bin = request.ListFonts._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ListFonts._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.ListFonts._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.ListFonts._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestListFontsWithInfo(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'max_names': 46571,
+            'max_names': 20989,
             'pattern': 'bhazr2',
             }
-        self.req_bin_0 = '\x32\x00\x00\x04' '\xb5\xeb\x00\x06' \
-            '\x62\x68\x61\x7a' '\x72\x32\x00\x00'
+        self.req_bin_0 = b'\x32\x00\x00\x04' b'\x51\xfd\x00\x06' \
+            b'\x62\x68\x61\x7a' b'\x72\x32\x00\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 20014,
-            'properties': [{'value': 2110430409, 'name': 435956656}],
-            'min_byte1': 214,
-            'max_byte1': 217,
-            'max_char_or_byte2': 2479,
-            'default_char': 17041,
-            'min_char_or_byte2': 26638,
-            'draw_direction': 192,
-            'replies_hint': 1985190562,
-            'min_bounds': {'descent': -27837, 'ascent': -14775, 'character_width': -13026, 'left_side_bearing': -29767, 'right_side_bearing': -31908, 'attributes': 2465},
             'all_chars_exist': 0,
+            'default_char': 61580,
+            'draw_direction': 146,
+            'font_ascent': -30368,
+            'font_descent': -15151,
+            'max_bounds': {'descent': -17786, 'right_side_bearing': -10759, 'character_width': -11617, 'left_side_bearing': -28480, 'attributes': 20976, 'ascent': -22938},
+            'max_byte1': 245,
+            'max_char_or_byte2': 49530,
+            'min_bounds': {'descent': -24065, 'right_side_bearing': -9300, 'character_width': -22473, 'left_side_bearing': -10823, 'attributes': 26194, 'ascent': -24947},
+            'min_byte1': 130,
+            'min_char_or_byte2': 61140,
             'name': 'fontfont',
-            'font_ascent': -30550,
-            'font_descent': -28978,
-            'max_bounds': {'descent': -20692, 'ascent': -6999, 'character_width': -15180, 'left_side_bearing': -7789, 'right_side_bearing': -5339, 'attributes': 1068},
+            'properties': [{'name': 2007331946, 'value': 560055601}],
+            'replies_hint': 457810933,
+            'sequence_number': 13642,
             }
-        self.reply_bin_0 = '\x01\x08\x4e\x2e' '\x00\x00\x00\x0b' \
-            '\x8b\xb9\x83\x5c' '\xcd\x1e\xc6\x49' \
-            '\x93\x43\x09\xa1' '\x00\x00\x00\x00' \
-            '\xe1\x93\xeb\x25' '\xc4\xb4\xe4\xa9' \
-            '\xaf\x2c\x04\x2c' '\x00\x00\x00\x00' \
-            '\x68\x0e\x09\xaf' '\x42\x91\x00\x01' \
-            '\xc0\xd6\xd9\x00' '\x88\xaa\x8e\xce' \
-            '\x76\x53\x9a\xa2' '\x19\xfc\x2b\xb0' \
-            '\x7d\xca\x9c\xc9' '\x66\x6f\x6e\x74' \
-            '\x66\x6f\x6e\x74'
+        self.reply_bin_0 = b'\x01\x08\x35\x4a' b'\x00\x00\x00\x0b' \
+            b'\xd5\xb9\xdb\xac' b'\xa8\x37\x9e\x8d' \
+            b'\xa1\xff\x66\x52' b'\x00\x00\x00\x00' \
+            b'\x90\xc0\xd5\xf9' b'\xd2\x9f\xa6\x66' \
+            b'\xba\x86\x51\xf0' b'\x00\x00\x00\x00' \
+            b'\xee\xd4\xc1\x7a' b'\xf0\x8c\x00\x01' \
+            b'\x92\x82\xf5\x00' b'\x89\x60\xc4\xd1' \
+            b'\x1b\x49\xa3\xf5' b'\x77\xa5\x74\x6a' \
+            b'\x21\x61\xc5\x31' b'\x66\x6f\x6e\x74' \
+            b'\x66\x6f\x6e\x74'
 
 
     def testPackRequest0(self):
         bin = request.ListFontsWithInfo._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ListFontsWithInfo._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.ListFontsWithInfo._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.ListFontsWithInfo._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestSetFontPath(EndianTest):
@@ -2547,1974 +1800,1416 @@ class TestSetFontPath(EndianTest):
         self.req_args_0 = {
             'path': ['foo', 'bar', 'gazonk'],
             }
-        self.req_bin_0 = '\x33\x00\x00\x06' '\x00\x03\x00\x00' \
-            '\x03\x66\x6f\x6f' '\x03\x62\x61\x72' \
-            '\x06\x67\x61\x7a' '\x6f\x6e\x6b\x00'
+        self.req_bin_0 = b'\x33\x00\x00\x06' b'\x00\x03\x00\x00' \
+            b'\x03\x66\x6f\x6f' b'\x03\x62\x61\x72' \
+            b'\x06\x67\x61\x7a' b'\x6f\x6e\x6b\x00'
 
         self.req_args_1 = {
             'path': [],
             }
-        self.req_bin_1 = '\x33\x00\x00\x02' '\x00\x00\x00\x00'
+        self.req_bin_1 = b'\x33\x00\x00\x02' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.SetFontPath._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetFontPath._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackRequest1(self):
         bin = request.SetFontPath._request.to_binary(*(), **self.req_args_1)
-        try:
-            assert bin == self.req_bin_1
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_1)
 
     def testUnpackRequest1(self):
         args, remain = request.SetFontPath._request.parse_binary(self.req_bin_1, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_1
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_1)
 
 
 class TestGetFontPath(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x34\x00\x00\x01'
+        self.req_bin_0 = b'\x34\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 21510,
             'paths': ['path1', 'path2232'],
+            'sequence_number': 33409,
             }
-        self.reply_bin_0 = '\x01\x00\x54\x06' '\x00\x00\x00\x04' \
-            '\x00\x02\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x05\x70\x61\x74' '\x68\x31\x08\x70' \
-            '\x61\x74\x68\x32' '\x32\x33\x32\x00'
+        self.reply_bin_0 = b'\x01\x00\x82\x81' b'\x00\x00\x00\x04' \
+            b'\x00\x02\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x05\x70\x61\x74' b'\x68\x31\x08\x70' \
+            b'\x61\x74\x68\x32' b'\x32\x33\x32\x00'
 
         self.reply_args_1 = {
-            'sequence_number': 62463,
             'paths': [],
+            'sequence_number': 17636,
             }
-        self.reply_bin_1 = '\x01\x00\xf3\xff' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_1 = b'\x01\x00\x44\xe4' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GetFontPath._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetFontPath._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetFontPath._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetFontPath._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
     def testPackReply1(self):
         bin = request.GetFontPath._reply.to_binary(*(), **self.reply_args_1)
-        try:
-            assert bin == self.reply_bin_1
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_1)
 
     def testUnpackReply1(self):
         args, remain = request.GetFontPath._reply.parse_binary(self.reply_bin_1, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_1
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_1)
 
 
 class TestCreatePixmap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'height': 65515,
-            'drawable': 162261202,
-            'pid': 926490960,
-            'depth': 145,
-            'width': 5641,
+            'depth': 161,
+            'drawable': 749556300,
+            'height': 4764,
+            'pid': 2004224799,
+            'width': 57984,
             }
-        self.req_bin_0 = '\x35\x91\x00\x04' '\x37\x39\x21\x50' \
-            '\x09\xab\xe8\xd2' '\x16\x09\xff\xeb'
+        self.req_bin_0 = b'\x35\xa1\x00\x04' b'\x77\x76\x0b\x1f' \
+            b'\x2c\xad\x52\x4c' b'\xe2\x80\x12\x9c'
 
 
     def testPackRequest0(self):
         bin = request.CreatePixmap._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CreatePixmap._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestFreePixmap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'pixmap': 213012851,
+            'pixmap': 1888284001,
             }
-        self.req_bin_0 = '\x36\x00\x00\x02' '\x0c\xb2\x51\x73'
+        self.req_bin_0 = b'\x36\x00\x00\x02' b'\x70\x8c\xed\x61'
 
 
     def testPackRequest0(self):
         bin = request.FreePixmap._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.FreePixmap._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCreateGC(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cid': 1060658282,
-            'drawable': 456876463,
-            'attrs': {'dashes': 183, 'fill_rule': 0, 'clip_mask': 620422624, 'plane_mask': 1797423280, 'line_style': 1, 'tile': 77620460, 'arc_mode': 0, 'clip_y_origin': -7419, 'dash_offset': 62459, 'line_width': 50494, 'background': 44336037, 'clip_x_origin': -32045, 'join_style': 2, 'graphics_exposures': 0, 'font': 95118395, 'tile_stipple_y_origin': -17619, 'stipple': 631657813, 'fill_style': 0, 'cap_style': 0, 'subwindow_mode': 0, 'tile_stipple_x_origin': -12494, 'foreground': 2096879871, 'function': 10},
+            'attrs': {'stipple': 1424681955, 'background': 338824284, 'subwindow_mode': 0, 'fill_style': 0, 'font': 568001783, 'graphics_exposures': 0, 'tile': 2000996399, 'tile_stipple_x_origin': -25980, 'dashes': 215, 'function': 7, 'foreground': 612071305, 'clip_x_origin': -22581, 'cap_style': 2, 'tile_stipple_y_origin': -23968, 'join_style': 2, 'line_width': 61484, 'dash_offset': 46571, 'clip_y_origin': -14920, 'arc_mode': 0, 'line_style': 2, 'plane_mask': 793618921, 'clip_mask': 605132525, 'fill_rule': 1},
+            'cid': 1476454377,
+            'drawable': 1362081172,
             }
-        self.req_bin_0 = '\x37\x00\x00\x1b' '\x3f\x38\x5c\x6a' \
-            '\x1b\x3b\x61\xaf' '\x00\x7f\xff\xff' \
-            '\x0a\x00\x00\x00' '\x6b\x22\x80\xb0' \
-            '\x7c\xfb\xd8\xff' '\x02\xa4\x83\xa5' \
-            '\xc5\x3e\x00\x00' '\x01\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x02\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x04\xa0\x64\xec' '\x25\xa6\x55\x55' \
-            '\xcf\x32\x00\x00' '\xbb\x2d\x00\x00' \
-            '\x05\xab\x64\x3b' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x82\xd3\x00\x00' \
-            '\xe3\x05\x00\x00' '\x24\xfa\xe5\xe0' \
-            '\xf3\xfb\x00\x00' '\xb7\x00\x00\x00' \
-            '\x00\x00\x00\x00'
+        self.req_bin_0 = b'\x37\x00\x00\x1b' b'\x58\x00\xe7\xe9' \
+            b'\x51\x2f\xb5\x94' b'\x00\x7f\xff\xff' \
+            b'\x07\x00\x00\x00' b'\x2f\x4d\xa9\xe9' \
+            b'\x24\x7b\x77\x89' b'\x14\x32\x0c\x5c' \
+            b'\xf0\x2c\x00\x00' b'\x02\x00\x00\x00' \
+            b'\x02\x00\x00\x00' b'\x02\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x01\x00\x00\x00' \
+            b'\x77\x44\xc8\x2f' b'\x54\xea\xeb\xe3' \
+            b'\x9a\x84\x00\x00' b'\xa2\x60\x00\x00' \
+            b'\x21\xdb\x04\xf7' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\xa7\xcb\x00\x00' \
+            b'\xc5\xb8\x00\x00' b'\x24\x11\x96\xed' \
+            b'\xb5\xeb\x00\x00' b'\xd7\x00\x00\x00' \
+            b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.CreateGC._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CreateGC._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestChangeGC(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'attrs': {'dashes': 249, 'fill_rule': 1, 'clip_mask': 496525721, 'plane_mask': 1467281901, 'line_style': 2, 'tile': 1713935374, 'arc_mode': 0, 'clip_y_origin': -24572, 'dash_offset': 46636, 'line_width': 61036, 'background': 1598773587, 'clip_x_origin': -19725, 'join_style': 1, 'graphics_exposures': 0, 'font': 429323306, 'tile_stipple_y_origin': -11767, 'stipple': 1365263649, 'fill_style': 2, 'cap_style': 1, 'subwindow_mode': 1, 'tile_stipple_x_origin': -23501, 'foreground': 1272378077, 'function': 11},
-            'gc': 518903558,
+            'attrs': {'stipple': 1656031462, 'background': 539344312, 'subwindow_mode': 1, 'fill_style': 0, 'font': 347060191, 'graphics_exposures': 1, 'tile': 716372747, 'tile_stipple_x_origin': -24195, 'dashes': 137, 'function': 8, 'foreground': 1049179696, 'clip_x_origin': -32135, 'cap_style': 3, 'tile_stipple_y_origin': -15601, 'join_style': 1, 'line_width': 36097, 'dash_offset': 42536, 'clip_y_origin': -25437, 'arc_mode': 1, 'line_style': 0, 'plane_mask': 1085423224, 'clip_mask': 161650480, 'fill_rule': 0},
+            'gc': 1250995304,
             }
-        self.req_bin_0 = '\x38\x00\x00\x1a' '\x1e\xed\xd7\x06' \
-            '\x00\x7f\xff\xff' '\x0b\x00\x00\x00' \
-            '\x57\x74\xf1\xed' '\x4b\xd6\xf2\xdd' \
-            '\x5f\x4b\x59\x53' '\xee\x6c\x00\x00' \
-            '\x02\x00\x00\x00' '\x01\x00\x00\x00' \
-            '\x01\x00\x00\x00' '\x02\x00\x00\x00' \
-            '\x01\x00\x00\x00' '\x66\x28\x94\x0e' \
-            '\x51\x60\x45\x21' '\xa4\x33\x00\x00' \
-            '\xd2\x09\x00\x00' '\x19\x96\xf4\x2a' \
-            '\x01\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\xb2\xf3\x00\x00' '\xa0\x04\x00\x00' \
-            '\x1d\x98\x61\x99' '\xb6\x2c\x00\x00' \
-            '\xf9\x00\x00\x00' '\x00\x00\x00\x00'
+        self.req_bin_0 = b'\x38\x00\x00\x1a' b'\x4a\x90\xac\x68' \
+            b'\x00\x7f\xff\xff' b'\x08\x00\x00\x00' \
+            b'\x40\xb2\x3e\x78' b'\x3e\x89\x36\x30' \
+            b'\x20\x25\xbd\xb8' b'\x8d\x01\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x03\x00\x00\x00' \
+            b'\x01\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x2a\xb2\xfb\x0b' \
+            b'\x62\xb5\x08\xe6' b'\xa1\x7d\x00\x00' \
+            b'\xc3\x0f\x00\x00' b'\x14\xaf\xb7\xdf' \
+            b'\x01\x00\x00\x00' b'\x01\x00\x00\x00' \
+            b'\x82\x79\x00\x00' b'\x9c\xa3\x00\x00' \
+            b'\x09\xa2\x97\x30' b'\xa6\x28\x00\x00' \
+            b'\x89\x00\x00\x00' b'\x01\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.ChangeGC._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangeGC._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCopyGC(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'mask': 1039948946,
-            'src_gc': 1958847367,
-            'dst_gc': 1311353896,
+            'dst_gc': 318094523,
+            'mask': 923025483,
+            'src_gc': 1186604145,
             }
-        self.req_bin_0 = '\x39\x00\x00\x04' '\x74\xc1\xa3\x87' \
-            '\x4e\x29\xac\x28' '\x3d\xfc\x5c\x92'
+        self.req_bin_0 = b'\x39\x00\x00\x04' b'\x46\xba\x24\x71' \
+            b'\x12\xf5\xbc\xbb' b'\x37\x04\x40\x4b'
 
 
     def testPackRequest0(self):
         bin = request.CopyGC._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CopyGC._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestSetDashes(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'dashes': [169, 241, 158, 238, 173, 159, 182, 139, 139],
-            'dash_offset': 51693,
-            'gc': 1639787502,
+            'dash_offset': 51381,
+            'dashes': [160, 138, 206, 221, 138, 219, 181, 191, 154],
+            'gc': 759584613,
             }
-        self.req_bin_0 = '\x3a\x00\x00\x06' '\x61\xbd\x2b\xee' \
-            '\xc9\xed\x00\x09' '\xa9\xf1\x9e\xee' \
-            '\xad\x9f\xb6\x8b' '\x8b\x00\x00\x00'
+        self.req_bin_0 = b'\x3a\x00\x00\x06' b'\x2d\x46\x57\x65' \
+            b'\xc8\xb5\x00\x09' b'\xa0\x8a\xce\xdd' \
+            b'\x8a\xdb\xb5\xbf' b'\x9a\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.SetDashes._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetDashes._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestSetClipRectangles(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'rectangles': [{'height': 59391, 'x': -15430, 'width': 46673, 'y': -3009}, {'height': 9883, 'x': -14046, 'width': 7782, 'y': -24857}],
-            'gc': 1105675380,
-            'x_origin': -22760,
-            'y_origin': -16557,
-            'ordering': 3,
+            'gc': 1856792138,
+            'ordering': 1,
+            'rectangles': [{'y': -3797, 'x': -14422, 'height': 26888, 'width': 57581}, {'y': -12431, 'x': -858, 'height': 10384, 'width': 49373}],
+            'x_origin': -27444,
+            'y_origin': -780,
             }
-        self.req_bin_0 = '\x3b\x03\x00\x07' '\x41\xe7\x44\x74' \
-            '\xa7\x18\xbf\x53' '\xc3\xba\xf4\x3f' \
-            '\xb6\x51\xe7\xff' '\xc9\x22\x9e\xe7' \
-            '\x1e\x66\x26\x9b'
+        self.req_bin_0 = b'\x3b\x01\x00\x07' b'\x6e\xac\x66\x4a' \
+            b'\x94\xcc\xfc\xf4' b'\xc7\xaa\xf1\x2b' \
+            b'\xe0\xed\x69\x08' b'\xfc\xa6\xcf\x71' \
+            b'\xc0\xdd\x28\x90'
 
         self.req_args_1 = {
+            'gc': 1892892424,
+            'ordering': 1,
             'rectangles': [],
-            'gc': 291514811,
-            'x_origin': -29867,
-            'y_origin': -10293,
-            'ordering': 0,
+            'x_origin': -19258,
+            'y_origin': -31956,
             }
-        self.req_bin_1 = '\x3b\x00\x00\x03' '\x11\x60\x29\xbb' \
-            '\x8b\x55\xd7\xcb'
+        self.req_bin_1 = b'\x3b\x01\x00\x03' b'\x70\xd3\x3f\x08' \
+            b'\xb4\xc6\x83\x2c'
 
 
     def testPackRequest0(self):
         bin = request.SetClipRectangles._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetClipRectangles._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackRequest1(self):
         bin = request.SetClipRectangles._request.to_binary(*(), **self.req_args_1)
-        try:
-            assert bin == self.req_bin_1
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_1)
 
     def testUnpackRequest1(self):
         args, remain = request.SetClipRectangles._request.parse_binary(self.req_bin_1, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_1
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_1)
 
 
 class TestFreeGC(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 371787524,
+            'gc': 385239625,
             }
-        self.req_bin_0 = '\x3c\x00\x00\x02' '\x16\x29\x07\x04'
+        self.req_bin_0 = b'\x3c\x00\x00\x02' b'\x16\xf6\x4a\x49'
 
 
     def testPackRequest0(self):
         bin = request.FreeGC._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.FreeGC._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestClearArea(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'exposures': 0,
-            'height': 53776,
-            'width': 63821,
-            'window': 1253992673,
-            'x': -1843,
-            'y': -32148,
+            'exposures': 1,
+            'height': 44159,
+            'width': 52831,
+            'window': 1680227732,
+            'x': -2268,
+            'y': -19277,
             }
-        self.req_bin_0 = '\x3d\x00\x00\x04' '\x4a\xbe\x68\xe1' \
-            '\xf8\xcd\x82\x6c' '\xf9\x4d\xd2\x10'
+        self.req_bin_0 = b'\x3d\x01\x00\x04' b'\x64\x26\x3d\x94' \
+            b'\xf7\x24\xb4\xb3' b'\xce\x5f\xac\x7f'
 
 
     def testPackRequest0(self):
         bin = request.ClearArea._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ClearArea._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCopyArea(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'src_drawable': 321720617,
-            'dst_drawable': 252019697,
-            'src_y': -8372,
-            'src_x': -25544,
-            'gc': 126071392,
-            'width': 49414,
-            'height': 61502,
-            'dst_x': -19068,
-            'dst_y': -4602,
+            'dst_drawable': 1578589574,
+            'dst_x': -27552,
+            'dst_y': -6968,
+            'gc': 1741136437,
+            'height': 7340,
+            'src_drawable': 1855628899,
+            'src_x': -24637,
+            'src_y': -24026,
+            'width': 46214,
             }
-        self.req_bin_0 = '\x3e\x00\x00\x07' '\x13\x2d\x11\x29' \
-            '\x0f\x05\x83\xf1' '\x07\x83\xb2\x60' \
-            '\x9c\x38\xdf\x4c' '\xb5\x84\xee\x06' \
-            '\xc1\x06\xf0\x3e'
+        self.req_bin_0 = b'\x3e\x00\x00\x07' b'\x6e\x9a\xa6\x63' \
+            b'\x5e\x17\x5d\x86' b'\x67\xc7\xa2\x35' \
+            b'\x9f\xc3\xa2\x26' b'\x94\x60\xe4\xc8' \
+            b'\xb4\x86\x1c\xac'
 
 
     def testPackRequest0(self):
         bin = request.CopyArea._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CopyArea._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCopyPlane(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'src_drawable': 1988650265,
-            'bit_plane': 2052065832,
-            'dst_drawable': 2120887972,
-            'src_y': -22401,
-            'src_x': -4542,
-            'gc': 1266180573,
-            'width': 41241,
-            'height': 33787,
-            'dst_x': -24940,
-            'dst_y': -13009,
+            'bit_plane': 988559210,
+            'dst_drawable': 1873029448,
+            'dst_x': -25480,
+            'dst_y': -26229,
+            'gc': 83225989,
+            'height': 60447,
+            'src_drawable': 821567629,
+            'src_x': -4634,
+            'src_y': -17345,
+            'width': 53771,
             }
-        self.req_bin_0 = '\x3f\x00\x00\x08' '\x76\x88\x65\x19' \
-            '\x7e\x6a\x2e\xa4' '\x4b\x78\x61\xdd' \
-            '\xee\x42\xa8\x7f' '\x9e\x94\xcd\x2f' \
-            '\xa1\x19\x83\xfb' '\x7a\x50\x0a\x28'
+        self.req_bin_0 = b'\x3f\x00\x00\x08' b'\x30\xf8\x20\x8d' \
+            b'\x6f\xa4\x29\x48' b'\x04\xf5\xed\x85' \
+            b'\xed\xe6\xbc\x3f' b'\x9c\x78\x99\x8b' \
+            b'\xd2\x0b\xec\x1f' b'\x3a\xec\x37\x6a'
 
 
     def testPackRequest0(self):
         bin = request.CopyPlane._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CopyPlane._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPolyPoint(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 206266633,
-            'points': [{'x': -22449, 'y': -16714}, {'x': -16465, 'y': -12850}, {'x': -19616, 'y': -13131}],
-            'drawable': 1008674,
-            'coord_mode': 1,
+            'coord_mode': 0,
+            'drawable': 50884525,
+            'gc': 1417476013,
+            'points': [{'y': -22768, 'x': -21311}, {'y': -6707, 'x': -5881}, {'y': -25311, 'x': -4217}],
             }
-        self.req_bin_0 = '\x40\x01\x00\x06' '\x00\x0f\x64\x22' \
-            '\x0c\x4b\x61\x09' '\xa8\x4f\xbe\xb6' \
-            '\xbf\xaf\xcd\xce' '\xb3\x60\xcc\xb5'
+        self.req_bin_0 = b'\x40\x00\x00\x06' b'\x03\x08\x6f\xad' \
+            b'\x54\x7c\xf7\xad' b'\xac\xc1\xa7\x10' \
+            b'\xe9\x07\xe5\xcd' b'\xef\x87\x9d\x21'
 
 
     def testPackRequest0(self):
         bin = request.PolyPoint._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolyPoint._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPolyLine(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 1355594189,
-            'points': [{'x': -11743, 'y': -18781}, {'x': -21373, 'y': -22722}, {'x': -17579, 'y': -13699}, {'x': -26545, 'y': -19353}, {'x': -11779, 'y': -26488}],
-            'drawable': 1668889192,
             'coord_mode': 1,
+            'drawable': 1459319574,
+            'gc': 2107068434,
+            'points': [{'y': -19712, 'x': -26440}, {'y': -23639, 'x': -22012}, {'y': -30494, 'x': -4445}, {'y': -7428, 'x': -1085}, {'y': -21262, 'x': -23622}],
             }
-        self.req_bin_0 = '\x41\x01\x00\x08' '\x63\x79\x3a\x68' \
-            '\x50\xcc\xb9\xcd' '\xd2\x21\xb6\xa3' \
-            '\xac\x83\xa7\x3e' '\xbb\x55\xca\x7d' \
-            '\x98\x4f\xb4\x67' '\xd1\xfd\x98\x88'
+        self.req_bin_0 = b'\x41\x01\x00\x08' b'\x56\xfb\x73\x16' \
+            b'\x7d\x97\x50\x12' b'\x98\xb8\xb3\x00' \
+            b'\xaa\x04\xa3\xa9' b'\xee\xa3\x88\xe2' \
+            b'\xfb\xc3\xe2\xfc' b'\xa3\xba\xac\xf2'
 
 
     def testPackRequest0(self):
         bin = request.PolyLine._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolyLine._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPolySegment(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'segments': [{'y1': -24252, 'y2': -22523, 'x1': -12610, 'x2': -25770}],
-            'drawable': 146511635,
-            'gc': 53385255,
+            'drawable': 59337240,
+            'gc': 247760051,
+            'segments': [{'y1': -15198, 'x2': -21917, 'x1': -5123, 'y2': -1992}],
             }
-        self.req_bin_0 = '\x42\x00\x00\x05' '\x08\xbb\x97\x13' \
-            '\x03\x2e\x98\x27' '\xce\xbe\xa1\x44' \
-            '\x9b\x56\xa8\x05'
+        self.req_bin_0 = b'\x42\x00\x00\x05' b'\x03\x89\x6a\x18' \
+            b'\x0e\xc4\x84\xb3' b'\xeb\xfd\xc4\xa2' \
+            b'\xaa\x63\xf8\x38'
 
 
     def testPackRequest0(self):
         bin = request.PolySegment._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolySegment._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPolyRectangle(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'drawable': 1927481661,
-            'gc': 410140275,
-            'rectangles': [{'height': 63567, 'x': -16992, 'width': 11122, 'y': -21320}, {'height': 34652, 'x': -18051, 'width': 59622, 'y': -30426}, {'height': 45646, 'x': -1111, 'width': 46231, 'y': -25261}],
+            'drawable': 742422946,
+            'gc': 1564604140,
+            'rectangles': [{'y': -970, 'x': -4030, 'height': 11958, 'width': 17374}, {'y': -1228, 'x': -13744, 'height': 17653, 'width': 64713}, {'y': -29216, 'x': -31515, 'height': 28735, 'width': 39352}],
             }
-        self.req_bin_0 = '\x43\x00\x00\x09' '\x72\xe3\x09\x3d' \
-            '\x18\x72\x3e\x73' '\xbd\xa0\xac\xb8' \
-            '\x2b\x72\xf8\x4f' '\xb9\x7d\x89\x26' \
-            '\xe8\xe6\x87\x5c' '\xfb\xa9\x9d\x53' \
-            '\xb4\x97\xb2\x4e'
+        self.req_bin_0 = b'\x43\x00\x00\x09' b'\x2c\x40\x79\xa2' \
+            b'\x5d\x41\xf6\xec' b'\xf0\x42\xfc\x36' \
+            b'\x43\xde\x2e\xb6' b'\xca\x50\xfb\x34' \
+            b'\xfc\xc9\x44\xf5' b'\x84\xe5\x8d\xe0' \
+            b'\x99\xb8\x70\x3f'
 
 
     def testPackRequest0(self):
         bin = request.PolyRectangle._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolyRectangle._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPolyArc(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'arcs': [{'height': 37549, 'angle1': -16979, 'x': -4943, 'angle2': -25650, 'width': 65448, 'y': -9205}, {'height': 9322, 'angle1': -20781, 'x': -13865, 'angle2': -8498, 'width': 62173, 'y': -22862}, {'height': 63266, 'angle1': -1231, 'x': -12693, 'angle2': -809, 'width': 63732, 'y': -7550}],
-            'drawable': 718777148,
-            'gc': 1127021391,
+            'arcs': [{'height': 39984, 'width': 28855, 'angle1': -517, 'angle2': -16010, 'y': -22490, 'x': -6999}, {'height': 38043, 'width': 59205, 'angle1': -26540, 'angle2': -24422, 'y': -20146, 'x': -28979}, {'height': 366, 'width': 28833, 'angle1': -15732, 'angle2': -2439, 'y': -9543, 'x': -31314}],
+            'drawable': 1732034432,
+            'gc': 1156382390,
             }
-        self.req_bin_0 = '\x44\x00\x00\x0c' '\x2a\xd7\xab\x3c' \
-            '\x43\x2c\xfb\x4f' '\xec\xb1\xdc\x0b' \
-            '\xff\xa8\x92\xad' '\xbd\xad\x9b\xce' \
-            '\xc9\xd7\xa6\xb2' '\xf2\xdd\x24\x6a' \
-            '\xae\xd3\xde\xce' '\xce\x6b\xe2\x82' \
-            '\xf8\xf4\xf7\x22' '\xfb\x31\xfc\xd7'
+        self.req_bin_0 = b'\x44\x00\x00\x0c' b'\x67\x3c\xbf\x80' \
+            b'\x44\xec\xfe\xb6' b'\xe4\xa9\xa8\x26' \
+            b'\x70\xb7\x9c\x30' b'\xfd\xfb\xc1\x76' \
+            b'\x8e\xcd\xb1\x4e' b'\xe7\x45\x94\x9b' \
+            b'\x98\x54\xa0\x9a' b'\x85\xae\xda\xb9' \
+            b'\x70\xa1\x01\x6e' b'\xc2\x8c\xf6\x79'
 
 
     def testPackRequest0(self):
         bin = request.PolyArc._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolyArc._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestFillPoly(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'shape': 1,
-            'gc': 1070496026,
-            'points': [{'x': -18749, 'y': -19415}, {'x': -8904, 'y': -26948}, {'x': -13336, 'y': -9462}],
-            'drawable': 1326525185,
             'coord_mode': 0,
+            'drawable': 423195261,
+            'gc': 782225195,
+            'points': [{'y': -9194, 'x': -10262}, {'y': -8456, 'x': -1958}, {'y': -10793, 'x': -8617}],
+            'shape': 1,
             }
-        self.req_bin_0 = '\x45\x00\x00\x07' '\x4f\x11\x2b\x01' \
-            '\x3f\xce\x79\x1a' '\x01\x00\x00\x00' \
-            '\xb6\xc3\xb4\x29' '\xdd\x38\x96\xbc' \
-            '\xcb\xe8\xdb\x0a'
+        self.req_bin_0 = b'\x45\x00\x00\x07' b'\x19\x39\x72\x7d' \
+            b'\x2e\x9f\xcf\x2b' b'\x01\x00\x00\x00' \
+            b'\xd7\xea\xdc\x16' b'\xf8\x5a\xde\xf8' \
+            b'\xde\x57\xd5\xd7'
 
 
     def testPackRequest0(self):
         bin = request.FillPoly._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.FillPoly._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPolyFillRectangle(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'drawable': 1708671692,
-            'gc': 1965498255,
-            'rectangles': [{'height': 36920, 'x': -2965, 'width': 26437, 'y': -3568}, {'height': 44383, 'x': -18327, 'width': 37730, 'y': -26752}],
+            'drawable': 267696363,
+            'gc': 1545726032,
+            'rectangles': [{'y': -11003, 'x': -1676, 'height': 21895, 'width': 60599}, {'y': -22482, 'x': -12349, 'height': 55831, 'width': 43731}],
             }
-        self.req_bin_0 = '\x46\x00\x00\x07' '\x65\xd8\x42\xcc' \
-            '\x75\x27\x1f\x8f' '\xf4\x6b\xf2\x10' \
-            '\x67\x45\x90\x38' '\xb8\x69\x97\x80' \
-            '\x93\x62\xad\x5f'
+        self.req_bin_0 = b'\x46\x00\x00\x07' b'\x0f\xf4\xb8\xeb' \
+            b'\x5c\x21\xe8\x50' b'\xf9\x74\xd5\x05' \
+            b'\xec\xb7\x55\x87' b'\xcf\xc3\xa8\x2e' \
+            b'\xaa\xd3\xda\x17'
 
 
     def testPackRequest0(self):
         bin = request.PolyFillRectangle._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolyFillRectangle._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPolyFillArc(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'arcs': [{'height': 64114, 'angle1': -28360, 'x': -10754, 'angle2': -6712, 'width': 53819, 'y': -19555}],
-            'drawable': 2083870696,
-            'gc': 414470877,
+            'arcs': [{'height': 20525, 'width': 33490, 'angle1': -10916, 'angle2': -19386, 'y': -22928, 'x': -3276}],
+            'drawable': 700537986,
+            'gc': 864213787,
             }
-        self.req_bin_0 = '\x47\x00\x00\x06' '\x7c\x35\x57\xe8' \
-            '\x18\xb4\x52\xdd' '\xd5\xfe\xb3\x9d' \
-            '\xd2\x3b\xfa\x72' '\x91\x38\xe5\xc8'
+        self.req_bin_0 = b'\x47\x00\x00\x06' b'\x29\xc1\x5c\x82' \
+            b'\x33\x82\xdb\x1b' b'\xf3\x34\xa6\x70' \
+            b'\x82\xd2\x50\x2d' b'\xd5\x5c\xb4\x46'
 
 
     def testPackRequest0(self):
         bin = request.PolyFillArc._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolyFillArc._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPutImage(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'height': 9883,
-            'data': 'bit map data',
-            'drawable': 1534678783,
-            'left_pad': 147,
-            'format': 1,
-            'dst_x': -3284,
-            'gc': 209913475,
-            'depth': 173,
-            'width': 62850,
-            'dst_y': -30693,
+            'data': b'\xe9\x10\xf2o\x7f{\xae-\xe6\x18\xce\x83',
+            'depth': 172,
+            'drawable': 634980240,
+            'dst_x': -18991,
+            'dst_y': -10980,
+            'format': 2,
+            'gc': 1190657277,
+            'height': 12828,
+            'left_pad': 225,
+            'width': 8597,
             }
-        self.req_bin_0 = '\x48\x01\x00\x09' '\x5b\x79\x56\xff' \
-            '\x0c\x83\x06\x83' '\xf5\x82\x26\x9b' \
-            '\xf3\x2c\x88\x1b' '\x93\xad\x00\x00' \
-            '\x62\x69\x74\x20' '\x6d\x61\x70\x20' \
-            '\x64\x61\x74\x61'
+        self.req_bin_0 = b'\x48\x02\x00\x09' b'\x25\xd9\x07\x90' \
+            b'\x46\xf7\xfc\xfd' b'\x21\x95\x32\x1c' \
+            b'\xb5\xd1\xd5\x1c' b'\xe1\xac\x00\x00' \
+            b'\xe9\x10\xf2\x6f' b'\x7f\x7b\xae\x2d' \
+            b'\xe6\x18\xce\x83'
 
 
     def testPackRequest0(self):
         bin = request.PutImage._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PutImage._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetImage(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'height': 42657,
-            'plane_mask': 1756278272,
-            'drawable': 1329487747,
-            'x': -27672,
-            'y': -30859,
-            'format': 1,
-            'width': 58993,
+            'drawable': 872105322,
+            'format': 2,
+            'height': 20170,
+            'plane_mask': 616208054,
+            'width': 282,
+            'x': -14814,
+            'y': -5449,
             }
-        self.req_bin_0 = '\x49\x01\x00\x05' '\x4f\x3e\x5f\x83' \
-            '\x93\xe8\x87\x75' '\xe6\x71\xa6\xa1' \
-            '\x68\xae\xae\x00'
+        self.req_bin_0 = b'\x49\x02\x00\x05' b'\x33\xfb\x45\x6a' \
+            b'\xc6\x22\xea\xb7' b'\x01\x1a\x4e\xca' \
+            b'\x24\xba\x96\xb6'
 
         self.reply_args_0 = {
-            'sequence_number': 54997,
-            'data': 'this is real ly imag e b-map',
-            'visual': 1108632607,
+            'data': b'\xeb?:\xa7\xc6\x8b\xc2\x96o-S\xe6\xd6z6\x94\xd7v\xd2R.\xa2\xeaw\t\x13\x95\x85',
             'depth': 181,
+            'sequence_number': 28429,
+            'visual': 1687469773,
             }
-        self.reply_bin_0 = '\x01\xb5\xd6\xd5' '\x00\x00\x00\x07' \
-            '\x42\x14\x64\x1f' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x74\x68\x69\x73' '\x20\x69\x73\x20' \
-            '\x72\x65\x61\x6c' '\x20\x6c\x79\x20' \
-            '\x69\x6d\x61\x67' '\x20\x65\x20\x62' \
-            '\x2d\x6d\x61\x70'
+        self.reply_bin_0 = b'\x01\xb5\x6f\x0d' b'\x00\x00\x00\x07' \
+            b'\x64\x94\xbe\xcd' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\xeb\x3f\x3a\xa7' b'\xc6\x8b\xc2\x96' \
+            b'\x6f\x2d\x53\xe6' b'\xd6\x7a\x36\x94' \
+            b'\xd7\x76\xd2\x52' b'\x2e\xa2\xea\x77' \
+            b'\x09\x13\x95\x85'
 
 
     def testPackRequest0(self):
         bin = request.GetImage._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetImage._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetImage._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetImage._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestPolyText8(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 1481564777,
-            'x': -13548,
-            'drawable': 1550998666,
-            'items': [{'delta': 2, 'string': 'zoo'}, 16909060, {'delta': 0, 'string': 'ie'}],
-            'y': -8902,
+            'drawable': 1245573363,
+            'gc': 1302861330,
+            'items': [{'string': 'zoo', 'delta': 2}, 16909060, {'string': 'ie', 'delta': 0}],
+            'x': -11315,
+            'y': -22209,
             }
-        self.req_bin_0 = '\x4a\x00\x00\x08' '\x5c\x72\x5c\x8a' \
-            '\x58\x4e\xe2\x69' '\xcb\x14\xdd\x3a' \
-            '\x03\x02\x7a\x6f' '\x6f\xff\x01\x02' \
-            '\x03\x04\x02\x00' '\x69\x65\x00\x00'
+        self.req_bin_0 = b'\x4a\x00\x00\x08' b'\x4a\x3d\xf0\xf3' \
+            b'\x4d\xa8\x16\x12' b'\xd3\xcd\xa9\x3f' \
+            b'\x03\x02\x7a\x6f' b'\x6f\xff\x01\x02' \
+            b'\x03\x04\x02\x00' b'\x69\x65\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.PolyText8._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolyText8._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestPolyText16(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'gc': 400697368,
-            'x': -31614,
-            'drawable': 1591407092,
-            'items': [{'delta': 2, 'string': (4131, 18)}, 16909060],
-            'y': -2741,
+            'drawable': 998620068,
+            'gc': 948793778,
+            'items': [{'string': (4131, 18), 'delta': 2}, 16909060],
+            'x': -18280,
+            'y': -10630,
             }
-        self.req_bin_0 = '\x4b\x00\x00\x07' '\x5e\xda\xf1\xf4' \
-            '\x17\xe2\x28\x18' '\x84\x82\xf5\x4b' \
-            '\x02\x02\x10\x23' '\x00\x12\xff\x01' \
-            '\x02\x03\x04\x00'
+        self.req_bin_0 = b'\x4b\x00\x00\x07' b'\x3b\x85\xbb\xa4' \
+            b'\x38\x8d\x71\xb2' b'\xb8\x98\xd6\x7a' \
+            b'\x02\x02\x10\x23' b'\x00\x12\xff\x01' \
+            b'\x02\x03\x04\x00'
 
 
     def testPackRequest0(self):
         bin = request.PolyText16._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.PolyText16._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestImageText8(EndianTest):
     def setUp(self):
         self.req_args_0 = {
+            'drawable': 458985805,
+            'gc': 1097803335,
             'string': 'showme',
-            'gc': 1393590305,
-            'drawable': 1823595869,
-            'x': -16077,
-            'y': -4873,
+            'x': -17263,
+            'y': -6759,
             }
-        self.req_bin_0 = '\x4c\x06\x00\x06' '\x6c\xb1\xdd\x5d' \
-            '\x53\x10\x80\x21' '\xc1\x33\xec\xf7' \
-            '\x73\x68\x6f\x77' '\x6d\x65\x00\x00'
+        self.req_bin_0 = b'\x4c\x06\x00\x06' b'\x1b\x5b\x91\x4d' \
+            b'\x41\x6f\x26\x47' b'\xbc\x91\xe5\x99' \
+            b'\x73\x68\x6f\x77' b'\x6d\x65\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.ImageText8._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ImageText8._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestImageText16(EndianTest):
     def setUp(self):
         self.req_args_0 = {
+            'drawable': 1935336610,
+            'gc': 2061289059,
             'string': (115, 104, 111, 119, 109, 111, 114, 101),
-            'gc': 1702299870,
-            'drawable': 33607184,
-            'x': -21343,
-            'y': -24237,
+            'x': -6684,
+            'y': -8653,
             }
-        self.req_bin_0 = '\x4d\x08\x00\x08' '\x02\x00\xce\x10' \
-            '\x65\x77\x08\xde' '\xac\xa1\xa1\x53' \
-            '\x00\x73\x00\x68' '\x00\x6f\x00\x77' \
-            '\x00\x6d\x00\x6f' '\x00\x72\x00\x65'
+        self.req_bin_0 = b'\x4d\x08\x00\x08' b'\x73\x5a\xe4\xa2' \
+            b'\x7a\xdc\xc6\x63' b'\xe5\xe4\xde\x33' \
+            b'\x00\x73\x00\x68' b'\x00\x6f\x00\x77' \
+            b'\x00\x6d\x00\x6f' b'\x00\x72\x00\x65'
 
 
     def testPackRequest0(self):
         bin = request.ImageText16._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ImageText16._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCreateColormap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'mid': 157536683,
             'alloc': 0,
-            'visual': 813982403,
-            'window': 698475631,
+            'mid': 1414936748,
+            'visual': 609492200,
+            'window': 182162564,
             }
-        self.req_bin_0 = '\x4e\x00\x00\x04' '\x09\x63\xd1\xab' \
-            '\x29\xa1\xe4\x6f' '\x30\x84\x62\xc3'
+        self.req_bin_0 = b'\x4e\x00\x00\x04' b'\x54\x56\x38\xac' \
+            b'\x0a\xdb\x94\x84' b'\x24\x54\x1c\xe8'
 
 
     def testPackRequest0(self):
         bin = request.CreateColormap._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CreateColormap._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestFreeColormap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 1296514923,
+            'cmap': 1106990292,
             }
-        self.req_bin_0 = '\x4f\x00\x00\x02' '\x4d\x47\x3f\x6b'
+        self.req_bin_0 = b'\x4f\x00\x00\x02' b'\x41\xfb\x54\xd4'
 
 
     def testPackRequest0(self):
         bin = request.FreeColormap._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.FreeColormap._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCopyColormapAndFree(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'src_cmap': 1049336329,
-            'mid': 1237242690,
+            'mid': 1425680795,
+            'src_cmap': 1359295675,
             }
-        self.req_bin_0 = '\x50\x00\x00\x03' '\x49\xbe\xd3\x42' \
-            '\x3e\x8b\x9a\x09'
+        self.req_bin_0 = b'\x50\x00\x00\x03' b'\x54\xfa\x29\x9b' \
+            b'\x51\x05\x34\xbb'
 
 
     def testPackRequest0(self):
         bin = request.CopyColormapAndFree._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CopyColormapAndFree._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestInstallColormap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 1539075582,
+            'cmap': 1329917990,
             }
-        self.req_bin_0 = '\x51\x00\x00\x02' '\x5b\xbc\x6d\xfe'
+        self.req_bin_0 = b'\x51\x00\x00\x02' b'\x4f\x44\xf0\x26'
 
 
     def testPackRequest0(self):
         bin = request.InstallColormap._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.InstallColormap._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestUninstallColormap(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 959493342,
+            'cmap': 719876845,
             }
-        self.req_bin_0 = '\x52\x00\x00\x02' '\x39\x30\xb4\xde'
+        self.req_bin_0 = b'\x52\x00\x00\x02' b'\x2a\xe8\x72\xed'
 
 
     def testPackRequest0(self):
         bin = request.UninstallColormap._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.UninstallColormap._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestListInstalledColormaps(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'window': 1517864638,
+            'window': 200613013,
             }
-        self.req_bin_0 = '\x53\x00\x00\x02' '\x5a\x78\xc6\xbe'
+        self.req_bin_0 = b'\x53\x00\x00\x02' b'\x0b\xf5\x1c\x95'
 
         self.reply_args_0 = {
-            'cmaps': [2146327722, 1361260227],
-            'sequence_number': 61652,
+            'cmaps': [1757616530, 2044469232],
+            'sequence_number': 49482,
             }
-        self.reply_bin_0 = '\x01\x00\xf0\xd4' '\x00\x00\x00\x02' \
-            '\x00\x02\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x7f\xee\x5c\xaa' '\x51\x23\x2e\xc3'
+        self.reply_bin_0 = b'\x01\x00\xc1\x4a' b'\x00\x00\x00\x02' \
+            b'\x00\x02\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x68\xc3\x19\x92' b'\x79\xdc\x1f\xf0'
 
 
     def testPackRequest0(self):
         bin = request.ListInstalledColormaps._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ListInstalledColormaps._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.ListInstalledColormaps._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.ListInstalledColormaps._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestAllocColor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'red': 39725,
-            'green': 49854,
-            'cmap': 523356125,
-            'blue': 49580,
+            'blue': 14978,
+            'cmap': 504442007,
+            'green': 20599,
+            'red': 44348,
             }
-        self.req_bin_0 = '\x54\x00\x00\x04' '\x1f\x31\xc7\xdd' \
-            '\x9b\x2d\xc2\xbe' '\xc1\xac\x00\x00'
+        self.req_bin_0 = b'\x54\x00\x00\x04' b'\x1e\x11\x2c\x97' \
+            b'\xad\x3c\x50\x77' b'\x3a\x82\x00\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 10904,
-            'red': 43784,
-            'green': 3170,
-            'pixel': 1067923656,
-            'blue': 14525,
+            'blue': 1856,
+            'green': 9912,
+            'pixel': 99308744,
+            'red': 13306,
+            'sequence_number': 53114,
             }
-        self.reply_bin_0 = '\x01\x00\x2a\x98' '\x00\x00\x00\x00' \
-            '\xab\x08\x0c\x62' '\x38\xbd\x00\x00' \
-            '\x3f\xa7\x38\xc8' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\xcf\x7a' b'\x00\x00\x00\x00' \
+            b'\x33\xfa\x26\xb8' b'\x07\x40\x00\x00' \
+            b'\x05\xeb\x54\xc8' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.AllocColor._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.AllocColor._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.AllocColor._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.AllocColor._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestAllocNamedColor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 128217824,
+            'cmap': 525860889,
             'name': 'octarin',
             }
-        self.req_bin_0 = '\x55\x00\x00\x05' '\x07\xa4\x72\xe0' \
-            '\x00\x07\x00\x00' '\x6f\x63\x74\x61' \
-            '\x72\x69\x6e\x00'
+        self.req_bin_0 = b'\x55\x00\x00\x05' b'\x1f\x58\x00\x19' \
+            b'\x00\x07\x00\x00' b'\x6f\x63\x74\x61' \
+            b'\x72\x69\x6e\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 19971,
-            'pixel': 1324239222,
-            'screen_green': 50499,
-            'screen_red': 33379,
-            'exact_green': 29067,
-            'exact_blue': 58811,
-            'screen_blue': 43109,
-            'exact_red': 64213,
+            'exact_blue': 50619,
+            'exact_green': 55944,
+            'exact_red': 40316,
+            'pixel': 1020413057,
+            'screen_blue': 27416,
+            'screen_green': 30102,
+            'screen_red': 5028,
+            'sequence_number': 64739,
             }
-        self.reply_bin_0 = '\x01\x00\x4e\x03' '\x00\x00\x00\x00' \
-            '\x4e\xee\x49\x76' '\xfa\xd5\x71\x8b' \
-            '\xe5\xbb\x82\x63' '\xc5\x43\xa8\x65' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\xfc\xe3' b'\x00\x00\x00\x00' \
+            b'\x3c\xd2\x44\x81' b'\x9d\x7c\xda\x88' \
+            b'\xc5\xbb\x13\xa4' b'\x75\x96\x6b\x18' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.AllocNamedColor._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.AllocNamedColor._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.AllocNamedColor._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.AllocNamedColor._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestAllocColorCells(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'planes': 32867,
-            'colors': 58698,
-            'cmap': 675372338,
-            'contiguous': 1,
+            'cmap': 1542701632,
+            'colors': 45892,
+            'contiguous': 0,
+            'planes': 25420,
             }
-        self.req_bin_0 = '\x56\x01\x00\x03' '\x28\x41\x5d\x32' \
-            '\xe5\x4a\x80\x63'
+        self.req_bin_0 = b'\x56\x00\x00\x03' b'\x5b\xf3\xc2\x40' \
+            b'\xb3\x44\x63\x4c'
 
         self.reply_args_0 = {
-            'masks': [733927381, 1023311668, 595898647],
-            'pixels': [693075497, 1294879029, 1478712895, 1781963728, 1442185575, 1654003869, 787619123, 1049825849, 1773935772, 1689075922, 1626562257, 177731275, 661046122, 1970509470, 1918486395, 688539096, 41044851],
-            'sequence_number': 54025,
+            'masks': [1726878301, 2057281944, 1494524694],
+            'pixels': [1061732426, 858313521, 524018138, 316972578, 1408939380, 1476723430, 11972931, 1917037904, 1612749468, 1847847580, 1653727126, 1901587588, 228960010, 1671710636, 913060041, 470023299, 377779303],
+            'sequence_number': 34200,
             }
-        self.reply_bin_0 = '\x01\x00\xd3\x09' '\x00\x00\x00\x14' \
-            '\x00\x11\x00\x03' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x29\x4f\x7e\x29' '\x4d\x2e\x49\x35' \
-            '\x58\x23\x5e\x3f' '\x6a\x36\x9b\xd0' \
-            '\x55\xf6\x01\x67' '\x62\x96\x18\x9d' \
-            '\x2e\xf2\x1d\x33' '\x3e\x93\x12\x39' \
-            '\x69\xbc\x1c\x9c' '\x64\xad\x40\xd2' \
-            '\x60\xf3\x5e\xd1' '\x0a\x97\xf6\xcb' \
-            '\x27\x66\xc3\x6a' '\x75\x73\x96\x9e' \
-            '\x72\x59\xc7\x7b' '\x29\x0a\x45\xd8' \
-            '\x02\x72\x4b\x73' '\x2b\xbe\xd7\xd5' \
-            '\x3c\xfe\x7f\x34' '\x23\x84\xb1\x17'
+        self.reply_bin_0 = b'\x01\x00\x85\x98' b'\x00\x00\x00\x14' \
+            b'\x00\x11\x00\x03' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x3f\x48\xc0\x4a' b'\x33\x28\xd3\x31' \
+            b'\x1f\x3b\xe1\xda' b'\x12\xe4\x9e\x22' \
+            b'\x53\xfa\xb5\x74' b'\x58\x05\x02\xe6' \
+            b'\x00\xb6\xb1\x43' b'\x72\x43\xad\x50' \
+            b'\x60\x20\x9a\x9c' b'\x6e\x23\xea\x9c' \
+            b'\x62\x91\xdf\x96' b'\x71\x57\xec\x84' \
+            b'\x0d\xa5\xa7\x0a' b'\x63\xa4\x47\xac' \
+            b'\x36\x6c\x30\xc9' b'\x1c\x03\xfc\x83' \
+            b'\x16\x84\x74\x67' b'\x66\xee\x12\x5d' \
+            b'\x7a\x9f\xa1\x98' b'\x59\x14\xa3\x16'
 
         self.reply_args_1 = {
             'masks': [],
             'pixels': [],
-            'sequence_number': 6273,
+            'sequence_number': 30700,
             }
-        self.reply_bin_1 = '\x01\x00\x18\x81' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_1 = b'\x01\x00\x77\xec' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.AllocColorCells._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.AllocColorCells._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.AllocColorCells._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.AllocColorCells._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
     def testPackReply1(self):
         bin = request.AllocColorCells._reply.to_binary(*(), **self.reply_args_1)
-        try:
-            assert bin == self.reply_bin_1
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_1)
 
     def testUnpackReply1(self):
         args, remain = request.AllocColorCells._reply.parse_binary(self.reply_bin_1, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_1
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_1)
 
 
 class TestAllocColorPlanes(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'red': 22876,
-            'colors': 58275,
-            'green': 9425,
-            'cmap': 308019811,
+            'blue': 8209,
+            'cmap': 1197085372,
+            'colors': 16587,
             'contiguous': 0,
-            'blue': 23880,
+            'green': 55852,
+            'red': 60383,
             }
-        self.req_bin_0 = '\x57\x00\x00\x04' '\x12\x5c\x02\x63' \
-            '\xe3\xa3\x59\x5c' '\x24\xd1\x5d\x48'
+        self.req_bin_0 = b'\x57\x00\x00\x04' b'\x47\x5a\x12\xbc' \
+            b'\x40\xcb\xeb\xdf' b'\xda\x2c\x20\x11'
 
         self.reply_args_0 = {
-            'green_mask': 265888391,
-            'sequence_number': 36175,
-            'pixels': [491961865, 1301906366, 1604705021, 1418751120],
-            'blue_mask': 44676180,
-            'red_mask': 734623206,
+            'blue_mask': 1200348460,
+            'green_mask': 2121548418,
+            'pixels': [980309855, 286409072, 1721094583, 997879295],
+            'red_mask': 1140662566,
+            'sequence_number': 44006,
             }
-        self.reply_bin_0 = '\x01\x00\x8d\x4f' '\x00\x00\x00\x04' \
-            '\x00\x04\x00\x00' '\x2b\xc9\x75\xe6' \
-            '\x0f\xd9\x22\x87' '\x02\xa9\xb4\x54' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x1d\x52\xbe\x09' '\x4d\x99\x83\xbe' \
-            '\x5f\xa5\xda\xfd' '\x54\x90\x6c\x90'
+        self.reply_bin_0 = b'\x01\x00\xab\xe6' b'\x00\x00\x00\x04' \
+            b'\x00\x04\x00\x00' b'\x43\xfd\x21\x26' \
+            b'\x7e\x74\x42\x82' b'\x47\x8b\xdd\x2c' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x3a\x6e\x57\x5f' b'\x11\x12\x41\x70' \
+            b'\x66\x95\xd1\xb7' b'\x3b\x7a\x6d\xff'
 
 
     def testPackRequest0(self):
         bin = request.AllocColorPlanes._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.AllocColorPlanes._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.AllocColorPlanes._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.AllocColorPlanes._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestFreeColors(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 727008216,
-            'pixels': [61281082, 398475082, 1660604639, 1516738417, 1211104329, 105034864, 884930615, 902914796, 288637231, 2097165249, 1171127263, 1027274519, 806213035, 1485898709, 542709465, 169067149, 1230881159],
-            'plane_mask': 1204733200,
+            'cmap': 341854532,
+            'pixels': [1278789650, 681457705, 2040260049, 1621952585, 1914388136, 950484730, 1315726377, 1750278681, 1544694596, 1915664535, 1084068385, 916484334, 1783699241, 1947521244, 1176611597, 957657715, 1926805276],
+            'plane_mask': 1597053435,
             }
-        self.req_bin_0 = '\x58\x00\x00\x14' '\x2b\x55\x43\xd8' \
-            '\x47\xce\xc5\x10' '\x03\xa7\x13\x3a' \
-            '\x17\xc0\x3f\x4a' '\x62\xfa\xd0\xdf' \
-            '\x5a\x67\x97\x71' '\x48\x2f\xfc\x49' \
-            '\x06\x42\xb4\x70' '\x34\xbe\xf8\x37' \
-            '\x35\xd1\x62\xec' '\x11\x34\x41\x2f' \
-            '\x7d\x00\x33\xc1' '\x45\xcd\xfb\xdf' \
-            '\x3d\x3a\xf7\x17' '\x30\x0d\xd5\xab' \
-            '\x58\x91\x03\xd5' '\x20\x59\x16\xd9' \
-            '\x0a\x13\xc2\x8d' '\x49\x5d\xc1\x87'
+        self.req_bin_0 = b'\x58\x00\x00\x14' b'\x14\x60\x49\x44' \
+            b'\x5f\x31\x19\xfb' b'\x4c\x38\xc8\x12' \
+            b'\x28\x9e\x38\x29' b'\x79\x9b\xe5\xd1' \
+            b'\x60\xad\x08\x49' b'\x72\x1b\x3e\xa8' \
+            b'\x38\xa7\x3e\xfa' b'\x4e\x6c\x64\x29' \
+            b'\x68\x53\x22\x19' b'\x5c\x12\x2b\x44' \
+            b'\x72\x2e\xb8\x97' b'\x40\x9d\x92\x21' \
+            b'\x36\xa0\x70\xee' b'\x6a\x51\x17\x29' \
+            b'\x74\x14\xd0\xdc' b'\x46\x21\xab\x0d' \
+            b'\x39\x14\xb2\x73' b'\x72\xd8\xb7\x1c'
 
 
     def testPackRequest0(self):
         bin = request.FreeColors._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.FreeColors._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestStoreColors(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 501035281,
-            'items': [{'red': 27925, 'pixel': 1094971765, 'green': 3673, 'flags': 189, 'blue': 31593}, {'red': 41633, 'pixel': 1330003189, 'green': 56186, 'flags': 178, 'blue': 30263}, {'red': 36007, 'pixel': 1813524037, 'green': 29697, 'flags': 224, 'blue': 14071}, {'red': 45716, 'pixel': 1987610486, 'green': 55405, 'flags': 200, 'blue': 35734}],
+            'cmap': 686636594,
+            'items': [{'blue': 17242, 'flags': 191, 'green': 29751, 'pixel': 1850111768, 'red': 31364}, {'blue': 50444, 'flags': 252, 'green': 18429, 'pixel': 1803657350, 'red': 42045}, {'blue': 29083, 'flags': 147, 'green': 18252, 'pixel': 1345997556, 'red': 15935}, {'blue': 18063, 'flags': 213, 'green': 15623, 'pixel': 1532391469, 'red': 18981}],
             }
-        self.req_bin_0 = '\x59\x00\x00\x0e' '\x1d\xdd\x31\x11' \
-            '\x41\x43\xf1\x75' '\x6d\x15\x0e\x59' \
-            '\x7b\x69\xbd\x00' '\x4f\x46\x3c\xf5' \
-            '\xa2\xa1\xdb\x7a' '\x76\x37\xb2\x00' \
-            '\x6c\x18\x2e\x45' '\x8c\xa7\x74\x01' \
-            '\x36\xf7\xe0\x00' '\x76\x78\x87\x76' \
-            '\xb2\x94\xd8\x6d' '\x8b\x96\xc8\x00'
+        self.req_bin_0 = b'\x59\x00\x00\x0e' b'\x28\xed\x3e\x32' \
+            b'\x6e\x46\x77\x18' b'\x7a\x84\x74\x37' \
+            b'\x43\x5a\xbf\x00' b'\x6b\x81\xa0\x86' \
+            b'\xa4\x3d\x47\xfd' b'\xc5\x0c\xfc\x00' \
+            b'\x50\x3a\x4a\xf4' b'\x3e\x3f\x47\x4c' \
+            b'\x71\x9b\x93\x00' b'\x5b\x56\x70\x2d' \
+            b'\x4a\x25\x3d\x07' b'\x46\x8f\xd5\x00'
 
 
     def testPackRequest0(self):
         bin = request.StoreColors._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.StoreColors._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestStoreNamedColor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
+            'cmap': 297221571,
+            'flags': 148,
             'name': 'blue',
-            'flags': 186,
-            'cmap': 2061119590,
-            'pixel': 1846011298,
+            'pixel': 323971915,
             }
-        self.req_bin_0 = '\x5a\xba\x00\x05' '\x7a\xda\x30\x66' \
-            '\x6e\x07\xe5\xa2' '\x00\x04\x00\x00' \
-            '\x62\x6c\x75\x65'
+        self.req_bin_0 = b'\x5a\x94\x00\x05' b'\x11\xb7\x3d\xc3' \
+            b'\x13\x4f\x6b\x4b' b'\x00\x04\x00\x00' \
+            b'\x62\x6c\x75\x65'
 
 
     def testPackRequest0(self):
         bin = request.StoreNamedColor._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.StoreNamedColor._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestQueryColors(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 596369797,
-            'pixels': [1018587496, 1553480933, 952694607, 341816269, 306591348, 1178729919, 173027853, 875811363],
+            'cmap': 875378525,
+            'pixels': [496695788, 822627561, 1490311416, 328212337, 1517089095, 459525846, 137995944, 890987562],
             }
-        self.req_bin_0 = '\x5b\x00\x00\x0a' '\x23\x8b\xe1\x85' \
-            '\x3c\xb6\x69\x68' '\x5c\x98\x3c\xe5' \
-            '\x38\xc8\xf7\x4f' '\x14\x5f\xb3\xcd' \
-            '\x12\x46\x36\x74' '\x46\x41\xfd\xbf' \
-            '\x0a\x50\x32\x0d' '\x34\x33\xd2\x23'
+        self.req_bin_0 = b'\x5b\x00\x00\x0a' b'\x34\x2d\x37\x5d' \
+            b'\x1d\x9a\xf9\xec' b'\x31\x08\x4c\xe9' \
+            b'\x58\xd4\x58\xf8' b'\x13\x90\x1f\x71' \
+            b'\x5a\x6c\xf1\x47' b'\x1b\x63\xce\xd6' \
+            b'\x08\x39\xa6\xa8' b'\x35\x1b\x64\x2a'
 
         self.reply_args_0 = {
-            'colors': [{'red': 6715, 'blue': 40144, 'green': 56664}, {'red': 5799, 'blue': 22078, 'green': 35523}, {'red': 60111, 'blue': 58654, 'green': 25206}, {'red': 7433, 'blue': 60908, 'green': 14468}, {'red': 31213, 'blue': 9298, 'green': 27481}],
-            'sequence_number': 60323,
+            'colors': [{'blue': 27504, 'green': 30790, 'red': 35816}, {'blue': 54840, 'green': 13811, 'red': 4336}, {'blue': 59555, 'green': 25780, 'red': 27790}, {'blue': 62257, 'green': 38534, 'red': 50705}, {'blue': 56402, 'green': 1536, 'red': 45837}],
+            'sequence_number': 57970,
             }
-        self.reply_bin_0 = '\x01\x00\xeb\xa3' '\x00\x00\x00\x0a' \
-            '\x00\x05\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x1a\x3b\xdd\x58' '\x9c\xd0\x00\x00' \
-            '\x16\xa7\x8a\xc3' '\x56\x3e\x00\x00' \
-            '\xea\xcf\x62\x76' '\xe5\x1e\x00\x00' \
-            '\x1d\x09\x38\x84' '\xed\xec\x00\x00' \
-            '\x79\xed\x6b\x59' '\x24\x52\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\xe2\x72' b'\x00\x00\x00\x0a' \
+            b'\x00\x05\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x8b\xe8\x78\x46' b'\x6b\x70\x00\x00' \
+            b'\x10\xf0\x35\xf3' b'\xd6\x38\x00\x00' \
+            b'\x6c\x8e\x64\xb4' b'\xe8\xa3\x00\x00' \
+            b'\xc6\x11\x96\x86' b'\xf3\x31\x00\x00' \
+            b'\xb3\x0d\x06\x00' b'\xdc\x52\x00\x00'
 
         self.req_args_1 = {
-            'cmap': 79317049,
+            'cmap': 710627905,
             'pixels': [],
             }
-        self.req_bin_1 = '\x5b\x00\x00\x02' '\x04\xba\x48\x39'
+        self.req_bin_1 = b'\x5b\x00\x00\x02' b'\x2a\x5b\x52\x41'
 
 
     def testPackRequest0(self):
         bin = request.QueryColors._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.QueryColors._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackRequest1(self):
         bin = request.QueryColors._request.to_binary(*(), **self.req_args_1)
-        try:
-            assert bin == self.req_bin_1
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_1)
 
     def testUnpackRequest1(self):
         args, remain = request.QueryColors._request.parse_binary(self.req_bin_1, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_1
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_1)
 
     def testPackReply0(self):
         bin = request.QueryColors._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.QueryColors._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestLookupColor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cmap': 789574750,
+            'cmap': 1644167361,
             'name': 'octarin',
             }
-        self.req_bin_0 = '\x5c\x00\x00\x05' '\x2f\x0f\xf4\x5e' \
-            '\x00\x07\x00\x00' '\x6f\x63\x74\x61' \
-            '\x72\x69\x6e\x00'
+        self.req_bin_0 = b'\x5c\x00\x00\x05' b'\x62\x00\x00\xc1' \
+            b'\x00\x07\x00\x00' b'\x6f\x63\x74\x61' \
+            b'\x72\x69\x6e\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 21040,
-            'screen_green': 65314,
-            'screen_red': 51033,
-            'exact_green': 59546,
-            'exact_blue': 61512,
-            'screen_blue': 29893,
-            'exact_red': 41875,
+            'exact_blue': 642,
+            'exact_green': 31515,
+            'exact_red': 25184,
+            'screen_blue': 19825,
+            'screen_green': 23308,
+            'screen_red': 62039,
+            'sequence_number': 37984,
             }
-        self.reply_bin_0 = '\x01\x00\x52\x30' '\x00\x00\x00\x00' \
-            '\xa3\x93\xe8\x9a' '\xf0\x48\xc7\x59' \
-            '\xff\x22\x74\xc5' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\x94\x60' b'\x00\x00\x00\x00' \
+            b'\x62\x60\x7b\x1b' b'\x02\x82\xf2\x57' \
+            b'\x5b\x0c\x4d\x71' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.LookupColor._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.LookupColor._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.LookupColor._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.LookupColor._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestCreateCursor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'x': 14199,
-            'fore_red': 65323,
-            'back_green': 5090,
-            'mask': 420188900,
-            'back_blue': 49879,
-            'y': 32780,
-            'cid': 2022028217,
-            'fore_blue': 63540,
-            'fore_green': 43028,
-            'back_red': 31899,
-            'source': 794739749,
+            'back_blue': 49245,
+            'back_green': 35528,
+            'back_red': 27716,
+            'cid': 1618141054,
+            'fore_blue': 55026,
+            'fore_green': 62740,
+            'fore_red': 58690,
+            'mask': 1832831050,
+            'source': 837555484,
+            'x': 48400,
+            'y': 36047,
             }
-        self.req_bin_0 = '\x5d\x00\x00\x08' '\x78\x85\xb3\xb9' \
-            '\x2f\x5e\xc4\x25' '\x19\x0b\x92\xe4' \
-            '\xff\x2b\xa8\x14' '\xf8\x34\x7c\x9b' \
-            '\x13\xe2\xc2\xd7' '\x37\x77\x80\x0c'
+        self.req_bin_0 = b'\x5d\x00\x00\x08' b'\x60\x72\xdf\x7e' \
+            b'\x31\xec\x15\x1c' b'\x6d\x3e\xc8\x4a' \
+            b'\xe5\x42\xf5\x14' b'\xd6\xf2\x6c\x44' \
+            b'\x8a\xc8\xc0\x5d' b'\xbd\x10\x8c\xcf'
 
 
     def testPackRequest0(self):
         bin = request.CreateCursor._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CreateCursor._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestCreateGlyphCursor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'fore_red': 56306,
-            'source_char': 7568,
-            'mask': 2018599719,
-            'back_blue': 6500,
-            'cid': 1999539964,
-            'mask_char': 46124,
-            'fore_blue': 30793,
-            'fore_green': 16989,
-            'back_red': 64484,
-            'source': 1412345132,
-            'back_green': 52966,
+            'back_blue': 25740,
+            'back_green': 2158,
+            'back_red': 32083,
+            'cid': 1717769345,
+            'fore_blue': 28818,
+            'fore_green': 18143,
+            'fore_red': 14636,
+            'mask': 1928100723,
+            'mask_char': 32252,
+            'source': 1295540602,
+            'source_char': 14709,
             }
-        self.req_bin_0 = '\x5e\x00\x00\x08' '\x77\x2e\x8e\xfc' \
-            '\x54\x2e\xad\x2c' '\x78\x51\x63\x27' \
-            '\x1d\x90\xb4\x2c' '\xdb\xf2\x42\x5d' \
-            '\x78\x49\xfb\xe4' '\xce\xe6\x19\x64'
+        self.req_bin_0 = b'\x5e\x00\x00\x08' b'\x66\x63\x14\x81' \
+            b'\x4d\x38\x61\x7a' b'\x72\xec\x7b\x73' \
+            b'\x39\x75\x7d\xfc' b'\x39\x2c\x46\xdf' \
+            b'\x70\x92\x7d\x53' b'\x08\x6e\x64\x8c'
 
 
     def testPackRequest0(self):
         bin = request.CreateGlyphCursor._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.CreateGlyphCursor._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestFreeCursor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'cursor': 553262138,
+            'cursor': 721898231,
             }
-        self.req_bin_0 = '\x5f\x00\x00\x02' '\x20\xfa\x1c\x3a'
+        self.req_bin_0 = b'\x5f\x00\x00\x02' b'\x2b\x07\x4a\xf7'
 
 
     def testPackRequest0(self):
         bin = request.FreeCursor._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.FreeCursor._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestRecolorCursor(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'fore_red': 44718,
-            'fore_green': 33104,
-            'back_blue': 49533,
-            'back_green': 12163,
-            'fore_blue': 17246,
-            'back_red': 64013,
-            'cursor': 295995276,
+            'back_blue': 55339,
+            'back_green': 11072,
+            'back_red': 47715,
+            'cursor': 1436460699,
+            'fore_blue': 26753,
+            'fore_green': 52563,
+            'fore_red': 44764,
             }
-        self.req_bin_0 = '\x60\x00\x00\x05' '\x11\xa4\x87\x8c' \
-            '\xae\xae\x81\x50' '\x43\x5e\xfa\x0d' \
-            '\x2f\x83\xc1\x7d'
+        self.req_bin_0 = b'\x60\x00\x00\x05' b'\x55\x9e\xa6\x9b' \
+            b'\xae\xdc\xcd\x53' b'\x68\x81\xba\x63' \
+            b'\x2b\x40\xd8\x2b'
 
 
     def testPackRequest0(self):
         bin = request.RecolorCursor._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.RecolorCursor._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestQueryBestSize(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'height': 34743,
-            'drawable': 503496990,
+            'drawable': 1974766133,
+            'height': 64528,
             'item_class': 1,
-            'width': 27916,
+            'width': 8620,
             }
-        self.req_bin_0 = '\x61\x01\x00\x03' '\x1e\x02\xc1\x1e' \
-            '\x6d\x0c\x87\xb7'
+        self.req_bin_0 = b'\x61\x01\x00\x03' b'\x75\xb4\x8a\x35' \
+            b'\x21\xac\xfc\x10'
 
         self.reply_args_0 = {
-            'height': 60728,
-            'sequence_number': 34070,
-            'width': 35970,
+            'height': 2023,
+            'sequence_number': 41036,
+            'width': 35260,
             }
-        self.reply_bin_0 = '\x01\x00\x85\x16' '\x00\x00\x00\x00' \
-            '\x8c\x82\xed\x38' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\xa0\x4c' b'\x00\x00\x00\x00' \
+            b'\x89\xbc\x07\xe7' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.QueryBestSize._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.QueryBestSize._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.QueryBestSize._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.QueryBestSize._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestQueryExtension(EndianTest):
@@ -4522,662 +3217,473 @@ class TestQueryExtension(EndianTest):
         self.req_args_0 = {
             'name': 'XTRA',
             }
-        self.req_bin_0 = '\x62\x00\x00\x03' '\x00\x04\x00\x00' \
-            '\x58\x54\x52\x41'
+        self.req_bin_0 = b'\x62\x00\x00\x03' b'\x00\x04\x00\x00' \
+            b'\x58\x54\x52\x41'
 
         self.reply_args_0 = {
-            'sequence_number': 39952,
-            'major_opcode': 195,
-            'first_error': 150,
+            'first_error': 237,
+            'first_event': 149,
+            'major_opcode': 134,
             'present': 1,
-            'first_event': 202,
+            'sequence_number': 59692,
             }
-        self.reply_bin_0 = '\x01\x00\x9c\x10' '\x00\x00\x00\x00' \
-            '\x01\xc3\xca\x96' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\xe9\x2c' b'\x00\x00\x00\x00' \
+            b'\x01\x86\x95\xed' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.QueryExtension._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.QueryExtension._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.QueryExtension._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.QueryExtension._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestListExtensions(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x63\x00\x00\x01'
+        self.req_bin_0 = b'\x63\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 20200,
             'names': ['XTRA', 'XTRA-II'],
+            'sequence_number': 9149,
             }
-        self.reply_bin_0 = '\x01\x02\x4e\xe8' '\x00\x00\x00\x04' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x04\x58\x54\x52' '\x41\x07\x58\x54' \
-            '\x52\x41\x2d\x49' '\x49\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x02\x23\xbd' b'\x00\x00\x00\x04' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x04\x58\x54\x52' b'\x41\x07\x58\x54' \
+            b'\x52\x41\x2d\x49' b'\x49\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.ListExtensions._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ListExtensions._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.ListExtensions._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.ListExtensions._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestChangeKeyboardMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'keysyms': [[707837223, 99294840, 1205405602], [67157514, 879853050, 2059131033], [1139736188, 578113249, 1525786315], [1335349176, 246731334, 277761436], [1386594542, 1676932187, 1862777168], [535892916, 342718655, 195574000], [5712156, 1820472637, 848853860], [1123197289, 1664064022, 94999154], [380150420, 402902535, 1061375041], [510686316, 502245882, 422893644], [1423643601, 194077695, 403885178], [1571826296, 529249772, 623556591], [720045879, 37553034, 955963792], [513407882, 861125615, 219940695], [184890179, 472466494, 1649347894], [1679171989, 1991748404, 1674460475], [1762342934, 276695222, 1941684480], [886658026, 1860690072, 577030090], [227169721, 1390318675, 321524615], [2144591365, 545119116, 404205206]],
-            'first_keycode': 250,
+            'first_keycode': 157,
+            'keysyms': [[1861549105, 991489870, 390260112], [107985429, 558681426, 814119353], [702984500, 454537006, 976459372], [701896028, 724776911, 1634728346], [1889012491, 814167346, 597551532], [1614928797, 2042695294, 1786543801], [905303576, 541748982, 1792957544], [175892294, 1009976242, 41625283], [1608517348, 1158393599, 111852976], [2147285698, 2044231981, 751534113], [481513427, 1396173819, 147356828], [1677685199, 2055755177, 1399632465], [86453688, 1619703478, 66636412], [2039275666, 531036848, 428123802], [1802230236, 43765755, 1334308166], [327238597, 512271361, 271057482], [1016964633, 1437651928, 245649464], [1211115441, 2035292716, 468075293], [998652876, 1502089592, 550279151], [1646901134, 792196355, 360324443]],
             }
-        self.req_bin_0 = '\x64\x14\x00\x3e' '\xfa\x03\x00\x00' \
-            '\x2a\x30\xbd\x27' '\x05\xeb\x1e\x78' \
-            '\x47\xd9\x07\xa2' '\x04\x00\xbe\x0a' \
-            '\x34\x71\x7d\xfa' '\x7a\xbb\xd8\x99' \
-            '\x43\xee\xfe\x7c' '\x22\x75\x4e\xe1' \
-            '\x5a\xf1\xa6\xcb' '\x4f\x97\xcf\xb8' \
-            '\x0e\xb4\xd2\x46' '\x10\x8e\x4d\x9c' \
-            '\x52\xa5\xc0\xee' '\x63\xf3\xf4\x5b' \
-            '\x6f\x07\xb9\x50' '\x1f\xf1\x13\xb4' \
-            '\x14\x6d\x78\xbf' '\x0b\xa8\x38\xf0' \
-            '\x00\x57\x29\x1c' '\x6c\x82\x35\x3d' \
-            '\x32\x98\x7b\x64' '\x42\xf2\xa1\x69' \
-            '\x63\x2f\x9a\x16' '\x05\xa9\x92\x72' \
-            '\x16\xa8\xa2\x94' '\x18\x03\xce\x07' \
-            '\x3f\x43\x4c\x41' '\x1e\x70\x74\x6c' \
-            '\x1d\xef\xa9\xfa' '\x19\x34\xd8\x4c' \
-            '\x54\xdb\x13\xd1' '\x0b\x91\x63\xff' \
-            '\x18\x12\xcc\x7a' '\x5d\xb0\x2a\x78' \
-            '\x1f\x8b\xb5\xec' '\x25\x2a\xb7\xef' \
-            '\x2a\xeb\x07\x37' '\x02\x3d\x03\x8a' \
-            '\x38\xfa\xd9\x90' '\x1e\x99\xfb\x8a' \
-            '\x33\x53\xbb\xef' '\x0d\x1c\x07\x57' \
-            '\x0b\x05\x33\x43' '\x1c\x29\x44\x3e' \
-            '\x62\x4f\x0d\x36' '\x64\x16\x21\x95' \
-            '\x76\xb7\xab\x34' '\x63\xce\x3d\x3b' \
-            '\x69\x0b\x38\x16' '\x10\x7e\x08\xb6' \
-            '\x73\xbb\xc1\x00' '\x34\xd9\x53\xea' \
-            '\x6e\xe7\xe0\x98' '\x22\x64\xc7\xca' \
-            '\x0d\x8a\x55\xb9' '\x52\xde\x94\x53' \
-            '\x13\x2a\x13\x87' '\x7f\xd3\xde\x05' \
-            '\x20\x7d\xdb\x8c' '\x18\x17\xae\x96'
+        self.req_bin_0 = b'\x64\x14\x00\x3e' b'\x9d\x03\x00\x00' \
+            b'\x6e\xf4\xfc\x31' b'\x3b\x18\xef\x4e' \
+            b'\x17\x42\xe5\x90' b'\x06\x6f\xba\x15' \
+            b'\x21\x4c\xcd\x52' b'\x30\x86\x79\xb9' \
+            b'\x29\xe6\xb1\x34' b'\x1b\x17\xaf\x2e' \
+            b'\x3a\x33\x96\x6c' b'\x29\xd6\x15\x5c' \
+            b'\x2b\x33\x37\xcf' b'\x61\x6f\xf9\x9a' \
+            b'\x70\x98\x0b\x0b' b'\x30\x87\x35\x32' \
+            b'\x23\x9d\xe9\xac' b'\x60\x41\xdb\x9d' \
+            b'\x79\xc1\x0e\x7e' b'\x6a\x7c\x7e\xb9' \
+            b'\x35\xf5\xd6\x18' b'\x20\x4a\x6e\xf6' \
+            b'\x6a\xde\x5c\x68' b'\x0a\x7b\xe7\x46' \
+            b'\x3c\x33\x03\xb2' b'\x02\x7b\x26\xc3' \
+            b'\x5f\xe0\x06\xe4' b'\x45\x0b\xae\xff' \
+            b'\x06\xaa\xbd\xb0' b'\x7f\xfc\xfa\xc2' \
+            b'\x79\xd8\x81\x2d' b'\x2c\xcb\x80\x21' \
+            b'\x1c\xb3\x4f\xd3' b'\x53\x37\xeb\xfb' \
+            b'\x08\xc8\x7c\x9c' b'\x63\xff\x71\xcf' \
+            b'\x7a\x88\x55\xa9' b'\x53\x6c\xb2\x51' \
+            b'\x05\x27\x2d\xb8' b'\x60\x8a\xb6\xb6' \
+            b'\x03\xf8\xca\x7c' b'\x79\x8c\xe0\x92' \
+            b'\x1f\xa6\xfa\xb0' b'\x19\x84\xa6\x9a' \
+            b'\x6b\x6b\xd9\xdc' b'\x02\x9b\xcf\xfb' \
+            b'\x4f\x87\xed\x46' b'\x13\x81\x43\xc5' \
+            b'\x1e\x88\xa4\x01' b'\x10\x28\x02\x4a' \
+            b'\x3c\x9d\xa6\x19' b'\x55\xb0\xd3\xd8' \
+            b'\x0e\xa4\x50\x38' b'\x48\x30\x27\xb1' \
+            b'\x79\x50\x1a\x2c' b'\x1b\xe6\x43\x1d' \
+            b'\x3b\x86\x3b\xcc' b'\x59\x88\x11\x78' \
+            b'\x20\xcc\x97\xef' b'\x62\x29\xb7\x8e' \
+            b'\x2f\x37\xf5\x03' b'\x15\x7a\x1d\x5b'
 
 
     def testPackRequest0(self):
         bin = request.ChangeKeyboardMapping._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangeKeyboardMapping._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetKeyboardMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'count': 131,
-            'first_keycode': 206,
+            'count': 207,
+            'first_keycode': 169,
             }
-        self.req_bin_0 = '\x65\x00\x00\x02' '\xce\x83\x00\x00'
+        self.req_bin_0 = b'\x65\x00\x00\x02' b'\xa9\xcf\x00\x00'
 
         self.reply_args_0 = {
-            'keysyms': [[1550369014, 1683205347, 1879538861], [452613596, 1132022246, 357271408], [528724632, 2118423140, 640580111], [1981239140, 195173082, 497130901], [2001675011, 809172000, 1577756130], [739794769, 1774524806, 787951551], [1784021539, 1998872082, 1747812414], [396316053, 1525431160, 1808906812], [1676662850, 1222579650, 1205117622], [396026453, 1956747483, 1762026309], [1222502216, 1488139702, 1799119214], [1504675136, 1414564657, 419659384], [1934768917, 2095924224, 590955729], [582168798, 383228141, 1552516537], [1482483262, 1041896520, 1047041873], [1932705867, 292473490, 226147737], [780322016, 1965031752, 1481062205], [89811542, 1313413666, 686267194], [237776128, 1310737228, 792176733], [849034415, 1592538831, 837355505]],
-            'sequence_number': 61409,
+            'keysyms': [[232140298, 1242716010, 55143985], [1994770011, 669923085, 1236514049], [1454592222, 1949971307, 2057660497], [805965556, 851808913, 2021792706], [1535482384, 425909956, 163201187], [1271520474, 1483083165, 1783638995], [1346992789, 521515080, 218831382], [1497210568, 1658890074, 647643874], [1825990828, 1469435098, 1289374120], [1729858135, 259963764, 1709884923], [2112789657, 1215330896, 1680696611], [88195295, 745614404, 1144061708], [919934772, 1420606257, 795794911], [148083460, 1086542523, 1390588550], [732788374, 27170279, 1824449766], [902069278, 1765942198, 1052700150], [226642993, 930984408, 2063275595], [777792886, 1364908620, 1914642756], [1779635393, 987282730, 1518933756], [328545991, 935201525, 378251236]],
+            'sequence_number': 48346,
             }
-        self.reply_bin_0 = '\x01\x03\xef\xe1' '\x00\x00\x00\x3c' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x5c\x68\xc0\xf6' '\x64\x53\xac\xe3' \
-            '\x70\x07\x7c\xad' '\x1a\xfa\x55\xdc' \
-            '\x43\x79\x49\xe6' '\x15\x4b\x87\x70' \
-            '\x1f\x83\xb2\x98' '\x7e\x44\x92\x64' \
-            '\x26\x2e\x7a\x0f' '\x76\x17\x4f\x64' \
-            '\x0b\xa2\x1a\xda' '\x1d\xa1\x9d\x95' \
-            '\x77\x4f\x23\x03' '\x30\x3a\xfc\x20' \
-            '\x5e\x0a\xa5\xe2' '\x2c\x18\x5f\x51' \
-            '\x69\xc5\x19\x86' '\x2e\xf7\x2f\xbf' \
-            '\x6a\x56\x02\x23' '\x77\x24\x5e\x12' \
-            '\x68\x2d\x80\x3e' '\x17\x9f\x4d\x95' \
-            '\x5a\xec\x3b\x78' '\x6b\xd1\xba\x3c' \
-            '\x63\xef\xd8\x42' '\x48\xdf\x15\xc2' \
-            '\x47\xd4\xa2\xb6' '\x17\x9a\xe2\x55' \
-            '\x74\xa1\x98\xdb' '\x69\x06\x63\x45' \
-            '\x48\xdd\xe7\x48' '\x58\xb3\x35\xb6' \
-            '\x6b\x3c\x61\x6e' '\x59\xaf\x85\x40' \
-            '\x54\x50\x8b\x31' '\x19\x03\x7e\x78' \
-            '\x73\x52\x3b\x15' '\x7c\xed\x44\x00' \
-            '\x23\x39\x44\xd1' '\x22\xb3\x30\xde' \
-            '\x16\xd7\x98\xed' '\x5c\x89\x85\xb9' \
-            '\x58\x5c\xe6\x3e' '\x3e\x1a\x14\x48' \
-            '\x3e\x68\x97\x51' '\x73\x32\xc0\x4b' \
-            '\x11\x6e\xca\x92' '\x0d\x7a\xbd\x99' \
-            '\x2e\x82\xc4\xe0' '\x75\x20\x01\x48' \
-            '\x58\x47\x37\x3d' '\x05\x5a\x6a\x56' \
-            '\x4e\x49\x1a\x22' '\x28\xe7\x9b\x3a' \
-            '\x0e\x2c\x2d\x00' '\x4e\x20\x43\x4c' \
-            '\x2f\x37\xa8\x5d' '\x32\x9b\x3c\xaf' \
-            '\x5e\xec\x36\xcf' '\x31\xe9\x07\xf1'
+        self.reply_bin_0 = b'\x01\x03\xbc\xda' b'\x00\x00\x00\x3c' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x0d\xd6\x2e\x0a' b'\x4a\x12\x57\x6a' \
+            b'\x03\x49\x6e\x31' b'\x76\xe5\xc6\x5b' \
+            b'\x27\xee\x37\x0d' b'\x49\xb3\xb5\x01' \
+            b'\x56\xb3\x50\xde' b'\x74\x3a\x33\x6b' \
+            b'\x7a\xa5\x68\x51' b'\x30\x0a\x0e\xf4' \
+            b'\x32\xc5\x92\x91' b'\x78\x82\x1b\xc2' \
+            b'\x5b\x85\x9a\x10' b'\x19\x62\xde\xc4' \
+            b'\x09\xba\x40\xa3' b'\x4b\xc9\xdc\xda' \
+            b'\x58\x66\x0d\x9d' b'\x6a\x50\x2b\xd3' \
+            b'\x50\x49\x7a\x95' b'\x1f\x15\xb0\x48' \
+            b'\x0d\x0b\x1a\x16' b'\x59\x3d\x9e\xc8' \
+            b'\x62\xe0\xa7\x5a' b'\x26\x9a\x42\xe2' \
+            b'\x6c\xd6\x68\xac' b'\x57\x95\xcc\xda' \
+            b'\x4c\xda\x49\xa8' b'\x67\x1b\x8a\x57' \
+            b'\x0f\x7e\xbb\x74' b'\x65\xea\xc5\xfb' \
+            b'\x7d\xee\x9c\x99' b'\x48\x70\x7a\x50' \
+            b'\x64\x2d\x65\x23' b'\x05\x41\xc0\xdf' \
+            b'\x2c\x71\x2c\x44' b'\x44\x30\xff\x0c' \
+            b'\x36\xd5\x17\x34' b'\x54\xac\xbb\x31' \
+            b'\x2f\x6e\xdd\xdf' b'\x08\xd3\x93\x04' \
+            b'\x40\xc3\x52\xbb' b'\x52\xe2\xb2\x86' \
+            b'\x2b\xad\x76\x96' b'\x01\x9e\x95\xe7' \
+            b'\x6c\xbe\xe4\xe6' b'\x35\xc4\x7c\x1e' \
+            b'\x69\x42\x23\xb6' b'\x3e\xbe\xed\xf6' \
+            b'\x0d\x82\x4c\x31' b'\x37\x7d\xb1\xd8' \
+            b'\x7a\xfb\x16\x4b' b'\x2e\x5c\x2d\x76' \
+            b'\x51\x5a\xda\x4c' b'\x72\x1f\x21\x44' \
+            b'\x6a\x13\x14\xc1' b'\x3a\xd8\xbd\x2a' \
+            b'\x5a\x89\x16\xfc' b'\x13\x95\x36\xc7' \
+            b'\x37\xbe\x0a\xf5' b'\x16\x8b\xa7\xe4'
 
 
     def testPackRequest0(self):
         bin = request.GetKeyboardMapping._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetKeyboardMapping._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetKeyboardMapping._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetKeyboardMapping._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestChangeKeyboardControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'attrs': {'key_click_percent': -35, 'bell_percent': -53, 'led_mode': 1, 'bell_pitch': -17390, 'auto_repeat_mode': 2, 'bell_duration': -30281, 'key': 235, 'led': 192},
+            'attrs': {'led': 196, 'auto_repeat_mode': 0, 'bell_pitch': -2303, 'bell_percent': -5, 'key_click_percent': -59, 'key': 190, 'bell_duration': -4223, 'led_mode': 1},
             }
-        self.req_bin_0 = '\x66\x00\x00\x0a' '\x00\x00\x00\xff' \
-            '\xdd\x00\x00\x00' '\xcb\x00\x00\x00' \
-            '\xbc\x12\x00\x00' '\x89\xb7\x00\x00' \
-            '\xc0\x00\x00\x00' '\x01\x00\x00\x00' \
-            '\xeb\x00\x00\x00' '\x02\x00\x00\x00'
+        self.req_bin_0 = b'\x66\x00\x00\x0a' b'\x00\x00\x00\xff' \
+            b'\xc5\x00\x00\x00' b'\xfb\x00\x00\x00' \
+            b'\xf7\x01\x00\x00' b'\xef\x81\x00\x00' \
+            b'\xc4\x00\x00\x00' b'\x01\x00\x00\x00' \
+            b'\xbe\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.ChangeKeyboardControl._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangeKeyboardControl._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetKeyboardControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x67\x00\x00\x01'
+        self.req_bin_0 = b'\x67\x00\x00\x01'
 
         self.reply_args_0 = {
-            'key_click_percent': 206,
-            'sequence_number': 30149,
-            'bell_percent': 251,
-            'bell_pitch': 13779,
-            'auto_repeats': [217, 171, 167, 167, 243, 163, 129, 239, 168, 153, 225, 199, 189, 155, 228, 149, 148, 237, 139, 150, 211, 133, 135, 250, 191, 166, 146, 212, 239, 183, 214, 250],
+            'auto_repeats': [199, 243, 190, 246, 225, 214, 135, 254, 211, 174, 252, 182, 218, 194, 215, 199, 198, 130, 176, 149, 189, 232, 253, 189, 249, 253, 242, 132, 151, 203, 184, 231],
+            'bell_duration': 35050,
+            'bell_percent': 249,
+            'bell_pitch': 36528,
             'global_auto_repeat': 0,
-            'led_mask': 438224369,
-            'bell_duration': 20235,
+            'key_click_percent': 222,
+            'led_mask': 1425908825,
+            'sequence_number': 20323,
             }
-        self.reply_bin_0 = '\x01\x00\x75\xc5' '\x00\x00\x00\x05' \
-            '\x1a\x1e\xc5\xf1' '\xce\xfb\x35\xd3' \
-            '\x4f\x0b\x00\x00' '\xd9\xab\xa7\xa7' \
-            '\xf3\xa3\x81\xef' '\xa8\x99\xe1\xc7' \
-            '\xbd\x9b\xe4\x95' '\x94\xed\x8b\x96' \
-            '\xd3\x85\x87\xfa' '\xbf\xa6\x92\xd4' \
-            '\xef\xb7\xd6\xfa'
+        self.reply_bin_0 = b'\x01\x00\x4f\x63' b'\x00\x00\x00\x05' \
+            b'\x54\xfd\xa4\x59' b'\xde\xf9\x8e\xb0' \
+            b'\x88\xea\x00\x00' b'\xc7\xf3\xbe\xf6' \
+            b'\xe1\xd6\x87\xfe' b'\xd3\xae\xfc\xb6' \
+            b'\xda\xc2\xd7\xc7' b'\xc6\x82\xb0\x95' \
+            b'\xbd\xe8\xfd\xbd' b'\xf9\xfd\xf2\x84' \
+            b'\x97\xcb\xb8\xe7'
 
 
     def testPackRequest0(self):
         bin = request.GetKeyboardControl._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetKeyboardControl._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetKeyboardControl._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetKeyboardControl._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestBell(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'percent': -19,
+            'percent': -40,
             }
-        self.req_bin_0 = '\x68\xed\x00\x01'
+        self.req_bin_0 = b'\x68\xd8\x00\x01'
 
 
     def testPackRequest0(self):
         bin = request.Bell._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.Bell._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestChangePointerControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'accel_denum': -32484,
-            'accel_num': -9346,
-            'do_accel': 0,
-            'do_thresh': 0,
-            'threshold': -8309,
+            'accel_denum': -8326,
+            'accel_num': -18826,
+            'do_accel': 1,
+            'do_thresh': 1,
+            'threshold': -14733,
             }
-        self.req_bin_0 = '\x69\x00\x00\x03' '\xdb\x7e\x81\x1c' \
-            '\xdf\x8b\x00\x00'
+        self.req_bin_0 = b'\x69\x00\x00\x03' b'\xb6\x76\xdf\x7a' \
+            b'\xc6\x73\x01\x01'
 
 
     def testPackRequest0(self):
         bin = request.ChangePointerControl._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangePointerControl._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetPointerControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x6a\x00\x00\x01'
+        self.req_bin_0 = b'\x6a\x00\x00\x01'
 
         self.reply_args_0 = {
-            'accel_denom': 63793,
-            'sequence_number': 59946,
-            'threshold': 46060,
-            'accel_num': 53419,
+            'accel_denom': 18010,
+            'accel_num': 29992,
+            'sequence_number': 46318,
+            'threshold': 20350,
             }
-        self.reply_bin_0 = '\x01\x00\xea\x2a' '\x00\x00\x00\x00' \
-            '\xd0\xab\xf9\x31' '\xb3\xec\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\xb4\xee' b'\x00\x00\x00\x00' \
+            b'\x75\x28\x46\x5a' b'\x4f\x7e\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GetPointerControl._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetPointerControl._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetPointerControl._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetPointerControl._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestSetScreenSaver(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'allow_exposures': 0,
-            'timeout': -12675,
-            'interval': -12318,
-            'prefer_blank': 2,
+            'allow_exposures': 2,
+            'interval': -25214,
+            'prefer_blank': 0,
+            'timeout': -24531,
             }
-        self.req_bin_0 = '\x6b\x00\x00\x03' '\xce\x7d\xcf\xe2' \
-            '\x02\x00\x00\x00'
+        self.req_bin_0 = b'\x6b\x00\x00\x03' b'\xa0\x2d\x9d\x82' \
+            b'\x00\x02\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.SetScreenSaver._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetScreenSaver._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestGetScreenSaver(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x6c\x00\x00\x01'
+        self.req_bin_0 = b'\x6c\x00\x00\x01'
 
         self.reply_args_0 = {
-            'allow_exposures': 1,
-            'timeout': 1865,
-            'sequence_number': 14674,
-            'prefer_blanking': 1,
-            'interval': 60559,
+            'allow_exposures': 0,
+            'interval': 8091,
+            'prefer_blanking': 0,
+            'sequence_number': 12877,
+            'timeout': 20935,
             }
-        self.reply_bin_0 = '\x01\x00\x39\x52' '\x00\x00\x00\x00' \
-            '\x07\x49\xec\x8f' '\x01\x01\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x00\x32\x4d' b'\x00\x00\x00\x00' \
+            b'\x51\xc7\x1f\x9b' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GetScreenSaver._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetScreenSaver._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetScreenSaver._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetScreenSaver._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestChangeHosts(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'host': [188, 226, 135, 199],
-            'mode': 1,
-            'host_family': 1,
+            'host': [183, 251, 198, 200],
+            'host_family': 0,
+            'mode': 0,
             }
-        self.req_bin_0 = '\x6d\x01\x00\x03' '\x01\x00\x00\x04' \
-            '\xbc\xe2\x87\xc7'
+        self.req_bin_0 = b'\x6d\x00\x00\x03' b'\x00\x00\x00\x04' \
+            b'\xb7\xfb\xc6\xc8'
 
 
     def testPackRequest0(self):
         bin = request.ChangeHosts._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ChangeHosts._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestListHosts(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x6e\x00\x00\x01'
+        self.req_bin_0 = b'\x6e\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 31662,
+            'hosts': [{'name': [34, 23, 178, 12], 'family': 0}, {'name': [130, 236, 254, 15], 'family': 0}],
             'mode': 1,
-            'hosts': [{'family': 0, 'name': [34, 23, 178, 12]}, {'family': 0, 'name': [130, 236, 254, 15]}],
+            'sequence_number': 15164,
             }
-        self.reply_bin_0 = '\x01\x01\x7b\xae' '\x00\x00\x00\x04' \
-            '\x00\x02\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x04' '\x22\x17\xb2\x0c' \
-            '\x00\x00\x00\x04' '\x82\xec\xfe\x0f'
+        self.reply_bin_0 = b'\x01\x01\x3b\x3c' b'\x00\x00\x00\x04' \
+            b'\x00\x02\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x04' b'\x22\x17\xb2\x0c' \
+            b'\x00\x00\x00\x04' b'\x82\xec\xfe\x0f'
 
 
     def testPackRequest0(self):
         bin = request.ListHosts._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ListHosts._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.ListHosts._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.ListHosts._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestSetAccessControl(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'mode': 0,
+            'mode': 1,
             }
-        self.req_bin_0 = '\x6f\x00\x00\x01'
+        self.req_bin_0 = b'\x6f\x01\x00\x01'
 
 
     def testPackRequest0(self):
         bin = request.SetAccessControl._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetAccessControl._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestSetCloseDownMode(EndianTest):
@@ -5185,89 +3691,62 @@ class TestSetCloseDownMode(EndianTest):
         self.req_args_0 = {
             'mode': 0,
             }
-        self.req_bin_0 = '\x70\x00\x00\x01'
+        self.req_bin_0 = b'\x70\x00\x00\x01'
 
 
     def testPackRequest0(self):
         bin = request.SetCloseDownMode._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetCloseDownMode._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestKillClient(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'resource': 1679944210,
+            'resource': 649180254,
             }
-        self.req_bin_0 = '\x71\x00\x00\x02' '\x64\x21\xea\x12'
+        self.req_bin_0 = b'\x71\x00\x00\x02' b'\x26\xb1\xb4\x5e'
 
 
     def testPackRequest0(self):
         bin = request.KillClient._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.KillClient._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestRotateProperties(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'delta': -27095,
-            'window': 109899869,
-            'properties': [1758270592, 1474783027, 1362037883, 19212066, 1095428186, 1435857629, 337040311, 1202859364, 1426187239, 725785004, 1722986690, 435243112],
+            'delta': -11867,
+            'properties': [30448914, 1520523655, 1147111912, 271900374, 589144637, 97809756, 2092347973, 117159267, 1188394866, 627424198, 1497757970, 2027482546],
+            'window': 271248673,
             }
-        self.req_bin_0 = '\x72\x00\x00\x0f' '\x06\x8c\xf0\x5d' \
-            '\x00\x0c\x96\x29' '\x68\xcd\x14\x80' \
-            '\x57\xe7\x67\x33' '\x51\x2f\x0c\x7b' \
-            '\x01\x25\x27\x22' '\x41\x4a\xe8\x5a' \
-            '\x55\x95\x72\xdd' '\x14\x16\xd3\xb7' \
-            '\x47\xb2\x2d\x64' '\x55\x01\xe3\xe7' \
-            '\x2b\x42\x99\xac' '\x66\xb2\xb0\xc2' \
-            '\x19\xf1\x48\x68'
+        self.req_bin_0 = b'\x72\x00\x00\x0f' b'\x10\x2a\xed\x21' \
+            b'\x00\x0c\xd1\xa5' b'\x01\xd0\x9d\x12' \
+            b'\x5a\xa1\x59\x87' b'\x44\x5f\x89\xe8' \
+            b'\x10\x34\xde\xd6' b'\x23\x1d\xa2\x3d' \
+            b'\x05\xd4\x75\x5c' b'\x7c\xb6\xb2\x45' \
+            b'\x06\xfb\xb5\x63' b'\x46\xd5\x77\x72' \
+            b'\x25\x65\xbb\xc6' b'\x59\x45\xf9\x12' \
+            b'\x78\xd8\xed\xb2'
 
 
     def testPackRequest0(self):
         bin = request.RotateProperties._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.RotateProperties._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestForceScreenSaver(EndianTest):
@@ -5275,274 +3754,183 @@ class TestForceScreenSaver(EndianTest):
         self.req_args_0 = {
             'mode': 1,
             }
-        self.req_bin_0 = '\x73\x01\x00\x01'
+        self.req_bin_0 = b'\x73\x01\x00\x01'
 
 
     def testPackRequest0(self):
         bin = request.ForceScreenSaver._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.ForceScreenSaver._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 class TestSetPointerMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'map': [218, 142, 195, 250, 194],
+            'map': [154, 131, 200, 248, 250],
             }
-        self.req_bin_0 = '\x74\x05\x00\x03' '\xda\x8e\xc3\xfa' \
-            '\xc2\x00\x00\x00'
+        self.req_bin_0 = b'\x74\x05\x00\x03' b'\x9a\x83\xc8\xf8' \
+            b'\xfa\x00\x00\x00'
 
         self.reply_args_0 = {
-            'sequence_number': 11995,
-            'status': 187,
+            'sequence_number': 22584,
+            'status': 240,
             }
-        self.reply_bin_0 = '\x01\xbb\x2e\xdb' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\xf0\x58\x38' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.SetPointerMapping._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetPointerMapping._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.SetPointerMapping._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.SetPointerMapping._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestGetPointerMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x75\x00\x00\x01'
+        self.req_bin_0 = b'\x75\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 35825,
-            'map': [165, 233, 136, 197, 230],
+            'map': [175, 141, 192, 250, 157],
+            'sequence_number': 54134,
             }
-        self.reply_bin_0 = '\x01\x05\x8b\xf1' '\x00\x00\x00\x02' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\xa5\xe9\x88\xc5' '\xe6\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\x05\xd3\x76' b'\x00\x00\x00\x02' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\xaf\x8d\xc0\xfa' b'\x9d\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.GetPointerMapping._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetPointerMapping._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetPointerMapping._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetPointerMapping._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestSetModifierMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
-            'keycodes': [[72, 169], [161, 154], [26, 10], [108, 187], [110, 198], [225, 88], [33, 66], [189, 147]],
+            'keycodes': [[33, 205], [251, 37], [27, 77], [76, 155], [43, 127], [60, 213], [115, 194], [230, 226]],
             }
-        self.req_bin_0 = '\x76\x02\x00\x05' '\x48\xa9\xa1\x9a' \
-            '\x1a\x0a\x6c\xbb' '\x6e\xc6\xe1\x58' \
-            '\x21\x42\xbd\x93'
+        self.req_bin_0 = b'\x76\x02\x00\x05' b'\x21\xcd\xfb\x25' \
+            b'\x1b\x4d\x4c\x9b' b'\x2b\x7f\x3c\xd5' \
+            b'\x73\xc2\xe6\xe2'
 
         self.reply_args_0 = {
-            'sequence_number': 44526,
-            'status': 188,
+            'sequence_number': 56627,
+            'status': 204,
             }
-        self.reply_bin_0 = '\x01\xbc\xad\xee' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.reply_bin_0 = b'\x01\xcc\xdd\x33' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPackRequest0(self):
         bin = request.SetModifierMapping._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.SetModifierMapping._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.SetModifierMapping._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.SetModifierMapping._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestGetModifierMapping(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x77\x00\x00\x01'
+        self.req_bin_0 = b'\x77\x00\x00\x01'
 
         self.reply_args_0 = {
-            'sequence_number': 58377,
-            'keycodes': [[3, 183], [213, 173], [9, 97], [35, 60], [249, 78], [175, 62], [237, 11], [26, 119]],
+            'keycodes': [[219, 156], [30, 50], [106, 108], [135, 41], [80, 122], [88, 38], [80, 1], [209, 230]],
+            'sequence_number': 45434,
             }
-        self.reply_bin_0 = '\x01\x02\xe4\x09' '\x00\x00\x00\x04' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x03\xb7\xd5\xad' '\x09\x61\x23\x3c' \
-            '\xf9\x4e\xaf\x3e' '\xed\x0b\x1a\x77'
+        self.reply_bin_0 = b'\x01\x02\xb1\x7a' b'\x00\x00\x00\x04' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\xdb\x9c\x1e\x32' b'\x6a\x6c\x87\x29' \
+            b'\x50\x7a\x58\x26' b'\x50\x01\xd1\xe6'
 
 
     def testPackRequest0(self):
         bin = request.GetModifierMapping._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.GetModifierMapping._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
     def testPackReply0(self):
         bin = request.GetModifierMapping._reply.to_binary(*(), **self.reply_args_0)
-        try:
-            assert bin == self.reply_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.reply_bin_0)
 
     def testUnpackReply0(self):
         args, remain = request.GetModifierMapping._reply.parse_binary(self.reply_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.reply_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.reply_args_0)
 
 
 class TestNoOperation(EndianTest):
     def setUp(self):
         self.req_args_0 = {
             }
-        self.req_bin_0 = '\x7f\x00\x00\x01'
+        self.req_bin_0 = b'\x7f\x00\x00\x01'
 
 
     def testPackRequest0(self):
         bin = request.NoOperation._request.to_binary(*(), **self.req_args_0)
-        try:
-            assert bin == self.req_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.req_bin_0)
 
     def testUnpackRequest0(self):
         args, remain = request.NoOperation._request.parse_binary(self.req_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.req_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.req_args_0)
 
 
 if __name__ == "__main__":
-    check_endian()
     unittest.main()

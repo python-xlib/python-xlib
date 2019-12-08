@@ -14,842 +14,625 @@ dummy_display = DummyDisplay()
 class TestKeymapNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'type': 154,
-            'data': [160, 192, 133, 223, 245, 128, 133, 188, 208, 142, 202, 142, 218, 238, 145, 150, 211, 150, 165, 230, 149, 162, 139, 159, 135, 255, 246, 202, 232, 185, 164],
+            'data': [248, 202, 136, 187, 201, 200, 244, 146, 187, 195, 178, 236, 157, 185, 166, 196, 164, 146, 143, 170, 206, 201, 240, 159, 247, 205, 231, 197, 254, 240, 148],
+            'type': 138,
             }
-        self.evt_bin_0 = '\x9a\xa0\xc0\x85' '\xdf\xf5\x80\x85' \
-            '\xbc\xd0\x8e\xca' '\x8e\xda\xee\x91' \
-            '\x96\xd3\x96\xa5' '\xe6\x95\xa2\x8b' \
-            '\x9f\x87\xff\xf6' '\xca\xe8\xb9\xa4'
+        self.evt_bin_0 = b'\x8a\xf8\xca\x88' b'\xbb\xc9\xc8\xf4' \
+            b'\x92\xbb\xc3\xb2' b'\xec\x9d\xb9\xa6' \
+            b'\xc4\xa4\x92\x8f' b'\xaa\xce\xc9\xf0' \
+            b'\x9f\xf7\xcd\xe7' b'\xc5\xfe\xf0\x94'
 
 
     def testPack0(self):
         bin = event.KeymapNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.KeymapNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestExpose(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 22214,
-            'sequence_number': 56268,
-            'type': 254,
-            'x': 16974,
-            'y': 19752,
-            'window': 1381709156,
-            'width': 26369,
-            'count': 60118,
+            'count': 15258,
+            'height': 6241,
+            'sequence_number': 48394,
+            'type': 238,
+            'width': 1951,
+            'window': 692245859,
+            'x': 39820,
+            'y': 16664,
             }
-        self.evt_bin_0 = '\xfe\x00\xdb\xcc' '\x52\x5b\x35\x64' \
-            '\x42\x4e\x4d\x28' '\x67\x01\x56\xc6' \
-            '\xea\xd6\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xee\x00\xbd\x0a' b'\x29\x42\xd5\x63' \
+            b'\x9b\x8c\x41\x18' b'\x07\x9f\x18\x61' \
+            b'\x3b\x9a\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.Expose._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.Expose._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestGraphicsExpose(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 352,
-            'sequence_number': 6380,
-            'type': 242,
-            'drawable': 820411264,
-            'x': 57593,
-            'y': 41762,
-            'major_event': 216,
-            'count': 63321,
-            'width': 58556,
-            'minor_event': 22632,
+            'count': 49818,
+            'drawable': 1443779242,
+            'height': 2892,
+            'major_event': 172,
+            'minor_event': 50267,
+            'sequence_number': 50375,
+            'type': 133,
+            'width': 38020,
+            'x': 54088,
+            'y': 17918,
             }
-        self.evt_bin_0 = '\xf2\x00\x18\xec' '\x30\xe6\x7b\x80' \
-            '\xe0\xf9\xa3\x22' '\xe4\xbc\x01\x60' \
-            '\x58\x68\xf7\x59' '\xd8\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\x85\x00\xc4\xc7' b'\x56\x0e\x52\xaa' \
+            b'\xd3\x48\x45\xfe' b'\x94\x84\x0b\x4c' \
+            b'\xc4\x5b\xc2\x9a' b'\xac\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.GraphicsExpose._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.GraphicsExpose._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestNoExpose(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 46171,
-            'major_event': 242,
-            'type': 187,
-            'window': 1319843810,
-            'minor_event': 45687,
+            'major_event': 199,
+            'minor_event': 29237,
+            'sequence_number': 34266,
+            'type': 248,
+            'window': 1399171519,
             }
-        self.evt_bin_0 = '\xbb\x00\xb4\x5b' '\x4e\xab\x37\xe2' \
-            '\xb2\x77\xf2\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xf8\x00\x85\xda' b'\x53\x65\xa9\xbf' \
+            b'\x72\x35\xc7\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.NoExpose._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.NoExpose._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestVisibilityNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'state': 238,
-            'sequence_number': 52805,
-            'type': 242,
-            'window': 1543431298,
+            'sequence_number': 38616,
+            'state': 253,
+            'type': 174,
+            'window': 936121409,
             }
-        self.evt_bin_0 = '\xf2\x00\xce\x45' '\x5b\xfe\xe4\x82' \
-            '\xee\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xae\x00\x96\xd8' b'\x37\xcc\x14\x41' \
+            b'\xfd\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.VisibilityNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.VisibilityNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestCreateNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 15506,
-            'sequence_number': 8253,
-            'type': 255,
-            'border_width': 53414,
-            'x': -31204,
-            'y': -23908,
-            'override': 1,
-            'parent': 654326356,
-            'window': 8505372,
-            'width': 8871,
+            'border_width': 56468,
+            'height': 7111,
+            'override': 0,
+            'parent': 747306217,
+            'sequence_number': 31058,
+            'type': 151,
+            'width': 44173,
+            'window': 876986399,
+            'x': -21847,
+            'y': -22248,
             }
-        self.evt_bin_0 = '\xff\x00\x20\x3d' '\x27\x00\x3a\x54' \
-            '\x00\x81\xc8\x1c' '\x86\x1c\xa2\x9c' \
-            '\x22\xa7\x3c\x92' '\xd0\xa6\x01\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\x97\x00\x79\x52' b'\x2c\x8a\xfc\xe9' \
+            b'\x34\x45\xc0\x1f' b'\xaa\xa9\xa9\x18' \
+            b'\xac\x8d\x1b\xc7' b'\xdc\x94\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.CreateNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.CreateNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestDestroyNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 49137,
-            'event': 408289937,
-            'type': 223,
-            'window': 1716558237,
+            'event': 1489718405,
+            'sequence_number': 27233,
+            'type': 212,
+            'window': 1064077163,
             }
-        self.evt_bin_0 = '\xdf\x00\xbf\xf1' '\x18\x56\x02\x91' \
-            '\x66\x50\x99\x9d' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xd4\x00\x6a\x61' b'\x58\xcb\x4c\x85' \
+            b'\x3f\x6c\x87\x6b' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.DestroyNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.DestroyNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestUnmapNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
+            'event': 2029853215,
             'from_configure': 0,
-            'sequence_number': 4412,
-            'event': 1122103072,
-            'type': 217,
-            'window': 1455493798,
+            'sequence_number': 43679,
+            'type': 201,
+            'window': 860030193,
             }
-        self.evt_bin_0 = '\xd9\x00\x11\x3c' '\x42\xe1\xef\x20' \
-            '\x56\xc1\x12\xa6' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xc9\x00\xaa\x9f' b'\x78\xfd\x1a\x1f' \
+            b'\x33\x43\x04\xf1' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.UnmapNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.UnmapNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestMapNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 65096,
-            'event': 328610268,
-            'type': 228,
-            'window': 1882369959,
-            'override': 0,
+            'event': 675485985,
+            'override': 1,
+            'sequence_number': 6027,
+            'type': 244,
+            'window': 542087937,
             }
-        self.evt_bin_0 = '\xe4\x00\xfe\x48' '\x13\x96\x31\xdc' \
-            '\x70\x32\xaf\xa7' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xf4\x00\x17\x8b' b'\x28\x43\x19\x21' \
+            b'\x20\x4f\x9b\x01' b'\x01\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.MapNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.MapNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestMapRequest(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'parent': 1664235152,
-            'sequence_number': 51552,
-            'type': 171,
-            'window': 488763730,
+            'parent': 1659099581,
+            'sequence_number': 63838,
+            'type': 157,
+            'window': 868024861,
             }
-        self.evt_bin_0 = '\xab\x00\xc9\x60' '\x63\x32\x36\x90' \
-            '\x1d\x21\xf1\x52' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\x9d\x00\xf9\x5e' b'\x62\xe3\xd9\xbd' \
+            b'\x33\xbd\x02\x1d' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.MapRequest._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.MapRequest._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestReparentNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 9256,
-            'event': 2000272853,
-            'type': 229,
-            'override': 1,
-            'x': -28587,
-            'y': -11597,
-            'parent': 912114770,
-            'window': 1142506827,
+            'event': 1867017989,
+            'override': 0,
+            'parent': 992152190,
+            'sequence_number': 43356,
+            'type': 128,
+            'window': 1165276406,
+            'x': -19227,
+            'y': -30992,
             }
-        self.evt_bin_0 = '\xe5\x00\x24\x28' '\x77\x39\xbd\xd5' \
-            '\x44\x19\x45\x4b' '\x36\x5d\xc4\x52' \
-            '\x90\x55\xd2\xb3' '\x01\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\x80\x00\xa9\x5c' b'\x6f\x48\x6f\x05' \
+            b'\x45\x74\xb4\xf6' b'\x3b\x23\x0a\x7e' \
+            b'\xb4\xe5\x86\xf0' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.ReparentNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.ReparentNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestConfigureNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 16243,
-            'sequence_number': 62364,
-            'event': 1373455462,
-            'type': 191,
-            'border_width': 7244,
-            'x': -12771,
-            'y': -15228,
-            'override': 1,
-            'above_sibling': 1099666850,
-            'window': 2046157981,
-            'width': 8604,
+            'above_sibling': 1343120585,
+            'border_width': 17757,
+            'event': 1624514845,
+            'height': 13596,
+            'override': 0,
+            'sequence_number': 41060,
+            'type': 220,
+            'width': 3638,
+            'window': 1070571314,
+            'x': -18284,
+            'y': -7865,
             }
-        self.evt_bin_0 = '\xbf\x00\xf3\x9c' '\x51\xdd\x44\x66' \
-            '\x79\xf5\xe4\x9d' '\x41\x8b\x95\xa2' \
-            '\xce\x1d\xc4\x84' '\x21\x9c\x3f\x73' \
-            '\x1c\x4c\x01\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xdc\x00\xa0\x64' b'\x60\xd4\x21\x1d' \
+            b'\x3f\xcf\x9f\x32' b'\x50\x0e\x64\xc9' \
+            b'\xb8\x94\xe1\x47' b'\x0e\x36\x35\x1c' \
+            b'\x45\x5d\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.ConfigureNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.ConfigureNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestConfigureRequest(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 31377,
-            'value_mask': 19345,
-            'type': 156,
-            'border_width': 54779,
-            'x': -18191,
-            'y': -17663,
-            'window': 1231046739,
-            'width': 51620,
-            'height': 47094,
-            'sibling': 1154714518,
-            'stack_mode': 199,
-            'parent': 176713389,
+            'border_width': 52639,
+            'height': 40159,
+            'parent': 1499546058,
+            'sequence_number': 57983,
+            'sibling': 260826075,
+            'stack_mode': 240,
+            'type': 201,
+            'value_mask': 15938,
+            'width': 41545,
+            'window': 1040976198,
+            'x': -31823,
+            'y': -880,
             }
-        self.evt_bin_0 = '\x9c\xc7\x7a\x91' '\x0a\x88\x6e\xad' \
-            '\x49\x60\x48\x53' '\x44\xd3\x8b\x96' \
-            '\xb8\xf1\xbb\x01' '\xc9\xa4\xb7\xf6' \
-            '\xd5\xfb\x4b\x91' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xc9\xf0\xe2\x7f' b'\x59\x61\x41\xca' \
+            b'\x3e\x0c\x09\x46' b'\x0f\x8b\xe3\xdb' \
+            b'\x83\xb1\xfc\x90' b'\xa2\x49\x9c\xdf' \
+            b'\xcd\x9f\x3e\x42' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.ConfigureRequest._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.ConfigureRequest._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestGravityNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 43376,
-            'event': 641536677,
-            'type': 192,
-            'window': 51697690,
-            'x': -21924,
-            'y': -4866,
+            'event': 1182983311,
+            'sequence_number': 20621,
+            'type': 168,
+            'window': 29431224,
+            'x': -14672,
+            'y': -19399,
             }
-        self.evt_bin_0 = '\xc0\x00\xa9\x70' '\x26\x3d\x12\xa5' \
-            '\x03\x14\xd8\x1a' '\xaa\x5c\xec\xfe' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xa8\x00\x50\x8d' b'\x46\x82\xe4\x8f' \
+            b'\x01\xc1\x15\xb8' b'\xc6\xb0\xb4\x39' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.GravityNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.GravityNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestResizeRequest(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'height': 59752,
-            'sequence_number': 21348,
-            'type': 149,
-            'window': 1698104652,
-            'width': 41494,
+            'height': 60085,
+            'sequence_number': 14981,
+            'type': 151,
+            'width': 55398,
+            'window': 2130921516,
             }
-        self.evt_bin_0 = '\x95\x00\x53\x64' '\x65\x37\x05\x4c' \
-            '\xa2\x16\xe9\x68' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\x97\x00\x3a\x85' b'\x7f\x03\x48\x2c' \
+            b'\xd8\x66\xea\xb5' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.ResizeRequest._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.ResizeRequest._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestPropertyNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'atom': 762586168,
-            'sequence_number': 29670,
-            'time': 1791118117,
-            'type': 188,
-            'state': 181,
-            'window': 334365400,
+            'atom': 252322161,
+            'sequence_number': 30497,
+            'state': 167,
+            'time': 1391011497,
+            'type': 157,
+            'window': 2033863003,
             }
-        self.evt_bin_0 = '\xbc\x00\x73\xe6' '\x13\xee\x02\xd8' \
-            '\x2d\x74\x24\x38' '\x6a\xc2\x4b\x25' \
-            '\xb5\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\x9d\x00\x77\x21' b'\x79\x3a\x49\x5b' \
+            b'\x0f\x0a\x21\x71' b'\x52\xe9\x26\xa9' \
+            b'\xa7\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.PropertyNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.PropertyNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestSelectionClear(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'time': 578079299,
-            'sequence_number': 13691,
-            'atom': 1385452659,
-            'type': 170,
-            'window': 355039782,
+            'atom': 1092859866,
+            'sequence_number': 61378,
+            'time': 1538959461,
+            'type': 255,
+            'window': 626833463,
             }
-        self.evt_bin_0 = '\xaa\x00\x35\x7b' '\x22\x74\xca\x43' \
-            '\x15\x29\x7a\x26' '\x52\x94\x54\x73' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xff\x00\xef\xc2' b'\x5b\xba\xa8\x65' \
+            b'\x25\x5c\xb8\x37' b'\x41\x23\xb7\xda' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.SelectionClear._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.SelectionClear._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestSelectionRequest(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 13254,
-            'type': 162,
-            'property': 397160681,
-            'owner': 2075837783,
-            'time': 1154635674,
-            'target': 1312534659,
-            'selection': 1972323175,
-            'requestor': 178195168,
+            'owner': 1036225485,
+            'property': 981007010,
+            'requestor': 2105124856,
+            'selection': 1014149797,
+            'sequence_number': 27485,
+            'target': 523473665,
+            'time': 1792621552,
+            'type': 197,
             }
-        self.evt_bin_0 = '\xa2\x00\x33\xc6' '\x44\xd2\x57\x9a' \
-            '\x7b\xba\xc5\x57' '\x0a\x9f\x0a\xe0' \
-            '\x75\x8f\x43\x67' '\x4e\x3b\xb0\x83' \
-            '\x17\xac\x30\xe9' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xc5\x00\x6b\x5d' b'\x6a\xd9\x3b\xf0' \
+            b'\x3d\xc3\x8b\xcd' b'\x7d\x79\xa7\xf8' \
+            b'\x3c\x72\xb2\xa5' b'\x1f\x33\x93\x01' \
+            b'\x3a\x78\xfa\xa2' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.SelectionRequest._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.SelectionRequest._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestSelectionNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 39736,
-            'type': 199,
-            'property': 302372755,
-            'time': 882192222,
-            'target': 2131462701,
-            'selection': 781895626,
-            'requestor': 1242076588,
+            'property': 1602716574,
+            'requestor': 1979762314,
+            'selection': 1287219120,
+            'sequence_number': 25394,
+            'target': 1091504539,
+            'time': 409398186,
+            'type': 165,
             }
-        self.evt_bin_0 = '\xc7\x00\x9b\x38' '\x34\x95\x2f\x5e' \
-            '\x4a\x08\x95\xac' '\x2e\x9a\xc7\xca' \
-            '\x7f\x0b\x8a\x2d' '\x12\x05\xd7\x93' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xa5\x00\x63\x32' b'\x18\x66\xeb\xaa' \
+            b'\x76\x00\xc6\x8a' b'\x4c\xb9\x67\xb0' \
+            b'\x41\x0f\x09\x9b' b'\x5f\x87\x83\x9e' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.SelectionNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.SelectionNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestColormapNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'state': 209,
-            'sequence_number': 62902,
-            'colormap': 300799750,
-            'type': 233,
-            'window': 1591667531,
+            'colormap': 593302316,
             'new': 1,
+            'sequence_number': 56880,
+            'state': 215,
+            'type': 162,
+            'window': 149981547,
             }
-        self.evt_bin_0 = '\xe9\x00\xf5\xb6' '\x5e\xde\xeb\x4b' \
-            '\x11\xed\xd7\x06' '\x01\xd1\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xa2\x00\xde\x30' b'\x08\xf0\x89\x6b' \
+            b'\x23\x5d\x13\x2c' b'\x01\xd7\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.ColormapNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.ColormapNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 class TestClientMessage(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 48712,
-            'data': (8, '01234567890123456789'),
-            'type': 245,
-            'client_type': 1340394836,
-            'window': 1256861040,
+            'client_type': 607457628,
+            'data': (8, b'01234567890123456789'),
+            'sequence_number': 54031,
+            'type': 196,
+            'window': 5574388,
             }
-        self.evt_bin_0 = '\xf5\x08\xbe\x48' '\x4a\xea\x2d\x70' \
-            '\x4f\xe4\xcd\x54' '\x30\x31\x32\x33' \
-            '\x34\x35\x36\x37' '\x38\x39\x30\x31' \
-            '\x32\x33\x34\x35' '\x36\x37\x38\x39'
+        self.evt_bin_0 = b'\xc4\x08\xd3\x0f' b'\x00\x55\x0e\xf4' \
+            b'\x24\x35\x11\x5c' b'\x30\x31\x32\x33' \
+            b'\x34\x35\x36\x37' b'\x38\x39\x30\x31' \
+            b'\x32\x33\x34\x35' b'\x36\x37\x38\x39'
 
         self.evt_args_1 = {
-            'sequence_number': 62804,
+            'client_type': 1245441508,
             'data': (16, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-            'type': 250,
-            'client_type': 214585025,
-            'window': 151327338,
+            'sequence_number': 55140,
+            'type': 204,
+            'window': 1260504694,
             }
-        self.evt_bin_1 = '\xfa\x10\xf5\x54' '\x09\x05\x12\x6a' \
-            '\x0c\xca\x4e\xc1' '\x00\x01\x00\x02' \
-            '\x00\x03\x00\x04' '\x00\x05\x00\x06' \
-            '\x00\x07\x00\x08' '\x00\x09\x00\x0a'
+        self.evt_bin_1 = b'\xcc\x10\xd7\x64' b'\x4b\x21\xc6\x76' \
+            b'\x4a\x3b\xed\xe4' b'\x00\x01\x00\x02' \
+            b'\x00\x03\x00\x04' b'\x00\x05\x00\x06' \
+            b'\x00\x07\x00\x08' b'\x00\x09\x00\x0a'
 
         self.evt_args_2 = {
-            'sequence_number': 3122,
+            'client_type': 959018764,
             'data': (32, [1, 2, 3, 4, 5]),
-            'type': 243,
-            'client_type': 698151018,
-            'window': 725159371,
+            'sequence_number': 56961,
+            'type': 253,
+            'window': 319171761,
             }
-        self.evt_bin_2 = '\xf3\x20\x0c\x32' '\x2b\x39\x0d\xcb' \
-            '\x29\x9c\xf0\x6a' '\x00\x00\x00\x01' \
-            '\x00\x00\x00\x02' '\x00\x00\x00\x03' \
-            '\x00\x00\x00\x04' '\x00\x00\x00\x05'
+        self.evt_bin_2 = b'\xfd\x20\xde\x81' b'\x13\x06\x2c\xb1' \
+            b'\x39\x29\x77\x0c' b'\x00\x00\x00\x01' \
+            b'\x00\x00\x00\x02' b'\x00\x00\x00\x03' \
+            b'\x00\x00\x00\x04' b'\x00\x00\x00\x05'
 
 
     def testPack0(self):
         bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.ClientMessage._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
     def testPack1(self):
         bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_1)
-        try:
-            assert bin == self.evt_bin_1
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_1)
 
     def testUnpack1(self):
         args, remain = event.ClientMessage._fields.parse_binary(self.evt_bin_1, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_1
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_1)
 
     def testPack2(self):
         bin = event.ClientMessage._fields.to_binary(*(), **self.evt_args_2)
-        try:
-            assert bin == self.evt_bin_2
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_2)
 
     def testUnpack2(self):
         args, remain = event.ClientMessage._fields.parse_binary(self.evt_bin_2, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_2
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_2)
 
 
 class TestMappingNotify(EndianTest):
     def setUp(self):
         self.evt_args_0 = {
-            'sequence_number': 53541,
-            'count': 151,
-            'request': 141,
-            'type': 252,
-            'first_keycode': 218,
+            'count': 244,
+            'first_keycode': 224,
+            'request': 213,
+            'sequence_number': 22874,
+            'type': 251,
             }
-        self.evt_bin_0 = '\xfc\x00\xd1\x25' '\x8d\xda\x97\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00' \
-            '\x00\x00\x00\x00' '\x00\x00\x00\x00'
+        self.evt_bin_0 = b'\xfb\x00\x59\x5a' b'\xd5\xe0\xf4\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00' \
+            b'\x00\x00\x00\x00' b'\x00\x00\x00\x00'
 
 
     def testPack0(self):
         bin = event.MappingNotify._fields.to_binary(*(), **self.evt_args_0)
-        try:
-            assert bin == self.evt_bin_0
-        except AssertionError:
-            raise AssertionError(tohex(bin))
+        self.assertBinaryEqual(bin, self.evt_bin_0)
 
     def testUnpack0(self):
         args, remain = event.MappingNotify._fields.parse_binary(self.evt_bin_0, dummy_display, 1)
-        try:
-            assert len(remain) == 0
-        except AssertionError:
-            raise AssertionError(tohex(remain))
-        try:
-            assert args == self.evt_args_0
-        except AssertionError:
-            raise AssertionError(args)
+        self.assertBinaryEmpty(remain)
+        self.assertEqual(args, self.evt_args_0)
 
 
 if __name__ == "__main__":
-    check_endian()
     unittest.main()

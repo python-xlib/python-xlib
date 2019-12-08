@@ -62,12 +62,12 @@ _resource_hierarchy = {
     }
 
 class _BaseDisplay(protocol_display.Display):
-    resource_classes = _resource_baseclasses.copy()
 
     # Implement a cache of atom names, used by Window objects when
     # dealing with some ICCCM properties not defined in Xlib.Xatom
 
     def __init__(self, *args, **keys):
+        self.resource_classes = _resource_baseclasses.copy()
         protocol_display.Display.__init__(self, *args, **keys)
         self._atom_cache = {}
 
@@ -517,7 +517,7 @@ class Display(object):
                           event = event)
 
     def ungrab_pointer(self, time, onerror = None):
-        """elease a grabbed pointer and any queued events. See
+        """Release a grabbed pointer and any queued events. See
         XUngrabPointer(3X11)."""
         request.UngrabPointer(display = self.display,
                               onerror = onerror,
@@ -661,7 +661,7 @@ class Display(object):
         font_ascent
         font_descent
         replies_hint
-            See the descripton of XFontStruct in XGetFontProperty(3X11)
+            See the description of XFontStruct in XGetFontProperty(3X11)
             for details on these values.
         properties
             A list of properties. Each entry has two attributes:
@@ -814,7 +814,7 @@ class Display(object):
         request.ChangePointerControl(display = self.display,
                                      onerror = onerror,
                                      do_accel = do_accel,
-                                     do_thres = do_threshold,
+                                     do_thresh = do_threshold,
                                      accel_num = accel_num,
                                      accel_denum = accel_denum,
                                      threshold = threshold)

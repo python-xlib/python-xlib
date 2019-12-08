@@ -5,7 +5,7 @@ import struct
 import types
 import re
 
-from six import binary_type
+from six import binary_type, iterbytes
 
 from Xlib.protocol import rq
 from . import DummyDisplay, TestCase
@@ -24,24 +24,25 @@ class StructTest(object):
     """ Test class helper for rq.Struct packing/unpacking support. """
 
     struct = None
-    values = None
+    values_in = None
     binary = None
+    values_out = None
 
     def test_pack_value_dict(self):
-        self.assertBinaryEqual(self.struct.pack_value(dict(self.values)), self.binary)
+        self.assertBinaryEqual(self.struct.pack_value(dict(self.values_in)), self.binary)
 
     def test_pack_value_tuple(self):
-        self.assertBinaryEqual(self.struct.pack_value(tuple(self.values.values())), self.binary)
+        self.assertBinaryEqual(self.struct.pack_value(tuple(self.values_in.values())), self.binary)
 
     def test_to_binary_args(self):
-        self.assertBinaryEqual(self.struct.to_binary(*self.values.values()), self.binary)
+        self.assertBinaryEqual(self.struct.to_binary(*self.values_in.values()), self.binary)
 
     def test_to_binary_kwargs(self):
-        self.assertBinaryEqual(self.struct.to_binary(**dict(self.values)), self.binary)
+        self.assertBinaryEqual(self.struct.to_binary(**dict(self.values_in)), self.binary)
 
     def test_parse_binary(self):
         values, remain = self.struct.parse_binary(self.binary, dummy_display)
-        self.assertEqual(values, rq.DictWrapper(dict(self.values)))
+        self.assertEqual(values, rq.DictWrapper(dict(self.values_out)))
         self.assertBinaryEmpty(remain)
 
 
@@ -54,35 +55,49 @@ def _struct_test(name, fields):
         - field_type:
             factory for the field type, taking one parameter only, the name of
             the field and returning a rq.Field subclass instance
-        - field_value:
+        - field_value_in:
             the raw value passed in when packing and expected output on unpacking
         - field_binary:
             the binary representation of the field value or a function to
             convert it to binary for creating the expected result of packing
             the struct
+        - field_value_out:
+            the raw value passed expected on output on unpacking
+            (optional, <field_value_in> is used if not specified)
     """
 
     class_name = ''.join([part.capitalize() for part in re.sub(r'[^\w]+', ' ', name).split()])
     class_name += 'StructTest'
     struct_layout = []
-    values = OrderedDict()
+    values_in = OrderedDict()
     binary = b''
-    for field_name, field_type, field_value, field_binary in fields:
+    values_out = OrderedDict()
+    for field_params in fields:
+        assert 4 <= len(field_params) <= 5
+        field_name, field_type, field_value_in, field_binary = field_params[0:4]
+        if len(field_params) == 5:
+            field_value_out = field_params[4]
+        else:
+            field_value_out = field_value_in
         struct_layout.append(field_type(field_name))
-        if field_name is not None and field_value is not None:
-            values[field_name] = field_value
+        if field_name is not None:
+            if field_value_in is not None:
+                values_in[field_name] = field_value_in
+            if field_value_out is not None:
+                values_out[field_name] = field_value_out
         if isinstance(field_binary, binary_type):
             binary += field_binary
         elif isinstance(field_binary, (types.FunctionType, types.LambdaType, partial)):
-            binary += field_binary(field_value)
+            binary += field_binary(field_value_in)
         else:
             raise ValueError('unsupported type for binary: {data} [{type}]'.format(
                 data=str(field_binary), type=type(field_binary))
             )
     class_dict = {
         'struct': rq.Struct(*struct_layout),
-        'values': values,
+        'values_in': values_in,
         'binary': binary,
+        'values_out': values_out,
     }
     globals()[class_name] = type(class_name, (StructTest, TestCase), class_dict)
 
@@ -145,6 +160,14 @@ _struct_test('string8 pad', (
     ('s1', lambda name: rq.String8(name, pad=1), "testing"                           , partial(packstr, padding=1)),
     ('s2', lambda name: rq.String8(name, pad=1), "one two three"                     , partial(packstr, padding=3)),
     ('s3', lambda name: rq.String8(name, pad=1), "supercalifragilisticexpialidocious", partial(packstr, padding=2)),
+))
+
+_struct_test('simple string16', (
+    (None, lambda name: rq.LengthOf('s1', 1)   , None            , pack('B', 3) ),
+    (None, lambda name: rq.LengthOf('s2', 2)   , None            , pack('H', 3) ),
+    ('s1', lambda name: rq.String16(name, pad=0), (0, 1, 2), lambda s: struct.pack('>' + 'H' * len(s), *s)),
+    # An 8-bits string is also allowed on input.
+    ('s2', lambda name: rq.String16(name, pad=0), b'\x03\x04\x05', lambda s: struct.pack('>' + 'H' * len(s), *iterbytes(s)), (3, 4, 5)),
 ))
 
 _struct_test('binary', (

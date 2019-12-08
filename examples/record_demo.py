@@ -56,7 +56,7 @@ def record_callback(reply):
     if reply.client_swapped:
         print("* received swapped protocol data, cowardly ignored")
         return
-    if not len(reply.data) or ord(reply.data[0]) < 2:
+    if not len(reply.data) or reply.data[0] < 2:
         # not an event
         return
 

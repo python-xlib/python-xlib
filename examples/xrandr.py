@@ -42,11 +42,11 @@ class Window(object):
 
         # Check for extension
         if not self.d.has_extension('RANDR'):
-            sys.stderr.write('%s: server does not have the RANDR extension\n'
-                             % sys.argv[0])
-            print(self.d.query_extension('RANDR'))
+            sys.stderr.write('{}: server does not have the RANDR extension\n'.format(sys.argv[0]))
+            ext = self.d.query_extension('RANDR')
+            print(ext)
             sys.stderr.write("\n".join(self.d.list_extensions()))
-            if self.d.query_extension('RANDR') is None:
+            if ext is None:
                 sys.exit(1)
 
         # print(version)

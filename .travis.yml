@@ -2,48 +2,41 @@ language: python
 
 python:
   - "2.7"
-  - "3.3"
   - "3.4"
   - "3.5"
+  - "3.6"
+  - "3.7"
+  - "3.8"
 
 # command to install dependencies
 install:
   - pip install -r requirements.txt
   - pip install -r dev-requirements.txt
 
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
-  - xauth generate :99.0 . trusted
-
 # command to run tests
-script: 
-  nosetests --exe --with-xunit --with-coverage --cover-html --cover-html-dir=Coverage_report --verbosity=3 test/ examples/run_examples.py
+script:
+  python -W all runtests.py --with-coverage --cover-html --cover-html-dir=Coverage_report
 
 after_success:
   - codecov
 
 before_deploy:
   # Generate source distribution.
-  # Note: only do this with Python 3.5 so we get support for tar.xz, and
-  # because the contents of the distribution are the same for all versions.
-  - case "$TRAVIS_PYTHON_VERSION" in 3.5) python setup.py sdist --formats=xztar;; esac
-  # Generate egg distribution.
-  - python setup.py bdist_egg
+  # Note: only do this with Python 3.5 because the contents
+  # of the distribution are the same for all versions.
+  - case "$TRAVIS_PYTHON_VERSION" in 3.5) python setup.py sdist --formats=bztar;; esac
   # Generate wheel distribution.
-  # Note: only do this once for each major Python version, as the minor version
-  # number is not encoded in the resulting filename (and contents are the same).
-  - case "$TRAVIS_PYTHON_VERSION" in 2.7|3.5) python setup.py bdist_wheel;; esac
+  # Note: only do this once, since we create a universal wheel.
+  - case "$TRAVIS_PYTHON_VERSION" in 3.5) python setup.py bdist_wheel;; esac
 
 deploy:
   - provider: releases
     api_key:
-      secure: "lBEbXUeBQyDspP0XBGM/NgfzO2AhW3sMRqCKvOxWQNw4VrC+nfXCkF3OyuRkqQbw+25TKHJadjg+NxX/FtCxdKAJo2MeRrCxNmLqVhq3PnRyBSkVROxYfDFZFL12hmeFA0CrZp45uuSWdruU7a0xh9SkFVBdHSYt55jIzbHKZBdqy1fnL/ot+hnafmsUWc+EiP0s6BgLeqihfevxq87imKyzMKpyH8ofwKKWx6LTgq9khJdQt5x4LUm+Kq8HDcdDeJtz2eLFziDGA7ds+aIpbrk0bG8tmT4SaM06EmJCZoegifGWWnkf5xEe5CVmQXS8Xl3R2bgeII5O4eXUWUXk1tT2nuPLPPv4iTSsZkEd1UH/eHupIID/IKuVqo2GrhvzLBcIzDCFaZg/U8ufARmsx1FGfuzqWwzpqXb+tvDBp6Xz6xSpjrUwwJ41oDRWnDzGLN3uvH06VeMcy6pVFftRLbiMVpOEd76tNvGEEEj4ropb7VyvRL+IHGwbb0Ns62toJYDbgzHyBhisN43tFmaT8fpqLvZP7yuRCMIqs8mtH9Iw4YpOJUG8scsFtX445C4xEGw1j/E6TZkjBrfG0O1FVP1Q6wHYCyutCNjvGKnWvyd+4pg1Nzx/HC/O+ioNefVm+jOTjKtKla/kY6P3ctDWGjXgHGqRe6gn0MtwmR/T+mY="
+      secure: "kZHDE09hKehX8bFRWa5qM56J3ujc3Stl5j2u9KfdXwmZyYlremZTJ5J9gdiLqqRrTI1jF5n+3miacYSdups1VSqgXYsGzoz99HurtcoMfkFxWkkeCnd6ORwvTXYFN28t2CcjWXV6jCyUABPaEv8TCK3/+LeFfuf30O5Hxg/KiUfpqBwXj6sWaht0whhay45r6D5nYb8omhqa7n4DDLlrStRqkp1SB895EElessFFuHjn/jkxlyEUjGjQ+x79h8JKiXVozYRcyb4eC75xIaE6+yeA6q2ZxMrNRdBnWbRrFBNYsx4QbMCe9vq2m0IQMkrh0kk5N53eA6/8Yy6ZpDUNAb/Alvql8+y/qWwVQl3TYwcMGd0PctmfGH6rElByiOIVV9Zv52hTK9jXky0ab+avLufXlL8tUDVSNReXR7En37vbxlq+AU+xNhHN3girkJJ7jU6saQpj1tROGBpPkLIIHQFh3dbubfgw9qdW5qYBZyLHK9yKNnlzFIr7yktqJvJ/jGz/YDER12UdlCzaoWtVdw8Ogm9faAFlMUvzExYt5BIneDYUe13GtoDw69aLiuq5YGcFKClsgDIqBqYYBTVIHwAS9kTV4CZV0L4C15ylmUIP68LFxZ/stufXW0MJxvhIaJ7gJ9d9LyCK1a0u0j5a78cX/OUx9RfqjOMCuVbGTys="
     file_glob: true
     file:
     - dist/*.tar.*
-    - dist/*.egg
     - dist/*.whl
     on:
       tags: true
+    skip_cleanup: true

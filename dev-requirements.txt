@@ -1,3 +1,5 @@
 coverage
 codecov
+mock
+nose
 setuptools-scm

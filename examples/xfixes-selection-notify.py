@@ -1,9 +1,10 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
-# examples/xfixes.py -- demonstrate the XFIXES extension
+# examples/xfixes-selection-notify.py -- demonstrate the XFIXES extension
+# SelectionNotify event.
 #
-#    Copyright (C) 2011 Outpost Embedded, LLC
-#      Forest Bond <forest.bond@rapidrollout.com>
+#    Copyright (C) 2019
+#      Tony Crisci <tony@dubstepdish.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public License
@@ -33,10 +34,18 @@ import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from Xlib.display import Display
-
+from Xlib.ext import xfixes
 
 def main(argv):
+    if len(sys.argv) != 2:
+        sys.exit('usage: {0} SELECTION\n\n'
+                 'SELECTION is typically PRIMARY, SECONDARY or CLIPBOARD.\n'
+                 .format(sys.argv[0]))
+
     display = Display()
+
+    sel_name = sys.argv[1]
+    sel_atom = display.get_atom(sel_name)
 
     if not display.has_extension('XFIXES'):
         if display.query_extension('XFIXES') is None:
@@ -51,15 +60,22 @@ def main(argv):
 
     screen = display.screen()
 
-    print('Hiding cursor ...', file=sys.stderr)
-    screen.root.xfixes_hide_cursor()
-    display.sync()
+    mask = xfixes.XFixesSetSelectionOwnerNotifyMask | \
+           xfixes.XFixesSelectionWindowDestroyNotifyMask | \
+           xfixes.XFixesSelectionClientCloseNotifyMask
 
-    time.sleep(5)
+    display.xfixes_select_selection_input(screen.root, sel_atom, mask)
 
-    print('Showing cursor ...', file=sys.stderr)
-    screen.root.xfixes_show_cursor()
-    display.sync()
+    while True:
+        e = display.next_event()
+        print(e)
+
+        if (e.type, e.sub_code) == display.extension_event.SetSelectionOwnerNotify:
+            print('SetSelectionOwner: owner=0x{0:08x}'.format(e.owner.id))
+        elif (e.type, e.sub_code) == display.extension_event.SelectionWindowDestroyNotify:
+            print('SelectionWindowDestroy: owner=0x{0:08x}'.format(e.owner.id))
+        elif (e.type, e.sub_code) == display.extension_event.SelectionClientCloseNotify:
+            print('SelectionClientClose: owner=0x{0:08x}'.format(e.owner.id))
 
 
 if __name__ == '__main__':
