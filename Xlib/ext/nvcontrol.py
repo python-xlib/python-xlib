@@ -273,6 +273,10 @@ def set_gpu_nvclock_offset(self, target, perf_level, offset):
     return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET, offset)
 
 
+def set_gpu_nvclock_offset_all_levels(self, target, offset):
+    return set_int_attribute(self, target, 0, NV_CTRL_GPU_NVCLOCK_OFFSET_ALL_PERFORMANCE_LEVELS, offset)
+
+
 def get_gpu_nvclock_offset_range(self, target, perf_level):
     return query_valid_attr_values(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET)
 
@@ -283,6 +287,10 @@ def get_mem_transfer_rate_offset(self, target, perf_level):
 
 def set_mem_transfer_rate_offset(self, target, perf_level, offset):
     return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET, offset)
+
+
+def set_mem_transfer_rate_offset_all_levels(self, target, offset):
+    return set_int_attribute(self, target, 0, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET_ALL_PERFORMANCE_LEVELS, offset)
 
 
 def get_mem_transfer_rate_offset_range(self, target, perf_level):
@@ -372,8 +380,10 @@ def init(disp, info):
     disp.extension_add_method('display', 'nvcontrol_get_current_performance_level', get_current_performance_level)
     disp.extension_add_method('display', 'nvcontrol_get_gpu_nvclock_offset', get_gpu_nvclock_offset)
     disp.extension_add_method('display', 'nvcontrol_set_gpu_nvclock_offset', set_gpu_nvclock_offset)
+    disp.extension_add_method('display', 'nvcontrol_set_gpu_nvclock_offset_all_levels', set_gpu_nvclock_offset_all_levels)
     disp.extension_add_method('display', 'nvcontrol_get_mem_transfer_rate_offset', get_mem_transfer_rate_offset)
     disp.extension_add_method('display', 'nvcontrol_set_mem_transfer_rate_offset', set_mem_transfer_rate_offset)
+    disp.extension_add_method('display', 'nvcontrol_set_mem_transfer_rate_offset_all_levels', set_mem_transfer_rate_offset_all_levels)
     disp.extension_add_method('display', 'nvcontrol_get_cooler_manual_control_enabled',
                               get_cooler_manual_control_enabled)
     disp.extension_add_method('display', 'nvcontrol_get_fan_duty', get_fan_duty)
