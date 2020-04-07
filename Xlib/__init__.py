@@ -19,7 +19,7 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-__version__ = (0, 26)
+__version__ = (0, 27)
 
 __version_extra__ = ''
 

@@ -1,5 +1,19 @@
 NEWS for Python X Library
 
+Version 0.27
+============
+
+Bug Fixes
+---------
+
+- fix TypeError in socket.error exception handling for Python 3.x (by @t-wissmann)
+
+Extensions
+--------------------
+
+- NV-CONTROL: set offset for all perf levels (by @Sporif)
+
+---
 Version 0.26
 ============
 
