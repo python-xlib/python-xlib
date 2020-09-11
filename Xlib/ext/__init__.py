@@ -38,6 +38,7 @@ __extensions__ = [
     ('XInputExtension', 'xinput'),
     ('NV-CONTROL', 'nvcontrol'),
     ('DAMAGE', 'damage'),
+    ('DPMS', 'dpms'),
     ]
 
 __all__ = map(lambda x: x[1], __extensions__)
