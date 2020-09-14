@@ -209,7 +209,7 @@ class DPMSInfo(rq.ReplyRequest):
         rq.Pad(1),
         rq.Card16('sequence_number'),
         rq.ReplyLength(),
-        rq.Resource('power_level', DPMSPowerLevel),
+        rq.Card16('power_level'),
         rq.Bool('state'),
         rq.Pad(21),
         )
@@ -222,7 +222,7 @@ def info(self):
                     minor_version=1)
 
 
-def init(disp, info):
+def init(disp, _info):
     disp.extension_add_method('display', 'dpms_get_version', get_version)
     disp.extension_add_method('display', 'dpms_capable', capable)
     disp.extension_add_method('display', 'dpms_get_timeouts', get_timeouts)
@@ -230,5 +230,4 @@ def init(disp, info):
     disp.extension_add_method('display', 'dpms_enable', enable)
     disp.extension_add_method('display', 'dpms_disable', disable)
     disp.extension_add_method('display', 'dpms_force_level', force_level)
-    # TODO: Returns 'TypeError: first argument must be callable' on call
-    # disp.extension_add_method('display', 'dpms_info', info)
+    disp.extension_add_method('display', 'dpms_info', info)
