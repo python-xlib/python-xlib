@@ -70,7 +70,7 @@ There are three advantages of implementing a pure Python library:
 
 -  Maintainability: It is much easier to develop and debug native Python
    modules than modules written in C.
-   
+
 Documentation
 ~~~~~~~~~~~~~
 
@@ -92,7 +92,7 @@ starting with version 2.0.
 
 There is a resource database implementation, ICCCM support and a
 framework for adding X extension code. Several extensions have been
-implemented; (RECORD, SHAPE, Xinerama, Composite, RANDR, and XTEST)
+implemented; (RECORD, SHAPE, Xinerama, Composite, RANDR, DPMS, and XTEST)
 patches for additions are very welcome.
 
 There are most likely still bugs, but the library is at least stable
