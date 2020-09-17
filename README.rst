@@ -75,10 +75,10 @@ Documentation
 ~~~~~~~~~~~~~
 
 The reference manual is not finished by far, but is probably still useful. It
-can be `browsed online <http://python-xlib.sourceforge.net/doc/html/index.html>`__.
+can be `browsed online <https://python-xlib.github.io/>`__.
 
 There are also some `example programs <Examples_>`_ and, of course,
-`the standard X11 documentation <http://tronche.com/gui/x/xlib/>`__ applies.
+`the standard X11 documentation <https://tronche.com/gui/x/xlib/>`__ applies.
 
 
 Project status
