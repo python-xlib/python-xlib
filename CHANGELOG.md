@@ -1,5 +1,14 @@
 NEWS for Python X Library
 
+Version 0.28
+============
+
+Extensions
+--------------------
+
+- DPMS: Display Power Management Signaling (by @thiagokokada)
+
+---
 Version 0.27
 ============
 

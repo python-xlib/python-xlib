@@ -92,7 +92,8 @@ starting with version 2.0.
 
 There is a resource database implementation, ICCCM support and a
 framework for adding X extension code. Several extensions have been
-implemented; (RECORD, SHAPE, Xinerama, Composite, RANDR, DPMS, and XTEST)
+implemented (RECORD, SHAPE, Xinerama, Composite, RANDR, DAMAGE,
+Generic Event, SECURITY, XFIXES, XInput, XTEST, NV-CONTROL and DPMS);
 patches for additions are very welcome.
 
 There are most likely still bugs, but the library is at least stable
