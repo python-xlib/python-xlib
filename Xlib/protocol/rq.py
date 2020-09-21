@@ -1320,7 +1320,7 @@ class DictWrapper(GetAttrData):
         return str(self._data)
 
     def __repr__(self):
-        return '%s(%s)' % (self.__class__, repr(self._data))
+        return '%s(%s)' % (self.__class__.__name__, repr(self._data))
 
     def __lt__(self, other):
         if isinstance(other, DictWrapper):
@@ -1400,7 +1400,7 @@ class ReplyRequest(GetAttrData):
         return 1
 
     def __repr__(self):
-        return '<%s serial = %s, data = %s, error = %s>' % (self.__class__, self._serial, self._data, self._error)
+        return '<%s serial = %s, data = %s, error = %s>' % (self.__class__.__name__, self._serial, self._data, self._error)
 
 
 class Event(GetAttrData):
@@ -1434,7 +1434,7 @@ class Event(GetAttrData):
             kwlist.append('%s = %s' % (kw, repr(val)))
 
         kws = ', '.join(kwlist)
-        return '%s(%s)' % (self.__class__, kws)
+        return '%s(%s)' % (self.__class__.__name__, kws)
 
     def __lt__(self, other):
         if isinstance(other, Event):

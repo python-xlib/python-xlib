@@ -45,11 +45,8 @@ class Resource(object):
     def __hash__(self):
         return int(self.id)
 
-    def __str__(self):
-        return '%s(0x%08x)' % (self.__class__, self.id)
-
     def __repr__(self):
-        return '<%s 0x%08x>' % (self.__class__, self.id)
+        return '<%s 0x%08x>' % (self.__class__.__name__, self.id)
 
     def kill_client(self, onerror = None):
         request.KillClient(display = self.display,
