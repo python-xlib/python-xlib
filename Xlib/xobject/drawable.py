@@ -779,7 +779,7 @@ class Window(Drawable):
     def _get_struct_prop(self, pname, ptype, pstruct):
         r = self.get_property(pname, ptype, 0, pstruct.static_size // 4)
         if r and r.format == 32:
-            value = r.value.tostring()
+            value = rq.encode_array(r.value)
             if len(value) == pstruct.static_size:
                 return pstruct.parse_binary(value, self.display)[0]
 
