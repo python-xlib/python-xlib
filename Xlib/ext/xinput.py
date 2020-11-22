@@ -236,7 +236,7 @@ class Mask(rq.List):
         else:
             mask_seq.extend(val)
 
-        return mask_seq.tostring(), len(mask_seq), None
+        return rq.encode_array(mask_seq), len(mask_seq), None
 
 EventMask = rq.Struct(
     DEVICE('deviceid'),
