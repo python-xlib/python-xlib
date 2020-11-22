@@ -1,5 +1,14 @@
 NEWS for Python X Library
 
+Version 0.29
+============
+
+Extensions
+--------------------
+
+- Drawable & XInput: Avoid using array.array.tostring() which wiil be removed in Python 3.9 (thanks @t-wissmann).
+
+---
 Version 0.28
 ============
 
