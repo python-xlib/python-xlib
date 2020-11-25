@@ -1175,7 +1175,7 @@ Returns None or string.
 @end defmethod
 
 @defmethod Window get_wm_class ( )
-Returns None or (isntance, class)
+Returns None or (instance, class)
 @end defmethod
 
 @defmethod Window set_wm_transient_for ( window, onerror = None )
