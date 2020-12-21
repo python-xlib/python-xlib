@@ -693,7 +693,8 @@ class PropertyData(ValueField):
                 val = list(val)
 
             size = fmt // 8
-            a = array(array_unsigned_codes[size], val)
+            a = array(array_unsigned_codes[size])
+            a.frombytes(val.encode())
             data = encode_array(a)
             dlen = len(val)
 
