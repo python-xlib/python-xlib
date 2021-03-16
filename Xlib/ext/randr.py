@@ -699,7 +699,7 @@ class DeleteOutputMode(rq.Request):
         rq.Card32('mode'),
         )
 
-def delete_output_mode(self):
+def delete_output_mode(self, output, mode):
     return DeleteOutputMode(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
