@@ -228,7 +228,10 @@ ResourceIdSpec = rq.Struct(
 
 
 ResourceSizeSpec = rq.Struct(
-        rq.Object("spec", ResourceIdSpec),
+        # inline struct ResourceIdSpec to work around
+        # a parser bug with nested objects
+        rq.Card32("resource"),
+        rq.Card32("type"),
         rq.Card32("bytes"),
         rq.Card32("ref_count"),
         rq.Card32("use_count"))
