@@ -77,6 +77,10 @@ class TestExamples(unittest.TestCase):
         """ Run xlsatoms.py -- show list atoms on X server """
         self.assertEqual(run_example(examples_folder + "xlsatoms.py"), 0)
 
+    def test_xres(self):
+        """ Run xres.py -- demonstrate the X-Resource extension """
+        self.assertEqual(run_example(examples_folder + "xres.py"), 0)
+
 
 if __name__ == '__main__':
     unittest.main()
