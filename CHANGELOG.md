@@ -1,5 +1,15 @@
 NEWS for Python X Library
 
+Version 0.30
+============
+
+Extensions
+--------------------
+
+- XResource: first implementation (thanks @alebastr).
+- XRandr: add missing parameters to delete_output_mode function (thanks @jimmy-loyola).
+
+---
 Version 0.29
 ============
 
