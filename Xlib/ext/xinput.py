@@ -158,6 +158,8 @@ DEVICEID = rq.Card16
 DEVICE = rq.Card16
 DEVICEUSE = rq.Card8
 
+PROPERTY_TYPE_FLOAT = 'FLOAT'
+
 class FP1616(rq.Int32):
 
     def check_value(self, value):
@@ -426,6 +428,114 @@ def query_device(self, deviceid):
         deviceid=deviceid,
         )
 
+class XIListProperties(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(56),
+        rq.RequestLength(),
+        DEVICEID('deviceid'),
+        rq.Pad(2),
+    )
+
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.LengthOf('atoms', 2),
+        rq.Pad(22),
+        rq.List('atoms', rq.Card32Obj),
+    )
+
+def list_device_properties(self, deviceid):
+    return XIListProperties(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        deviceid=deviceid,
+    )
+
+class XIGetProperty(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(59),
+        rq.RequestLength(),
+        DEVICEID('deviceid'),
+        rq.Card8('delete'),
+        rq.Pad(1),
+        rq.Card32('property'),
+        rq.Card32('type'),
+        rq.Card32('offset'),
+        rq.Card32('length'),
+    )
+
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card32('type'),
+        rq.Card32('bytes_after'),
+        rq.LengthOf('value', 4),
+        rq.Format('value', 1),
+        rq.Pad(11),
+        rq.PropertyData('value')
+    )
+
+def get_device_property(self, deviceid, property, type, offset, length, delete=False):
+    return XIGetProperty(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        deviceid=deviceid,
+        property=property,
+        type=type,
+        offset=offset,
+        length=length,
+        delete=delete,
+    )
+
+class XIChangeProperty(rq.Request):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(57),
+        rq.RequestLength(),
+        DEVICEID('deviceid'),
+        rq.Card8('mode'),
+        rq.Format('value', 1),
+        rq.Card32('property'),
+        rq.Card32('type'),
+        rq.LengthOf('value', 4),
+        rq.PropertyData('value'),
+    )
+
+def change_device_property(self, deviceid, property, type, mode, value):
+    return XIChangeProperty(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        deviceid=deviceid,
+        property=property,
+        type=type,
+        mode=mode,
+        value=value,
+    )
+
+class XIDeleteProperty(rq.Request):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(58),
+        rq.RequestLength(),
+        DEVICEID('deviceid'),
+        rq.Pad(2),
+        rq.Card32('property'),
+    )
+
+def delete_device_property(self, deviceid, property):
+    return XIDeleteProperty(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        deviceid=deviceid,
+        property=property,
+    )
+
 class XIGrabDevice(rq.ReplyRequest):
     _request = rq.Struct(
         rq.Card8('opcode'),
@@ -639,6 +749,14 @@ DeviceChangedEventData = rq.Struct(
     rq.List('classes', ClassInfo),
 )
 
+PropertyEventData = rq.Struct(
+    DEVICEID('deviceid'),
+    rq.Card32('time'),
+    rq.Card32('property'),
+    rq.Card8('what'),
+    rq.Pad(11),
+)
+
 def init(disp, info):
     disp.extension_add_method('display', 'xinput_query_version', query_version)
     disp.extension_add_method('window', 'xinput_select_events', select_events)
@@ -647,8 +765,13 @@ def init(disp, info):
     disp.extension_add_method('display', 'xinput_ungrab_device', ungrab_device)
     disp.extension_add_method('window', 'xinput_grab_keycode', grab_keycode)
     disp.extension_add_method('window', 'xinput_ungrab_keycode', ungrab_keycode)
+    disp.extension_add_method('display', 'xinput_get_device_property', get_device_property)
+    disp.extension_add_method('display', 'xinput_list_device_properties', list_device_properties)
+    disp.extension_add_method('display', 'xinput_change_device_property', change_device_property)
+    disp.extension_add_method('display', 'xinput_delete_device_property', delete_device_property)
     if hasattr(disp,"ge_add_event_data"):
         for device_event in (ButtonPress, ButtonRelease, KeyPress, KeyRelease, Motion):
             disp.ge_add_event_data(info.major_opcode, device_event, DeviceEventData)
         disp.ge_add_event_data(info.major_opcode, DeviceChanged, DeviceEventData)
         disp.ge_add_event_data(info.major_opcode, HierarchyChanged, HierarchyEventData)
+        disp.ge_add_event_data(info.major_opcode, PropertyEvent, PropertyEventData)

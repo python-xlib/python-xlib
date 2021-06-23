@@ -59,7 +59,9 @@ docs/_build/
 target/
 
 # IntelliJ
-
 .idea/
+
+# Visual Studio Code
+.vscode/
 
 /.mypy_cache/
