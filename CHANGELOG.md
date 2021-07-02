@@ -1,5 +1,14 @@
 NEWS for Python X Library
 
+Version 0.31
+============
+
+Extensions
+--------------------
+
+- XInput: add event methods (thanks @dd4e).
+
+---
 Version 0.30
 ============
 
