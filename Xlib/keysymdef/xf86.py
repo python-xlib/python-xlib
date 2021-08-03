@@ -1,8 +1,11 @@
-XK_XF86_MonBrightnessUp   = 0x1008FF02
-XK_XF86_MonBrightnessDown = 0x1008FF03
-XK_XF86_KbdLightOnOff     = 0x1008FF04
-XK_XF86_KbdBrightnessUp   = 0x1008FF05
-XK_XF86_KbdBrightnessDown = 0x1008FF06
+XK_XF86_ModeLock = 0x1008FF01
+
+XK_XF86_MonBrightnessUp    = 0x1008FF02
+XK_XF86_MonBrightnessDown  = 0x1008FF03
+XK_XF86_KbdLightOnOff      = 0x1008FF04
+XK_XF86_KbdBrightnessUp    = 0x1008FF05
+XK_XF86_KbdBrightnessDown  = 0x1008FF06
+XK_XF86_MonBrightnessCycle = 0x1008FF07
 
 XK_XF86_Standby          = 0x1008FF10
 XK_XF86_AudioLowerVolume = 0x1008FF11
@@ -195,3 +198,5 @@ XK_XF86_Ungrab          = 0x1008FE20
 XK_XF86_ClearGrab       = 0x1008FE21
 XK_XF86_Next_VMode      = 0x1008FE22
 XK_XF86_Prev_VMode      = 0x1008FE23
+XK_XF86_LogWindowTree	= 0x1008FE24
+XK_XF86_LogGrabInfo	= 0x1008FE25
