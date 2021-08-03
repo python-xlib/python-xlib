@@ -159,6 +159,25 @@ XK_XF86_Green           = 0x1008FFA4
 XK_XF86_Yellow          = 0x1008FFA5
 XK_XF86_Blue            = 0x1008FFA6
 
+XK_XF86_Suspend         = 0x1008FFA7
+XK_XF86_Hibernate       = 0x1008FFA8
+XK_XF86_TouchpadToggle  = 0x1008FFA9
+XK_XF86_TouchpadOn      = 0x1008FFB0
+XK_XF86_TouchpadOff     = 0x1008FFB1
+
+XK_XF86_AudioMicMute    = 0x1008FFB2
+
+XK_XF86_Keyboard        = 0x1008FFB3
+
+XK_XF86_WWAN            = 0x1008FFB4
+XK_XF86_RFKill          = 0x1008FFB5
+
+XK_XF86_AudioPreset     = 0x1008FFB6
+
+XK_XF86_RotationLockToggle = 0x1008FFB7
+
+XK_XF86_FullScreen      = 0x1008FFB8
+
 XK_XF86_Switch_VT_1     = 0x1008FE01
 XK_XF86_Switch_VT_2     = 0x1008FE02
 XK_XF86_Switch_VT_3     = 0x1008FE03
