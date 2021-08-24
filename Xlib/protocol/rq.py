@@ -1297,6 +1297,12 @@ class GetAttrData(object):
         except KeyError:
             raise AttributeError(attr)
 
+    def __dir__(self):
+        attrs = super().__dir__()
+        if self._data:
+            attrs.extend(list(self._data.keys()))
+        return attrs
+
 class DictWrapper(GetAttrData):
     def __init__(self, dict):
         self.__dict__['_data'] = dict
