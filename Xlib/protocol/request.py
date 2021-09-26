@@ -1640,7 +1640,8 @@ class ChangeHosts(rq.Request):
         rq.Opcode(109),
         rq.Set('mode', 1, (X.HostInsert, X.HostDelete)),
         rq.RequestLength(),
-        rq.Set('host_family', 1, (X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos)),
+        rq.Set('host_family', 1, (X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos,
+                                  X.FamilyServerInterpreted, X.FamilyInternetV6)),
         rq.Pad(1),
         rq.LengthOf('host', 2),
         rq.List('host', rq.Card8Obj)
