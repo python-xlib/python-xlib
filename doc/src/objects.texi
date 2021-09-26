@@ -678,7 +678,8 @@ XGetScreenSaver(3X11) for details.
 
 @var{mode} is either @code{X.HostInsert} or @code{X.HostDelete}.
 @var{host_family} is one of @code{X.FamilyInternet},
-@code{X.FamilyDECnet} or @code{X.FamilyChaos}.
+@code{X.FamilyDECnet}, @code{X.FamilyChaos}, @code{X.FamilyServerInterpreted}
+or @code{X.FamilyInternetV6}.
 
 @var{host} is a list of bytes.  For the Internet family, it should be
 the four bytes of an IPv4 address.
@@ -699,7 +700,8 @@ The hosts on the access list.  Each entry has the following attributes:
 
 @table @code
 @item family
-@code{X.FamilyInternet}, @code{X.FamilyDECnet}, or @code{X.FamilyChaos}.
+@code{X.FamilyInternet}, @code{X.FamilyDECnet}, @code{X.FamilyChaos},
+@code{X.FamilyServerInterpreted} or @code{X.FamilyInternetV6}.
 
 @item name
 A list of byte values, the coding depends on @code{family}.  For the

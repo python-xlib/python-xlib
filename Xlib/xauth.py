@@ -27,6 +27,8 @@ from Xlib import X, error
 FamilyInternet = X.FamilyInternet
 FamilyDECnet = X.FamilyDECnet
 FamilyChaos = X.FamilyChaos
+FamilyServerInterpreted = X.FamilyServerInterpreted
+FamilyInternetV6 = X.FamilyInternetV6
 FamilyLocal = 256
 
 class Xauthority(object):

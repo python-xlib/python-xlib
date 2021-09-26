@@ -849,7 +849,8 @@ class Display(object):
 
     def change_hosts(self, mode, host_family, host, onerror = None):
         """mode is either X.HostInsert or X.HostDelete. host_family is
-        one of X.FamilyInternet, X.FamilyDECnet or X.FamilyChaos.
+        one of X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos,
+        X.FamilyServerInterpreted or X.FamilyInternetV6.
 
         host is a list of bytes. For the Internet family, it should be the
         four bytes of an IPv4 address."""
@@ -868,7 +869,7 @@ hosts
     The hosts on the access list. Each entry has the following attributes:
 
     family
-        X.FamilyInternet, X.FamilyDECnet, or X.FamilyChaos.
+        X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos, X.FamilyServerInterpreted or X.FamilyInternetV6.
     name
         A list of byte values, the coding depends on family. For the Internet family, it is the 4 bytes of an IPv4 address.
 
