@@ -77,61 +77,61 @@ class TestUnixConnect(unittest.TestCase):
         for params, allow_unix, unix_addr_exists, allow_tcp, expect_connection_error, expected_calls in (
             # Successful explicit TCP socket connection.
             (('tcp/host:6', None, 'host', 6), False, False, True, False, [
-                ('_get_tcp_socket', 'host', 6),
+                ('_get_tcp_socket', 'host', 6, None),
             ]),
             # Failed explicit TCP socket connection.
             (('tcp/host:6', None, 'host', 6), False, False, False, True, [
-                ('_get_tcp_socket', 'host', 6),
+                ('_get_tcp_socket', 'host', 6, None),
             ]),
             # Successful implicit TCP socket connection.
             (('host:5', None, 'host', 5), False, False, True, False, [
-                ('_get_tcp_socket', 'host', 5),
+                ('_get_tcp_socket', 'host', 5, None),
             ]),
             # Failed implicit TCP socket connection.
             (('host:5', None, 'host', 5), False, False, False, True, [
-                ('_get_tcp_socket', 'host', 5),
+                ('_get_tcp_socket', 'host', 5, None),
             ]),
             # Successful explicit Unix socket connection.
             (('unix/name:0', 'unix', 'name', 0), True, True, False, False, [
                 ('os.path.exists', '/tmp/.X11-unix/X0'),
-                ('_get_unix_socket', '/tmp/.X11-unix/X0'),
+                ('_get_unix_socket', '/tmp/.X11-unix/X0', None),
             ]),
             # Failed explicit Unix socket connection.
             (('unix/name:0', 'unix', 'name', 0), False, True, False, True, [
                 ('os.path.exists', '/tmp/.X11-unix/X0'),
-                ('_get_unix_socket', '/tmp/.X11-unix/X0'),
+                ('_get_unix_socket', '/tmp/.X11-unix/X0', None),
             ]),
             # Successful explicit Unix socket connection, variant.
             (('unix:0', None, 'unix', 0), True, True, False, False, [
                 ('os.path.exists', '/tmp/.X11-unix/X0'),
-                ('_get_unix_socket', '/tmp/.X11-unix/X0'),
+                ('_get_unix_socket', '/tmp/.X11-unix/X0', None),
             ]),
             # Failed explicit Unix socket connection, variant.
             (('unix:0', None, 'unix', 0), False, True, False, True, [
                 ('os.path.exists', '/tmp/.X11-unix/X0'),
-                ('_get_unix_socket', '/tmp/.X11-unix/X0'),
+                ('_get_unix_socket', '/tmp/.X11-unix/X0', None),
             ]),
             # Successful implicit Unix socket connection.
             ((':4', None, '', 4), True, True, False, False, [
                 ('os.path.exists', '/tmp/.X11-unix/X4'),
-                ('_get_unix_socket', '/tmp/.X11-unix/X4'),
+                ('_get_unix_socket', '/tmp/.X11-unix/X4', None),
             ]),
             # Successful implicit Unix socket connection, abstract address.
             ((':3', None, '', 3), True, False, False, False, [
                 ('os.path.exists', '/tmp/.X11-unix/X3'),
-                ('_get_unix_socket', '\0/tmp/.X11-unix/X3'),
+                ('_get_unix_socket', '\0/tmp/.X11-unix/X3', None),
             ]),
             # Failed implicit Unix socket connection, successful fallback on TCP.
             ((':2', None, '', 2), False, False, True, False, [
                 ('os.path.exists', '/tmp/.X11-unix/X2'),
-                ('_get_unix_socket', '\0/tmp/.X11-unix/X2'),
-                ('_get_tcp_socket', '', 2),
+                ('_get_unix_socket', '\0/tmp/.X11-unix/X2', None),
+                ('_get_tcp_socket', '', 2, None),
             ]),
             # Failed implicit Unix socket connection, failed fallback on TCP.
             ((':1', None, '', 1), False, False, False, True, [
                 ('os.path.exists', '/tmp/.X11-unix/X1'),
-                ('_get_unix_socket', '\0/tmp/.X11-unix/X1'),
-                ('_get_tcp_socket', '', 1),
+                ('_get_unix_socket', '\0/tmp/.X11-unix/X1', None),
+                ('_get_tcp_socket', '', 1, None),
             ]),
         ):
             with \

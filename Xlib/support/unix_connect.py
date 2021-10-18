@@ -88,26 +88,30 @@ def get_display(display):
     return display, protocol, host, dno, screen
 
 
-def _get_tcp_socket(host, dno):
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host, 6000 + dno))
-    return s
+def _get_tcp_socket(host, dno, timeout):
+    return socket.create_connection(
+        address=(host, 6000 + dno),
+        timeout=timeout
+    )
 
-def _get_unix_socket(address):
+
+def _get_unix_socket(address, timeout):
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.settimeout(timeout)
     s.connect(address)
     return s
 
-def get_socket(dname, protocol, host, dno):
+
+def get_socket(dname, protocol, host, dno, timeout = None):
     assert protocol in SUPPORTED_PROTOCOLS
     try:
         # Darwin funky socket.
         if protocol == 'darwin':
-            s = _get_unix_socket(dname)
+            s = _get_unix_socket(dname, timeout)
 
         # TCP socket, note the special case: `unix:0.0` is equivalent to `:0.0`.
         elif (protocol is None or protocol != 'unix') and host and host != 'unix':
-            s = _get_tcp_socket(host, dno)
+            s = _get_tcp_socket(host, dno, timeout)
 
         # Unix socket.
         else:
@@ -116,11 +120,11 @@ def get_socket(dname, protocol, host, dno):
                 # Use abstract address.
                 address = '\0' + address
             try:
-                s = _get_unix_socket(address)
+                s = _get_unix_socket(address, timeout)
             except socket.error:
                 if not protocol and not host:
                     # If no protocol/host was specified, fallback to TCP.
-                    s = _get_tcp_socket(host, dno)
+                    s = _get_tcp_socket(host, dno, timeout)
                 else:
                     raise
     except socket.error as val:

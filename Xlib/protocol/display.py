@@ -80,13 +80,20 @@ class Display(object):
     error_classes = error.xerror_class.copy()
     event_classes = event.event_class.copy()
 
-    def __init__(self, display = None):
+    _READ_MASK = select.POLLIN | select.POLLPRI
+    _ERROR_MASK = select.POLLERR | select.POLLHUP
+    _WRITE_MASK = select.POLLOUT
+
+    _READ_POLL_MASK = _READ_MASK | _ERROR_MASK
+    _READY_POLL_MASK = _READ_MASK | _ERROR_MASK | _WRITE_MASK
+
+    def __init__(self, display = None, timeout = None):
         name, protocol, host, displayno, screenno = connect.get_display(display)
 
         self.display_name = name
         self.default_screen = screenno
 
-        self.socket = connect.get_socket(name, protocol, host, displayno)
+        self.socket = connect.get_socket(name, protocol, host, displayno, timeout)
 
         auth_name, auth_data = connect.get_auth(self.socket, name,
                                                 protocol, host, displayno)
@@ -98,6 +105,12 @@ class Display(object):
         # in one way or another
         self.socket_error_lock = lock.allocate_lock()
         self.socket_error = None
+
+        # Initialize read and ready polls
+        self.read_poll = select.poll()
+        self.read_poll.register(self.socket, self._READ_POLL_MASK)
+        self.ready_poll = select.poll()
+        self.ready_poll.register(self.socket, self._READY_POLL_MASK)
 
         # Event queue
         self.event_queue_read_lock = lock.allocate_lock()
@@ -367,7 +380,7 @@ class Display(object):
 #       if qlen > 10:
 #           self.flush()
 
-    def close_internal(self, whom):
+    def close_internal(self, whom, socket_error = error.ConnectionClosedError):
         # Clear out data structures
         self.request_queue = None
         self.sent_requests = None
@@ -375,12 +388,24 @@ class Display(object):
         self.data_send = None
         self.data_recv = None
 
+        for poll in (self.read_poll, self.ready_poll):
+            try:
+                poll.unregister(self.socket)
+            except (KeyError, ValueError):
+                # KeyError is raised if somehow the socket was not registered
+                # ValueError is raised if the socket's file descriptor is negative.
+                # In either case, we can't do anything better than to remove the reference to the poller.
+                pass
+        self.read_poll = None
+        self.ready_poll = None
+
         # Close the connection
         self.socket.close()
+        self.socket = None
 
         # Set a connection closed indicator
         self.socket_error_lock.acquire()
-        self.socket_error = error.ConnectionClosedError(whom)
+        self.socket_error = socket_error(whom)
         self.socket_error_lock.release()
 
 
@@ -537,31 +562,21 @@ class Display(object):
             if flush and flush_bytes is None:
                 flush_bytes = self.data_sent_bytes + len(self.data_send)
 
+            # We're only checking for the socket to be writable
+            # if we're the sending thread.  We always check for it
+            # to become readable: either we are the receiving thread
+            # and should take care of the data, or the receiving thread
+            # might finish receiving after having read the data
+
+            # Timeout immediately if we're only checking for
+            # something to read or if we're flushing, otherwise block
+            if recv or flush:
+                timeout = 0
+            else:
+                timeout = self.socket.gettimeout()
 
             try:
-                # We're only checking for the socket to be writable
-                # if we're the sending thread.  We always check for it
-                # to become readable: either we are the receiving thread
-                # and should take care of the data, or the receiving thread
-                # might finish receiving after having read the data
-
-                if sending:
-                    writeset = [self.socket]
-                else:
-                    writeset = []
-
-                # Timeout immediately if we're only checking for
-                # something to read or if we're flushing, otherwise block
-
-                if recv or flush:
-                    timeout = 0
-                else:
-                    timeout = None
-
-                rs, ws, es = select.select([self.socket], writeset, [], timeout)
-
-            # Ignore errors caused by a signal received while blocking.
-            # All other errors are re-raised.
+                rs, ws = self._select(sending, timeout)
             except select.error as err:
                 if isinstance(err, OSError):
                     code = err.errno
@@ -610,6 +625,9 @@ class Display(object):
 
                     self.data_recv = bytes(self.data_recv) + bytes_recv
                     gotreq = self.parse_response(request)
+                    if request == -1 and gotreq == -1:
+                        self.close_internal('Xlib: Not a valid X11 server')
+                        raise self.socket_error
 
                 # Otherwise return, allowing the calling thread to figure
                 # out if it has got the data it needs
@@ -646,6 +664,11 @@ class Display(object):
             if recv:
                 break
 
+            # We got timeout
+            if not ws and not rs:
+                self.close_internal('server', error.ConnectionTimeoutError)
+                raise self.socket_error
+
             # Else there's may still data which must be sent, or
             # we haven't got the data we waited for.  Lock and loop
 
@@ -673,6 +696,52 @@ class Display(object):
 
         self.send_recv_lock.release()
 
+    def _select(self, sending, timeout):
+        ws = rs = False
+        if sending:
+            try:
+                ws, events = self._is_ready_for_command(timeout)
+                rs = self._check_can_read(events)
+            except TimeoutError:
+                ws = False
+        else:
+            try:
+                rs, _ = self._can_read(timeout)
+            except TimeoutError:
+                rs = False
+        return rs, ws
+
+    def _check_can_read(self, events):
+        return bool(events and events[0][1] & self._READ_MASK)
+
+    def _can_read(self, timeout):
+        """
+        Return True if data is ready to be read from the socket,
+        otherwise False.
+        This doesn't guarantee that the socket is still connected, just
+        that there is data to read.
+        """
+        if timeout is not None:
+            timeout = timeout * 1000  # timeout in poll is in milliseconds
+        events = self.read_poll.poll(timeout)
+        if not events:
+            raise TimeoutError('Timeout in read poll')
+        return self._check_can_read(events), events
+
+    def _check_is_ready_for_command(self, events):
+        return bool(events and events[0][1] & self._WRITE_MASK)
+
+    def _is_ready_for_command(self, timeout):
+        """
+        Return True if the socket is ready to send a command,
+        otherwise False
+        """
+        if timeout is not None:
+            timeout = timeout * 1000  # timeout in poll is in milliseconds
+        events = self.ready_poll.poll(timeout)
+        if not events:
+            raise TimeoutError('Timeout in ready poll')
+        return self._check_is_ready_for_command(events), events
 
     def parse_response(self, request):
         """Internal method.
@@ -973,6 +1042,8 @@ class Display(object):
                 r._data, d = r._reply.parse_binary(self.data_recv[:8],
                                                    self, rawdict = 1)
                 self.data_recv = self.data_recv[8:]
+                if r._data['status'] not in [0, 1, 2]:
+                    return -1
 
                 # Loop around to see if we have got the additional data
                 # already

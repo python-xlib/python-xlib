@@ -73,7 +73,7 @@ def get_display(display):
     return mod.get_display(display)
 
 
-def get_socket(dname, protocol, host, dno):
+def get_socket(dname, protocol, host, dno, timeout):
     """socket = get_socket(dname, protocol, host, dno)
 
     Connect to the display specified by DNAME, PROTOCOL, HOST and DNO, which
@@ -84,7 +84,7 @@ def get_socket(dname, protocol, host, dno):
 
     modname = _socket_mods.get(platform, _default_socket_mod)
     mod = _relative_import(modname)
-    return mod.get_socket(dname, protocol, host, dno)
+    return mod.get_socket(dname, protocol, host, dno, timeout)
 
 
 def get_auth(sock, dname, protocol, host, dno):
