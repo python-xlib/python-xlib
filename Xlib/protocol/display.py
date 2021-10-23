@@ -75,6 +75,11 @@ else:
         return buffer(data, offset, size)
 
 
+    class TimeoutError(OSError):
+        """ Timeout expired. """
+        pass
+
+
 class Display(object):
     extension_major_opcodes = {}
     error_classes = error.xerror_class.copy()
