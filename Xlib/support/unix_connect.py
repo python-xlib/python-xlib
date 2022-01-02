@@ -23,23 +23,6 @@ import re
 import os
 import platform
 import socket
-
-# FCNTL is deprecated from Python 2.2, so only import it if we doesn't
-# get the names we need.  Furthermore, FD_CLOEXEC seems to be missing
-# in Python 2.2.
-
-import fcntl
-
-if hasattr(fcntl, 'F_SETFD'):
-    F_SETFD = fcntl.F_SETFD
-    if hasattr(fcntl, 'FD_CLOEXEC'):
-        FD_CLOEXEC = fcntl.FD_CLOEXEC
-    else:
-        FD_CLOEXEC = 1
-else:
-    from FCNTL import F_SETFD, FD_CLOEXEC
-
-
 from Xlib import error, xauth
 
 
@@ -93,10 +76,12 @@ def _get_tcp_socket(host, dno):
     s.connect((host, 6000 + dno))
     return s
 
+
 def _get_unix_socket(address):
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
     s.connect(address)
     return s
+
 
 def get_socket(dname, protocol, host, dno):
     assert protocol in SUPPORTED_PROTOCOLS
@@ -127,9 +112,35 @@ def get_socket(dname, protocol, host, dno):
         raise error.DisplayConnectionError(dname, str(val))
 
     # Make sure that the connection isn't inherited in child processes.
-    fcntl.fcntl(s.fileno(), F_SETFD, FD_CLOEXEC)
+    _ensure_not_inheritable(s)
 
     return s
+
+
+def _ensure_not_inheritable(sock):
+    # According to PEP446, in Python 3.4 and above,
+    # it is not inherited in child processes by default.
+    # However, just in case, we explicitly make it non-inheritable.
+    # Also, we don't use the code like the following,
+    # because there would be no possibility of backporting to past versions.
+    #   if sys.version_info.major == 3 and sys.version_info.minor >= 4:
+    #       sock.set_inheritable(False)
+    #       return
+    # We just check if the socket has `set_inheritable`.
+    if hasattr(sock, 'set_inheritable'):
+        sock.set_inheritable(False)
+        return
+
+    # On Windows,
+    # Python doesn't support fcntl module because Windows doesn't have fcntl API.
+    # At least by not importing fcntl, we will be able to import python-xlib on Windows.
+    if platform.system() == 'Windows':
+        # so.. unfortunately, for Python 3.3 and below, on Windows,
+        # we can't make sure that the connection isn't inherited in child processes for now.
+        return
+
+    import fcntl
+    fcntl.fcntl(sock.fileno(), fcntl.F_SETFD, fcntl.FD_CLOEXEC)
 
 
 def new_get_auth(sock, dname, protocol, host, dno):
