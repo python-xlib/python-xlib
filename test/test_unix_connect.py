@@ -72,8 +72,8 @@ class TestUnixConnect(unittest.TestCase):
         def path_exists(returns, path):
             calls.append(('os.path.exists', path))
             return returns
-        def fcntl(*args):
-            calls.append(('fcntl',) + args)
+        def ensure_not_inheritable(*args):
+            calls.append(('ensure_not_inheritable',) + args)
         for params, allow_unix, unix_addr_exists, allow_tcp, expect_connection_error, expected_calls in (
             # Successful explicit TCP socket connection.
             (('tcp/host:6', None, 'host', 6), False, False, True, False, [
@@ -141,7 +141,7 @@ class TestUnixConnect(unittest.TestCase):
                           partial(_get_socket, 'tcp', not allow_tcp)), \
                     patch('os.path.exists',
                           partial(path_exists, unix_addr_exists)), \
-                    patch('fcntl.fcntl', fcntl):
+                    patch('Xlib.support.unix_connect._ensure_not_inheritable', ensure_not_inheritable):
                 del calls[:]
                 if expect_connection_error:
                     with self.assertRaises(DisplayConnectionError):
@@ -149,9 +149,7 @@ class TestUnixConnect(unittest.TestCase):
                 else:
                     s = unix_connect.get_socket(*params)
                     self.assertIsInstance(s, FakeSocket)
-                    expected_calls.append(('fcntl', 42,
-                                           unix_connect.F_SETFD,
-                                           unix_connect.FD_CLOEXEC))
+                    expected_calls.append(('ensure_not_inheritable', s))
                 self.assertEqual(calls, expected_calls)
 
 
