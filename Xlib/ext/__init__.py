@@ -40,6 +40,7 @@ __extensions__ = [
     ('DAMAGE', 'damage'),
     ('DPMS', 'dpms'),
     ('X-Resource', 'res'),
+    ('MIT-SCREEN-SAVER', 'screensaver'),
     ]
 
 __all__ = map(lambda x: x[1], __extensions__)
