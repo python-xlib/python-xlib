@@ -25,7 +25,7 @@
 This implementation is based off version 1.3 of the XRandR protocol, and may
 not be compatible with other versions.
 
-Version 1.2 of the protocol is documented at:
+Version 1.5 of the protocol is documented at:
 http://cgit.freedesktop.org/xorg/proto/randrproto/tree/randrproto.txt
 
 Version 1.3.1 here:
@@ -168,6 +168,19 @@ Render_Transform = rq.Struct(
         rq.Card32('matrix33'),
         )
 
+MonitorInfo = rq.Struct(
+    rq.Card32('name'),
+    rq.Bool('primary'),
+    rq.Bool('automatic'),
+    rq.LengthOf('crtcs', 2),
+    rq.Int16('x'),
+    rq.Int16('y'),
+    rq.Card16('width_in_pixels'),
+    rq.Card16('height_in_pixels'),
+    rq.Card32('width_in_millimeters'),
+    rq.Card32('height_in_millimeters'),
+    rq.List('crtcs', rq.Card32Obj)
+)
 
 # Requests #
 
@@ -197,7 +210,7 @@ def query_version(self):
         display=self.display,
         opcode=self.display.get_extension_major(extname),
         major_version=1,
-        minor_version=3,
+        minor_version=5,
         )
 
 
@@ -1078,6 +1091,76 @@ def get_output_primary(self):
         )
 
 
+# Version 1.5 methods 
+
+class GetMonitors(rq.ReplyRequest):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(42),
+        rq.RequestLength(),
+        rq.Window('window'),
+        rq.Bool('is_active'),
+        rq.Pad(3)
+    )
+
+    _reply = rq.Struct(
+        rq.ReplyCode(),
+        rq.Pad(1),
+        rq.Card16('sequence_number'),
+        rq.ReplyLength(),
+        rq.Card32('timestamp'),
+        rq.LengthOf('monitors', 4),
+        rq.Card32('outputs'),
+        rq.Pad(12),
+        rq.List('monitors', MonitorInfo)
+    )
+
+
+def get_monitors(self, is_active=True):
+    return GetMonitors(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+        is_active=is_active
+    )
+
+class SetMonitor(rq.Request):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(43),
+        rq.RequestLength(),
+        rq.Window('window'),
+        rq.Object('monitor_info', MonitorInfo)
+    )
+
+
+def set_monitor(self, monitor_info):
+    return SetMonitor(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+        monitor_info=monitor_info
+    )
+
+
+class DeleteMonitor(rq.Request):
+    _request = rq.Struct(
+        rq.Card8('opcode'),
+        rq.Opcode(44),
+        rq.RequestLength(),
+        rq.Window('window'),
+        rq.Card32('name')
+    )
+
+
+def delete_monitor(self, name):
+    return DeleteMonitor(
+        display=self.display,
+        opcode=self.display.get_extension_major(extname),
+        window=self,
+        name=name
+    )
+
 # Events #
 
 class ScreenChangeNotify(rq.Event):
@@ -1149,8 +1232,8 @@ class OutputPropertyNotify(rq.Event):
         rq.Card8('state'),
         rq.Pad(11),
         )
-
-
+	
+	
 # Initialization #
 
 def init(disp, info):
@@ -1185,6 +1268,11 @@ def init(disp, info):
     disp.extension_add_method('window', 'xrandr_get_output_primary', get_output_primary)
     disp.extension_add_method('display', 'xrandr_get_panning', get_panning)
     disp.extension_add_method('display', 'xrandr_set_panning', set_panning)
+
+    # version 1.5 compatible
+    disp.extension_add_method('window', 'xrandr_get_monitors', get_monitors)
+    disp.extension_add_method('window', 'xrandr_set_monitor', set_monitor)
+    disp.extension_add_method('window', 'xrandr_delete_monitor', delete_monitor)
 
     disp.extension_add_event(info.first_event + RRScreenChangeNotify, ScreenChangeNotify)
      # add RRNotify events (1 event code with 3 subcodes)
