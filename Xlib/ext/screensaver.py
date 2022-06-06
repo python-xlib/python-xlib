@@ -64,9 +64,9 @@ class QueryVersion(rq.ReplyRequest):
             rq.Pad(1),
             rq.Card16('sequence_number'),
             rq.ReplyLength(),
-            rq.Card8('major_version'),
-            rq.Card8('minor_version'),
-            rq.Pad(22),
+            rq.Card16('major_version'),
+            rq.Card16('minor_version'),
+            rq.Pad(20),
             )
 
 def query_version(self):
@@ -94,7 +94,7 @@ class QueryInfo(rq.ReplyRequest):
             rq.Card32('idle'),
             rq.Card32('event_mask'), # rq.Set('event_mask', 4, (NotifyMask, CycleMask)),
             rq.Card8('kind'),
-            rq.Pad(10),
+            rq.Pad(7),
             )
 
 def query_info(self):
