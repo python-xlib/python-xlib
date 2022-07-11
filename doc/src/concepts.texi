@@ -9,4 +9,4 @@
 Here you might find an introduction to X concepts sometime in the
 future.  For now, I just refer to the introduction parts of the standard
 X documentation.  A vast collection of X documentation links can be
-found at @uref{http://www.rahul.net/kenton/xsites.html}.
+found at @uref{https://web.archive.org/web/20201228053920/http://www.rahul.net/kenton/xsites.html}.
