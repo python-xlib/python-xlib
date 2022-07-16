@@ -120,6 +120,8 @@ class Xauthority(object):
         matches = {}
 
         for efam, eaddr, enum, ename, edata in self.entries:
+            if enum == b'' and ename not in matches:
+                enum = num
             if efam == family and eaddr == address and num == enum:
                 matches[ename] = edata
 
