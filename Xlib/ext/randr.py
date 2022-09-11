@@ -22,7 +22,7 @@
 
 """RandR - provide access to the RandR extension information.
 
-This implementation is based off version 1.3 of the XRandR protocol, and may
+This implementation is based off version 1.5 of the XRandR protocol, and may
 not be compatible with other versions.
 
 Version 1.5 of the protocol is documented at:
@@ -1232,8 +1232,6 @@ class OutputPropertyNotify(rq.Event):
         rq.Card8('state'),
         rq.Pad(11),
         )
-	
-	
 # Initialization #
 
 def init(disp, info):
@@ -1269,17 +1267,20 @@ def init(disp, info):
     disp.extension_add_method('display', 'xrandr_get_panning', get_panning)
     disp.extension_add_method('display', 'xrandr_set_panning', set_panning)
 
-    # version 1.5 compatible
-    disp.extension_add_method('window', 'xrandr_get_monitors', get_monitors)
-    disp.extension_add_method('window', 'xrandr_set_monitor', set_monitor)
-    disp.extension_add_method('window', 'xrandr_delete_monitor', delete_monitor)
+    # If the server is running RANDR 1.5+, enable 1.5 compatible methods and events
+    version = query_version(disp)
+    if version.major_version == 1 and version.minor_version >= 5:
+        # version 1.5 compatible
+        disp.extension_add_method('window', 'xrandr_get_monitors', get_monitors)
+        disp.extension_add_method('window', 'xrandr_set_monitor', set_monitor)
+        disp.extension_add_method('window', 'xrandr_delete_monitor', delete_monitor)
 
-    disp.extension_add_event(info.first_event + RRScreenChangeNotify, ScreenChangeNotify)
-     # add RRNotify events (1 event code with 3 subcodes)
-    disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_CrtcChange, CrtcChangeNotify)
-    disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_OutputChange, OutputChangeNotify)
-    disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_OutputProperty, OutputPropertyNotify)
+        disp.extension_add_event(info.first_event + RRScreenChangeNotify, ScreenChangeNotify)
+        # add RRNotify events (1 event code with 3 subcodes)
+        disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_CrtcChange, CrtcChangeNotify)
+        disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_OutputChange, OutputChangeNotify)
+        disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_OutputProperty, OutputPropertyNotify)
 
-    #disp.extension_add_error(BadRROutput, BadRROutputError)
-    #disp.extension_add_error(BadRRCrtc, BadRRCrtcError)
-    #disp.extension_add_error(BadRRMode, BadRRModeError)
+        #disp.extension_add_error(BadRROutput, BadRROutputError)
+        #disp.extension_add_error(BadRRCrtc, BadRRCrtcError)
+        #disp.extension_add_error(BadRRMode, BadRRModeError)
