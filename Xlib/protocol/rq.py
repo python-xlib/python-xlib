@@ -604,8 +604,7 @@ class Object(ValueField):
         return self.type.parse_value(val, display)
 
     def pack_value(self, val):
-        val = self.type.pack_value(val)
-        return val, len(val), None
+        return self.type.pack_value(val)
 
     def check_value(self, val):
         if isinstance(val, tuple):
