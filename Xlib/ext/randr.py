@@ -34,6 +34,7 @@ http://www.x.org/releases/X11R7.5/doc/randrproto/randrproto.txt
 """
 
 
+from tkinter import W
 from Xlib import X
 from Xlib.protocol import rq, structs
 
@@ -122,6 +123,12 @@ BadRROutput                 = 0
 BadRRCrtc                   = 1
 BadRRMode                   = 2
 
+# Error classes #
+class BadRROutputError(Exception): pass
+
+class BadRRCrtcError(Exception): pass
+
+class BadRRModeError(Exception): pass
 
 # Data Structures #
 
@@ -1281,6 +1288,6 @@ def init(disp, info):
         disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_OutputChange, OutputChangeNotify)
         disp.extension_add_subevent(info.first_event + RRNotify, RRNotify_OutputProperty, OutputPropertyNotify)
 
-        #disp.extension_add_error(BadRROutput, BadRROutputError)
-        #disp.extension_add_error(BadRRCrtc, BadRRCrtcError)
-        #disp.extension_add_error(BadRRMode, BadRRModeError)
+        disp.extension_add_error(BadRROutput, BadRROutputError)
+        disp.extension_add_error(BadRRCrtc, BadRRCrtcError)
+        disp.extension_add_error(BadRRMode, BadRRModeError)
