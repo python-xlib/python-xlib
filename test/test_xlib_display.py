@@ -87,7 +87,7 @@ class TestXlibDisplay(unittest.TestCase):
         self.assertRaises(AssertionError, self.display.extension_add_method, "font", "__init__", lambda x: x)
 
     def test_can_add_extension_error(self):
-        self.display.add_extension_error(1, Xlib.error.XError)
+        self.display.extension_add_error(1, Xlib.error.XError)
         self.assertEqual(self.display.display.error_classes[1], Xlib.error.XError)
 
     def test_keycode_to_keysym_for_invalid_index(self):
