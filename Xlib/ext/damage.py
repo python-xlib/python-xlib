@@ -179,4 +179,4 @@ def init(disp, info):
 
     disp.extension_add_event(info.first_event + DamageNotifyCode, DamageNotify)
 
-    disp.add_extension_error(code=BadDamageCode, err=BadDamageError)
+    disp.extension_add_error(code=BadDamageCode, err=BadDamageError)

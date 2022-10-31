@@ -340,8 +340,8 @@ class Display(object):
         # extension dict maintained in the display object
         setattr(self.extension_event, name, (code,subcode))
 
-    def add_extension_error(self, code, err):
-        """add_extension_error(code, err)
+    def extension_add_error(self, code, err):
+        """extension_add_error(code, err)
 
         Add an extension error.  CODE is the numeric code, and ERR is
         the error class.
