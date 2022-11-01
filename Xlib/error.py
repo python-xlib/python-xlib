@@ -52,6 +52,13 @@ class ConnectionClosedError(Exception):
     def __str__(self):
         return 'Display connection closed by %s' % self.whom
 
+class ConnectionTimeoutError(OSError):
+    def __init__(self, whom):
+        self.whom = whom
+
+    def __str__(self):
+        return 'Timeout reached in %s' % self.whom
+
 
 class XauthError(Exception): pass
 class XNoAuthError(Exception): pass

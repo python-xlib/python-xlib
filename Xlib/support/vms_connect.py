@@ -55,13 +55,15 @@ def get_display(display):
     return name, None, host, dno, screen
 
 
-def get_socket(dname, protocol, host, dno):
+def get_socket(dname, protocol, host, dno, timeout = None):
     try:
         # Always use TCP/IP sockets.  Later it would be nice to
         # be able to use DECNET och LOCAL connections.
 
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((host, 6000 + dno))
+        s = socket.create_connection(
+            address=(host, 6000 + dno),
+            timeout=timeout
+        )
 
     except socket.error as val:
         raise error.DisplayConnectionError(dname, str(val))

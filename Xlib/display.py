@@ -61,7 +61,7 @@ _resource_hierarchy = {
     'fontable': ('font', 'gc')
     }
 
-class _BaseDisplay(protocol_display.Display):
+class BaseDisplay(protocol_display.Display):
 
     # Implement a cache of atom names, used by Window objects when
     # dealing with some ICCCM properties not defined in Xlib.Xatom
@@ -86,7 +86,7 @@ class _BaseDisplay(protocol_display.Display):
 
 class Display(object):
     def __init__(self, display = None):
-        self.display = _BaseDisplay(display)
+        self.display = BaseDisplay(display)
 
         # Create the keymap cache
         self._keymap_codes = [()] * 256
