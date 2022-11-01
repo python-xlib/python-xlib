@@ -1,5 +1,23 @@
 NEWS for Python X Library
 
+Version 0.32
+============
+
+Bug Fixes
+---------
+
+- Use archived link for X documentation resource (thanks @yaxollum).
+- Fix for auth entry having no display number (thanks @Majiir).
+- Fix return type inconsistency with the `pack_value` for class `Object` (thanks @allfro).
+- Rename `add_extension_error` method to `extension_add_error` (thanks @mattalexx).
+
+Extensions
+--------------------
+
+- screensaver: fix screensaver protocol mismatch (thanks @yut23).
+- XRandr: add version 1.5 support for RRSetMonitor RRGetMonitors and RRDeleteMonitors (thanks @allfro and @jklong).
+
+---
 Version 0.31
 ============
 
