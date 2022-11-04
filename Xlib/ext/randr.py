@@ -33,8 +33,7 @@ http://www.x.org/releases/X11R7.5/doc/randrproto/randrproto.txt
 
 """
 
-
-from tkinter import W
+W = "w"
 from Xlib import X
 from Xlib.protocol import rq, structs
 
