@@ -19,6 +19,8 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+from . import XK, X, Xatom, Xcursorfont, Xutil, display, error, rdb
+
 __version__ = (0, 32)
 
 __version_extra__ = ''
@@ -36,4 +38,4 @@ __all__ = [
     'rdb',
     # Explicitly exclude threaded, so that it isn't imported by
     #  from Xlib import *
-    ]
+]
