@@ -25,8 +25,7 @@ A partial implementation of the XFIXES extension.  Only the HideCursor and
 ShowCursor requests and SelectionNotify events are provided.
 '''
 
-from Xlib import X
-from Xlib.protocol import rq, structs
+from Xlib.protocol import rq
 
 extname = 'XFIXES'
 
