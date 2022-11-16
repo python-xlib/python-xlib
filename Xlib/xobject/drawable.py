@@ -19,7 +19,7 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-from Xlib import X, Xatom, Xutil
+from Xlib import X, Xatom
 from Xlib.protocol import request, rq
 
 # Other X resource objects
