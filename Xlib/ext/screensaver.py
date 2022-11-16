@@ -33,6 +33,20 @@ XCB Protocol specification:
 from Xlib import X
 from Xlib.protocol import rq, structs
 
+try:
+    from typing import TYPE_CHECKING, TypeVar, Optional
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing_extensions import TypeAlias
+    from Xlib.error import XError
+    from Xlib.protocol import request
+    from Xlib.display import Display
+    from Xlib.xobject import drawable, resource
+    _T = TypeVar("_T")
+    _ErrorHandler:  TypeAlias = Callable[[XError, Optional[rq.Request]], _T]
+
 extname = 'MIT-SCREEN-SAVER'
 
 # Event members
@@ -70,6 +84,7 @@ class QueryVersion(rq.ReplyRequest):
             )
 
 def query_version(self):
+    # type: (Display | resource.Resource) -> QueryVersion
     return QueryVersion(display=self.display,
                         opcode=self.display.get_extension_major(extname),
                         major_version=1,
@@ -98,6 +113,7 @@ class QueryInfo(rq.ReplyRequest):
             )
 
 def query_info(self):
+    # type: (drawable.Drawable) -> QueryInfo
     return QueryInfo(display=self.display,
                      opcode=self.display.get_extension_major(extname),
                      drawable=self,
@@ -114,6 +130,7 @@ class SelectInput(rq.Request):
         )
 
 def select_input(self, mask):
+    # type: (drawable.Drawable, int) -> SelectInput
     return SelectInput(display=self.display,
                        opcode=self.display.get_extension_major(extname),
                        drawable=self,
@@ -144,6 +161,7 @@ def set_attributes(self, x, y, width, height, border_width,
                    visual = X.CopyFromParent,
                    onerror = None,
                    **keys):
+    # type: (drawable.Drawable, int, int, int, int, int, int, int, int, _ErrorHandler[object] | None, object) -> SetAttributes
     return SetAttributes(display=self.display,
                          onerror = onerror,
                          opcode=self.display.get_extension_major(extname),
@@ -168,6 +186,7 @@ class UnsetAttributes(rq.Request):
         )
 
 def unset_attributes(self, onerror = None):
+    # type: (drawable.Drawable, _ErrorHandler[object] | None) -> UnsetAttributes
     return UnsetAttributes(display=self.display,
                            onerror = onerror,
                            opcode=self.display.get_extension_major(extname),
@@ -189,6 +208,7 @@ class Notify(rq.Event):
         )
 
 def init(disp, info):
+    # type: (Display, request.QueryExtension) -> None
     disp.extension_add_method('display', 'screensaver_query_version', query_version)
     disp.extension_add_method('drawable', 'screensaver_query_info', query_info)
     disp.extension_add_method('drawable', 'screensaver_select_input', select_input)

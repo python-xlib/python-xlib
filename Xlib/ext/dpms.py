@@ -29,6 +29,8 @@ Documentation: https://www.x.org/releases/X11R7.7/doc/xextproto/dpms.html
 
 from Xlib import X
 from Xlib.protocol import rq
+from Xlib.display import Display
+from Xlib.xobject import resource
 
 extname = 'DPMS'
 
@@ -72,6 +74,7 @@ class DPMSGetVersion(rq.ReplyRequest):
 
 
 def get_version(self):
+    # type: (Display | resource.Resource) -> DPMSGetVersion
     return DPMSGetVersion(display=self.display,
                           opcode=self.display.get_extension_major(extname),
                           major_version=1,
@@ -96,6 +99,7 @@ class DPMSCapable(rq.ReplyRequest):
 
 
 def capable(self):
+    # type: (Display | resource.Resource) -> DPMSCapable
     return DPMSCapable(display=self.display,
                        opcode=self.display.get_extension_major(extname),
                        major_version=1,
@@ -122,6 +126,7 @@ class DPMSGetTimeouts(rq.ReplyRequest):
 
 
 def get_timeouts(self):
+    # type: (Display | resource.Resource) -> DPMSGetTimeouts
     return DPMSGetTimeouts(display=self.display,
                            opcode=self.display.get_extension_major(extname),
                            major_version=1,
@@ -141,6 +146,7 @@ class DPMSSetTimeouts(rq.Request):
 
 
 def set_timeouts(self, standby_timeout, suspend_timeout, off_timeout):
+    # type: (Display | resource.Resource, int, int, int) -> DPMSSetTimeouts
     return DPMSSetTimeouts(display=self.display,
                            opcode=self.display.get_extension_major(extname),
                            major_version=1,
@@ -159,6 +165,7 @@ class DPMSEnable(rq.Request):
 
 
 def enable(self):
+    # type: (Display | resource.Resource) -> DPMSEnable
     return DPMSEnable(display=self.display,
                       opcode=self.display.get_extension_major(extname),
                       major_version=1,
@@ -174,6 +181,7 @@ class DPMSDisable(rq.Request):
 
 
 def disable(self):
+    # type: (Display | resource.Resource) -> DPMSDisable
     return DPMSDisable(display=self.display,
                        opcode=self.display.get_extension_major(extname),
                        major_version=1,
@@ -190,6 +198,7 @@ class DPMSForceLevel(rq.Request):
 
 
 def force_level(self, power_level):
+    # type: (Display | resource.Resource, int) -> DPMSForceLevel
     return DPMSForceLevel(display=self.display,
                           opcode=self.display.get_extension_major(extname),
                           major_version=1,
@@ -216,6 +225,7 @@ class DPMSInfo(rq.ReplyRequest):
 
 
 def info(self):
+    # type: (Display | resource.Resource) -> DPMSInfo
     return DPMSInfo(display=self.display,
                     opcode=self.display.get_extension_major(extname),
                     major_version=1,
@@ -223,6 +233,7 @@ def info(self):
 
 
 def init(disp, _info):
+    # type: (Display, object) -> None
     disp.extension_add_method('display', 'dpms_get_version', get_version)
     disp.extension_add_method('display', 'dpms_capable', capable)
     disp.extension_add_method('display', 'dpms_get_timeouts', get_timeouts)

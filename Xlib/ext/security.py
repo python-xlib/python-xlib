@@ -26,6 +26,17 @@ SecurityAuthorizationRevoked event is not implemented.
 '''
 
 from Xlib.protocol import rq
+try:
+    from typing import TYPE_CHECKING, Any, Union
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from mmap import mmap
+    from typing_extensions import TypeAlias
+    from Xlib.display import Display
+    from Xlib.xobject import resource
+    from array import array
+    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
 
 
 extname = 'SECURITY'
@@ -58,6 +69,7 @@ class QueryVersion(rq.ReplyRequest):
 
 
 def query_version(self):
+    # type: (Display | resource.Resource) -> QueryVersion
     return QueryVersion(display=self.display,
                         opcode=self.display.get_extension_major(extname),
                         major_version=1,
@@ -91,6 +103,7 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
 
 def generate_authorization(self, auth_proto, auth_data=b'', timeout=None,
                            trust_level=None, group=None, event_mask=None):
+    # type: (Display | resource.Resource, str, _SliceableBuffer, int | None, int | None, int | None, int | None) -> SecurityGenerateAuthorization
     value_mask = 0
     values = []
     if timeout is not None:
@@ -122,12 +135,14 @@ class SecurityRevokeAuthorization(rq.Request):
 
 
 def revoke_authorization(self, authid):
+    # type: (Display | resource.Resource, int) -> SecurityRevokeAuthorization
     return SecurityRevokeAuthorization(display=self.display,
                                        opcode=self.display.get_extension_major(extname),
                                        authid=authid)
 
 
 def init(disp, info):
+    # type: (Display, object) -> None
     disp.extension_add_method('display',
                               'security_query_version',
                               query_version)

@@ -21,9 +21,10 @@
 
 
 from Xlib import X
-from Xlib.protocol import rq, structs
-from Xlib.xobject import resource
+from Xlib.protocol import rq, structs, request
 from Xlib.error import XError
+from Xlib.display import Display
+from Xlib.xobject import resource
 
 extname = 'DAMAGE'
 
@@ -71,6 +72,7 @@ class QueryVersion(rq.ReplyRequest):
                        )
 
 def query_version(self):
+    # type: (Display | resource.Resource) -> QueryVersion
     return QueryVersion(display=self.display,
                         opcode=self.display.get_extension_major(extname),
                         major_version=1,
@@ -87,6 +89,7 @@ class DamageCreate(rq.Request):
                          )
 
 def damage_create(self, level):
+    # type: (Display | resource.Resource, int) -> int
     did = self.display.allocate_resource_id()
     DamageCreate(display=self.display,
                  opcode=self.display.get_extension_major(extname),
@@ -104,6 +107,7 @@ class DamageDestroy(rq.Request):
                          )
 
 def damage_destroy(self, damage):
+    # type: (Display | resource.Resource, int) -> None
     DamageDestroy(display=self.display,
                   opcode=self.display.get_extension_major(extname),
                   damage=damage,
@@ -121,6 +125,7 @@ class DamageSubtract(rq.Request):
                          )
 
 def damage_subtract(self, damage, repair=X.NONE, parts=X.NONE):
+    # type: (Display | resource.Resource, int, int, int) -> None
     DamageSubtract(display=self.display,
                    opcode=self.display.get_extension_major(extname),
                    damage=damage,
@@ -136,6 +141,7 @@ class DamageAdd(rq.Request):
                          )
 
 def damage_add(self, repair, parts):
+    # type: (Display | resource.Resource, int, int) -> None
     DamageAdd(display=self.display,
               opcode=self.display.get_extension_major(extname),
               repair=repair,
@@ -157,6 +163,7 @@ class DamageNotify(rq.Event):
         )
 
 def init(disp, info):
+    # type: (Display, request.QueryExtension) -> None
     disp.extension_add_method('display',
                               'damage_query_version',
                               query_version)

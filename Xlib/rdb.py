@@ -22,7 +22,7 @@
 
 # See end of file for an explanation of the algorithm and
 # data structures used.
-
+from __future__ import annotations
 
 # Standard modules
 import re
@@ -30,6 +30,24 @@ import sys
 
 # Xlib modules
 from .support import lock
+
+try:
+    from typing import TYPE_CHECKING, Any, TypeVar, Protocol, overload
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
+    from _typeshed import SupportsRead, SupportsDunderLT, SupportsDunderGT
+    class SupportsDunderEQ(Protocol):
+        def __eq__(self, __other: object) -> bool: ...
+    class SupportsComparisons(
+        SupportsDunderLT[object], SupportsDunderGT[object], SupportsDunderEQ, Protocol
+    ): ...
+    from typing_extensions import TypeAlias
+    from Xlib import display
+    _T = TypeVar("_T")
+    _C = TypeVar("_C", bound=SupportsComparisons)
+    _DB: TypeAlias = dict[str, tuple["_DB", ...]]
 
 # Set up a few regexpes for parsing string representation of resources
 
@@ -52,7 +70,8 @@ class OptionError(Exception):
 
 class ResourceDB(object):
     def __init__(self, file = None, string = None, resources = None):
-        self.db = {}
+        # type: (bytes | SupportsRead[str] | None, str | None, Iterable[tuple[str, object]] | None) -> None
+        self.db = {}  # type: _DB
         self.lock = lock.allocate_lock()
 
         if file is not None:
@@ -63,6 +82,7 @@ class ResourceDB(object):
             self.insert_resources(resources)
 
     def insert_file(self, file):
+        # type: (bytes | SupportsRead[str]) -> None
         """insert_file(file)
 
         Load resources entries from FILE, and insert them into the
@@ -77,6 +97,7 @@ class ResourceDB(object):
 
 
     def insert_string(self, data):
+        # type: (str) -> None
         """insert_string(data)
 
         Insert the resources entries in the string DATA into the
@@ -137,6 +158,7 @@ class ResourceDB(object):
 
 
     def insert_resources(self, resources):
+        # type: (Iterable[tuple[str, object]]) -> None
         """insert_resources(resources)
 
         Insert all resources entries in the list RESOURCES into the
@@ -152,6 +174,7 @@ class ResourceDB(object):
             self.insert(res, value)
 
     def insert(self, resource, value):
+        # type: (str, object) -> None
         """insert(resource, value)
 
         Insert a resource entry into the database.  RESOURCE is a
@@ -191,6 +214,7 @@ class ResourceDB(object):
         self.lock.release()
 
     def __getitem__(self, keys_tuple):
+        # type: (tuple[str, str]) -> Any
         """db[name, class]
 
         Return the value matching the resource identified by NAME and
@@ -303,7 +327,14 @@ class ResourceDB(object):
         finally:
             self.lock.release()
 
+    if TYPE_CHECKING:
+        @overload
+        def get(self, res: str, cls: str, default: None = ...) -> Any: ...
+        @overload
+        def get(self, res: str, cls: str, default: _T) -> _T: ...
+
     def get(self, res, cls, default = None):
+        # type: (str, str, object) -> Any
         """get(name, class [, default])
 
         Return the value matching the resource identified by NAME and
@@ -318,6 +349,7 @@ class ResourceDB(object):
             return default
 
     def update(self, db):
+        # type: (ResourceDB) -> None
         """update(db)
 
         Update this database with all resources entries in the resource
@@ -341,6 +373,7 @@ class ResourceDB(object):
         return text
 
     def getopt(self, name, argv, opts):
+        # type: (str, Sequence[str], dict[str, Option]) -> Sequence[str]
         """getopt(name, argv, opts)
 
         Parse X command line options, inserting the recognised options
@@ -452,6 +485,7 @@ class _Match(object):
 #
 
 def bin_insert(list, element):
+    # type: (list[_C], _C) -> None
     """bin_insert(list, element)
 
     Insert ELEMENT into LIST.  LIST must be sorted, and ELEMENT will
@@ -487,6 +521,7 @@ def bin_insert(list, element):
 #
 
 def update_db(dest, src):
+    # type: (_DB, _DB) -> None
     for comp, group in src.items():
 
         # DEST already contains this component, update it
@@ -507,9 +542,11 @@ def update_db(dest, src):
             dest[comp] = copy_group(group)
 
 def copy_group(group):
+    # type: (tuple[_DB, ...]) -> tuple[_DB, ...]
     return (copy_db(group[0]), copy_db(group[1])) + group[2:]
 
 def copy_db(db):
+    # type: (_DB) -> _DB
     newdb = {}
     for comp, group in db.items():
         newdb[comp] = copy_group(group)
@@ -522,6 +559,7 @@ def copy_db(db):
 #
 
 def output_db(prefix, db):
+    # type: (str, _DB) -> str
     res = ''
     for comp, group in db.items():
 
@@ -536,6 +574,7 @@ def output_db(prefix, db):
     return res
 
 def output_escape(value):
+    # type: (object) -> str
     value = str(value)
     if not value:
         return value
@@ -564,39 +603,47 @@ class Option(object):
         pass
 
     def parse(self, name, db, args):
+        # type: (str, ResourceDB, Sequence[_T]) -> Sequence[_T]
         pass
 
 class NoArg(Option):
     """Value is provided to constructor."""
     def __init__(self, specifier, value):
+        # type: (str, object) -> None
         self.specifier = specifier
         self.value = value
 
     def parse(self, name, db, args):
+        # type: (str, ResourceDB, Sequence[_T]) -> Sequence[_T]
         db.insert(name + self.specifier, self.value)
         return args[1:]
 
 class IsArg(Option):
     """Value is the option string itself."""
     def __init__(self, specifier):
+        # type: (str) -> None
         self.specifier = specifier
 
     def parse(self, name, db, args):
+        # type: (str, ResourceDB, Sequence[_T]) -> Sequence[_T]
         db.insert(name + self.specifier, args[0])
         return args[1:]
 
 class SepArg(Option):
     """Value is the next argument."""
     def __init__(self, specifier):
+        # type: (str) -> None
         self.specifier = specifier
 
     def parse(self, name, db, args):
+        # type: (str, ResourceDB, Sequence[_T]) -> Sequence[_T]
         db.insert(name + self.specifier, args[1])
         return args[2:]
 
 class ResArgClass(Option):
     """Resource and value in the next argument."""
     def parse(self, name, db, args):
+        # type: (str, ResourceDB, Sequence[str]) -> Sequence[str]
         db.insert_string(args[1])
         return args[2:]
 
@@ -605,6 +652,7 @@ ResArg = ResArgClass()
 class SkipArgClass(Option):
     """Ignore this option and next argument."""
     def parse(self, name, db, args):
+        # type: (str, ResourceDB, Sequence[_T]) -> Sequence[_T]
         return args[2:]
 
 SkipArg = SkipArgClass()
@@ -612,6 +660,7 @@ SkipArg = SkipArgClass()
 class SkipLineClass(Option):
     """Ignore rest of the arguments."""
     def parse(self, name, db, args):
+        # type: (str, ResourceDB, Sequence[_T]) -> Sequence[_T]
         return []
 
 SkipLine = SkipLineClass()
@@ -619,14 +668,17 @@ SkipLine = SkipLineClass()
 class SkipNArgs(Option):
     """Ignore this option and the next COUNT arguments."""
     def __init__(self, count):
+        # type: (int) -> None
         self.count = count
 
     def parse(self, name, db, args):
+        # type: (str, ResourceDB, Sequence[_T]) -> Sequence[_T]
         return args[1 + self.count:]
 
 
 
 def get_display_opts(options, argv = sys.argv):
+    # type: (dict[str, Option], Sequence[str]) -> tuple[display.Display, str, ResourceDB, Sequence[str]]
     """display, name, db, args = get_display_opts(options, [argv])
 
     Parse X OPTIONS from ARGV (or sys.argv if not provided).

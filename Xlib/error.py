@@ -25,9 +25,20 @@ from . import X
 # Xlib.protocol modules
 from .protocol import rq
 
+try:
+    from typing import TYPE_CHECKING, Any, Union
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from mmap import mmap
+    from array import array
+    from typing_extensions import TypeAlias, Literal
+    from Xlib.protocol import display
+    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
 
 class DisplayError(Exception):
     def __init__(self, display):
+        # type: (object) -> None
         self.display = display
 
     def __str__(self):
@@ -39,6 +50,7 @@ class DisplayNameError(DisplayError):
 
 class DisplayConnectionError(DisplayError):
     def __init__(self, display, msg):
+        # type: (object, object) -> None
         self.display = display
         self.msg = msg
 
@@ -47,6 +59,7 @@ class DisplayConnectionError(DisplayError):
 
 class ConnectionClosedError(Exception):
     def __init__(self, whom):
+        # type: (object) -> None
         self.whom = whom
 
     def __str__(self):
@@ -70,6 +83,7 @@ class XError(rq.GetAttrData, Exception):
                          )
 
     def __init__(self, display, data):
+        # type: (display.Display, _SliceableBuffer) -> None
         self._data, data = self._fields.parse_binary(data, display, rawdict = 1)
 
     def __str__(self):
@@ -131,11 +145,13 @@ xerror_class = {
 
 class CatchError(object):
     def __init__(self, *errors):
+        # type: (type[XError]) -> None
         self.error_types = errors
-        self.error = None
-        self.request = None
+        self.error = None # type: XError | None
+        self.request = None # type: rq.Request | None
 
     def __call__(self, error, request):
+        # type: (XError, rq.Request | None) -> Literal[0, 1]
         if self.error_types:
             for etype in self.error_types:
                 if isinstance(error, etype):

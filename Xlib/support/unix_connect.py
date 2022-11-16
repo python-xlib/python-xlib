@@ -19,35 +19,37 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+import sys
 import re
 import os
 import platform
 import socket
 
-# FCNTL is deprecated from Python 2.2, so only import it if we doesn't
-# get the names we need.  Furthermore, FD_CLOEXEC seems to be missing
-# in Python 2.2.
+try:
+    import fcntl
 
-import fcntl
-
-if hasattr(fcntl, 'F_SETFD'):
-    F_SETFD = fcntl.F_SETFD
-    if hasattr(fcntl, 'FD_CLOEXEC'):
-        FD_CLOEXEC = fcntl.FD_CLOEXEC
-    else:
-        FD_CLOEXEC = 1
-else:
-    from FCNTL import F_SETFD, FD_CLOEXEC
-
+    FD_CLOEXEC = getattr(fcntl, 'FD_CLOEXEC', 1)
+    F_SETFD = getattr(fcntl, 'F_SETFD', 2)
+except ImportError:
+    FD_CLOEXEC = 1
+    F_SETFD = 2
 
 from Xlib import error, xauth
 
 
 SUPPORTED_PROTOCOLS = (None, 'tcp', 'unix')
 
+try:
+    from typing import TYPE_CHECKING, Any, Union
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from typing_extensions import TypeAlias
+    _Protocol = type(SUPPORTED_PROTOCOLS)
+    _Address: TypeAlias = Union[tuple[Any, ...], str]
+
 # Darwin funky socket.
-uname = platform.uname()
-if (uname[0] == 'Darwin') and ([int(x) for x in uname[2].split('.')] >= [9, 0]):
+if sys.platform == 'darwin' and ([int(x) for x in platform.release().split('.')] >= [9, 0]):
     SUPPORTED_PROTOCOLS += ('darwin',)
     DARWIN_DISPLAY_RE = re.compile(r'^/private/tmp/[-:a-zA-Z0-9._]*:(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$')
 
@@ -55,13 +57,14 @@ DISPLAY_RE = re.compile(r'^((?P<proto>tcp|unix)/)?(?P<host>[-:a-zA-Z0-9._]*):(?P
 
 
 def get_display(display):
+    # type: (str | None) -> tuple[str, str | None, str | None, int, int]
     # Use $DISPLAY if display isn't provided
     if display is None:
         display = os.environ.get('DISPLAY', '')
 
-    re_list = [(DISPLAY_RE, {})]
+    re_list = [(DISPLAY_RE, {})]  # type: list[tuple[re.Pattern[str], dict[str, str]]]
 
-    if 'darwin' in SUPPORTED_PROTOCOLS:
+    if sys.platform == 'darwin' and 'darwin' in SUPPORTED_PROTOCOLS:
         re_list.insert(0, (DARWIN_DISPLAY_RE, {'protocol': 'darwin'}))
 
     for re, defaults in re_list:
@@ -99,6 +102,7 @@ def _get_unix_socket(address):
     return s
 
 def get_socket(dname, protocol, host, dno):
+    # type: (_Address, _Protocol, _Address | None, int) -> socket.socket
     assert protocol in SUPPORTED_PROTOCOLS
     try:
         # Darwin funky socket.
@@ -133,6 +137,7 @@ def get_socket(dname, protocol, host, dno):
 
 
 def new_get_auth(sock, dname, protocol, host, dno):
+    # type: (socket.socket, object, _Protocol, object, int) -> tuple[bytes, bytes]
     assert protocol in SUPPORTED_PROTOCOLS
     # Translate socket address into the xauth domain
     if protocol == 'darwin':
@@ -173,6 +178,7 @@ def new_get_auth(sock, dname, protocol, host, dno):
 
 
 def old_get_auth(sock, dname, host, dno):
+    # type: (object, _Address, object, object) -> tuple[str, bytes]
     # Find authorization cookie
     auth_name = auth_data = b''
 

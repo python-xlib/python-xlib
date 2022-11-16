@@ -41,6 +41,28 @@ from .xobject import fontable
 from .xobject import colormap
 from .xobject import cursor
 
+try:
+    from typing import TYPE_CHECKING, overload, TypeVar, Optional, Union, Any
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Sequence, Callable
+    from typing_extensions import Literal, TypeAlias
+    from re import Pattern
+    _T = TypeVar("_T")
+    _ErrorHandler: TypeAlias = Callable[[error.XError, Optional[rq.Request]], _T]
+    _ResourceBaseClass: TypeAlias = Union[
+        resource.Resource,
+        drawable.Drawable,
+        drawable.Window,
+        drawable.Pixmap,
+        fontable.Fontable,
+        fontable.Font,
+        fontable.GC,
+        colormap.Colormap,
+        cursor.Cursor,
+    ]
+
 _resource_baseclasses = {
     'resource': resource.Resource,
     'drawable': drawable.Drawable,
@@ -67,11 +89,13 @@ class _BaseDisplay(protocol_display.Display):
     # dealing with some ICCCM properties not defined in Xlib.Xatom
 
     def __init__(self, *args, **keys):
+        # type: (str | None, object, object) -> None
         self.resource_classes = _resource_baseclasses.copy()
         protocol_display.Display.__init__(self, *args, **keys)
         self._atom_cache = {}
 
     def get_atom(self, atomname, only_if_exists=0):
+        # type: (str, bool) -> int
         if atomname in self._atom_cache:
             return self._atom_cache[atomname]
 
@@ -86,22 +110,23 @@ class _BaseDisplay(protocol_display.Display):
 
 class Display(object):
     def __init__(self, display = None):
+        # type: (str | None) -> None
         self.display = _BaseDisplay(display)
 
         # Create the keymap cache
-        self._keymap_codes = [()] * 256
-        self._keymap_syms = {}
+        self._keymap_codes = [()] * 256  # type: list[tuple[int, ...]]
+        self._keymap_syms = {}  # type: dict[int, list[tuple[int, ...]]]
         self._update_keymap(self.display.info.min_keycode,
                             (self.display.info.max_keycode
                              - self.display.info.min_keycode + 1))
 
         # Translations for keysyms to strings.
-        self.keysym_translations = {}
+        self.keysym_translations = {}  # type: dict[int, str]
 
         # Find all supported extensions
-        self.extensions = []
-        self.class_extension_dicts = {}
-        self.display_extension_methods = {}
+        self.extensions = []  # type: list[str]
+        self.class_extension_dicts = {}  # type: dict[str, dict[str, types.FunctionType]]
+        self.display_extension_methods = {}  # type: dict[str, Callable[..., Any]]
 
         # a dict that maps the event name to the code
         # or, when it's an event with a subcode, to a tuple of (event,subcode)
@@ -161,6 +186,7 @@ class Display(object):
         self.display.close()
 
     def set_error_handler(self, handler):
+        # type: (_ErrorHandler[object] | None) -> None
         """Set the default error handler which will be called for all
         unhandled errors. handler should take two arguments as a normal
         request error handler, but the second argument (the request) will
@@ -192,11 +218,32 @@ class Display(object):
         return self.display.pending_events()
 
     def has_extension(self, extension):
+        # type: (str) -> bool
         """Check if both the server and the client library support the X
         extension named extension."""
         return extension in self.extensions
 
+    if TYPE_CHECKING:
+        @overload
+        def create_resource_object(self, type: Literal['resource'], id: int) -> resource.Resource: ...
+        @overload
+        def create_resource_object(self, type: Literal['drawable'], id: int) -> drawable.Drawable: ...
+        @overload
+        def create_resource_object(self, type: Literal['window'], id: int) -> drawable.Window: ...
+        @overload
+        def create_resource_object(self, type: Literal['pixmap'], id: int) -> drawable.Pixmap: ...
+        @overload
+        def create_resource_object(self, type: Literal['fontable'], id: int) -> fontable.Fontable: ...
+        @overload
+        def create_resource_object(self, type: Literal['font'], id: int) -> fontable.Font: ...
+        @overload
+        def create_resource_object(self, type: Literal['gc'], id: int) -> fontable.GC: ...
+        @overload
+        def create_resource_object(self, type: Literal['colormap'], id: int) -> colormap.Colormap: ...
+        @overload
+        def create_resource_object(self, type: Literal['cursor'], id: int) -> cursor.Cursor: ...
     def create_resource_object(self, type, id):
+        # type: (str, int) -> resource.Resource
         """Create a resource object of type for the integer id. type
         should be one of the following strings:
 
@@ -220,6 +267,7 @@ class Display(object):
 
     # We need this to handle display extension methods
     def __getattr__(self, attr):
+        # type: (str) -> types.MethodType
         try:
             function = self.display_extension_methods[attr]
             return types.MethodType(function, self)
@@ -231,6 +279,7 @@ class Display(object):
     ###
 
     def screen(self, sno = None):
+        # type: (int | None) -> rq.Struct
         if sno is None:
             return self.display.info.roots[self.display.default_screen]
         else:
@@ -250,6 +299,7 @@ class Display(object):
     ###
 
     def extension_add_method(self, object, name, function):
+        # type: (str, str, Callable[..., Any]) -> None
         """extension_add_method(object, name, function)
 
         Add an X extension module method.  OBJECT is the type of
@@ -292,6 +342,7 @@ class Display(object):
                     self.class_extension_dicts[class_name] = { name: method }
 
     def extension_add_event(self, code, evt, name = None):
+        # type: (int, type, str | None) -> None
         """extension_add_event(code, evt, [name])
 
         Add an extension event.  CODE is the numeric code, and EVT is
@@ -315,6 +366,7 @@ class Display(object):
         setattr(self.extension_event, name, code)
 
     def extension_add_subevent(self, code, subcode, evt, name = None):
+        # type: (int, int | None, type[rq.Event], str | None) -> None
         """extension_add_subevent(code, evt, [name])
 
         Add an extension subevent.  CODE is the numeric code, subcode
@@ -341,6 +393,7 @@ class Display(object):
         setattr(self.extension_event, name, (code,subcode))
 
     def extension_add_error(self, code, err):
+        # type: (int, type[error.XError]) -> None
         """extension_add_error(code, err)
 
         Add an extension error.  CODE is the numeric code, and ERR is
@@ -364,6 +417,7 @@ class Display(object):
     # index is the keysyms index in the map for that keycode.
 
     def keycode_to_keysym(self, keycode, index):
+        # type: (int, int) -> int
         """Convert a keycode to a keysym, looking in entry index.
         Normally index 0 is unshifted, 1 is shifted, 2 is alt grid, and 3
         is shift+alt grid. If that key entry is not bound, X.NoSymbol is
@@ -374,6 +428,7 @@ class Display(object):
             return X.NoSymbol
 
     def keysym_to_keycode(self, keysym):
+        # type: (int) -> int
         """Look up the primary keycode that is bound to keysym. If
         several keycodes are found, the one with the lowest index and
         lowest code is returned. If keysym is not bound to any key, 0 is
@@ -384,6 +439,7 @@ class Display(object):
             return 0
 
     def keysym_to_keycodes(self, keysym):
+        # type: (int) -> map[tuple[int, int]] | list[tuple[int, int]]
         """Look up all the keycodes that is bound to keysym. A list of
         tuples (keycode, index) is returned, sorted primarily on the
         lowest index and secondarily on the lowest keycode."""
@@ -394,6 +450,7 @@ class Display(object):
             return []
 
     def refresh_keyboard_mapping(self, evt):
+        # type: (rq.Event) -> None
         """This method should be called once when a MappingNotify event
         is received, to update the keymap cache. evt should be the event
         object."""
@@ -446,6 +503,7 @@ class Display(object):
     ###
 
     def lookup_string(self, keysym):
+        # type: (int) -> str | None
         """Return a string corresponding to KEYSYM, or None if no
         reasonable translation is found.
         """
@@ -457,6 +515,7 @@ class Display(object):
         return Xlib.XK.keysym_to_string(keysym)
 
     def rebind_string(self, keysym, newstring):
+        # type: (int, str | None) -> None
         """Change the translation of KEYSYM to NEWSTRING.
         If NEWSTRING is None, remove old translation if any.
         """
@@ -474,6 +533,7 @@ class Display(object):
     ###
 
     def intern_atom(self, name, only_if_exists = 0):
+        # type: (str, int) -> int
         """Intern the string name, returning its atom number. If
         only_if_exists is true and the atom does not already exist, it
         will not be created and X.NONE is returned."""
@@ -483,11 +543,13 @@ class Display(object):
         return r.atom
 
     def get_atom(self, atom, only_if_exists = 0):
+        # type: (str, int) -> int
         """Alias for intern_atom, using internal cache"""
         return self.display.get_atom(atom, only_if_exists)
 
 
     def get_atom_name(self, atom):
+        # type: (int) -> str
         """Look up the name of atom, returning it as a string. Will raise
         BadAtom if atom does not exist."""
         r = request.GetAtomName(display = self.display,
@@ -495,6 +557,7 @@ class Display(object):
         return r.name
 
     def get_selection_owner(self, selection):
+        # type: (int) -> int
         """Return the window that owns selection (an atom), or X.NONE if
         there is no owner for the selection. Can raise BadAtom."""
         r = request.GetSelectionOwner(display = self.display,
@@ -503,6 +566,7 @@ class Display(object):
 
     def send_event(self, destination, event, event_mask = 0, propagate = 0,
                    onerror = None):
+        # type: (int, rq.Event, int, bool, _ErrorHandler[object] | None) -> None
         """Send a synthetic event to the window destination which can be
         a window object, or X.PointerWindow or X.InputFocus. event is the
         event object to send, instantiated from one of the classes in
@@ -517,6 +581,7 @@ class Display(object):
                           event = event)
 
     def ungrab_pointer(self, time, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         """Release a grabbed pointer and any queued events. See
         XUngrabPointer(3X11)."""
         request.UngrabPointer(display = self.display,
@@ -524,6 +589,7 @@ class Display(object):
                               time = time)
 
     def change_active_pointer_grab(self, event_mask, cursor, time, onerror = None):
+        # type: (int, cursor.Cursor, int, _ErrorHandler[object] | None) -> None
         """Change the dynamic parameters of a pointer grab. See
         XChangeActivePointerGrab(3X11)."""
         request.ChangeActivePointerGrab(display = self.display,
@@ -533,6 +599,7 @@ class Display(object):
                                         event_mask = event_mask)
 
     def ungrab_keyboard(self, time, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         """Ungrab a grabbed keyboard and any queued events. See
         XUngrabKeyboard(3X11)."""
         request.UngrabKeyboard(display = self.display,
@@ -540,6 +607,7 @@ class Display(object):
                                time = time)
 
     def allow_events(self, mode, time, onerror = None):
+        # type: (int, int, _ErrorHandler[object] | None) -> None
         """Release some queued events. mode should be one of
         X.AsyncPointer, X.SyncPointer, X.AsyncKeyboard, X.SyncKeyboard,
         X.ReplayPointer, X.ReplayKeyboard, X.AsyncBoth, or X.SyncBoth.
@@ -550,6 +618,7 @@ class Display(object):
                             time = time)
 
     def grab_server(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         """Disable processing of requests on all other client connections
         until the server is ungrabbed. Server grabbing should be avoided
         as much as possible."""
@@ -557,12 +626,14 @@ class Display(object):
                            onerror = onerror)
 
     def ungrab_server(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         """Release the server if it was previously grabbed by this client."""
         request.UngrabServer(display = self.display,
                              onerror = onerror)
 
     def warp_pointer(self, x, y, src_window = X.NONE, src_x = 0, src_y = 0,
                      src_width = 0, src_height = 0, onerror = None):
+        # type: (int, int, int, int, int, int, int, _ErrorHandler[object] | None) -> None
         """Move the pointer relative its current position by the offsets
         (x, y). However, if src_window is a window the pointer is only
         moved if the specified rectangle in src_window contains it. If
@@ -582,6 +653,7 @@ class Display(object):
                             dst_y = y)
 
     def set_input_focus(self, focus, revert_to, time, onerror = None):
+        # type: (int, int, int, _ErrorHandler[object] | None) -> None
         """Set input focus to focus, which should be a window,
         X.PointerRoot or X.NONE. revert_to specifies where the focus
         reverts to if the focused window becomes not visible, and should
@@ -596,6 +668,7 @@ class Display(object):
                               time = time)
 
     def get_input_focus(self):
+        # type: () -> request.GetInputFocus
         """Return an object with the following attributes:
 
         focus
@@ -607,6 +680,7 @@ class Display(object):
         return request.GetInputFocus(display = self.display)
 
     def query_keymap(self):
+        # type: () -> bytes  # TODO: Validate if this is correct
         """Return a bit vector for the logical state of the keyboard,
         where each bit set to 1 indicates that the corresponding key is
         currently pressed down. The vector is represented as a list of 32
@@ -616,6 +690,7 @@ class Display(object):
         return r.map
 
     def open_font(self, name):
+        # type: (str) -> _ResourceBaseClass | None
         """Open the font identifed by the pattern name and return its
         font object. If name does not match any font, None is returned."""
         fid = self.display.allocate_resource_id()
@@ -635,6 +710,7 @@ class Display(object):
             return cls(self.display, fid, owner = 1)
 
     def list_fonts(self, pattern, max_names):
+        # type: (Pattern[str] | str, int) -> list[str]
         """Return a list of font names matching pattern. No more than
         max_names will be returned."""
         r = request.ListFonts(display = self.display,
@@ -643,6 +719,7 @@ class Display(object):
         return r.fonts
 
     def list_fonts_with_info(self, pattern, max_names):
+        # type: (Pattern[str] | str, int) -> request.ListFontsWithInfo
         """Return a list of fonts matching pattern. No more than
         max_names will be returned. Each list item represents one font
         and has the following properties:
@@ -676,6 +753,7 @@ class Display(object):
                                          pattern = pattern)
 
     def set_font_path(self, path, onerror = None):
+        # type: (Sequence[str], _ErrorHandler[object] | None) -> None
         """Set the font path to path, which should be a list of strings.
         If path is empty, the default font path of the server will be
         restored."""
@@ -684,11 +762,13 @@ class Display(object):
                             path = path)
 
     def get_font_path(self):
+        # type: () -> list[str]
         """Return the current font path as a list of strings."""
         r = request.GetFontPath(display = self.display)
         return r.paths
 
     def query_extension(self, name):
+        # type: (str) -> request.QueryExtension | None
         """Ask the server if it supports the extension name. If it is
         supported an object with the following attributes is returned:
 
@@ -708,11 +788,13 @@ class Display(object):
             return None
 
     def list_extensions(self):
+        # type: () -> list[str]
         """Return a list of all the extensions provided by the server."""
         r = request.ListExtensions(display = self.display)
         return r.names
 
     def change_keyboard_mapping(self, first_keycode, keysyms, onerror = None):
+        # type: (int, Sequence[Sequence[int]], _ErrorHandler[object] | None) -> None
         """Modify the keyboard mapping, starting with first_keycode.
         keysyms is a list of tuples of keysyms. keysyms[n][i] will be
         assigned to keycode first_keycode+n at index i."""
@@ -722,6 +804,7 @@ class Display(object):
                                       keysyms = keysyms)
 
     def get_keyboard_mapping(self, first_keycode, count):
+        # type: (int, int) -> list[tuple[int, ...]]
         """Return the current keyboard mapping as a list of tuples,
         starting at first_keycount and no more than count."""
         r = request.GetKeyboardMapping(display = self.display,
@@ -730,6 +813,7 @@ class Display(object):
         return r.keysyms
 
     def change_keyboard_control(self, onerror = None, **keys):
+        # type: (_ErrorHandler[object] | None, object) -> None
         """Change the parameters provided as keyword arguments:
 
         key_click_percent
@@ -786,6 +870,7 @@ class Display(object):
         return request.GetKeyboardControl(display = self.display)
 
     def bell(self, percent = 0, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         """Ring the bell at the volume percent which is relative the base
         volume. See XBell(3X11)."""
         request.Bell(display = self.display,
@@ -793,6 +878,7 @@ class Display(object):
                      percent = percent)
 
     def change_pointer_control(self, accel = None, threshold = None, onerror = None):
+        # type: (tuple[int, int] | None, int | None, _ErrorHandler[object] | None) -> None
         """To change the pointer acceleration, set accel to a tuple (num,
         denum). The pointer will then move num/denum times the normal
         speed if it moves beyond the threshold number of pixels at once.
@@ -833,6 +919,7 @@ class Display(object):
         return request.GetPointerControl(display = self.display)
 
     def set_screen_saver(self, timeout, interval, prefer_blank, allow_exposures, onerror = None):
+        # type: (int, int, int, int, _ErrorHandler[object] | None) -> None
         """See XSetScreenSaver(3X11)."""
         request.SetScreenSaver(display = self.display,
                                onerror = onerror,
@@ -848,6 +935,7 @@ class Display(object):
         return request.GetScreenSaver(display = self.display)
 
     def change_hosts(self, mode, host_family, host, onerror = None):
+        # type: (int, int, Sequence[int] | Sequence[bytes], _ErrorHandler[object] | None) -> None # TODO: validate the list of bytes
         """mode is either X.HostInsert or X.HostDelete. host_family is
         one of X.FamilyInternet, X.FamilyDECnet, X.FamilyChaos,
         X.FamilyServerInterpreted or X.FamilyInternetV6.
@@ -877,6 +965,7 @@ hosts
         return request.ListHosts(display = self.display)
 
     def set_access_control(self, mode, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         """Enable use of access control lists at connection setup if mode
         is X.EnableAccess, disable if it is X.DisableAccess."""
         request.SetAccessControl(display = self.display,
@@ -884,6 +973,7 @@ hosts
                                  mode = mode)
 
     def set_close_down_mode(self, mode, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         """Control what will happen with the client's resources at
         connection close. The default is X.DestroyAll, the other values
         are X.RetainPermanent and X.RetainTemporary."""
@@ -892,6 +982,7 @@ hosts
                                  mode = mode)
 
     def force_screen_saver(self, mode, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         """If mode is X.ScreenSaverActive the screen saver is activated.
         If it is X.ScreenSaverReset, the screen saver is deactivated as
         if device input had been received."""
@@ -900,6 +991,7 @@ hosts
                                  mode = mode)
 
     def set_pointer_mapping(self, map):
+        # type: (Sequence[int]) -> int
         """Set the mapping of the pointer buttons. map is a list of
         logical button numbers. map must be of the same length as the
         list returned by Display.get_pointer_mapping().
@@ -918,12 +1010,14 @@ hosts
         return r.status
 
     def get_pointer_mapping(self):
+        # type: () -> list[int]
         """Return a list of the pointer button mappings. Entry N in the
         list sets the logical button number for the physical button N+1."""
         r = request.GetPointerMapping(display = self.display)
         return r.map
 
     def set_modifier_mapping(self, keycodes):
+        # type: (Sequence[Sequence[int]] | tuple[Sequence[int], Sequence[int], Sequence[int], Sequence[int], Sequence[int], Sequence[int], Sequence[int], Sequence[int]]) -> int
         """Set the keycodes for the eight modifiers X.Shift, X.Lock,
         X.Control, X.Mod1, X.Mod2, X.Mod3, X.Mod4 and X.Mod5. keycodes
         should be a eight-element list where each entry is a list of the
@@ -939,6 +1033,7 @@ hosts
         return r.status
 
     def get_modifier_mapping(self):
+        # type: () -> list[list[int]]
         """Return a list of eight lists, one for each modifier. The list
         can be indexed using X.ShiftMapIndex, X.Mod1MapIndex, and so on.
         The sublists list the keycodes bound to that modifier."""
@@ -946,6 +1041,7 @@ hosts
         return r.keycodes
 
     def no_operation(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         """Do nothing but send a request to the server."""
         request.NoOperation(display = self.display,
                             onerror = onerror)

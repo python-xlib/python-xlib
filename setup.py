@@ -20,4 +20,5 @@ setup(
         'Xlib.support',
         'Xlib.xobject'
     ],
+    package_data={"Xlib": ["Xlib/py.typed"]},
 )

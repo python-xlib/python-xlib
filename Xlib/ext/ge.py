@@ -25,6 +25,18 @@ ge - Generic Event Extension
 '''
 
 from Xlib.protocol import rq
+try:
+    from typing import TYPE_CHECKING, Union, Any
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from Xlib.display import Display
+    from Xlib.protocol import display
+    from Xlib.xobject import resource
+    from mmap import mmap
+    from array import array
+    from typing_extensions import TypeAlias
+    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
 
 extname = 'Generic Event Extension'
 
@@ -52,6 +64,7 @@ class GEQueryVersion(rq.ReplyRequest):
 
 
 def query_version(self):
+    # type: (Display | resource.Resource) -> GEQueryVersion
     return GEQueryVersion(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -77,6 +90,7 @@ class GenericEvent(rq.Event):
         )
 
     def __init__(self, binarydata = None, display = None, **keys):
+        # type: (_SliceableBuffer | None, display.Display | None, object) -> None
         if binarydata:
             data = binarydata[10:]
             binarydata = binarydata[:10]
@@ -101,12 +115,14 @@ class GenericEvent(rq.Event):
 
 
 def add_event_data(self, extension, evtype, estruct):
+    # type: (Display | resource.Resource, int, int, int) -> None
     if not hasattr(self.display, 'ge_event_data'):
         self.display.ge_event_data = {}
     self.display.ge_event_data[(extension, evtype)] = estruct
 
 
 def init(disp, info):
+    # type: (Display, object) -> None
     disp.extension_add_method('display', 'ge_query_version', query_version)
     disp.extension_add_method('display', 'ge_add_event_data', add_event_data)
     disp.extension_add_event(GenericEventCode, GenericEvent)

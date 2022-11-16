@@ -24,10 +24,18 @@ import socket
 
 from Xlib import error
 
+try:
+    from typing import TYPE_CHECKING, Any, Union
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from typing_extensions import TypeAlias
+    _Address: TypeAlias = Union[tuple[Any, ...], str]
+
 display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 
 def get_display(display):
-
+    # type: (str | None) -> tuple[str, None, str, int, int]
     # Use dummy display if none is set.  We really should
     # check DECW$DISPLAY instead, but that has to wait
 
@@ -56,6 +64,7 @@ def get_display(display):
 
 
 def get_socket(dname, protocol, host, dno):
+    # type: (_Address, object, _Address, int) -> socket.socket
     try:
         # Always use TCP/IP sockets.  Later it would be nice to
         # be able to use DECNET och LOCAL connections.
@@ -70,5 +79,6 @@ def get_socket(dname, protocol, host, dno):
 
 
 def get_auth(sock, dname, host, dno):
+    # type: (object, object, object, object) -> tuple[str, str]
     # VMS doesn't have xauth
     return '', ''

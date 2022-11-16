@@ -21,6 +21,8 @@
 
 from Xlib import X
 from Xlib.protocol import rq
+from Xlib.display import Display
+from Xlib.xobject import resource
 
 extname = 'XTEST'
 
@@ -44,6 +46,7 @@ class GetVersion(rq.ReplyRequest):
                        )
 
 def get_version(self, major, minor):
+    # type: (Display | resource.Resource, int, int) -> GetVersion
     return GetVersion(display = self.display,
                       opcode = self.display.get_extension_major(extname),
                       major_version = major,
@@ -65,6 +68,7 @@ class CompareCursor(rq.ReplyRequest):
                        )
 
 def compare_cursor(self, cursor):
+    # type: (Display | resource.Resource, int) -> int
     r = CompareCursor(display = self.display,
                       opcode = self.display.get_extension_major(extname),
                       window = self.id,
@@ -92,6 +96,7 @@ class FakeInput(rq.Request):
 
 def fake_input(self, event_type, detail = 0, time = X.CurrentTime,
                root = X.NONE, x = 0, y = 0):
+    # type: (Display | resource.Resource, int, int, int, int, int, int) -> None
 
     FakeInput(display = self.display,
               opcode = self.display.get_extension_major(extname),
@@ -111,11 +116,13 @@ class GrabControl(rq.Request):
                          )
 
 def grab_control(self, impervious):
+    # type: (Display | resource.Resource, bool) -> None
     GrabControl(display = self.display,
                 opcode = self.display.get_extension_major(extname),
                 impervious = impervious)
 
 def init(disp, info):
+    # type: (Display, object) -> None
     disp.extension_add_method('display', 'xtest_get_version', get_version)
     disp.extension_add_method('window', 'xtest_compare_cursor', compare_cursor)
     disp.extension_add_method('display', 'xtest_fake_input', fake_input)

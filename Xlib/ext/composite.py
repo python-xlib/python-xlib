@@ -37,6 +37,20 @@ from Xlib import X
 from Xlib.protocol import rq
 from Xlib.xobject import drawable
 
+try:
+    from typing import TYPE_CHECKING, TypeVar, Optional, Union
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing_extensions import TypeAlias
+    from Xlib.error import XError
+    from Xlib.display import Display
+    from Xlib.xobject import resource
+    _T = TypeVar("_T")
+    _ErrorHandler: TypeAlias = Callable[[XError, Optional[rq.Request]], _T]
+    _Update: TypeAlias = Callable[[Union[rq.DictWrapper, dict[str, object]]], object]
+
 extname = 'Composite'
 
 RedirectAutomatic = 0
@@ -62,6 +76,7 @@ class QueryVersion(rq.ReplyRequest):
             )
 
 def query_version(self):
+    # type: (Display | resource.Resource) -> QueryVersion
     return QueryVersion(
         display = self.display,
         opcode = self.display.get_extension_major(extname),
@@ -81,6 +96,7 @@ class RedirectWindow(rq.Request):
         )
 
 def redirect_window(self, update, onerror = None):
+    # type: (drawable.Window, _Update, _ErrorHandler[object] | None) -> None
     """Redirect the hierarchy starting at this window to off-screen
     storage.
     """
@@ -103,6 +119,7 @@ class RedirectSubwindows(rq.Request):
         )
 
 def redirect_subwindows(self, update, onerror = None):
+    # type: (drawable.Window, _Update, _ErrorHandler[object] | None) -> None
     """Redirect the hierarchies starting at all current and future
     children to this window to off-screen storage.
     """
@@ -125,6 +142,7 @@ class UnredirectWindow(rq.Request):
         )
 
 def unredirect_window(self, update, onerror = None):
+    # type: (drawable.Window, _Update, _ErrorHandler[object] | None) -> None
     """Stop redirecting this window hierarchy.
     """
     UnredirectWindow(display = self.display,
@@ -146,6 +164,7 @@ class UnredirectSubindows(rq.Request):
         )
 
 def unredirect_subwindows(self, update, onerror = None):
+    # type: (drawable.Window, _Update, _ErrorHandler[object] | None) -> None
     """Stop redirecting the hierarchies of children to this window.
     """
     RedirectWindow(display = self.display,
@@ -166,6 +185,7 @@ class CreateRegionFromBorderClip(rq.Request):
         )
 
 def create_region_from_border_clip(self, onerror = None):
+    # type: (drawable.Window, _ErrorHandler[object] | None) -> int
     """Create a region of the border clip of the window, i.e. the area
     that is not clipped by the parent and any sibling windows.
     """
@@ -193,6 +213,7 @@ class NameWindowPixmap(rq.Request):
         )
 
 def name_window_pixmap(self, onerror = None):
+    # type: (drawable.Window, _ErrorHandler[object] | None) -> drawable.Pixmap
     """Create a new pixmap that refers to the off-screen storage of
     the window, including its border.
 
@@ -231,6 +252,7 @@ class GetOverlayWindow(rq.ReplyRequest):
     )
 
 def get_overlay_window(self):
+    # type: (Display | resource.Resource) -> GetOverlayWindow
     """Return the overlay window of the root window.
     """
 
@@ -239,6 +261,7 @@ def get_overlay_window(self):
                               window = self)
 
 def init(disp, info):
+    # type: (Display, object) -> None
     disp.extension_add_method('display',
                               'composite_query_version',
                               query_version)

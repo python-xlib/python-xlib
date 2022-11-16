@@ -18,6 +18,7 @@
 #    59 Temple Place,
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
+from __future__ import annotations
 
 import os
 import struct
@@ -33,6 +34,7 @@ FamilyLocal = 256
 
 class Xauthority(object):
     def __init__(self, filename = None):
+        # type: (str | bytes | os.PathLike[str] | os.PathLike[bytes] | int | None) -> None
         if filename is None:
             filename = os.environ.get('XAUTHORITY')
 
@@ -49,7 +51,7 @@ class Xauthority(object):
         except IOError as err:
             raise error.XauthError('could not read from {0}: {1}'.format(filename, err))
 
-        self.entries = []
+        self.entries = []  # type: list[tuple[bytes, bytes, bytes, bytes, bytes]]
 
         # entry format (all shorts in big-endian)
         #   short family;
@@ -99,11 +101,12 @@ class Xauthority(object):
         return len(self.entries)
 
     def __getitem__(self, i):
+        # type: (int) -> tuple[bytes, bytes, bytes, bytes, bytes]
         return self.entries[i]
 
     def get_best_auth(self, family, address, dispno,
                       types = ( b"MIT-MAGIC-COOKIE-1", )):
-
+        # type: (bytes, bytes, bytes, tuple[bytes]) -> tuple[bytes, bytes]
         """Find an authentication entry matching FAMILY, ADDRESS and
         DISPNO.
 

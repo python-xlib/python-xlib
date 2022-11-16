@@ -23,11 +23,14 @@
 """NV-CONTROL - provide access to the NV-CONTROL extension information."""
 
 from Xlib.protocol import rq
+from Xlib.display import Display
+from Xlib.xobject import resource
 
 extname = 'NV-CONTROL'
 
 
 def query_target_count(self, target):
+    # type: (Display | resource.Resource, Target) -> int
     """Return the target count"""
     reply = NVCtrlQueryTargetCountReplyRequest(display=self.display,
                                                opcode=self.display.get_extension_major(extname),
@@ -36,6 +39,7 @@ def query_target_count(self, target):
 
 
 def query_int_attribute(self, target, display_mask, attr):
+    # type: (Display | resource.Resource, Target, int, int) -> int | None
     """Return the value of an integer attribute"""
     reply = NVCtrlQueryAttributeReplyRequest(display=self.display,
                                              opcode=self.display.get_extension_major(extname),
@@ -49,6 +53,7 @@ def query_int_attribute(self, target, display_mask, attr):
 
 
 def set_int_attribute(self, target, display_mask, attr, value):
+    # type: (Display | resource.Resource, Target, int, int, int) -> bool
     """Set the value of an integer attribute"""
     reply = NVCtrlSetAttributeAndGetStatusReplyRequest(display=self.display,
                                                        opcode=self.display.get_extension_major(extname),
@@ -61,6 +66,7 @@ def set_int_attribute(self, target, display_mask, attr, value):
 
 
 def query_string_attribute(self, target, display_mask, attr):
+    # type: (Display | resource.Resource, Target, int, int) -> str | None
     """Return the value of a string attribute"""
     reply = NVCtrlQueryStringAttributeReplyRequest(display=self.display,
                                                    opcode=self.display.get_extension_major(extname),
@@ -74,6 +80,7 @@ def query_string_attribute(self, target, display_mask, attr):
 
 
 def query_valid_attr_values(self, target, display_mask, attr):
+    # type: (Display | resource.Resource, Target, int, int) -> tuple[int, int] | None
     """Return the value of an integer attribute"""
     reply = NVCtrlQueryValidAttributeValuesReplyRequest(display=self.display,
                                                         opcode=self.display.get_extension_major(extname),
@@ -87,6 +94,7 @@ def query_valid_attr_values(self, target, display_mask, attr):
 
 
 def query_binary_data(self, target, display_mask, attr):
+    # type: (Display | resource.Resource, Target, int, int) -> bytes | None
     """Return binary data"""
     reply = NVCtrlQueryBinaryDataReplyRequest(display=self.display,
                                               opcode=self.display.get_extension_major(extname),
@@ -100,6 +108,7 @@ def query_binary_data(self, target, display_mask, attr):
 
 
 def get_coolers_used_by_gpu(self, target):
+    # type: (Display | resource.Resource, Target) -> bytes | None
     reply = NVCtrlQueryListCard32ReplyRequest(display=self.display,
                                               opcode=self.display.get_extension_major(extname),
                                               target_id=target.id(),
@@ -116,30 +125,36 @@ def get_coolers_used_by_gpu(self, target):
 
 
 def get_gpu_count(self):
+    # type: (Display | resource.Resource) -> int
     """Return the number of GPU's present in the system."""
     return int(query_target_count(self, Gpu()))
 
 
 def get_name(self, target):
+    # type: (Display | resource.Resource, Target) -> str | None
     """Return the GPU product name on which the specified X screen is running"""
     return query_string_attribute(self, target, 0, NV_CTRL_STRING_PRODUCT_NAME)
 
 
 def get_driver_version(self, target):
+    # type: (Display | resource.Resource, Target) -> str | None
     """Return the NVIDIA (kernel level) driver version for the specified screen or GPU"""
     return query_string_attribute(self, target, 0, NV_CTRL_STRING_NVIDIA_DRIVER_VERSION)
 
 
 def get_vbios_version(self, target):
+    # type: (Display | resource.Resource, Target) -> str | None
     """Return the version of the VBIOS for the specified screen or GPU"""
     return query_string_attribute(self, target, 0, NV_CTRL_STRING_VBIOS_VERSION)
 
 
 def get_gpu_uuid(self, target):
+    # type: (Display | resource.Resource, Target) -> str | None
     return query_string_attribute(self, target, 0, NV_CTRL_STRING_GPU_UUID)
 
 
 def get_utilization_rates(self, target):
+    # type: (Display | resource.Resource, Target) -> dict[str, str | int]
     string = query_string_attribute(self, target, 0, NV_CTRL_STRING_GPU_UTILIZATION)
     result = {}
     if string is not None and string != '':
@@ -150,6 +165,7 @@ def get_utilization_rates(self, target):
 
 
 def get_performance_modes(self, target):
+    # type: (Display | resource.Resource, Target) -> list[dict[str, str | int]]
     string = query_string_attribute(self, target, 0, NV_CTRL_STRING_PERFORMANCE_MODES)
     result = []
     if string is not None and string != '':
@@ -163,6 +179,7 @@ def get_performance_modes(self, target):
 
 
 def get_clock_info(self, target):
+    # type: (Display | resource.Resource, Target) -> dict[str, str | int]
     string = query_string_attribute(self, target, 0, NV_CTRL_STRING_GPU_CURRENT_CLOCK_FREQS)
     result = {}
     if string is not None and string != '':
@@ -173,15 +190,18 @@ def get_clock_info(self, target):
 
 
 def get_vram(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_VIDEO_RAM)
 
 
 def get_irq(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return the interrupt request line used by the GPU driving the screen"""
     return query_int_attribute(self, target, 0, NV_CTRL_IRQ)
 
 
 def supports_framelock(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return whether the underlying GPU supports Frame Lock.
 
     All of the other frame lock attributes are only applicable if this returns True.
@@ -190,6 +210,7 @@ def supports_framelock(self, target):
 
 
 def gvo_supported(self, screen):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return whether this X screen supports GVO
 
     If this screen does not support GVO output, then all other GVO attributes are unavailable.
@@ -198,11 +219,13 @@ def gvo_supported(self, screen):
 
 
 def get_core_temp(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return the current core temperature of the GPU driving the X screen."""
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_CORE_TEMPERATURE)
 
 
 def get_core_threshold(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return the current GPU core slowdown threshold temperature.
 
     It reflects the temperature at which the GPU is throttled to prevent overheating.
@@ -211,113 +234,140 @@ def get_core_threshold(self, target):
 
 
 def get_default_core_threshold(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return the default core threshold temperature."""
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_DEFAULT_CORE_THRESHOLD)
 
 
 def get_max_core_threshold(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return the maximum core threshold temperature."""
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_MAX_CORE_THRESHOLD)
 
 
 def get_ambient_temp(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return the current temperature in the immediate neighbourhood of the GPU driving the X screen."""
     return query_int_attribute(self, target, 0, NV_CTRL_AMBIENT_TEMPERATURE)
 
 
 def get_cuda_cores(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_CORES)
 
 
 def get_memory_bus_width(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_MEMORY_BUS_WIDTH)
 
 
 def get_total_dedicated_gpu_memory(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_TOTAL_DEDICATED_GPU_MEMORY)
 
 
 def get_used_dedicated_gpu_memory(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_USED_DEDICATED_GPU_MEMORY)
 
 
 def get_curr_pcie_link_width(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_PCIE_CURRENT_LINK_WIDTH)
 
 
 def get_max_pcie_link_width(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_PCIE_MAX_LINK_WIDTH)
 
 
 def get_curr_pcie_link_generation(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_PCIE_GENERATION)
 
 
 def get_encoder_utilization(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_VIDEO_ENCODER_UTILIZATION)
 
 
 def get_decoder_utilization(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_VIDEO_DECODER_UTILIZATION)
 
 
 def get_current_performance_level(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_CURRENT_PERFORMANCE_LEVEL)
 
 
 def get_gpu_nvclock_offset(self, target, perf_level):
+    # type: (Display | resource.Resource, Target, int) -> int | None
     return query_int_attribute(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET)
 
 
 def set_gpu_nvclock_offset(self, target, perf_level, offset):
+    # type: (Display | resource.Resource, Target, int, int) -> bool
     return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET, offset)
 
 
 def set_gpu_nvclock_offset_all_levels(self, target, offset):
+    # type: (Display | resource.Resource, Target, int) -> bool
     return set_int_attribute(self, target, 0, NV_CTRL_GPU_NVCLOCK_OFFSET_ALL_PERFORMANCE_LEVELS, offset)
 
 
 def get_gpu_nvclock_offset_range(self, target, perf_level):
+    # type: (Display | resource.Resource, Target, int) -> tuple[int, int] | None
     return query_valid_attr_values(self, target, perf_level, NV_CTRL_GPU_NVCLOCK_OFFSET)
 
 
 def get_mem_transfer_rate_offset(self, target, perf_level):
+    # type: (Display | resource.Resource, Target, int) -> int | None
     return query_int_attribute(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
 
 
 def set_mem_transfer_rate_offset(self, target, perf_level, offset):
+    # type: (Display | resource.Resource, Target, int, int) -> bool
     return set_int_attribute(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET, offset)
 
 
 def set_mem_transfer_rate_offset_all_levels(self, target, offset):
+    # type: (Display | resource.Resource, Target, int) -> bool
     return set_int_attribute(self, target, 0, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET_ALL_PERFORMANCE_LEVELS, offset)
 
 
 def get_mem_transfer_rate_offset_range(self, target, perf_level):
+    # type: (Display | resource.Resource, Target, int) -> tuple[int, int] | None
     return query_valid_attr_values(self, target, perf_level, NV_CTRL_GPU_MEM_TRANSFER_RATE_OFFSET)
 
 
 def get_cooler_manual_control_enabled(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL)
 
 
 def set_cooler_manual_control_enabled(self, target, enabled):
+    # type: (Display | resource.Resource, Target, bool) -> bool
     return set_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL, 1 if enabled else 0) == 1
 
 
 def get_fan_duty(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_THERMAL_COOLER_CURRENT_LEVEL)
 
 
 def set_fan_duty(self, cooler, speed):
+    # type: (Display | resource.Resource, Target, int) -> bool
     return set_int_attribute(self, cooler, 0, NV_CTRL_THERMAL_COOLER_LEVEL, speed)
 
 
 def get_fan_rpm(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     return query_int_attribute(self, target, 0, NV_CTRL_THERMAL_COOLER_SPEED)
 
 
 def get_max_displays(self, target):
+    # type: (Display | resource.Resource, Target) -> int | None
     """Return the maximum number of display devices that can be driven simultaneously on a GPU.
 
     Note that this does not indicate the maximum number of bits that can be set in
@@ -354,6 +404,7 @@ def _displays2mask(displays):
 
 
 def init(disp, info):
+    # type: (Display, object) -> None
     disp.extension_add_method('display', 'nvcontrol_query_target_count', query_target_count)
     disp.extension_add_method('display', 'nvcontrol_query_int_attribute', query_int_attribute)
     disp.extension_add_method('display', 'nvcontrol_query_string_attribute', query_string_attribute)
@@ -5199,6 +5250,7 @@ class Target(object):
 
 class Gpu(Target):
     def __init__(self, ngpu=0):
+        # type: (int) -> None
         """Target a GPU"""
         super(self.__class__, self).__init__()
         self._id = ngpu
@@ -5208,6 +5260,7 @@ class Gpu(Target):
 
 class Screen(Target):
     def __init__(self, nscr=0):
+        # type: (int) -> None
         """Target an X screen"""
         super(self.__class__, self).__init__()
         self._id = nscr
@@ -5217,6 +5270,7 @@ class Screen(Target):
 
 class Cooler(Target):
     def __init__(self, nfan=0):
+        # type: (int) -> None
         """Target a fann"""
         super(self.__class__, self).__init__()
         self._id = nfan

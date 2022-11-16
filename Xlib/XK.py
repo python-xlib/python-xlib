@@ -26,6 +26,7 @@
 from Xlib.X import NoSymbol
 
 def string_to_keysym(keysym):
+    # type: (str) -> int
     '''Return the (16 bit) numeric code of keysym.
 
     Given the name of a keysym as a string, return its numeric code.
@@ -34,6 +35,7 @@ def string_to_keysym(keysym):
     return globals().get('XK_' + keysym, NoSymbol)
 
 def load_keysym_group(group):
+    # type: (str) -> None
     '''Load all the keysyms in group.
 
     Given a group name such as 'latin1' or 'katakana' load the keysyms
@@ -68,6 +70,7 @@ load_keysym_group('latin1')
 
 
 def keysym_to_string(keysym):
+    # type: (int) -> str | None
     '''Translate a keysym (16 bit number) into a python string.
 
     This will pass 0 to 0xff as well as XK_BackSpace, XK_Tab, XK_Clear,

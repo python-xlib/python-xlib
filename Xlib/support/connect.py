@@ -18,9 +18,20 @@
 #    59 Temple Place,
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
+from __future__ import annotations
 
 import sys
 import importlib
+
+try:
+    from typing import TYPE_CHECKING, Any, Union
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    import socket
+    from typing_extensions import TypeAlias
+    from Xlib.support.unix_connect import _Protocol
+    _Address: TypeAlias = Union[tuple[Any, ...], str]
 
 # List the modules which contain the corresponding functions
 
@@ -54,8 +65,14 @@ del _parts
 def _relative_import(modname):
     return importlib.import_module('..' + modname, __name__)
 
+if TYPE_CHECKING:
+    if sys.platform == 'OpenVMS':
+        from Xlib.support.vms_connect import get_display as get_display, get_socket as get_socket
+    else:
+        from Xlib.support.unix_connect import get_display as get_display, get_socket as get_socket
 
 def get_display(display):
+    # type: (str | None) -> tuple[str, str | None, str | None, int, int]
     """dname, protocol, host, dno, screen = get_display(display)
 
     Parse DISPLAY into its components.  If DISPLAY is None, use
@@ -72,8 +89,8 @@ def get_display(display):
     mod = _relative_import(modname)
     return mod.get_display(display)
 
-
 def get_socket(dname, protocol, host, dno):
+    # type: (_Address, _Protocol, _Address | None, int) -> socket.socket
     """socket = get_socket(dname, protocol, host, dno)
 
     Connect to the display specified by DNAME, PROTOCOL, HOST and DNO, which
@@ -88,6 +105,7 @@ def get_socket(dname, protocol, host, dno):
 
 
 def get_auth(sock, dname, protocol, host, dno):
+    # type: (socket.socket, object, _Protocol, object, int) -> tuple[bytes, bytes]
     """auth_name, auth_data = get_auth(sock, dname, protocol, host, dno)
 
     Return authentication data for the display on the other side of

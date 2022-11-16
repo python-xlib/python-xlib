@@ -31,6 +31,21 @@ from . import fontable
 # Inter-client communication conventions
 from . import icccm
 
+try:
+    from typing import TYPE_CHECKING, TypeVar, Optional, Union, Any
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence, Iterable
+    from typing_extensions import TypeAlias
+    from Xlib.error import XError
+    from PIL import Image
+    from array import array
+    from mmap import mmap
+    _T = TypeVar("_T")
+    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
+    _ErrorHandler:  TypeAlias = Callable[[XError, Optional[rq.Request]], _T]
+
 class Drawable(resource.Resource):
     __drawable__ = resource.Resource.__resource__
 
@@ -39,6 +54,7 @@ class Drawable(resource.Resource):
                                    drawable = self)
 
     def create_pixmap(self, width, height, depth):
+        # type: (int, int, int) -> Pixmap
         pid = self.display.allocate_resource_id()
         request.CreatePixmap(display = self.display,
                              depth = depth,
@@ -51,6 +67,7 @@ class Drawable(resource.Resource):
         return cls(self.display, pid, owner = 1)
 
     def create_gc(self, **keys):
+        # type: (object) -> fontable.GC
         cid = self.display.allocate_resource_id()
         request.CreateGC(display = self.display,
                          cid = cid,
@@ -61,6 +78,7 @@ class Drawable(resource.Resource):
         return cls(self.display, cid, owner = 1)
 
     def copy_area(self, gc, src_drawable, src_x, src_y, width, height, dst_x, dst_y, onerror = None):
+        # type: (int, int, int, int, int, int, int, int, _ErrorHandler[object] | None) -> None
         request.CopyArea(display = self.display,
                          onerror = onerror,
                          src_drawable = src_drawable,
@@ -75,6 +93,7 @@ class Drawable(resource.Resource):
 
     def copy_plane(self, gc, src_drawable, src_x, src_y, width, height,
                    dst_x, dst_y, bit_plane, onerror = None):
+        # type: (int, int, int, int, int, int, int, int, int, _ErrorHandler[object] | None) -> None
         request.CopyPlane(display = self.display,
                           onerror = onerror,
                           src_drawable = src_drawable,
@@ -89,6 +108,7 @@ class Drawable(resource.Resource):
                           bit_plane = bit_plane)
 
     def poly_point(self, gc, coord_mode, points, onerror = None):
+        # type: (int, int, Sequence[tuple[int, int]], _ErrorHandler[object] | None) -> None
         request.PolyPoint(display = self.display,
                           onerror = onerror,
                           coord_mode = coord_mode,
@@ -97,6 +117,7 @@ class Drawable(resource.Resource):
                           points = points)
 
     def point(self, gc, x, y, onerror = None):
+        # type: (int, int, int, _ErrorHandler[object] | None) -> None
         request.PolyPoint(display = self.display,
                           onerror = onerror,
                           coord_mode = X.CoordModeOrigin,
@@ -105,6 +126,7 @@ class Drawable(resource.Resource):
                           points = [(x, y)])
 
     def poly_line(self, gc, coord_mode, points, onerror = None):
+        # type: (int, int, Sequence[tuple[int, int]], _ErrorHandler[object] | None) -> None
         request.PolyLine(display = self.display,
                          onerror = onerror,
                          coord_mode = coord_mode,
@@ -113,6 +135,7 @@ class Drawable(resource.Resource):
                          points = points)
 
     def line(self, gc, x1, y1, x2, y2, onerror = None):
+        # type: (int, int, int, int, int, _ErrorHandler[object] | None) -> None
         request.PolySegment(display = self.display,
                             onerror = onerror,
                             drawable = self.id,
@@ -120,6 +143,7 @@ class Drawable(resource.Resource):
                             segments = [(x1, y1, x2, y2)])
 
     def poly_segment(self, gc, segments, onerror = None):
+        # type: (int, Sequence[tuple[int, int, int, int]], _ErrorHandler[object] | None) -> None
         request.PolySegment(display = self.display,
                             onerror = onerror,
                             drawable = self.id,
@@ -127,6 +151,7 @@ class Drawable(resource.Resource):
                             segments = segments)
 
     def poly_rectangle(self, gc, rectangles, onerror = None):
+        # type: (int, Sequence[tuple[int, int, int, int]], _ErrorHandler[object] | None) -> None
         request.PolyRectangle(display = self.display,
                               onerror = onerror,
                               drawable = self.id,
@@ -134,6 +159,7 @@ class Drawable(resource.Resource):
                               rectangles = rectangles)
 
     def rectangle(self, gc, x, y, width, height, onerror = None):
+        # type: (int, int, int, int, int,  _ErrorHandler[object] | None) -> None
         request.PolyRectangle(display = self.display,
                               onerror = onerror,
                               drawable = self.id,
@@ -142,6 +168,7 @@ class Drawable(resource.Resource):
 
 
     def poly_arc(self, gc, arcs, onerror = None):
+        # type: (int, Sequence[tuple[int, int, int, int, int, int]], _ErrorHandler[object] | None) -> None
         request.PolyArc(display = self.display,
                         onerror = onerror,
                         drawable = self.id,
@@ -149,6 +176,7 @@ class Drawable(resource.Resource):
                         arcs = arcs)
 
     def arc(self, gc,  x, y, width, height, angle1, angle2, onerror = None):
+        # type: (int, int, int, int, int, int, int, _ErrorHandler[object] | None) -> None
         request.PolyArc(display = self.display,
                         onerror = onerror,
                         drawable = self.id,
@@ -156,6 +184,7 @@ class Drawable(resource.Resource):
                         arcs = [(x, y, width, height, angle1, angle2)])
 
     def fill_poly(self, gc, shape, coord_mode, points, onerror = None):
+        # type: (int, int, int, Sequence[tuple[int, int]], _ErrorHandler[object] | None) -> None
         request.FillPoly(display = self.display,
                          onerror = onerror,
                          shape = shape,
@@ -165,6 +194,7 @@ class Drawable(resource.Resource):
                          points = points)
 
     def poly_fill_rectangle(self, gc, rectangles, onerror = None):
+        # type: (int, Sequence[tuple[int, int, int, int]], _ErrorHandler[object] | None) -> None
         request.PolyFillRectangle(display = self.display,
                                   onerror = onerror,
                                   drawable = self.id,
@@ -172,6 +202,7 @@ class Drawable(resource.Resource):
                                   rectangles = rectangles)
 
     def fill_rectangle(self, gc, x, y, width, height, onerror = None):
+        # type: (int, int, int, int, int, _ErrorHandler[object] | None) -> None
         request.PolyFillRectangle(display = self.display,
                                   onerror = onerror,
                                   drawable = self.id,
@@ -179,6 +210,7 @@ class Drawable(resource.Resource):
                                   rectangles = [(x, y, width, height)])
 
     def poly_fill_arc(self, gc, arcs, onerror = None):
+        # type: (int, Sequence[tuple[int, int, int, int, int, int]], _ErrorHandler[object] | None) -> None
         request.PolyFillArc(display = self.display,
                             onerror = onerror,
                             drawable = self.id,
@@ -186,6 +218,7 @@ class Drawable(resource.Resource):
                             arcs = arcs)
 
     def fill_arc(self, gc,  x, y, width, height, angle1, angle2, onerror = None):
+        # type: (int, int, int, int, int, int, int, _ErrorHandler[object] | None) -> None
         request.PolyFillArc(display = self.display,
                             onerror = onerror,
                             drawable = self.id,
@@ -195,6 +228,7 @@ class Drawable(resource.Resource):
 
     def put_image(self, gc, x, y, width, height, format,
                   depth, left_pad, data, onerror = None):
+        # type: (int, int, int, int, int, int, int, int, _SliceableBuffer, _ErrorHandler[object] | None) -> None
         request.PutImage(display = self.display,
                          onerror = onerror,
                          format = format,
@@ -211,6 +245,7 @@ class Drawable(resource.Resource):
     # Trivial little method for putting PIL images.  Will break on anything
     # but depth 1 or 24...
     def put_pil_image(self, gc, x, y, image, onerror = None):
+        # type: (int, int, int, Image.Image, _ErrorHandler[object] | None) -> None
         width, height = image.size
         if image.mode == '1':
             format = X.XYBitmap
@@ -256,6 +291,7 @@ class Drawable(resource.Resource):
 
 
     def get_image(self, x, y, width, height, format, plane_mask):
+        # type: (int, int, int, int, int, int) -> request.GetImage
         return request.GetImage(display = self.display,
                                 format = format,
                                 drawable = self.id,
@@ -266,6 +302,7 @@ class Drawable(resource.Resource):
                                 plane_mask = plane_mask)
 
     def draw_text(self, gc, x, y, text, onerror = None):
+        # type: (int, int, int, dict[str, str | int], _ErrorHandler[object] | None) -> None
         request.PolyText8(display = self.display,
                           onerror = onerror,
                           drawable = self.id,
@@ -275,6 +312,7 @@ class Drawable(resource.Resource):
                           items = [text])
 
     def poly_text(self, gc, x, y, items, onerror = None):
+        # type: (int, int, int, Sequence[dict[str, str | int]], _ErrorHandler[object] | None) -> None
         request.PolyText8(display = self.display,
                           onerror = onerror,
                           drawable = self.id,
@@ -284,6 +322,7 @@ class Drawable(resource.Resource):
                           items = items)
 
     def poly_text_16(self, gc, x, y, items, onerror = None):
+        # type: (int, int, int, Sequence[dict[str, str | int]], _ErrorHandler[object] | None) -> None
         request.PolyText16(display = self.display,
                            onerror = onerror,
                            drawable = self.id,
@@ -293,6 +332,7 @@ class Drawable(resource.Resource):
                            items = items)
 
     def image_text(self, gc, x, y, string, onerror = None):
+        # type: (int, int, int, str, _ErrorHandler[object] | None) -> None
         request.ImageText8(display = self.display,
                            onerror = onerror,
                            drawable = self.id,
@@ -302,6 +342,7 @@ class Drawable(resource.Resource):
                            string = string)
 
     def image_text_16(self, gc, x, y, string, onerror = None):
+        # type: (int, int, int, str, _ErrorHandler[object] | None) -> None
         request.ImageText16(display = self.display,
                             onerror = onerror,
                             drawable = self.id,
@@ -311,6 +352,7 @@ class Drawable(resource.Resource):
                             string = string)
 
     def query_best_size(self, item_class, width, height):
+        # type: (int, int, int) -> request.QueryBestSize
         return request.QueryBestSize(display = self.display,
                                      item_class = item_class,
                                      drawable = self.id,
@@ -328,6 +370,7 @@ class Window(Drawable):
                       visual = X.CopyFromParent,
                       onerror = None,
                       **keys):
+        # type: (int, int, int, int, int, int, int, int, _ErrorHandler[object] | None, object) -> Window
 
         wid = self.display.allocate_resource_id()
         request.CreateWindow(display = self.display,
@@ -348,6 +391,7 @@ class Window(Drawable):
         return cls(self.display, wid, owner = 1)
 
     def change_attributes(self, onerror = None, **keys):
+        # type: (_ErrorHandler[object] | None, object) -> None
         request.ChangeWindowAttributes(display = self.display,
                                        onerror = onerror,
                                        window = self.id,
@@ -358,6 +402,7 @@ class Window(Drawable):
                                            window = self.id)
 
     def destroy(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.DestroyWindow(display = self.display,
                               onerror = onerror,
                               window = self.id)
@@ -365,18 +410,21 @@ class Window(Drawable):
         self.display.free_resource_id(self.id)
 
     def destroy_sub_windows(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.DestroySubWindows(display = self.display,
                                   onerror = onerror,
                                   window = self.id)
 
 
     def change_save_set(self, mode, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         request.ChangeSaveSet(display = self.display,
                               onerror = onerror,
                               mode = mode,
                               window = self.id)
 
     def reparent(self, parent, x, y, onerror = None):
+        # type: (int, int, int, _ErrorHandler[object] | None) -> None
         request.ReparentWindow(display = self.display,
                                onerror = onerror,
                                window = self.id,
@@ -385,38 +433,45 @@ class Window(Drawable):
                                y = y)
 
     def map(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.MapWindow(display = self.display,
                           onerror = onerror,
                           window = self.id)
 
     def map_sub_windows(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.MapSubwindows(display = self.display,
                               onerror = onerror,
                               window = self.id)
 
     def unmap(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.UnmapWindow(display = self.display,
                             onerror = onerror,
                             window = self.id)
 
     def unmap_sub_windows(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.UnmapSubwindows(display = self.display,
                                 onerror = onerror,
                                 window = self.id)
 
     def configure(self, onerror = None, **keys):
+        # type: (_ErrorHandler[object] | None, object) -> None
         request.ConfigureWindow(display = self.display,
                                 onerror = onerror,
                                 window = self.id,
                                 attrs = keys)
 
     def circulate(self, direction, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         request.CirculateWindow(display = self.display,
                                 onerror = onerror,
                                 direction = direction,
                                 window = self.id)
 
     def raise_window(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         """alias for raising the window to the top - as in XRaiseWindow"""
         self.configure(onerror, stack_mode = X.Above)
 
@@ -426,6 +481,7 @@ class Window(Drawable):
 
     def change_property(self, property, property_type, format, data,
                         mode = X.PropModeReplace, onerror = None):
+        # type: (int, int, int, Sequence[float] | Sequence[str], int, _ErrorHandler[object] | None) -> None
 
         request.ChangeProperty(display = self.display,
                                onerror = onerror,
@@ -437,6 +493,7 @@ class Window(Drawable):
 
     def change_text_property(self, property, property_type, data,
                         mode = X.PropModeReplace, onerror = None):
+        # type: (int, int, bytes | str, int, _ErrorHandler[object] | None) -> None
         if not isinstance(data, bytes):
             if property_type == Xatom.STRING:
                 data = data.encode(self._STRING_ENCODING)
@@ -446,12 +503,14 @@ class Window(Drawable):
                              mode=mode, onerror=onerror)
 
     def delete_property(self, property, onerror = None):
+        # type: (int, _ErrorHandler[object] | None) -> None
         request.DeleteProperty(display = self.display,
                                onerror = onerror,
                                window = self.id,
                                property = property)
 
     def get_property(self, property, property_type, offset, length, delete = 0):
+        # type: (int, int, int, int, bool) -> request.GetProperty | None
         r = request.GetProperty(display = self.display,
                                 delete = delete,
                                 window = self.id,
@@ -469,6 +528,7 @@ class Window(Drawable):
             return None
 
     def get_full_property(self, property, property_type, sizehint = 10):
+        # type: (int, int, int) -> request.GetProperty | None
         prop = self.get_property(property, property_type, 0, sizehint)
         if prop:
             val = prop.value
@@ -483,6 +543,7 @@ class Window(Drawable):
             return None
 
     def get_full_text_property(self, property, property_type=X.AnyPropertyType, sizehint = 10):
+        # type: (int, int, int) -> str | None
         prop = self.get_full_property(property, property_type,
                                       sizehint=sizehint)
         if prop is None or prop.format != 8:
@@ -496,11 +557,13 @@ class Window(Drawable):
         return prop.value
 
     def list_properties(self):
+        # type: () -> list[int]
         r = request.ListProperties(display = self.display,
                                    window = self.id)
         return r.atoms
 
     def set_selection_owner(self, selection, time, onerror = None):
+        # type: (int, int, _ErrorHandler[object] | None) -> None
         request.SetSelectionOwner(display = self.display,
                                   onerror = onerror,
                                   window = self.id,
@@ -508,6 +571,7 @@ class Window(Drawable):
                                   time = time)
 
     def convert_selection(self, selection, target, property, time, onerror = None):
+        # type: (int, int, int, int, _ErrorHandler[object] | None) -> None
         request.ConvertSelection(display = self.display,
                                  onerror = onerror,
                                  requestor = self.id,
@@ -517,6 +581,7 @@ class Window(Drawable):
                                  time = time)
 
     def send_event(self, event, event_mask = 0, propagate = 0, onerror = None):
+        # type: (rq.Event, int, bool, _ErrorHandler[object] | None) -> None
         request.SendEvent(display = self.display,
                           onerror = onerror,
                           propagate = propagate,
@@ -527,6 +592,7 @@ class Window(Drawable):
     def grab_pointer(self, owner_events, event_mask,
                      pointer_mode, keyboard_mode,
                      confine_to, cursor, time):
+        # type: (bool, int, int, int, int, int, int) -> None
 
         r = request.GrabPointer(display = self.display,
                                 owner_events = owner_events,
@@ -542,6 +608,7 @@ class Window(Drawable):
     def grab_button(self, button, modifiers, owner_events, event_mask,
                     pointer_mode, keyboard_mode,
                     confine_to, cursor, onerror = None):
+        # type: (int, int, bool, int, int, int, int, int, _ErrorHandler[object] | None) -> None
 
         request.GrabButton(display = self.display,
                            onerror = onerror,
@@ -556,6 +623,7 @@ class Window(Drawable):
                            modifiers = modifiers)
 
     def ungrab_button(self, button, modifiers, onerror = None):
+        # type: (int, int, _ErrorHandler[object] | None) -> None
         request.UngrabButton(display = self.display,
                              onerror = onerror,
                              button = button,
@@ -564,6 +632,7 @@ class Window(Drawable):
 
 
     def grab_keyboard(self, owner_events, pointer_mode, keyboard_mode, time):
+        # type: (bool, int, int, int) -> int
         r = request.GrabKeyboard(display = self.display,
                                  owner_events = owner_events,
                                  grab_window = self.id,
@@ -574,6 +643,7 @@ class Window(Drawable):
         return r.status
 
     def grab_key(self, key, modifiers, owner_events, pointer_mode, keyboard_mode, onerror = None):
+        # type: (int, int, bool, int, int, _ErrorHandler[object] | None) -> None
         request.GrabKey(display = self.display,
                         onerror = onerror,
                         owner_events = owner_events,
@@ -584,6 +654,7 @@ class Window(Drawable):
                         keyboard_mode = keyboard_mode)
 
     def ungrab_key(self, key, modifiers, onerror = None):
+        # type: (int, int, _ErrorHandler[object] | None) -> None
         request.UngrabKey(display = self.display,
                           onerror = onerror,
                           key = key,
@@ -595,6 +666,7 @@ class Window(Drawable):
                                     window = self.id)
 
     def get_motion_events(self, start, stop):
+        # type: (int, int) -> rq.Struct
         r = request.GetMotionEvents(display = self.display,
                                     window = self.id,
                                     start = start,
@@ -602,6 +674,7 @@ class Window(Drawable):
         return r.events
 
     def translate_coords(self, src_window, src_x, src_y):
+        # type: (int, int, int) -> request.TranslateCoords
         return request.TranslateCoords(display = self.display,
                                        src_wid = src_window,
                                        dst_wid = self.id,
@@ -610,6 +683,7 @@ class Window(Drawable):
 
     def warp_pointer(self, x, y, src_window = 0, src_x = 0, src_y = 0,
                      src_width = 0, src_height = 0, onerror = None):
+        # type: (int, int, int, int, int, int, int, _ErrorHandler[object] | None) -> None
 
         request.WarpPointer(display = self.display,
                             onerror = onerror,
@@ -623,6 +697,7 @@ class Window(Drawable):
                             dst_y = y)
 
     def set_input_focus(self, revert_to, time, onerror = None):
+        # type: (int, int, _ErrorHandler[object] | None) -> None
         request.SetInputFocus(display = self.display,
                               onerror = onerror,
                               revert_to = revert_to,
@@ -630,6 +705,7 @@ class Window(Drawable):
                               time = time)
 
     def clear_area(self, x = 0, y = 0, width = 0, height = 0, exposures = 0, onerror = None):
+        # type: (int, int, int, int, bool, _ErrorHandler[object] | None) -> None
         request.ClearArea(display = self.display,
                           onerror = onerror,
                           exposures = exposures,
@@ -640,6 +716,7 @@ class Window(Drawable):
                           height = height)
 
     def create_colormap(self, visual, alloc):
+        # type: (int, int) -> colormap.Colormap
         mid = self.display.allocate_resource_id()
         request.CreateColormap(display = self.display,
                                alloc = alloc,
@@ -650,11 +727,13 @@ class Window(Drawable):
         return cls(self.display, mid, owner = 1)
 
     def list_installed_colormaps(self):
+        # type: () -> list[colormap.Colormap]
         r = request.ListInstalledColormaps(display = self.display,
                                            window = self.id)
         return r.cmaps
 
     def rotate_properties(self, properties, delta, onerror = None):
+        # type: (Sequence[int], int, _ErrorHandler[object] | None) -> None
         request.RotateProperties(display = self.display,
                                  onerror = onerror,
                                  window = self.id,
@@ -662,6 +741,7 @@ class Window(Drawable):
                                  properties = properties)
 
     def set_wm_name(self, name, onerror = None):
+        # type: (bytes | str, _ErrorHandler[object] | None) -> None
         self.change_text_property(Xatom.WM_NAME, Xatom.STRING, name,
                                   onerror = onerror)
 
@@ -669,6 +749,7 @@ class Window(Drawable):
         return self.get_full_text_property(Xatom.WM_NAME, Xatom.STRING)
 
     def set_wm_icon_name(self, name, onerror = None):
+        # type: (bytes | str, _ErrorHandler[object] | None) -> None
         self.change_text_property(Xatom.WM_ICON_NAME, Xatom.STRING, name,
                                   onerror = onerror)
 
@@ -676,6 +757,7 @@ class Window(Drawable):
         return self.get_full_text_property(Xatom.WM_ICON_NAME, Xatom.STRING)
 
     def set_wm_class(self, inst, cls, onerror = None):
+        # type: (str, str, _ErrorHandler[object] | None) -> None
         self.change_text_property(Xatom.WM_CLASS, Xatom.STRING,
                                   '%s\0%s\0' % (inst, cls),
                                   onerror = onerror)
@@ -691,6 +773,7 @@ class Window(Drawable):
             return parts[0], parts[1]
 
     def set_wm_transient_for(self, window, onerror = None):
+        # type: (Window, _ErrorHandler[object] | None) -> None
         self.change_property(Xatom.WM_TRANSIENT_FOR, Xatom.WINDOW,
                              32, [window.id],
                              onerror = onerror)
@@ -705,11 +788,13 @@ class Window(Drawable):
 
 
     def set_wm_protocols(self, protocols, onerror = None):
+        # type: (Iterable[int], _ErrorHandler[object] | None) -> None
         self.change_property(self.display.get_atom('WM_PROTOCOLS'),
                              Xatom.ATOM, 32, protocols,
                              onerror = onerror)
 
     def get_wm_protocols(self):
+        # type: () -> list[int]
         d = self.get_full_property(self.display.get_atom('WM_PROTOCOLS'), Xatom.ATOM)
         if d is None or d.format != 32:
             return []
@@ -717,12 +802,14 @@ class Window(Drawable):
             return d.value
 
     def set_wm_colormap_windows(self, windows, onerror = None):
+        # type: (Iterable[Window], _ErrorHandler[object] | None) -> None
         self.change_property(self.display.get_atom('WM_COLORMAP_WINDOWS'),
                              Xatom.WINDOW, 32,
                              map(lambda w: w.id, windows),
                              onerror = onerror)
 
     def get_wm_colormap_windows(self):
+        # type: () -> list[Window] | map[Window]
         d = self.get_full_property(self.display.get_atom('WM_COLORMAP_WINDOWS'),
                                    Xatom.WINDOW)
         if d is None or d.format != 32:
@@ -734,6 +821,7 @@ class Window(Drawable):
 
 
     def set_wm_client_machine(self, name, onerror = None):
+        # type: (bytes | str, _ErrorHandler[object] | None) -> None
         self.change_text_property(Xatom.WM_CLIENT_MACHINE, Xatom.STRING, name,
                                   onerror = onerror)
 
@@ -741,6 +829,7 @@ class Window(Drawable):
         return self.get_full_text_property(Xatom.WM_CLIENT_MACHINE, Xatom.STRING)
 
     def set_wm_normal_hints(self, hints = {}, onerror = None, **keys):
+        # type: (rq.DictWrapper | dict[str, object], _ErrorHandler[object] | None, object) -> None
         self._set_struct_prop(Xatom.WM_NORMAL_HINTS, Xatom.WM_SIZE_HINTS,
                               icccm.WMNormalHints, hints, keys, onerror)
 
@@ -749,6 +838,7 @@ class Window(Drawable):
                                      icccm.WMNormalHints)
 
     def set_wm_hints(self, hints = {}, onerror = None, **keys):
+        # type: (rq.DictWrapper | dict[str, object], _ErrorHandler[object] | None, object) -> None
         self._set_struct_prop(Xatom.WM_HINTS, Xatom.WM_HINTS,
                               icccm.WMHints, hints, keys, onerror)
 
@@ -757,6 +847,7 @@ class Window(Drawable):
                                      icccm.WMHints)
 
     def set_wm_state(self, hints = {}, onerror = None, **keys):
+        # type: (rq.DictWrapper | dict[str, object], _ErrorHandler[object] | None, object) -> None
         atom = self.display.get_atom('WM_STATE')
         self._set_struct_prop(atom, atom, icccm.WMState, hints, keys, onerror)
 
@@ -765,6 +856,7 @@ class Window(Drawable):
         return self._get_struct_prop(atom, atom, icccm.WMState)
 
     def set_wm_icon_size(self, hints = {}, onerror = None, **keys):
+        # type: (rq.DictWrapper | dict[str, object], _ErrorHandler[object] | None, object) -> None
         self._set_struct_prop(Xatom.WM_ICON_SIZE, Xatom.WM_ICON_SIZE,
                               icccm.WMIconSize, hints, keys, onerror)
 
@@ -777,6 +869,7 @@ class Window(Drawable):
     # Returns a DictWrapper, or None
 
     def _get_struct_prop(self, pname, ptype, pstruct):
+        # type: (int, int, rq.Struct) -> rq.DictWrapper | None
         r = self.get_property(pname, ptype, 0, pstruct.static_size // 4)
         if r and r.format == 32:
             value = rq.encode_array(r.value)
@@ -791,6 +884,7 @@ class Window(Drawable):
     # will be modified.  onerror is the error handler.
 
     def _set_struct_prop(self, pname, ptype, pstruct, hints, keys, onerror):
+        # type: (int, int, rq.Struct, rq.DictWrapper | dict[str, object], dict[str, object], _ErrorHandler[object] | None) -> None
         if isinstance(hints, rq.DictWrapper):
             keys.update(hints._data)
         else:
@@ -805,6 +899,7 @@ class Pixmap(Drawable):
     __pixmap__ = resource.Resource.__resource__
 
     def free(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.FreePixmap(display = self.display,
                            onerror = onerror,
                            pixmap = self.id)
@@ -812,6 +907,7 @@ class Pixmap(Drawable):
         self.display.free_resource_id(self.id)
 
     def create_cursor(self, mask, foreground, background, x, y):
+        # type: (int, tuple[int, int, int], tuple[int, int, int], int, int) -> cursor.Cursor
         fore_red, fore_green, fore_blue = foreground
         back_red, back_green, back_blue = background
         cid = self.display.allocate_resource_id()
@@ -832,4 +928,5 @@ class Pixmap(Drawable):
 
 
 def roundup(value, unit):
+    # type: (int, int) -> int
     return (value + (unit - 1)) & ~(unit - 1)
