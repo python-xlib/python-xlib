@@ -533,7 +533,7 @@ class Display(object):
     ###
 
     def intern_atom(self, name, only_if_exists = 0):
-        # type: (str, int) -> int
+        # type: (str, bool) -> int
         """Intern the string name, returning its atom number. If
         only_if_exists is true and the atom does not already exist, it
         will not be created and X.NONE is returned."""
@@ -543,7 +543,7 @@ class Display(object):
         return r.atom
 
     def get_atom(self, atom, only_if_exists = 0):
-        # type: (str, int) -> int
+        # type: (str, bool) -> int
         """Alias for intern_atom, using internal cache"""
         return self.display.get_atom(atom, only_if_exists)
 
