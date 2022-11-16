@@ -35,7 +35,6 @@ the rq.Struct crammed into them. The exception is isActive, which
 returns the state information - because that's what libXinerama does."""
 
 
-from Xlib import X
 from Xlib.protocol import rq, structs
 
 extname = 'XINERAMA'
