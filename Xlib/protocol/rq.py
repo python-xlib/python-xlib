@@ -1109,7 +1109,7 @@ class Struct(object):
 
         for f in self.var_fields:
             if f.keyword_args:
-                v, l, fm = f.pack_value(field_args[f.name], keys)
+                v, l, fm = f.pack_value(field_args[f.name], keys)  # ValueList
             else:
                 v, l, fm = f.pack_value(field_args[f.name])
             var_vals[f.name] = v
@@ -1473,7 +1473,7 @@ class Request(object):
         # type: (_BaseDisplay, _ErrorHandler[object] | None, object, object) -> None
         self._errorhandler = onerror
         self._binary = self._request.to_binary(*args, **keys)
-        self._serial = None
+        self._serial = None  # type: int | None
         display.send_request(self, onerror is not None)
 
     def _set_error(self, error):
