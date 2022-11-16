@@ -24,7 +24,6 @@ import sys
 import traceback
 import struct
 from array import array
-import types
 
 # Python 2/3 compatibility.
 from six import PY3, binary_type, byte2int, indexbytes, iterbytes
