@@ -76,7 +76,7 @@ class RawField(rq.ValueField):
         return val, len(val), None
 
     def parse_binary_value(self, data, display, length, format):
-        return data, ''
+        return data, b''
 
 
 class GetVersion(rq.ReplyRequest):
