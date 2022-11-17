@@ -220,7 +220,7 @@ def get_rectangles(self, source_kind):
         source_kind=source_kind,
     )
 
-def input_selected(self, ):
+def input_selected(self):
     return InputSelected(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -249,14 +249,14 @@ def offset(self, destination_kind, x_offset, y_offset):
         y_offset=y_offset,
     )
 
-def query_extents(self, ):
+def query_extents(self):
     return QueryExtents(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
         destination_window=self,
     )
 
-def query_version(self, ):
+def query_version(self):
     return QueryVersion(
         display=self.display,
         opcode=self.display.get_extension_major(extname),

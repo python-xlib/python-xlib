@@ -785,9 +785,9 @@ class ListFontsWithInfo(rq.ReplyRequest):
 
     # Bastards.
 
-    def __init__(self, *args, **keys):
+    def __init__(self, display, defer = False, *args, **keys):
         self._fonts = []
-        rq.ReplyRequest.__init__(self, *args, **keys)
+        rq.ReplyRequest.__init__(self, display, defer, *args, **keys)
 
     def _parse_response(self, data):
 
