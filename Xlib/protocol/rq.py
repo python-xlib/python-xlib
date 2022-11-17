@@ -1283,7 +1283,7 @@ class TextElements8(ValueField):
 
             # string with delta
             else:
-                v, _ = self.string_textitem.parse_binary(data, display)
+                v, data = self.string_textitem.parse_binary(data, display)
                 values.append(v)
 
         return values, ''
