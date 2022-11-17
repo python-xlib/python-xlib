@@ -28,16 +28,13 @@ import socket
 # get the names we need.  Furthermore, FD_CLOEXEC seems to be missing
 # in Python 2.2.
 
-import fcntl
+try:
+    import fcntl
 
-if hasattr(fcntl, 'F_SETFD'):
-    F_SETFD = fcntl.F_SETFD
-    if hasattr(fcntl, 'FD_CLOEXEC'):
-        FD_CLOEXEC = fcntl.FD_CLOEXEC
-    else:
-        FD_CLOEXEC = 1
-else:
-    from FCNTL import F_SETFD, FD_CLOEXEC
+    FD_CLOEXEC = getattr(fcntl, 'FD_CLOEXEC', 1)
+    F_SETFD = getattr(fcntl, 'F_SETFD', 2)
+except ImportError:
+    pass
 
 
 from Xlib import error, xauth
