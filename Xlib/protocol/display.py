@@ -369,11 +369,11 @@ class Display(object):
 
     def close_internal(self, whom):
         # Clear out data structures
-        self.request_queue = None
-        self.sent_requests = None
-        self.event_queue = None
-        self.data_send = None
-        self.data_recv = None
+        self.request_queue = []
+        self.sent_requests = []
+        self.event_queue = []
+        self.data_send = b''
+        self.data_recv = b''
 
         # Close the connection
         self.socket.close()
@@ -583,7 +583,7 @@ class Display(object):
                     i = self.socket.send(self.data_send)
                 except socket.error as err:
                     self.close_internal('server: %s' % err)
-                    raise self.socket_error
+                    raise self.socket_error or Exception()
 
                 self.data_send = self.data_send[i:]
                 self.data_sent_bytes = self.data_sent_bytes + i
@@ -601,12 +601,12 @@ class Display(object):
                         bytes_recv = self.socket.recv(count)
                     except socket.error as err:
                         self.close_internal('server: %s' % err)
-                        raise self.socket_error
+                        raise self.socket_error or Exception()
 
                     if not bytes_recv:
                         # Clear up, set a connection closed indicator and raise it
                         self.close_internal('server')
-                        raise self.socket_error
+                        raise self.socket_error or Exception()
 
                     self.data_recv = bytes(self.data_recv) + bytes_recv
                     gotreq = self.parse_response(request)
@@ -690,6 +690,7 @@ class Display(object):
 
         # Parse ordinary server response
         gotreq = 0
+        rtype = None
         while 1:
             if self.data_recv:
                 # Check the first byte to find out what kind of response it is
@@ -703,7 +704,7 @@ class Display(object):
                 if rtype == 1:
                     gotreq = self.parse_request_response(request) or gotreq
                     continue
-                elif rtype & 0x7f == ge.GenericEventCode:
+                elif rtype and (rtype & 0x7f == ge.GenericEventCode):
                     self.parse_event_response(rtype)
                     continue
                 else:
@@ -711,7 +712,7 @@ class Display(object):
 
             # Every response is at least 32 bytes long, so don't bother
             # until we have received that much
-            if len(self.data_recv) < 32:
+            if len(self.data_recv) < 32 or rtype is None:
                 return gotreq
 
             # Error response
@@ -719,7 +720,7 @@ class Display(object):
                 gotreq = self.parse_error_response(request) or gotreq
 
             # Request response or generic event.
-            elif rtype == 1 or rtype & 0x7f == ge.GenericEventCode:
+            elif rtype and rtype == 1 or rtype and (rtype & 0x7f == ge.GenericEventCode):
                 # Set reply length, and loop around to see if
                 # we have got the full response
                 rlen = int(struct.unpack('=L', self.data_recv[4:8])[0])
@@ -812,9 +813,10 @@ class Display(object):
 
     def parse_event_response(self, etype):
         # Skip bit 8, that is set if this event came from an SendEvent
-        etype = etype & 0x7f
+        etype = etype and (etype & 0x7f)
+        is_generic_event_code = etype == ge.GenericEventCode
 
-        if etype == ge.GenericEventCode:
+        if is_generic_event_code:
             length = self.recv_packet_len
         else:
             length = 32
@@ -832,7 +834,7 @@ class Display(object):
 
         e = estruct(display = self, binarydata = self.data_recv[:length])
 
-        if etype == ge.GenericEventCode:
+        if is_generic_event_code:
             self.recv_packet_len = 0
 
         self.data_recv = bytesview(self.data_recv, length)
@@ -1022,6 +1024,7 @@ Screen = rq.Struct( rq.Window('root'),
 
 
 class ConnectionSetupRequest(rq.GetAttrData):
+    _serial = None  # type: int | None
     _request = rq.Struct( rq.Set('byte_order', 1, (0x42, 0x6c)),
                           rq.Pad(1),
                           rq.Card16('protocol_major'),
@@ -1061,7 +1064,7 @@ class ConnectionSetupRequest(rq.GetAttrData):
 
     def __init__(self, display, *args, **keys):
         self._binary = self._request.to_binary(*args, **keys)
-        self._data = None
+        self._data = {}
 
         # Don't bother about locking, since no other threads have
         # access to the display yet

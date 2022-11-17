@@ -110,8 +110,9 @@ class Field(object):
     f.parse_binary_value() instead.  See its documentation string for
     details.
     """
-    name = None
+    name = ""
     default = None
+    pack_value = None
 
     structcode = None
     structvalues = 0
@@ -184,6 +185,10 @@ class LengthField(Field):
     structcode = 'L'
     structvalues = 1
     other_fields = None
+
+    def parse_binary_value(self, data = None, display = None, length = None, format = None):
+        # type: (object, object, object, object) -> tuple[Any, _SliceableBuffer]
+        return b'', b''
 
     def calc_length(self, length):
         """newlen = lf.calc_length(length)
@@ -654,10 +659,9 @@ class PropertyData(ValueField):
         else:
             length = int(length)
 
-        if format == 0:
-            ret = None
+        ret = None
 
-        elif format == 8:
+        if format == 8:
             ret = (8, data[:length])
             data = data[length + ((4 - length % 4) % 4):]
 
@@ -938,6 +942,9 @@ class Struct(object):
     object to make conversion as fast as possible.  They are
     generated the first time the methods are called.
     """
+    name = ""
+    check_value = None  # type: Callable[[Any], Any] | None
+    keyword_args = False
 
     def __init__(self, *fields):
         self.fields = fields
@@ -1015,6 +1022,9 @@ class Struct(object):
         formats = {}
 
         for f in self.var_fields:
+            if not f.pack_value:
+                continue
+
             if f.keyword_args:
                 v, l, fm = f.pack_value(field_args[f.name], keys)
             else:
@@ -1273,7 +1283,7 @@ class TextElements8(ValueField):
 
             # string with delta
             else:
-                v, data = self.string_textitem.parse_binary(data, display)
+                v, _ = self.string_textitem.parse_binary(data, display)
                 values.append(v)
 
         return values, ''
@@ -1288,6 +1298,9 @@ class TextElements16(TextElements8):
 
 
 class GetAttrData(object):
+    _data = {} # type: dict[str, object]
+    # GetAttrData classes get their attributes dynamically
+    # TODO: Complete all classes inheriting from GetAttrData
     def __getattr__(self, attr):
         try:
             if self._data:
@@ -1342,6 +1355,7 @@ class DictWrapper(GetAttrData):
 
 
 class Request(object):
+    _request = None  # type: Struct
     def __init__(self, display, onerror = None, *args, **keys):
         self._errorhandler = onerror
         self._binary = self._request.to_binary(*args, **keys)
@@ -1355,6 +1369,7 @@ class Request(object):
             return 0
 
 class ReplyRequest(GetAttrData):
+    _request = None  # type: Struct
     def __init__(self, display, defer = 0, *args, **keys):
         self._display = display
         self._binary = self._request.to_binary(*args, **keys)
@@ -1372,6 +1387,8 @@ class ReplyRequest(GetAttrData):
         # Send request and wait for reply if we hasn't
         # already got one.  This means that reply() can safely
         # be called more than one time.
+        if self._display is None:
+            raise TypeError
 
         self._response_lock.acquire()
         while self._data is None and self._error is None:
@@ -1404,6 +1421,7 @@ class ReplyRequest(GetAttrData):
 
 
 class Event(GetAttrData):
+    _fields = None # type: Struct
     def __init__(self, binarydata = None, display = None,
                  **keys):
         if binarydata:
