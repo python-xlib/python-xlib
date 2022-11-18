@@ -112,7 +112,7 @@ class Field(object):
     """
     name = ""
     default = None
-    pack_value = None
+    pack_value = None  # type: Callable[[Any], tuple[Any, int | None, int | None]] | None
 
     structcode = None
     structvalues = 0
