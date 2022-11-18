@@ -1211,8 +1211,8 @@ class Struct(object):
 
         for f in self.var_fields:
             ret[f.name], data = f.parse_binary_value(data, display,
-                                                     lengths.get(f.name),
-                                                     formats.get(f.name),
+                                                     lengths.get(f.name, 0),
+                                                     formats.get(f.name, 0),
                                                     )
 
         if not rawdict:
@@ -1283,7 +1283,7 @@ class TextElements8(ValueField):
 
             # string with delta
             else:
-                v, _ = self.string_textitem.parse_binary(data, display)
+                v, data = self.string_textitem.parse_binary(data, display)
                 values.append(v)
 
         return values, ''
