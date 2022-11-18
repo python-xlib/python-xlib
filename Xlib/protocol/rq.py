@@ -1203,7 +1203,7 @@ class Struct(object):
         # Structs generate their attributes
         # TODO: Complete all classes inheriting from Struct
         # and create a type-only class for all direct instances
-        def __getattr__(self, __name):
+        def __getattr__(self, attr):
             # type: (str) -> Any
             pass
 
@@ -1432,11 +1432,8 @@ class GetAttrData(object):
     def __getattr__(self, attr):
         # type: (str) -> Any
         try:
-            if self._data:
-                return self._data[attr]
-            else:
-                raise AttributeError(attr)
-        except KeyError:
+            return self._data[attr]
+        except (KeyError, AttributeError):
             raise AttributeError(attr)
     if TYPE_CHECKING:
         def __setattr__(self, __name, __value):
