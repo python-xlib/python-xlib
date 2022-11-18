@@ -307,8 +307,8 @@ class Resource(Card32):
             return value
 
     def parse_value(self, value, display):
-        # if not display:
-        #    return value
+        if not display:
+           return value
         if value in self.codes:
             return value
 
@@ -897,8 +897,8 @@ class ResourceObj(object):
         self.check_value = None
 
     def parse_value(self, value, display):
-        # if not display:
-        #     return value
+        if not display:
+            return value
         c = display.get_resource_class(self.class_name)
         if c:
             return c(display, value)
