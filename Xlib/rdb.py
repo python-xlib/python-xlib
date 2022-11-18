@@ -43,11 +43,10 @@ if TYPE_CHECKING:
     class SupportsComparisons(
         SupportsDunderLT[object], SupportsDunderGT[object], SupportsDunderEQ, Protocol
     ): ...
-    from typing_extensions import TypeAlias
     from Xlib import display
     _T = TypeVar("_T")
     _C = TypeVar("_C", bound=SupportsComparisons)
-    _DB: TypeAlias = dict[str, tuple["_DB", ...]]
+    _DB = dict[str, tuple["_DB", ...]]
 
 # Set up a few regexpes for parsing string representation of resources
 

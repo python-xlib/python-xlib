@@ -45,11 +45,11 @@ if TYPE_CHECKING:
     from collections.abc import Sequence, Iterable
     from Xlib.xobject import drawable, resource
     from mmap import mmap
-    from typing_extensions import TypeAlias, SupportsIndex
+    from typing_extensions import SupportsIndex
     from _typeshed import ReadableBuffer
     _T = TypeVar("_T")
-    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array.array[Any], mmap]
-    _Floatable: TypeAlias = Union[SupportsFloat, SupportsIndex, str, ReadableBuffer]
+    _SliceableBuffer = Union[bytes, bytearray, memoryview, array.array[Any], mmap]
+    _Floatable = Union[SupportsFloat, SupportsIndex, str, ReadableBuffer]
 
 extname = 'XInputExtension'
 

@@ -29,9 +29,8 @@ except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     import socket
-    from typing_extensions import TypeAlias
     from Xlib.support.unix_connect import _Protocol
-    _Address: TypeAlias = Union[tuple[Any, ...], str]
+    _Address = Union[tuple[Any, ...], str]
 
 # List the modules which contain the corresponding functions
 

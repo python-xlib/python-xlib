@@ -30,12 +30,11 @@ except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from typing_extensions import TypeAlias
     from Xlib.error import XError
     from Xlib.protocol.rq import Request
     from collections.abc import Sequence
     _T = TypeVar("_T")
-    _ErrorHandler:  TypeAlias = Callable[[XError, Optional[Request]], _T]
+    _ErrorHandler = Callable[[XError, Optional[Request]], _T]
 
 class Fontable(resource.Resource):
     __fontable__ = resource.Resource.__resource__

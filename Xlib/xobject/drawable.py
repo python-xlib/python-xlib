@@ -37,14 +37,13 @@ except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence, Iterable
-    from typing_extensions import TypeAlias
     from Xlib.error import XError
     from PIL import Image
     from array import array
     from mmap import mmap
     _T = TypeVar("_T")
-    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
-    _ErrorHandler:  TypeAlias = Callable[[XError, Optional[rq.Request]], _T]
+    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
+    _ErrorHandler = Callable[[XError, Optional[rq.Request]], _T]
 
 class Drawable(resource.Resource):
     __drawable__ = resource.Resource.__resource__

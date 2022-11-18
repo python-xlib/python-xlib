@@ -39,13 +39,12 @@ except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from typing_extensions import TypeAlias
     from Xlib.error import XError
     from Xlib.protocol import request
     from Xlib.display import Display
     from Xlib.xobject import drawable, resource
     _T = TypeVar("_T")
-    _ErrorHandler:  TypeAlias = Callable[[XError, Optional[rq.Request]], _T]
+    _ErrorHandler = Callable[[XError, Optional[rq.Request]], _T]
 
 extname = 'MIT-SCREEN-SAVER'
 

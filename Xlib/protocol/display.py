@@ -49,7 +49,7 @@ try:
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing_extensions import TypeAlias, Literal
+    from typing_extensions import Literal
     from array import array
     from mmap import mmap
     from collections.abc import Callable
@@ -57,8 +57,8 @@ if TYPE_CHECKING:
     from Xlib.xobject import cursor, colormap, fontable, drawable, resource
     _T = TypeVar("_T")
     _BaseClasses = type(_resource_baseclasses)
-    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
-    _ErrorHandler: TypeAlias = Callable[[error.XError, Optional[rq.Request]], _T]
+    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
+    _ErrorHandler = Callable[[error.XError, Optional[rq.Request]], _T]
 
 if sys.version_info[0] == 3:
 

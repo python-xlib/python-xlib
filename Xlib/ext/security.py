@@ -32,11 +32,10 @@ except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     from mmap import mmap
-    from typing_extensions import TypeAlias
     from Xlib.display import Display
     from Xlib.xobject import resource
     from array import array
-    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
+    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
 
 
 extname = 'SECURITY'

@@ -32,11 +32,9 @@ except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence
-    from typing_extensions import TypeAlias
     from Xlib.protocol import rq
-
     _T = TypeVar("_T")
-    _ErrorHandler:  TypeAlias = Callable[[error.XError, Optional[rq.Request]], _T]
+    _ErrorHandler = Callable[[error.XError, Optional[rq.Request]], _T]
 
 rgb_res = [
     re.compile(r'\Argb:([0-9a-fA-F]{1,4})/([0-9a-fA-F]{1,4})/([0-9a-fA-F]{1,4})\Z'),

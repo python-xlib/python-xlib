@@ -47,11 +47,11 @@ except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Sequence, Callable
-    from typing_extensions import Literal, TypeAlias
+    from typing_extensions import Literal
     from re import Pattern
     _T = TypeVar("_T")
-    _ErrorHandler: TypeAlias = Callable[[error.XError, Optional[rq.Request]], _T]
-    _ResourceBaseClass: TypeAlias = Union[
+    _ErrorHandler = Callable[[error.XError, Optional[rq.Request]], _T]
+    _ResourceBaseClass = Union[
         resource.Resource,
         drawable.Drawable,
         drawable.Window,

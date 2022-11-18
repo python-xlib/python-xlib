@@ -29,8 +29,7 @@ try:
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing_extensions import TypeAlias
-    _Address: TypeAlias = Union[tuple[Any, ...], str]
+    _Address = Union[tuple[Any, ...], str]
 
 display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 

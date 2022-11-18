@@ -35,8 +35,7 @@ if TYPE_CHECKING:
     from Xlib.xobject import resource
     from mmap import mmap
     from array import array
-    from typing_extensions import TypeAlias
-    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
+    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
 
 extname = 'Generic Event Extension'
 

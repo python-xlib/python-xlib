@@ -32,9 +32,9 @@ except ImportError:
 if TYPE_CHECKING:
     from mmap import mmap
     from array import array
-    from typing_extensions import TypeAlias, Literal
+    from typing_extensions import Literal
     from Xlib.protocol import display
-    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
+    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
 
 class DisplayError(Exception):
     def __init__(self, display):

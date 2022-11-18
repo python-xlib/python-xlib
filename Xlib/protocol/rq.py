@@ -42,7 +42,7 @@ if TYPE_CHECKING:
     from ..display import _BaseDisplay
     from mmap import mmap
     from collections.abc import Iterable, Sequence, Callable
-    from typing_extensions import TypeAlias, Literal, SupportsIndex, LiteralString
+    from typing_extensions import Literal, SupportsIndex, LiteralString
     from Xlib.error import XError
     from Xlib.protocol import display
     from pickle import PickleBuffer
@@ -50,9 +50,9 @@ if TYPE_CHECKING:
     from Xlib.ext.xinput import ClassInfoClass
     from Xlib.display import _ResourceBaseClass
     _T = TypeVar("_T")
-    _SliceableBuffer: TypeAlias = Union[bytes, bytearray, memoryview, array[Any], mmap]
-    _IntNew: TypeAlias = Union[str, _SliceableBuffer, _CData, PickleBuffer, SupportsInt, SupportsIndex]
-    _ErrorHandler: TypeAlias = Callable[[XError, Optional["Request"]], _T]
+    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
+    _IntNew = Union[str, _SliceableBuffer, _CData, PickleBuffer, SupportsInt, SupportsIndex]
+    _ErrorHandler = Callable[[XError, Optional["Request"]], _T]
 
 def decode_string(bs):
     # type: (bytes | bytearray) -> str
@@ -1602,4 +1602,4 @@ def call_error_handler(handler, error, request):
 
 if TYPE_CHECKING:
     # What about StrClass, Mask, RawField, SizeOf, FP1616 and FP3232 ?
-    _HasStructCodeAndName: TypeAlias = Union[Pad, Opcode, ReplyCode, LengthField, FormatField, Int8, Int16, Int32, Card8, Card16, Card32, Bool, Set, FixedBinary]
+    _HasStructCodeAndName = Union[Pad, Opcode, ReplyCode, LengthField, FormatField, Int8, Int16, Int32, Card8, Card16, Card32, Bool, Set, FixedBinary]

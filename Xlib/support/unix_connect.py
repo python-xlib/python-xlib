@@ -44,9 +44,8 @@ try:
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing_extensions import TypeAlias
     _Protocol = type(SUPPORTED_PROTOCOLS)
-    _Address: TypeAlias = Union[tuple[Any, ...], str]
+    _Address = Union[tuple[Any, ...], str]
 
 # Darwin funky socket.
 if sys.platform == 'darwin' and ([int(x) for x in platform.release().split('.')] >= [9, 0]):
