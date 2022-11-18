@@ -402,7 +402,7 @@ class Display(object):
         To wait for an event to be received, event should be true.
 
         To wait for a response to a certain request (either an error
-        or a response), request should be set the that request's
+        or a response), request should be set to that request's
         serial number.
 
         To just read any pending data from the server, recv should be true.

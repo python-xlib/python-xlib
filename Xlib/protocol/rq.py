@@ -1358,7 +1358,7 @@ class ReplyRequest(GetAttrData):
         self._display = display
         self._binary = self._request.to_binary(*args, **keys)
         self._serial = None
-        self._data = {}
+        self._data = None
         self._error = None
 
         self._response_lock = lock.allocate_lock()
