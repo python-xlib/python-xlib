@@ -1203,9 +1203,9 @@ class Struct(object):
         # Structs generate their attributes
         # TODO: Complete all classes inheriting from Struct
         # and create a type-only class for all direct instances
-        def __getattr__(self, attr):
-            # type: (str) -> Any
-            pass
+        # def __getattr__(self, attr):
+        #     # type: (str) -> Any
+        #     pass
 
         @overload
         def parse_value(self, val, display, rawdict):
@@ -1435,10 +1435,10 @@ class GetAttrData(object):
             return self._data[attr]
         except (KeyError, AttributeError):
             raise AttributeError(attr)
-    if TYPE_CHECKING:
-        def __setattr__(self, __name, __value):
-            # type: (str, Any) -> None
-            pass
+    # if TYPE_CHECKING:
+    #     def __setattr__(self, __name, __value):
+    #         # type: (str, Any) -> None
+    #         pass
 
 class DictWrapper(GetAttrData):
     def __init__(self, dict):

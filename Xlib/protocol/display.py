@@ -78,9 +78,9 @@ if sys.version_info[0] == 3:
             return len(self.view)
 
         if TYPE_CHECKING:
-            def __contains__(self, other):
-                # type: (object) -> bool
-                pass
+            # def __contains__(self, other):
+            #     # type: (object) -> bool
+            #     pass
 
             @overload
             def __getitem__(self, key):
