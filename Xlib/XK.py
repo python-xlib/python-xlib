@@ -24,6 +24,10 @@
 # definition modules in the Xlib/keysymdef directory.
 
 from Xlib.X import NoSymbol
+try:
+    from typing import TYPE_CHECKING
+except ImportError:
+    TYPE_CHECKING = False
 
 def string_to_keysym(keysym):
     # type: (str) -> int
@@ -66,7 +70,11 @@ def _load_keysyms_into_XK(mod):
 
 # Always import miscellany and latin1 keysyms
 load_keysym_group('miscellany')
+if TYPE_CHECKING:
+    from Xlib.keysymdef.miscellany import *
 load_keysym_group('latin1')
+if TYPE_CHECKING:
+    from Xlib.keysymdef.latin1 import *
 
 
 def keysym_to_string(keysym):
