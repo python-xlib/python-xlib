@@ -80,13 +80,18 @@ if sys.version_info[0] == 3:
             return len(self.view)
 
         if TYPE_CHECKING:
-            def __contains__(self, other: object) -> bool: ...
+            def __contains__(self, other):
+                # type: (object) -> bool
+                pass
 
             @overload
-            def __getitem__(self, key: int) -> int: ...
+            def __getitem__(self, key):
+                # type: (int) -> int
+                pass
             @overload
-            def __getitem__(self, key: slice) -> bytes: ...
-
+            def __getitem__(self, key):
+                # type: (slice) -> bytes
+                pass
         def __getitem__(self, key):
             # type: (slice | int) -> bytes | int
             if isinstance(key, slice):
@@ -341,31 +346,51 @@ class Display(object):
         finally:
             self.resource_id_lock.release()
 
-
     if TYPE_CHECKING:
         @overload
-        def get_resource_class(self, class_name: Literal['resource'], default: object = ...) -> type[resource.Resource]: ...
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['resource'], object) -> type[resource.Resource]
+            pass
         @overload
-        def get_resource_class(self, class_name: Literal['drawable'], default: object = ...) -> type[drawable.Drawable]: ...
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['drawable'], object) -> type[drawable.Drawable]
+            pass
         @overload
-        def get_resource_class(self, class_name: Literal['window'], default: object = ...) -> type[drawable.Window]: ...
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['window'], object) -> type[drawable.Window]
+            pass
         @overload
-        def get_resource_class(self, class_name: Literal['pixmap'], default: object = ...) -> type[drawable.Pixmap]: ...
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['pixmap'], object) -> type[drawable.Pixmap]
+            pass
         @overload
-        def get_resource_class(self, class_name: Literal['fontable'], default: object = ...) -> type[fontable.Fontable]: ...
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['fontable'], object) -> type[fontable.Fontable]
+            pass
         @overload
-        def get_resource_class(self, class_name: Literal['font'], default: object = ...) -> type[fontable.Font]: ...
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['font'], object) -> type[fontable.Font]
+            pass
         @overload
-        def get_resource_class(self, class_name: Literal['gc'], default: object = ...) -> type[fontable.GC]: ...
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['gc'], object) -> type[fontable.GC]
+            pass
         @overload
-        def get_resource_class(self, class_name: Literal['colormap'], default: object = ...) -> type[colormap.Colormap]: ...
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['colormap'], object) -> type[colormap.Colormap]
+            pass
         @overload
-        def get_resource_class(self, class_name: Literal['cursor'], default: object) -> type[cursor.Cursor]: ...
+        def get_resource_class(self, class_name, default):
+            # type: (Literal['cursor'], object) -> type[cursor.Cursor]
+            pass
         @overload
-        def get_resource_class(self, class_name: str, default: _T) -> type[_ResourceBaseClass] | _T: ...
+        def get_resource_class(self, class_name, default):
+            # type: (str, _T) -> type[_ResourceBaseClass] | _T
+            pass
         @overload
-        def get_resource_class(self, class_name: str, default: None = ...) -> type[_ResourceBaseClass] | None: ...
-
+        def get_resource_class(self, class_name, default = None):
+            # type: (str, None) -> type[_ResourceBaseClass] | None
+            pass
     def get_resource_class(self, class_name, default = None):
         # type: (str, _T | None) -> _T | None
         """class = d.get_resource_class(class_name, default = None)

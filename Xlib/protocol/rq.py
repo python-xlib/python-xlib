@@ -333,9 +333,13 @@ class Resource(Card32):
 
     if TYPE_CHECKING:
         @overload
-        def check_value(self, value: Callable[[], _T]) -> _T: ...
+        def check_value(self, value):
+            # type: (Callable[[], _T]) -> _T
+            pass
         @overload
-        def check_value(self, value: _T) -> _T: ...
+        def check_value(self, value):
+            # type: (_T) -> _T
+            pass
     def check_value(self, value):
         # type: (Callable[[], _T] | _T) -> _T
         if hasattr(value, self.cast_function):
@@ -449,12 +453,16 @@ class Binary(ValueField):
             return val_bytes + b'\0' * ((4 - slen % 4) % 4), slen, None
         else:
             return val_bytes, slen, None
+
     if TYPE_CHECKING:
         @overload
-        def parse_binary_value(self, data: _T, display: object, length: None, format: object) -> tuple[_T, Literal[b'']]: ...
+        def parse_binary_value(self, data, display, length, format):
+            # type: (_T, object, None, object) -> tuple[_T, Literal[b'']]
+            pass
         @overload
-        def parse_binary_value(self, data: _SliceableBuffer, display: object, length: int, format: object) -> tuple[_SliceableBuffer, _SliceableBuffer]: ...
-
+        def parse_binary_value(self, data, display, length, format):
+            # type: (_SliceableBuffer, object, int, object) -> tuple[_SliceableBuffer, _SliceableBuffer]
+            pass
     def parse_binary_value(self, data, display, length, format):
         # type: (_SliceableBuffer, object, int, object) -> tuple[_SliceableBuffer, _SliceableBuffer]
         if length is None:
@@ -491,10 +499,13 @@ class String8(ValueField):
 
     if TYPE_CHECKING:
         @overload
-        def parse_binary_value(self, data: bytes | bytearray, display: object, length: None, format: object) -> tuple[str, Literal[b'']]: ...
+        def parse_binary_value(self, data, display, length, format):
+            # type: (bytes | bytearray, object, None, object) -> tuple[str, Literal[b'']]
+            pass
         @overload
-        def parse_binary_value(self, data: _SliceableBuffer, display: object, length: int, format: object) -> tuple[str, _SliceableBuffer]: ...
-
+        def parse_binary_value(self, data, display, length, format):
+            # type: (_SliceableBuffer, object, int, object) -> tuple[str, _SliceableBuffer]
+            pass
     def parse_binary_value(self, data, display, length, format):
         # type: (bytes | bytearray, object, int, object) -> tuple[str, bytes | bytearray]
         if length is None:
@@ -554,7 +565,7 @@ class List(ValueField):
     The type of data objects must be provided as an object with the
     following attributes and methods:
 
-    ...
+    pass
 
     """
 
@@ -1190,13 +1201,18 @@ class Struct(object):
         # Structs generate their attributes
         # TODO: Complete all classes inheriting from Struct
         # and create a type-only class for all direct instances
-        def __getattr__(self, __name: str) -> Any: ...
+        def __getattr__(self, __name):
+            # type: (str) -> Any
+            pass
 
         @overload
-        def parse_value(self, val: _SliceableBuffer, display: display.Display | None, rawdict: Literal[True]) -> dict[str, Any]: ...
+        def parse_value(self, val, display, rawdict):
+            # type: (_SliceableBuffer, display.Display | None, Literal[True]) -> dict[str, Any]
+            pass
         @overload
-        def parse_value(self, val: _SliceableBuffer, display: display.Display | None, rawdict: Literal[False] = ...) -> DictWrapper:...
-
+        def parse_value(self, val, display, rawdict = False):
+            # type: (_SliceableBuffer, display.Display | None, Literal[False]) -> DictWrapper
+            pass
     def parse_value(self, val, display, rawdict = 0):
         # type: (_SliceableBuffer, display.Display | None, bool) -> dict[str, Any] | DictWrapper
 
@@ -1243,9 +1259,13 @@ class Struct(object):
 
     if TYPE_CHECKING:
         @overload
-        def parse_binary(self, data: _SliceableBuffer, display: display.Display | None, rawdict: Literal[True]) -> tuple[dict[str, Any], _SliceableBuffer]: ...
+        def parse_binary(self, data, display, rawdict):
+            # type: (_SliceableBuffer, display.Display | None, Literal[True]) -> tuple[dict[str, Any], _SliceableBuffer]
+            pass
         @overload
-        def parse_binary(self, data: _SliceableBuffer, display: display.Display | None, rawdict: Literal[False] = ...) -> tuple[DictWrapper , _SliceableBuffer]:...
+        def parse_binary(self, data, display, rawdict = False):
+            # type: (_SliceableBuffer, display.Display | None, Literal[False]) -> tuple[DictWrapper , _SliceableBuffer]
+            pass
     def parse_binary(self, data, display, rawdict = 0):
         # type: (_SliceableBuffer, display.Display | None, bool) -> tuple[DictWrapper | dict[str, Any], _SliceableBuffer]
 
@@ -1417,7 +1437,9 @@ class GetAttrData(object):
         except KeyError:
             raise AttributeError(attr)
     if TYPE_CHECKING:
-        def __setattr__(self, __name: str, __value: Any) -> None: ...
+        def __setattr__(self, __name, __value):
+            # type: (str, Any) -> None
+            pass
 
 class DictWrapper(GetAttrData):
     def __init__(self, dict):

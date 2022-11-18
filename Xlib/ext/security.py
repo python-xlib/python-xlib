@@ -37,7 +37,6 @@ if TYPE_CHECKING:
     from array import array
     _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
 
-
 extname = 'SECURITY'
 
 

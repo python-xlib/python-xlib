@@ -28,6 +28,10 @@ try:
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
+    if sys.platform == 'OpenVMS':
+        from Xlib.support.vms_connect import get_display as get_display, get_socket as get_socket
+    else:
+        from Xlib.support.unix_connect import get_display as get_display, get_socket as get_socket
     import socket
     from Xlib.support.unix_connect import _Protocol
     _Address = Union[tuple[Any, ...], str]
@@ -63,12 +67,6 @@ del _parts
 
 def _relative_import(modname):
     return importlib.import_module('..' + modname, __name__)
-
-if TYPE_CHECKING:
-    if sys.platform == 'OpenVMS':
-        from Xlib.support.vms_connect import get_display as get_display, get_socket as get_socket
-    else:
-        from Xlib.support.unix_connect import get_display as get_display, get_socket as get_socket
 
 def get_display(display):
     # type: (str | None) -> tuple[str, str | None, str | None, int, int]

@@ -39,10 +39,12 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
     from _typeshed import SupportsRead, SupportsDunderLT, SupportsDunderGT
     class SupportsDunderEQ(Protocol):
-        def __eq__(self, __other: object) -> bool: ...
+        def __eq__(self, __other: object):
+            # type: (object) -> bool
+            pass
     class SupportsComparisons(
         SupportsDunderLT[object], SupportsDunderGT[object], SupportsDunderEQ, Protocol
-    ): ...
+    ): pass
     from Xlib import display
     _T = TypeVar("_T")
     _C = TypeVar("_C", bound=SupportsComparisons)
@@ -328,10 +330,13 @@ class ResourceDB(object):
 
     if TYPE_CHECKING:
         @overload
-        def get(self, res: str, cls: str, default: None = ...) -> Any: ...
+        def get(self, res, cls, default = None):
+            # type: (str, str, None) -> Any
+            pass
         @overload
-        def get(self, res: str, cls: str, default: _T) -> _T: ...
-
+        def get(self, res, cls, default):
+            # type: (str, str, _T) -> _T
+            pass
     def get(self, res, cls, default = None):
         # type: (str, str, object) -> Any
         """get(name, class [, default])

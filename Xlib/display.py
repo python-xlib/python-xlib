@@ -225,23 +225,45 @@ class Display(object):
 
     if TYPE_CHECKING:
         @overload
-        def create_resource_object(self, type: Literal['resource'], id: int) -> resource.Resource: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['resource'], int) -> resource.Resource
+            pass
         @overload
-        def create_resource_object(self, type: Literal['drawable'], id: int) -> drawable.Drawable: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['drawable'], int) -> resource.Drawable
+            pass
         @overload
-        def create_resource_object(self, type: Literal['window'], id: int) -> drawable.Window: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['window'], int) -> resource.Window
+            pass
         @overload
-        def create_resource_object(self, type: Literal['pixmap'], id: int) -> drawable.Pixmap: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['pixmap'], int) -> resource.Pixmap
+            pass
         @overload
-        def create_resource_object(self, type: Literal['fontable'], id: int) -> fontable.Fontable: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['fontable'], int) -> resource.Fontable
+            pass
         @overload
-        def create_resource_object(self, type: Literal['font'], id: int) -> fontable.Font: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['font'], int) -> resource.Font
+            pass
         @overload
-        def create_resource_object(self, type: Literal['gc'], id: int) -> fontable.GC: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['gc'], int) -> resource.GC
+            pass
         @overload
-        def create_resource_object(self, type: Literal['colormap'], id: int) -> colormap.Colormap: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['colormap'], int) -> resource.Colormap
+            pass
         @overload
-        def create_resource_object(self, type: Literal['cursor'], id: int) -> cursor.Cursor: ...
+        def create_resource_object(self, type, id):
+            # type: (Literal['cursor'], int) -> resource.Cursor
+            pass
+        @overload
+        def create_resource_object(self, type, id):
+            # type: (str, int) -> resource.Resource
+            pass
     def create_resource_object(self, type, id):
         # type: (str, int) -> resource.Resource
         """Create a resource object of type for the integer id. type

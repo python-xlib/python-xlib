@@ -12,7 +12,6 @@ if TYPE_CHECKING:
     from Xlib.xobject import resource, drawable
     from collections.abc import Sequence
 
-
 extname = 'SHAPE'
 
 OP = rq.Card8
