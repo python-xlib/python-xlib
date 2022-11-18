@@ -952,6 +952,7 @@ class EventField(ValueField):
         from . import event
 
         estruct = display.event_classes.get(byte2int(data) & 0x7f, event.AnyEvent)  # type: dict[int, type[Event]] | type[Event]
+        if type(estruct) == dict:
             # this etype refers to a set of sub-events with individual subcodes
             estruct = estruct[indexbytes(data, 1)]
 
