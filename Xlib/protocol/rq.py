@@ -296,7 +296,10 @@ class Resource(Card32):
         self.codes = codes
 
     def check_value(self, value):
-        return getattr(value, self.cast_function, value)()
+        if hasattr(value, self.cast_function):
+            return getattr(value, self.cast_function)()
+        else:
+            return value
 
     def parse_value(self, value, display):
         # if not display:
