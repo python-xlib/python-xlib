@@ -21,6 +21,7 @@
 
 from Xlib import X
 from Xlib.protocol import rq
+
 try:
     from typing import TYPE_CHECKING, Any, TypeVar
 except ImportError:

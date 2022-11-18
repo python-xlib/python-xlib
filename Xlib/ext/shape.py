@@ -2,6 +2,7 @@
 # Generated from: /usr/share/xcb/shape.xml
 
 from Xlib.protocol import rq, structs
+
 try:
     from typing import TYPE_CHECKING
 except ImportError:

@@ -132,7 +132,6 @@ class Field(object):
     """
     name = None  # type: str
     default = None  # type: int | None
-    pack_value = None  # type: Callable[[Any], tuple[Any, int | None, int | None]] | None
 
     structcode = None  # type: str | None
     structvalues = 0
@@ -347,6 +346,8 @@ class Resource(Card32):
 
     def parse_value(self, value, display):
         # type: (int, _BaseDisplay | None) -> int | _ResourceBaseClass
+        # if not display:
+        #    return value
         if value in self.codes:
             return value
 
@@ -563,7 +564,7 @@ class List(ValueField):
     The type of data objects must be provided as an object with the
     following attributes and methods:
 
-    pass
+    ...
 
     """
 
@@ -995,6 +996,8 @@ class ResourceObj(object):
 
     def parse_value(self, value, display):
         # type: (int, _BaseDisplay | None) -> int | _ResourceBaseClass
+        # if not display:
+        #     return value
         if not display:
             return value
         c = display.get_resource_class(self.class_name)
@@ -1121,8 +1124,8 @@ class Struct(object):
         formats = {}
 
         for f in self.var_fields:
-            if f.keyword_args:
-                v, l, fm = f.pack_value(field_args[f.name], keys)  # ValueList
+            if f.keyword_args:  # f is ValueList
+                v, l, fm = f.pack_value(field_args[f.name], keys)
             else:
                 v, l, fm = f.pack_value(field_args[f.name])
             var_vals[f.name] = v
@@ -1194,6 +1197,7 @@ class Struct(object):
             return self.to_binary(**value._data)
         else:
             raise BadDataError('%s is not a tuple or a list' % (value))
+
 
     if TYPE_CHECKING:
         # Structs generate their attributes

@@ -24,6 +24,7 @@
 # definition modules in the Xlib/keysymdef directory.
 
 from Xlib.X import NoSymbol
+
 try:
     from typing import TYPE_CHECKING
 except ImportError:

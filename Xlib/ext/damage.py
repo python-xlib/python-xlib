@@ -22,9 +22,9 @@
 
 from Xlib import X
 from Xlib.protocol import rq, structs, request
+from Xlib.xobject import resource
 from Xlib.error import XError
 from Xlib.display import Display
-from Xlib.xobject import resource
 
 extname = 'DAMAGE'
 

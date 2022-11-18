@@ -26,6 +26,7 @@ SecurityAuthorizationRevoked event is not implemented.
 '''
 
 from Xlib.protocol import rq
+
 try:
     from typing import TYPE_CHECKING, Any, Union
 except ImportError:

@@ -25,6 +25,7 @@ ge - Generic Event Extension
 '''
 
 from Xlib.protocol import rq
+
 try:
     from typing import TYPE_CHECKING, Union, Any
 except ImportError:

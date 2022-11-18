@@ -67,6 +67,7 @@ del _parts
 def _relative_import(modname):
     return importlib.import_module('..' + modname, __name__)
 
+
 def get_display(display):
     # type: (str | None) -> tuple[str, str | None, str | None, int, int]
     """dname, protocol, host, dno, screen = get_display(display)
@@ -84,6 +85,7 @@ def get_display(display):
     modname = _display_mods.get(platform, _default_display_mod)
     mod = _relative_import(modname)
     return mod.get_display(display)
+
 
 def get_socket(dname, protocol, host, dno):
     # type: (_Address, _Protocol, _Address | None, int) -> socket.socket
