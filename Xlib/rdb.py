@@ -22,7 +22,6 @@
 
 # See end of file for an explanation of the algorithm and
 # data structures used.
-from __future__ import annotations
 
 # Standard modules
 import re

@@ -20,12 +20,10 @@
 #    Boston, MA 02111-1307 USA
 
 # Standard modules
-from __future__ import annotations
 import sys
 import traceback
 import struct
 from array import array
-import types
 
 # Python 2/3 compatibility.
 from six import binary_type, byte2int, indexbytes, iterbytes

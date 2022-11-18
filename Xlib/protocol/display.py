@@ -21,8 +21,6 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-from __future__ import annotations
-
 # Standard modules
 import errno
 import math
