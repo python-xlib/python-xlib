@@ -39,7 +39,7 @@ if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
     from _typeshed import SupportsRead, SupportsDunderLT, SupportsDunderGT
     class SupportsDunderEQ(Protocol):
-        def __eq__(self, __other: object):
+        def __eq__(self, __other):
             # type: (object) -> bool
             pass
     class SupportsComparisons(
