@@ -234,7 +234,7 @@ class EnableContext(rq.ReplyRequest):
     # See the discussion on ListFonstsWithInfo in request.py
 
     def __init__(self, callback, *args, **keys):
-        # type: (Callable[[rq.DictWrapper | dict[str, object]], Any], display.Display, object, bool, object) -> None
+        # type: (Callable[[rq.DictWrapper | dict[str, object]], Any], display.Display, bool, object, object) -> None
         self._callback = callback
         rq.ReplyRequest.__init__(self, *args, **keys)
 

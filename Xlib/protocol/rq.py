@@ -331,17 +331,20 @@ class Resource(Card32):
         Card32.__init__(self, name, default)
         self.codes = codes
 
+    if TYPE_CHECKING:
+        @overload
+        def check_value(self, value: Callable[[], _T]) -> _T: ...
+        @overload
+        def check_value(self, value: _T) -> _T: ...
     def check_value(self, value):
-        # type: (Callable[[], _T]) -> _T | int
+        # type: (Callable[[], _T] | _T) -> _T
         if hasattr(value, self.cast_function):
             return getattr(value, self.cast_function)()
         else:
             return value
 
     def parse_value(self, value, display):
-        # type: (int, _BaseDisplay) -> int | _ResourceBaseClass
-        # if not display:
-        #    return value
+        # type: (int, _BaseDisplay | None) -> int | _ResourceBaseClass
         if value in self.codes:
             return value
 
@@ -981,9 +984,9 @@ class ResourceObj(object):
         self.check_value = None
 
     def parse_value(self, value, display):
-        # type: (int, _BaseDisplay) -> int | _ResourceBaseClass
-        # if not display:
-        #     return value
+        # type: (int, _BaseDisplay | None) -> int | _ResourceBaseClass
+        if not display:
+            return value
         c = display.get_resource_class(self.class_name)
         if c:
             return c(display, value)

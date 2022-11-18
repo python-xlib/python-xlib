@@ -89,7 +89,7 @@ class _BaseDisplay(protocol_display.Display):
     # dealing with some ICCCM properties not defined in Xlib.Xatom
 
     def __init__(self, *args, **keys):
-        # type: (str | None, object, object) -> None
+        # type: (str | None) -> None
         self.resource_classes = _resource_baseclasses.copy()
         protocol_display.Display.__init__(self, *args, **keys)
         self._atom_cache = {}

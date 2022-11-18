@@ -466,7 +466,7 @@ class Display(object):
         To wait for an event to be received, event should be true.
 
         To wait for a response to a certain request (either an error
-        or a response), request should be set the that request's
+        or a response), request should be set to that request's
         serial number.
 
         To just read any pending data from the server, recv should be true.
@@ -1132,7 +1132,7 @@ class ConnectionSetupRequest(rq.GetAttrData):
     def __init__(self, display, *args, **keys):
         # type: (Display, object, object) -> None
         self._binary = self._request.to_binary(*args, **keys)
-        self._data = None
+        self._data = None  # type: dict[str, object]
 
         # Don't bother about locking, since no other threads have
         # access to the display yet
