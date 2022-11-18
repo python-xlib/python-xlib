@@ -1374,7 +1374,7 @@ class ReplyRequest(GetAttrData):
         self._display = display
         self._binary = self._request.to_binary(*args, **keys)
         self._serial = None
-        self._data = None
+        self._data = {}  # type: dict[str, object]
         self._error = None
 
         self._response_lock = lock.allocate_lock()
@@ -1391,7 +1391,7 @@ class ReplyRequest(GetAttrData):
             raise TypeError
 
         self._response_lock.acquire()
-        while self._data is None and self._error is None:
+        while not self._data and self._error is None:
             self._display.send_recv_lock.acquire()
             self._response_lock.release()
 

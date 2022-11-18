@@ -1064,7 +1064,7 @@ class ConnectionSetupRequest(rq.GetAttrData):
 
     def __init__(self, display, *args, **keys):
         self._binary = self._request.to_binary(*args, **keys)
-        self._data = {}
+        self._data = {}  # type: dict[str, object]
 
         # Don't bother about locking, since no other threads have
         # access to the display yet
