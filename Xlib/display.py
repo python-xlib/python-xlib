@@ -66,9 +66,9 @@ class _BaseDisplay(protocol_display.Display):
     # Implement a cache of atom names, used by Window objects when
     # dealing with some ICCCM properties not defined in Xlib.Xatom
 
-    def __init__(self, display = None, *args, **kwargs):
+    def __init__(self, display = None):
         self.resource_classes = _resource_baseclasses.copy()
-        protocol_display.Display.__init__(self, display, *args, **kwargs)
+        protocol_display.Display.__init__(self, display)
         self._atom_cache = {}
 
     def get_atom(self, atomname, only_if_exists=0):

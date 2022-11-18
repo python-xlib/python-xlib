@@ -215,9 +215,9 @@ class EnableContext(rq.ReplyRequest):
 
     # See the discussion on ListFonstsWithInfo in request.py
 
-    def __init__(self, callback, display, *args, defer = False, **keys):
+    def __init__(self, callback, display, defer = False, *args, **keys):
         self._callback = callback
-        rq.ReplyRequest.__init__(self, display, *args, defer=defer, **keys)
+        rq.ReplyRequest.__init__(self, display, defer=defer, *args, **keys)
 
     def _parse_response(self, data):
         r, d = self._reply.parse_binary(data, self._display)
