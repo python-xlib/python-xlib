@@ -79,6 +79,7 @@ class Display(object):
     extension_major_opcodes = {}
     error_classes = error.xerror_class.copy()
     event_classes = event.event_class.copy()
+    resource_classes = {}  # type: _BaseClasses
 
     def __init__(self, display = None):
         name, protocol, host, displayno, screenno = connect.get_display(display)
