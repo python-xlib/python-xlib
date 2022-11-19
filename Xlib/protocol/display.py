@@ -78,9 +78,9 @@ if sys.version_info[0] == 3:
             return len(self.view)
 
         if TYPE_CHECKING:
-            # def __contains__(self, other):
-            #     # type: (object) -> bool
-            #     pass
+            def __contains__(self, other):
+                # type: (object) -> bool
+                pass
 
             @overload
             def __getitem__(self, key):
@@ -110,7 +110,6 @@ class Display(object):
     extension_major_opcodes = {}  # type: dict[str, int]
     error_classes = error.xerror_class.copy() # type: dict[int, type[error.XError]]
     event_classes = event.event_class.copy()  # type: dict[int, type[rq.Event] | dict[int, type[rq.Event]]]
-    resource_classes = {}  # type: _BaseClasses
 
     def __init__(self, display = None):
         # type: (str | None) -> None
