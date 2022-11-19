@@ -721,7 +721,7 @@ class Display(object):
                 gotreq = self.parse_error_response(request) or gotreq
 
             # Request response or generic event.
-            elif rtype and rtype == 1 or rtype and (rtype & 0x7f == ge.GenericEventCode):
+            elif rtype == 1 or (rtype & 0x7f == ge.GenericEventCode):
                 # Set reply length, and loop around to see if
                 # we have got the full response
                 rlen = int(struct.unpack('=L', self.data_recv[4:8])[0])

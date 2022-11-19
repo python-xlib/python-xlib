@@ -379,9 +379,15 @@ class Display(object):
         lowest code is returned. If keysym is not bound to any key, 0 is
         returned."""
         try:
-            return self._keymap_syms[keysym][0][1]
-        except (KeyError, IndexError):
-            return 0
+            return (1, self._keymap_syms[keysym][0][1])
+        except:
+            try:
+                return (2, self._keymap_syms[keysym][0])
+            except:
+                try:
+                    return (3, self._keymap_syms[keysym])
+                except:
+                    return (4, self._keymap_syms)
 
     def keysym_to_keycodes(self, keysym):
         """Look up all the keycodes that is bound to keysym. A list of
