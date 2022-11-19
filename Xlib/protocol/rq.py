@@ -186,9 +186,9 @@ class LengthField(Field):
     structvalues = 1
     other_fields = None
 
-    # def parse_binary_value(self, data = None, display = None, length = None, format = None):
-    #     # type: (object, object, object, object) -> tuple[Any, _SliceableBuffer]
-    #     return b'', b''
+    def parse_binary_value(self, data = None, display = None, length = None, format = None):
+        # type: (object, object, object, object) -> tuple[Any, _SliceableBuffer]
+        return b'', b''
 
     def calc_length(self, length):
         """newlen = lf.calc_length(length)
@@ -474,7 +474,9 @@ class String16(ValueField):
         return struct.pack('>' + 'H' * slen, *val) + pad, slen, None
 
     def parse_binary_value(self, data, display, length, format):
-        if length == 'odd':
+        if length is None:
+            length = len(data)
+        elif length == 'odd':
             length = len(data) // 2 - 1
         elif length == 'even':
             length = len(data) // 2
@@ -1211,8 +1213,8 @@ class Struct(object):
 
         for f in self.var_fields:
             ret[f.name], data = f.parse_binary_value(data, display,
-                                                     lengths.get(f.name, 0),
-                                                     formats.get(f.name, 0),
+                                                     lengths.get(f.name),
+                                                     formats.get(f.name),
                                                     )
 
         if not rawdict:

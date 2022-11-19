@@ -309,6 +309,8 @@ class ButtonState(rq.ValueField):
         rq.ValueField.__init__(self, name)
 
     def parse_binary_value(self, data, display, length, fmt):
+        if length is None:
+            length = len(data)
         # Mask: bitfield of <length> button states.
         mask_len = 4 * ((((length + 7) >> 3) + 3) >> 2)
         mask_data = data[:mask_len]
