@@ -145,7 +145,7 @@ class Field(object):
         pass
 
     def parse_binary_value(self, data, display, length, format):
-        # type: (_SliceableBuffer, display.Display | None, int, int) -> tuple[Any, _SliceableBuffer]
+        # type: (_SliceableBuffer, display.Display | None, int | None, int) -> tuple[Any, _SliceableBuffer]
         """value, remaindata = f.parse_binary_value(data, display, length, format)
 
         Decode a value for this field from the binary string DATA.
@@ -463,7 +463,7 @@ class Binary(ValueField):
             # type: (_SliceableBuffer, object, int, object) -> tuple[_SliceableBuffer, _SliceableBuffer]
             pass
     def parse_binary_value(self, data, display, length, format):
-        # type: (_SliceableBuffer, object, int, object) -> tuple[_SliceableBuffer, _SliceableBuffer]
+        # type: (_SliceableBuffer, object, int | None, object) -> tuple[_SliceableBuffer, _SliceableBuffer]
         if length is None:
             return data, b''
 
@@ -506,7 +506,7 @@ class String8(ValueField):
             # type: (_SliceableBuffer, object, int, object) -> tuple[str, _SliceableBuffer]
             pass
     def parse_binary_value(self, data, display, length, format):
-        # type: (bytes | bytearray, object, int, object) -> tuple[str, bytes | bytearray]
+        # type: (bytes | bytearray, object, int | None, object) -> tuple[str, bytes | bytearray]
         if length is None:
             return decode_string(data), b''
 
@@ -544,7 +544,7 @@ class String16(ValueField):
         return struct.pack('>' + 'H' * slen, *val) + pad, slen, None
 
     def parse_binary_value(self, data, display, length, format):
-        # type: (_SliceableBuffer, object, int | Literal['odd', 'even'], object) -> tuple[tuple[Any, ...], _SliceableBuffer]
+        # type: (_SliceableBuffer, object, int | Literal['odd', 'even'] | None, object) -> tuple[tuple[Any, ...], _SliceableBuffer]
         if length == 'odd':
             length = len(data) // 2 - 1
         elif length == 'even':
