@@ -186,9 +186,9 @@ class LengthField(Field):
     structvalues = 1
     other_fields = None
 
-    def parse_binary_value(self, data = None, display = None, length = None, format = None):
-        # type: (object, object, object, object) -> tuple[Any, _SliceableBuffer]
-        return b'', b''
+    # def parse_binary_value(self, data = None, display = None, length = None, format = None):
+    #     # type: (object, object, object, object) -> tuple[Any, _SliceableBuffer]
+    #     return b'', b''
 
     def calc_length(self, length):
         """newlen = lf.calc_length(length)
@@ -1303,11 +1303,8 @@ class GetAttrData(object):
     # TODO: Complete all classes inheriting from GetAttrData
     def __getattr__(self, attr):
         try:
-            if self._data:
-                return self._data[attr]
-            else:
-                raise AttributeError(attr)
-        except KeyError:
+            return self._data[attr]
+        except (KeyError, AttributeError):
             raise AttributeError(attr)
 
 class DictWrapper(GetAttrData):
