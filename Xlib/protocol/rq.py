@@ -1017,7 +1017,7 @@ class StrClass(object):
         return (chr(len(val)) + val).encode()
 
     def parse_binary(self, data, display):
-        # type: (bytes | bytearray, object) -> tuple[str, _SliceableBuffer]
+        # type: (bytes | bytearray, object) -> tuple[str, bytes | bytearray]
         slen = byte2int(data) + 1
         return decode_string(data[1:slen]), data[slen:]
 

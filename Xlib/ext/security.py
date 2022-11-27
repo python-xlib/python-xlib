@@ -28,15 +28,12 @@ SecurityAuthorizationRevoked event is not implemented.
 from Xlib.protocol import rq
 
 try:
-    from typing import TYPE_CHECKING, Any, Union
+    from typing import TYPE_CHECKING
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from mmap import mmap
     from Xlib.display import Display
     from Xlib.xobject import resource
-    from array import array
-    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
 
 extname = 'SECURITY'
 
@@ -102,7 +99,7 @@ class SecurityGenerateAuthorization(rq.ReplyRequest):
 
 def generate_authorization(self, auth_proto, auth_data=b'', timeout=None,
                            trust_level=None, group=None, event_mask=None):
-    # type: (Display | resource.Resource, str, _SliceableBuffer, int | None, int | None, int | None, int | None) -> SecurityGenerateAuthorization
+    # type: (Display | resource.Resource, str, bytes | bytearray, int | None, int | None, int | None, int | None) -> SecurityGenerateAuthorization
     value_mask = 0
     values = []
     if timeout is not None:

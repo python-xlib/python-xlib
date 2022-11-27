@@ -51,19 +51,28 @@ if TYPE_CHECKING:
     from array import array
     from mmap import mmap
     from collections.abc import Callable
-    from Xlib.display import _resource_baseclasses, _ResourceBaseClass
+    from Xlib.display import _ResourceBaseClass
     from Xlib.xobject import cursor, colormap, fontable, drawable, resource
+    from pickle import PickleBuffer
+    from ctypes import _CData
     _T = TypeVar("_T")
-    _BaseClasses = type(_resource_baseclasses)
-    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
+    _BufferWithLen = Union[bytes, bytearray, memoryview, array[Any], mmap, _CData, PickleBuffer]
     _ErrorHandler = Callable[[error.XError, Optional[rq.Request]], _T]
 
 if sys.version_info[0] == 3:
 
     class bytesview(object):
-
+        if TYPE_CHECKING:
+            @overload
+            def __init__(self, data, offset, size):
+                # type: (bytes | bytesview, int, int) -> None
+                pass
+            @overload
+            def __init__(self, data, offset=0, size=None):
+                # type: (_BufferWithLen, int, None) -> None
+                pass
         def __init__(self, data, offset=0, size=None):
-            # type: (_SliceableBuffer | bytesview, int, int | None) -> None
+            # type: (_BufferWithLen | bytesview, int, int | None) -> None
             if size is None:
                 size = len(data)-offset
             if isinstance(data, bytes):

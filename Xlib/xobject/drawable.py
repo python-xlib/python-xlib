@@ -32,17 +32,14 @@ from . import fontable
 from . import icccm
 
 try:
-    from typing import TYPE_CHECKING, TypeVar, Optional, Union, Any
+    from typing import TYPE_CHECKING, TypeVar, Optional
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     from collections.abc import Callable, Sequence, Iterable
     from Xlib.error import XError
     from PIL import Image
-    from array import array
-    from mmap import mmap
     _T = TypeVar("_T")
-    _SliceableBuffer = Union[bytes, bytearray, memoryview, array[Any], mmap]
     _ErrorHandler = Callable[[XError, Optional[rq.Request]], _T]
 
 class Drawable(resource.Resource):
@@ -227,7 +224,7 @@ class Drawable(resource.Resource):
 
     def put_image(self, gc, x, y, width, height, format,
                   depth, left_pad, data, onerror = None):
-        # type: (int, int, int, int, int, int, int, int, _SliceableBuffer, _ErrorHandler[object] | None) -> None
+        # type: (int, int, int, int, int, int, int, int, bytes | bytearray, _ErrorHandler[object] | None) -> None
         request.PutImage(display = self.display,
                          onerror = onerror,
                          format = format,
