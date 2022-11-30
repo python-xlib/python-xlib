@@ -23,7 +23,7 @@ import sys
 import importlib
 
 try:
-    from typing import TYPE_CHECKING, Any, Union
+    from typing import TYPE_CHECKING
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
         from Xlib.support.unix_connect import get_display as get_display, get_socket as get_socket
     import socket
     from Xlib.support.unix_connect import _Protocol
-    _Address = Union[tuple[Any, ...], str]
+    from _socket import _Address
 
 # List the modules which contain the corresponding functions
 

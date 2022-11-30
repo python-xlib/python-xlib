@@ -25,11 +25,9 @@ import socket
 from Xlib import error
 
 try:
-    from typing import TYPE_CHECKING, Any, Union
+    from _socket import _Address
 except ImportError:
-    TYPE_CHECKING = False
-if TYPE_CHECKING:
-    _Address = Union[tuple[Any, ...], str]
+    pass
 
 display_re = re.compile(r'^([-a-zA-Z0-9._]*):([0-9]+)(\.([0-9]+))?$')
 

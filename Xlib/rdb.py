@@ -36,19 +36,15 @@ try:
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
+    from collections.abc import Iterable, Sequence, Mapping
     from _typeshed import SupportsRead, SupportsDunderLT, SupportsDunderGT
-    class SupportsDunderEQ(Protocol):
-        def __eq__(self, __other):
-            # type: (object) -> bool
-            pass
-    class SupportsComparisons(
-        SupportsDunderLT[object], SupportsDunderGT[object], SupportsDunderEQ, Protocol
-    ): pass
     from Xlib import display
     _T = TypeVar("_T")
-    _C = TypeVar("_C", bound=SupportsComparisons)
+    _T_contra = TypeVar("_T", contravariant=True)
+    class SupportsComparisons(SupportsDunderLT[_T_contra], SupportsDunderGT[_T_contra], Protocol): pass
     _DB = dict[str, tuple["_DB", ...]]
+    # This can be a bit annoying due to dict invariance, so making a parameter-specific alias
+    _DB_Param = dict[str, Any]
 
 # Set up a few regexpes for parsing string representation of resources
 
@@ -377,7 +373,7 @@ class ResourceDB(object):
         return text
 
     def getopt(self, name, argv, opts):
-        # type: (str, Sequence[str], dict[str, Option]) -> Sequence[str]
+        # type: (str, Sequence[str], Mapping[str, Option]) -> Sequence[str]
         """getopt(name, argv, opts)
 
         Parse X command line options, inserting the recognised options
@@ -489,7 +485,7 @@ class _Match(object):
 #
 
 def bin_insert(list, element):
-    # type: (list[_C], _C) -> None
+    # type: (list[SupportsComparisons[_T]], SupportsComparisons[_T]) -> None
     """bin_insert(list, element)
 
     Insert ELEMENT into LIST.  LIST must be sorted, and ELEMENT will
@@ -525,7 +521,7 @@ def bin_insert(list, element):
 #
 
 def update_db(dest, src):
-    # type: (_DB, _DB) -> None
+    # type: (_DB_Param, _DB_Param) -> None
     for comp, group in src.items():
 
         # DEST already contains this component, update it
@@ -546,11 +542,11 @@ def update_db(dest, src):
             dest[comp] = copy_group(group)
 
 def copy_group(group):
-    # type: (tuple[_DB, ...]) -> tuple[_DB, ...]
+    # type: (tuple[_DB_Param, ...]) -> tuple[_DB, ...]
     return (copy_db(group[0]), copy_db(group[1])) + group[2:]
 
 def copy_db(db):
-    # type: (_DB) -> _DB
+    # type: (_DB_Param) -> _DB
     newdb = {}
     for comp, group in db.items():
         newdb[comp] = copy_group(group)
@@ -563,7 +559,7 @@ def copy_db(db):
 #
 
 def output_db(prefix, db):
-    # type: (str, _DB) -> str
+    # type: (str, _DB_Param) -> str
     res = ''
     for comp, group in db.items():
 
@@ -682,7 +678,7 @@ class SkipNArgs(Option):
 
 
 def get_display_opts(options, argv = sys.argv):
-    # type: (dict[str, Option], Sequence[str]) -> tuple[display.Display, str, ResourceDB, Sequence[str]]
+    # type: (Mapping[str, Option], Sequence[str]) -> tuple[display.Display, str, ResourceDB, Sequence[str]]
     """display, name, db, args = get_display_opts(options, [argv])
 
     Parse X OPTIONS from ARGV (or sys.argv if not provided).

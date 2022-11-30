@@ -40,12 +40,12 @@ from Xlib import error, xauth
 SUPPORTED_PROTOCOLS = (None, 'tcp', 'unix')
 
 try:
-    from typing import TYPE_CHECKING, Any, Union
+    from typing import TYPE_CHECKING
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
     _Protocol = type(SUPPORTED_PROTOCOLS)
-    _Address = Union[tuple[Any, ...], str]
+    from _socket import _Address
 
 # Darwin funky socket.
 if sys.platform == 'darwin' and ([int(x) for x in platform.release().split('.')] >= [9, 0]):

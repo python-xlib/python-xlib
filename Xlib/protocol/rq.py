@@ -1201,8 +1201,7 @@ class Struct(object):
 
     if TYPE_CHECKING:
         # Structs generate their attributes
-        # TODO: Complete all classes inheriting from Struct
-        # and create a type-only class for all direct instances
+        # TODO: Create a specific type-only class for all instances of `Struct`
         def __getattr__(self, attr):
             # type: (str) -> Any
             pass
