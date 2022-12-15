@@ -6,7 +6,11 @@ import socket
 import sys
 import unittest
 
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
+
 
 from Xlib.support import unix_connect
 from Xlib.error import DisplayConnectionError, DisplayNameError

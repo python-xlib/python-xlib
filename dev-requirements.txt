@@ -1,5 +1,5 @@
 coverage
 codecov
-mock
 nose
 setuptools-scm
+mock; python_version < '3.3'
