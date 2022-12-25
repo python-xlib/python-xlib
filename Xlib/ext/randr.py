@@ -36,6 +36,7 @@ http://www.x.org/releases/X11R7.5/doc/randrproto/randrproto.txt
 
 from Xlib import X
 from Xlib.protocol import rq
+from Xlib.error import XError
 
 extname = 'RANDR'
 
@@ -123,11 +124,11 @@ BadRRCrtc                   = 1
 BadRRMode                   = 2
 
 # Error classes #
-class BadRROutputError(Exception): pass
+class BadRROutputError(XError): pass
 
-class BadRRCrtcError(Exception): pass
+class BadRRCrtcError(XError): pass
 
-class BadRRModeError(Exception): pass
+class BadRRModeError(XError): pass
 
 # Data Structures #
 
