@@ -1275,7 +1275,7 @@ class TextElements8(ValueField):
                 v, data = self.string_textitem.parse_binary(data, display)
                 values.append(v)
 
-        return values, ''
+        return values, b''
 
 
 

@@ -185,7 +185,8 @@ def new_get_auth(sock, dname, protocol, host, dno):
 
 def old_get_auth(sock, dname, host, dno):
     # Find authorization cookie
-    auth_name = auth_data = b''
+    auth_name = ''
+    auth_data = b''
 
     try:
         # We could parse .Xauthority, but xauth is simpler
