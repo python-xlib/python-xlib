@@ -21,6 +21,18 @@
 
 from Xlib.protocol import rq
 
+try:
+    from typing import TYPE_CHECKING, Any, TypeVar
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from Xlib.display import Display
+    from Xlib.protocol import display
+    from collections.abc import Sequence, Sized, Callable
+    from Xlib.xobject import  resource
+    _T = TypeVar("_T")
+    _S = TypeVar("_S", bound=Sized)
+
 extname = 'RECORD'
 
 FromServerTime          = 0x01
@@ -72,9 +84,11 @@ class RawField(rq.ValueField):
     structcode = None
 
     def pack_value(self, val):
+        # type: (_S) -> tuple[_S, int, None]
         return val, len(val), None
 
     def parse_binary_value(self, data, display, length, format):
+        # type: (_T, object, object, object) -> tuple[_T, bytes]
         return data, ''
 
 
@@ -94,6 +108,7 @@ class GetVersion(rq.ReplyRequest):
             rq.Pad(20))
 
 def get_version(self, major, minor):
+    # type: (Display | resource.Resource, int, int) -> GetVersion
     return GetVersion(
             display = self.display,
             opcode = self.display.get_extension_major(extname),
@@ -115,6 +130,7 @@ class CreateContext(rq.Request):
             rq.List('ranges', Record_Range))
 
 def create_context(self, datum_flags, clients, ranges):
+    # type: (Display | resource.Resource, int, Sequence[int], Sequence[tuple[tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int], bool, bool]]) -> int
     context = self.display.allocate_resource_id()
     CreateContext(
             display = self.display,
@@ -140,6 +156,7 @@ class RegisterClients(rq.Request):
             rq.List('ranges', Record_Range))
 
 def register_clients(self, context, element_header, clients, ranges):
+    # type: (Display | resource.Resource, int, int, Sequence[int], Sequence[tuple[tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int], bool, bool]]) -> None
     RegisterClients(
             display = self.display,
             opcode = self.display.get_extension_major(extname),
@@ -159,6 +176,7 @@ class UnregisterClients(rq.Request):
             rq.List('clients', rq.Card32Obj))
 
 def unregister_clients(self, context, clients):
+    # type: (Display | resource.Resource, int, Sequence[int]) -> None
     UnregisterClients(
             display = self.display,
             opcode = self.display.get_extension_major(extname),
@@ -183,6 +201,7 @@ class GetContext(rq.ReplyRequest):
             rq.List('client_info', Record_ClientInfo))
 
 def get_context(self, context):
+    # type: (Display | resource.Resource, int) -> GetContext
     return GetContext(
             display = self.display,
             opcode = self.display.get_extension_major(extname),
@@ -215,6 +234,7 @@ class EnableContext(rq.ReplyRequest):
     # See the discussion on ListFonstsWithInfo in request.py
 
     def __init__(self, callback, *args, **keys):
+        # type: (Callable[[rq.DictWrapper | dict[str, object]], Any], display.Display, bool, object, object) -> None
         self._callback = callback
         rq.ReplyRequest.__init__(self, *args, **keys)
 
@@ -235,6 +255,7 @@ class EnableContext(rq.ReplyRequest):
             self._display.sent_requests.insert(0, self)
 
 def enable_context(self, context, callback):
+    # type: (Display | resource.Resource, int, Callable[[rq.DictWrapper | dict[str, object]], Any]) -> None
     EnableContext(
             callback = callback,
             display = self.display,
@@ -250,6 +271,7 @@ class DisableContext(rq.Request):
             rq.Card32('context'))           # Record_RC
 
 def disable_context(self, context):
+    # type: (Display | resource.Resource, int) -> None
     DisableContext(
             display = self.display,
             opcode = self.display.get_extension_major(extname),
@@ -264,6 +286,7 @@ class FreeContext(rq.Request):
             rq.Card32('context'))           # Record_RC
 
 def free_context(self, context):
+    # type: (Display | resource.Resource, int) -> None
     FreeContext(
             display = self.display,
             opcode = self.display.get_extension_major(extname),
@@ -272,6 +295,7 @@ def free_context(self, context):
 
 
 def init(disp, info):
+    # type: (Display, object) -> None
     disp.extension_add_method('display', 'record_get_version', get_version)
     disp.extension_add_method('display', 'record_create_context', create_context)
     disp.extension_add_method('display', 'record_register_clients', register_clients)

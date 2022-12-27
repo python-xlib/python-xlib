@@ -30,7 +30,7 @@ import struct
 import sys
 
 # Python 2/3 compatibility.
-from six import PY3, byte2int, indexbytes
+from six import byte2int, indexbytes
 
 # Xlib modules
 from .. import error
@@ -42,11 +42,37 @@ from ..support import lock, connect
 from . import rq
 from . import event
 
-if PY3:
+try:
+    from typing import TYPE_CHECKING, overload, Union, Any, Optional, TypeVar
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from typing_extensions import Literal
+    from array import array
+    from mmap import mmap
+    from collections.abc import Callable
+    from Xlib.display import _ResourceBaseClass
+    from Xlib.xobject import cursor, colormap, fontable, drawable, resource
+    from pickle import PickleBuffer
+    from ctypes import _CData
+    _T = TypeVar("_T")
+    _BufferWithLen = Union[bytes, bytearray, memoryview, array[Any], mmap, _CData, PickleBuffer]
+    _ErrorHandler = Callable[[error.XError, Optional[rq.Request]], _T]
+
+if sys.version_info[0] == 3:
 
     class bytesview(object):
-
+        if TYPE_CHECKING:
+            @overload
+            def __init__(self, data, offset, size):
+                # type: (bytes | bytesview, int, int) -> None
+                pass
+            @overload
+            def __init__(self, data, offset=0, size=None):
+                # type: (_BufferWithLen, int, None) -> None
+                pass
         def __init__(self, data, offset=0, size=None):
+            # type: (_BufferWithLen | bytesview, int, int | None) -> None
             if size is None:
                 size = len(data)-offset
             if isinstance(data, bytes):
@@ -55,12 +81,26 @@ if PY3:
                 view = data.view
             else:
                 raise TypeError('unsupported type: {}'.format(type(data)))
-            self.view = view[offset:offset+size]
+            self.view = view[offset:offset+size]  # type: memoryview
 
         def __len__(self):
             return len(self.view)
 
+        if TYPE_CHECKING:
+            def __contains__(self, other):
+                # type: (object) -> bool
+                pass
+
+            @overload
+            def __getitem__(self, key):
+                # type: (int) -> int
+                pass
+            @overload
+            def __getitem__(self, key):
+                # type: (slice) -> bytes
+                pass
         def __getitem__(self, key):
+            # type: (slice | int) -> bytes | int
             if isinstance(key, slice):
                 return bytes(self.view[key])
             return self.view[key]
@@ -76,11 +116,12 @@ else:
 
 
 class Display(object):
-    extension_major_opcodes = {}
-    error_classes = error.xerror_class.copy()
-    event_classes = event.event_class.copy()
+    extension_major_opcodes = {}  # type: dict[str, int]
+    error_classes = error.xerror_class.copy() # type: dict[int, type[error.XError]]
+    event_classes = event.event_class.copy()  # type: dict[int, type[rq.Event] | dict[int, type[rq.Event]]]
 
     def __init__(self, display = None):
+        # type: (str | None) -> None
         name, protocol, host, displayno, screenno = connect.get_display(display)
 
         self.display_name = name
@@ -97,17 +138,17 @@ class Display(object):
         # Socket error indicator, set when the socket is closed
         # in one way or another
         self.socket_error_lock = lock.allocate_lock()
-        self.socket_error = None
+        self.socket_error = None  # type: Exception | None
 
         # Event queue
         self.event_queue_read_lock = lock.allocate_lock()
         self.event_queue_write_lock = lock.allocate_lock()
-        self.event_queue = []
+        self.event_queue = []  # type: list[rq.Event]
 
         # Unsent request queue and sequence number counter
         self.request_queue_lock = lock.allocate_lock()
         self.request_serial = 1
-        self.request_queue = []
+        self.request_queue = []  # type: list[tuple[rq.Request | rq.ReplyRequest | ConnectionSetupRequest, bool]]
 
         # Send-and-receive loop, see function send_and_receive
         # for a detailed explanation
@@ -127,26 +168,26 @@ class Display(object):
         self.recv_buffer_size = int(buffer_size)
 
         # Data used by the send-and-receive loop
-        self.sent_requests = []
+        self.sent_requests = []  # type: list[rq.Request | rq.ReplyRequest | ConnectionSetupRequest]
         self.recv_packet_len = 0
         self.data_send = b''
-        self.data_recv = b''
+        self.data_recv = b'' # type: bytes | bytesview
         self.data_sent_bytes = 0
 
         # Resource ID structures
         self.resource_id_lock = lock.allocate_lock()
-        self.resource_ids = {}
+        self.resource_ids = {}  # type: dict[int, None]
         self.last_resource_id = 0
 
         # Use an default error handler, one which just prints the error
-        self.error_handler = None
+        self.error_handler = None  # type: _ErrorHandler[object] | None
 
 
         # Right, now we're all set up for the connection setup
         # request with the server.
 
         # Figure out which endianness the hardware uses
-        self.big_endian = struct.unpack('BB', struct.pack('H', 0x0100))[0]
+        self.big_endian = struct.unpack('BB', struct.pack('H', 0x0100))[0]  # type: bool
 
         if self.big_endian:
             order = 0x42
@@ -259,10 +300,12 @@ class Display(object):
         self.close_internal('client')
 
     def set_error_handler(self, handler):
+        # type: (_ErrorHandler[object] | None) -> None
         self.error_handler = handler
 
 
     def allocate_resource_id(self):
+        # type: () -> int
         """id = d.allocate_resource_id()
 
         Allocate a new X resource id number ID.
@@ -287,6 +330,7 @@ class Display(object):
             self.resource_id_lock.release()
 
     def free_resource_id(self, rid):
+        # type: (int) -> None
         """d.free_resource_id(rid)
 
         Free resource id RID.  Attempts to free a resource id which
@@ -308,9 +352,53 @@ class Display(object):
         finally:
             self.resource_id_lock.release()
 
-
-
+    if TYPE_CHECKING:
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['resource'], object) -> type[resource.Resource]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['drawable'], object) -> type[drawable.Drawable]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['window'], object) -> type[drawable.Window]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['pixmap'], object) -> type[drawable.Pixmap]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['fontable'], object) -> type[fontable.Fontable]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['font'], object) -> type[fontable.Font]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['gc'], object) -> type[fontable.GC]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (Literal['colormap'], object) -> type[colormap.Colormap]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default):
+            # type: (Literal['cursor'], object) -> type[cursor.Cursor]
+            pass
+        @overload
+        def get_resource_class(self, class_name, default):
+            # type: (str, _T) -> type[_ResourceBaseClass] | _T
+            pass
+        @overload
+        def get_resource_class(self, class_name, default = None):
+            # type: (str, None) -> type[_ResourceBaseClass] | None
+            pass
     def get_resource_class(self, class_name, default = None):
+        # type: (str, _T | None) -> _T | None
         """class = d.get_resource_class(class_name, default = None)
 
         Return the class to be used for X resource objects of type
@@ -320,12 +408,15 @@ class Display(object):
         return self.resource_classes.get(class_name, default)
 
     def set_extension_major(self, extname, major):
+        # type: (str, int) -> None
         self.extension_major_opcodes[extname] = major
 
     def get_extension_major(self, extname):
+        # type: (str) -> int
         return self.extension_major_opcodes[extname]
 
     def add_extension_event(self, code, evt, subcode=None):
+        # type: (int, type[rq.Event], int | None) -> None
        if subcode == None:
            self.event_classes[code] = evt
        else:
@@ -335,6 +426,7 @@ class Display(object):
                self.event_classes[code][subcode] = evt
 
     def add_extension_error(self, code, err):
+        # type: (int, type[error.XError]) -> None
         self.error_classes[code] = err
 
 
@@ -351,6 +443,7 @@ class Display(object):
             raise err
 
     def send_request(self, request, wait_for_response):
+        # type: (rq.Request | rq.ReplyRequest | ConnectionSetupRequest, bool) -> None
         if self.socket_error:
             raise self.socket_error
 
@@ -368,6 +461,7 @@ class Display(object):
 #           self.flush()
 
     def close_internal(self, whom):
+        # type: (object) -> None
         # Clear out data structures
         self.request_queue = None
         self.sent_requests = None
@@ -385,6 +479,7 @@ class Display(object):
 
 
     def send_and_recv(self, flush = False, event = False, request = None, recv = False):
+        # type: (bool, bool, int | None, bool) -> None
         """send_and_recv(flush = None, event = None, request = None, recv = None)
 
         Perform I/O, or wait for some other thread to do it for us.
@@ -675,6 +770,7 @@ class Display(object):
 
 
     def parse_response(self, request):
+        # type: (int) -> bool
         """Internal method.
 
         Parse data received from server.  If REQUEST is not None
@@ -731,6 +827,7 @@ class Display(object):
 
 
     def parse_error_response(self, request):
+        # type: (int) -> bool
         # Code is second byte
         code = indexbytes(self.data_recv, 1)
 
@@ -776,10 +873,12 @@ class Display(object):
 
 
     def default_error_handler(self, err):
+        # type: (object) -> None
         sys.stderr.write('X protocol error:\n%s\n' % err)
 
 
     def parse_request_response(self, request):
+        # type: (int) -> bool
         req = self.get_waiting_replyrequest()
 
         # Sequence number is always data[2:4]
@@ -811,6 +910,7 @@ class Display(object):
 
 
     def parse_event_response(self, etype):
+        # type: (int) -> None
         # Skip bit 8, that is set if this event came from an SendEvent
         etype = etype & 0x7f
 
@@ -866,6 +966,7 @@ class Display(object):
 
 
     def get_waiting_request(self, sno):
+        # type: (int) -> rq.ReplyRequest | ConnectionSetupRequest | None
         if not self.sent_requests:
             return None
 
@@ -1060,8 +1161,9 @@ class ConnectionSetupRequest(rq.GetAttrData):
 
 
     def __init__(self, display, *args, **keys):
+        # type: (Display, object, object) -> None
         self._binary = self._request.to_binary(*args, **keys)
-        self._data = None
+        self._data = None  # type: dict[str, object]
 
         # Don't bother about locking, since no other threads have
         # access to the display yet

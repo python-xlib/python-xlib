@@ -26,6 +26,16 @@ from . import resource
 
 import re
 
+try:
+    from typing import TYPE_CHECKING, TypeVar, Optional
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Callable, Sequence
+    from Xlib.protocol import rq
+    _T = TypeVar("_T")
+    _ErrorHandler = Callable[[error.XError, Optional[rq.Request]], _T]
+
 rgb_res = [
     re.compile(r'\Argb:([0-9a-fA-F]{1,4})/([0-9a-fA-F]{1,4})/([0-9a-fA-F]{1,4})\Z'),
     re.compile(r'\A#([0-9a-fA-F])([0-9a-fA-F])([0-9a-fA-F])\Z'),
@@ -38,6 +48,7 @@ class Colormap(resource.Resource):
     __colormap__ = resource.Resource.__resource__
 
     def free(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.FreeColormap(display = self.display,
                              onerror = onerror,
                              cmap = self.id)
@@ -45,6 +56,7 @@ class Colormap(resource.Resource):
         self.display.free_resource_id(self.id)
 
     def copy_colormap_and_free(self, scr_cmap):
+        # type: (int) -> Colormap
         mid = self.display.allocate_resource_id()
         request.CopyColormapAndFree(display = self.display,
                                     mid = mid,
@@ -54,11 +66,13 @@ class Colormap(resource.Resource):
         return cls(self.display, mid, owner = 1)
 
     def install_colormap(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.InstallColormap(display = self.display,
                                 onerror = onerror,
                                 cmap = self.id)
 
     def uninstall_colormap(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.UninstallColormap(display = self.display,
                                   onerror = onerror,
                                   cmap = self.id)
@@ -71,6 +85,7 @@ class Colormap(resource.Resource):
                                   blue = blue)
 
     def alloc_named_color(self, name):
+        # type: (str) -> request.AllocColor | request.AllocNamedColor | None
         for r in rgb_res:
             m = r.match(name)
             if m:
@@ -93,6 +108,7 @@ class Colormap(resource.Resource):
             return None
 
     def alloc_color_cells(self, contiguous, colors, planes):
+        # type: (bool, int, int) -> request.AllocColorCells
         return request.AllocColorCells(display = self.display,
                                        contiguous = contiguous,
                                        cmap = self.id,
@@ -100,6 +116,7 @@ class Colormap(resource.Resource):
                                        planes = planes)
 
     def alloc_color_planes(self, contiguous, colors, red, green, blue):
+        # type: (bool, int, int, int, int) -> request.AllocColorPlanes
         return request.AllocColorPlanes(display = self.display,
                                         contiguous = contiguous,
                                         cmap = self.id,
@@ -109,6 +126,7 @@ class Colormap(resource.Resource):
                                         blue = blue)
 
     def free_colors(self, pixels, plane_mask, onerror = None):
+        # type: (Sequence[int], int, _ErrorHandler[object] | None) -> None
         request.FreeColors(display = self.display,
                            onerror = onerror,
                            cmap = self.id,
@@ -116,12 +134,14 @@ class Colormap(resource.Resource):
                            pixels = pixels)
 
     def store_colors(self, items, onerror = None):
+        # type: (dict[str, int], _ErrorHandler[object] | None) -> None
         request.StoreColors(display = self.display,
                             onerror = onerror,
                             cmap = self.id,
                             items = items)
 
     def store_named_color(self, name, pixel, flags, onerror = None):
+        # type: (str, int, int, _ErrorHandler[object] | None) -> None
         request.StoreNamedColor(display = self.display,
                                 onerror = onerror,
                                 flags = flags,
@@ -130,12 +150,14 @@ class Colormap(resource.Resource):
                                 name = name)
 
     def query_colors(self, pixels):
+        # type: (Sequence[int]) -> rq.Struct
         r = request.QueryColors(display = self.display,
                                 cmap = self.id,
                                 pixels = pixels)
         return r.colors
 
     def lookup_color(self, name):
+        # type: (str) -> request.LookupColor
         return request.LookupColor(display = self.display,
                                    cmap = self.id,
                                    name = name)

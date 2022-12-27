@@ -36,6 +36,15 @@ http://www.x.org/releases/X11R7.5/doc/randrproto/randrproto.txt
 
 from Xlib import X
 from Xlib.protocol import rq
+try:
+    from typing import TYPE_CHECKING
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from Xlib.display import Display
+    from Xlib.protocol import request
+    from Xlib.xobject import resource, drawable
+    from collections.abc import Sequence
 
 extname = 'RANDR'
 
@@ -209,6 +218,7 @@ class QueryVersion(rq.ReplyRequest):
         )
 
 def query_version(self):
+    # type: (Display | resource.Resource) -> QueryVersion
     """Get the current version of the RandR extension.
 
     """
@@ -284,6 +294,7 @@ class SetScreenConfig(rq.ReplyRequest):
         )
 
 def set_screen_config(self, size_id, rotation, config_timestamp, rate=0, timestamp=X.CurrentTime):
+    # type: (drawable.Drawable, int, int, int, int, int) -> SetScreenConfig
     """Sets the screen to the specified size, rate, rotation and reflection.
 
     rate can be 0 to have the server select an appropriate rate.
@@ -312,6 +323,7 @@ class SelectInput(rq.Request):
         )
 
 def select_input(self, mask):
+    # type: (drawable.Window, int) -> SelectInput
     return SelectInput(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -346,6 +358,7 @@ class GetScreenInfo(rq.ReplyRequest):
         )
 
 def get_screen_info(self):
+    # type: (drawable.Window) -> GetScreenInfo
     """Retrieve information about the current and available configurations for
     the screen associated with this window.
 
@@ -379,6 +392,7 @@ class GetScreenSizeRange(rq.ReplyRequest):
         )
 
 def get_screen_size_range(self):
+    # type: (drawable.Window) -> GetScreenSizeRange
     """Retrieve the range of possible screen sizes. The screen may be set to
 	any size within this range.
 
@@ -403,6 +417,7 @@ class SetScreenSize(rq.Request):
         )
 
 def set_screen_size(self, width, height, width_in_millimeters=None, height_in_millimeters=None):
+    # type: (drawable.Window, int, int, int | None, int | None) -> SetScreenSize
     return SetScreenSize(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -440,6 +455,7 @@ class GetScreenResources(rq.ReplyRequest):
         )
 
 def get_screen_resources(self):
+    # type: (drawable.Window) -> GetScreenResources
     return GetScreenResources(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -478,6 +494,7 @@ class GetOutputInfo(rq.ReplyRequest):
         )
 
 def get_output_info(self, output, config_timestamp):
+    # type: (Display | resource.Resource, int, int) -> GetOutputInfo
     return GetOutputInfo(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -504,6 +521,7 @@ class ListOutputProperties(rq.ReplyRequest):
         )
 
 def list_output_properties(self, output):
+    # type: (Display | resource.Resource, int) -> ListOutputProperties
     return ListOutputProperties (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -532,6 +550,7 @@ class QueryOutputProperty(rq.ReplyRequest):
         )
 
 def query_output_property(self, output, property):
+    # type: (Display | resource.Resource, int, int) -> QueryOutputProperty
     return QueryOutputProperty (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -554,6 +573,7 @@ class ConfigureOutputProperty (rq.Request):
         )
 
 def configure_output_property (self, output, property):
+    # type: (Display | resource.Resource, int, int) -> ConfigureOutputProperty
     return ConfigureOutputProperty (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -578,6 +598,7 @@ class ChangeOutputProperty(rq.Request):
         )
 
 def change_output_property(self, output, property, type, mode, value):
+    # type: (Display | resource.Resource, int, int, int, int, Sequence[float] | Sequence[str]) -> ChangeOutputProperty
     return ChangeOutputProperty(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -599,6 +620,7 @@ class DeleteOutputProperty(rq.Request):
         )
 
 def delete_output_property(self, output, property):
+    # type: (Display | resource.Resource, int, int) -> DeleteOutputProperty
     return DeleteOutputProperty(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -634,6 +656,7 @@ class GetOutputProperty(rq.ReplyRequest):
         )
 
 def get_output_property(self, output, property, type, long_offset, long_length, delete=False, pending=False):
+    # type: (Display | resource.Resource, int, int, int, int, int, bool, bool) -> GetOutputProperty
     return GetOutputProperty(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -666,6 +689,7 @@ class CreateMode(rq.ReplyRequest):
         )
 
 def create_mode(self, mode, name):
+    # type: (drawable.Window, tuple[int, int, int, int, int, int, int, int, int, int, int, int, int], str) -> CreateMode
     return CreateMode (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -684,6 +708,7 @@ class DestroyMode(rq.Request):
         )
 
 def destroy_mode(self, mode):
+    # type: (Display | resource.Resource, int) -> DestroyMode
     return DestroyMode(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -701,6 +726,7 @@ class AddOutputMode(rq.Request):
         )
 
 def add_output_mode(self, output, mode):
+    # type: (Display | resource.Resource, int, int) -> AddOutputMode
     return AddOutputMode(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -719,6 +745,7 @@ class DeleteOutputMode(rq.Request):
         )
 
 def delete_output_mode(self, output, mode):
+    # type: (Display | resource.Resource, int, int) -> DeleteOutputMode
     return DeleteOutputMode(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -755,6 +782,7 @@ class GetCrtcInfo(rq.ReplyRequest):
         )
 
 def get_crtc_info(self, crtc, config_timestamp):
+    # type: (Display | resource.Resource, int, int) -> GetCrtcInfo
     return GetCrtcInfo (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -788,6 +816,7 @@ class SetCrtcConfig(rq.ReplyRequest):
         )
 
 def set_crtc_config(self, crtc, config_timestamp, x, y, mode, rotation, outputs, timestamp=X.CurrentTime):
+    # type: (Display | resource.Resource, int, int, int, int, int, int, Sequence[int], int) -> SetCrtcConfig
     return SetCrtcConfig (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -819,6 +848,7 @@ class GetCrtcGammaSize(rq.ReplyRequest):
         )
 
 def get_crtc_gamma_size(self, crtc):
+    # type: (Display | resource.Resource, int) -> GetCrtcGammaSize
     return GetCrtcGammaSize (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -846,6 +876,7 @@ class GetCrtcGamma(rq.ReplyRequest):
         )
 
 def get_crtc_gamma(self, crtc):
+    # type: (Display | resource.Resource, int) -> GetCrtcGamma
     return GetCrtcGamma (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -867,6 +898,7 @@ class SetCrtcGamma(rq.Request):
         )
 
 def set_crtc_gamma(self, crtc, size, red, green, blue):
+    # type: (Display | resource.Resource, int, int, Sequence[int], Sequence[int], Sequence[int]) -> SetCrtcGamma
     return SetCrtcGamma(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -906,6 +938,7 @@ class GetScreenResourcesCurrent(rq.ReplyRequest):
         )
 
 def get_screen_resources_current(self):
+    # type: (drawable.Window) -> GetScreenResourcesCurrent
     return GetScreenResourcesCurrent(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -927,6 +960,7 @@ class SetCrtcTransform(rq.Request):
         )
 
 def set_crtc_transform(self, crtc, n_bytes_filter):
+    # type: (Display | resource.Resource, int, Sequence[int]) -> SetCrtcTransform
     return SetCrtcTransform(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -963,6 +997,7 @@ class GetCrtcTransform(rq.ReplyRequest):
         )
 
 def get_crtc_transform(self, crtc):
+    # type: (Display | resource.Resource, int) -> GetCrtcTransform
     return GetCrtcTransform(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -998,6 +1033,7 @@ class GetPanning(rq.ReplyRequest):
         )
 
 def get_panning(self, crtc):
+    # type: (Display | resource.Resource, int) -> GetPanning
     return GetPanning (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -1035,6 +1071,7 @@ class SetPanning(rq.ReplyRequest):
         )
 
 def set_panning(self, crtc, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_width, border_height, timestamp=X.CurrentTime):
+    # type: (Display | resource.Resource, int, int, int, int, int, int, int, int, int, int, int, int, int, int) -> SetPanning
     return SetPanning (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -1065,6 +1102,7 @@ class SetOutputPrimary(rq.Request):
         )
 
 def set_output_primary(self, output):
+    # type: (drawable.Window, int) -> SetOutputPrimary
     return SetOutputPrimary(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -1090,6 +1128,7 @@ class GetOutputPrimary(rq.ReplyRequest):
         )
 
 def get_output_primary(self):
+    # type: (drawable.Window) -> GetOutputPrimary
     return GetOutputPrimary(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -1123,6 +1162,7 @@ class GetMonitors(rq.ReplyRequest):
 
 
 def get_monitors(self, is_active=True):
+    # type: (drawable.Window, bool) -> GetMonitors
     return GetMonitors(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -1141,6 +1181,7 @@ class SetMonitor(rq.Request):
 
 
 def set_monitor(self, monitor_info):
+    # type: (drawable.Window, tuple[int, bool, bool, Sequence[int], int, int, int, int, int]) -> SetMonitor
     return SetMonitor(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -1160,6 +1201,7 @@ class DeleteMonitor(rq.Request):
 
 
 def delete_monitor(self, name):
+    # type: (Display | resource.Resource, str) -> DeleteMonitor
     return DeleteMonitor(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -1241,6 +1283,7 @@ class OutputPropertyNotify(rq.Event):
 # Initialization #
 
 def init(disp, info):
+    # type: (Display, request.QueryExtension) -> None
     disp.extension_add_method('display', 'xrandr_query_version', query_version)
     disp.extension_add_method('window', 'xrandr_select_input', select_input)
     disp.extension_add_method('window', 'xrandr_get_screen_info', get_screen_info)

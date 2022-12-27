@@ -22,6 +22,19 @@
 import sys
 import importlib
 
+try:
+    from typing import TYPE_CHECKING
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    if sys.platform == 'OpenVMS':
+        from Xlib.support.vms_connect import get_display as get_display, get_socket as get_socket
+    else:
+        from Xlib.support.unix_connect import get_display as get_display, get_socket as get_socket
+    import socket
+    from Xlib.support.unix_connect import _Protocol
+    from _socket import _Address
+
 # List the modules which contain the corresponding functions
 
 _display_mods = {
@@ -56,6 +69,7 @@ def _relative_import(modname):
 
 
 def get_display(display):
+    # type: (str | None) -> tuple[str, str | None, str | None, int, int]
     """dname, protocol, host, dno, screen = get_display(display)
 
     Parse DISPLAY into its components.  If DISPLAY is None, use
@@ -74,6 +88,7 @@ def get_display(display):
 
 
 def get_socket(dname, protocol, host, dno):
+    # type: (_Address, _Protocol, _Address | None, int) -> socket.socket
     """socket = get_socket(dname, protocol, host, dno)
 
     Connect to the display specified by DNAME, PROTOCOL, HOST and DNO, which
@@ -88,6 +103,7 @@ def get_socket(dname, protocol, host, dno):
 
 
 def get_auth(sock, dname, protocol, host, dno):
+    # type: (socket.socket, object, _Protocol, object, int) -> tuple[bytes, bytes]
     """auth_name, auth_data = get_auth(sock, dname, protocol, host, dno)
 
     Return authentication data for the display on the other side of

@@ -34,6 +34,7 @@ class _DummyLock(object):
         self.acquire = self.release = self.locked = self.__noop
 
     def __noop(self, *args):
+        # type: (object) -> None
         return
 
 

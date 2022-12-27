@@ -21,8 +21,21 @@
 
 from Xlib.protocol import request
 
+try:
+    from typing import TYPE_CHECKING, TypeVar, Optional
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from Xlib.error import XError
+    from Xlib.protocol.rq import Request
+    from Xlib.display import _BaseDisplay
+    _T = TypeVar("_T")
+    _ErrorHandler = Callable[[XError, Optional[Request]], _T]
+
 class Resource(object):
     def __init__(self, display, rid, owner = 0):
+        # type: (_BaseDisplay, int, int) -> None
         self.display = display
         self.id = rid
         self.owner = owner
@@ -31,6 +44,7 @@ class Resource(object):
         return self.id
 
     def __eq__(self, obj):
+        # type: (object) -> bool
         if isinstance(obj, Resource):
             if self.display == obj.display:
                 return self.id == obj.id
@@ -40,6 +54,7 @@ class Resource(object):
             return id(self) == id(obj)
 
     def __ne__(self, obj):
+        # type: (object) -> bool
         return not self == obj
 
     def __hash__(self):
@@ -49,6 +64,7 @@ class Resource(object):
         return '<%s 0x%08x>' % (self.__class__.__name__, self.id)
 
     def kill_client(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.KillClient(display = self.display,
                            onerror = onerror,
                            resource = self.id)

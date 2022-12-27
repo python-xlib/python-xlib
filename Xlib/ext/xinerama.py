@@ -36,6 +36,8 @@ returns the state information - because that's what libXinerama does."""
 
 
 from Xlib.protocol import rq, structs
+from Xlib.display import Display
+from Xlib.xobject import resource, drawable
 
 extname = 'XINERAMA'
 
@@ -61,6 +63,7 @@ class QueryVersion(rq.ReplyRequest):
             )
 
 def query_version(self):
+    # type: (Display | resource.Resource) -> QueryVersion
     return QueryVersion(display=self.display,
                         opcode=self.display.get_extension_major(extname),
                         major_version=1,
@@ -84,6 +87,7 @@ class GetState(rq.ReplyRequest):
         )
 
 def get_state(self):
+    # type: (drawable.Window) -> GetState
     return GetState(display=self.display,
                     opcode=self.display.get_extension_major(extname),
                     window=self.id,
@@ -107,6 +111,7 @@ class GetScreenCount(rq.ReplyRequest):
         )
 
 def get_screen_count(self):
+    # type: (drawable.Window) -> GetScreenCount
     return GetScreenCount(display=self.display,
                           opcode=self.display.get_extension_major(extname),
                           window=self.id,
@@ -134,6 +139,7 @@ class GetScreenSize(rq.ReplyRequest):
         )
 
 def get_screen_size(self, screen_no):
+    # type: (drawable.Window, int) -> GetScreenSize
     """Returns the size of the given screen number"""
     return GetScreenSize(display=self.display,
                          opcode=self.display.get_extension_major(extname),
@@ -160,6 +166,7 @@ class IsActive(rq.ReplyRequest):
         )
 
 def is_active(self):
+    # type: (Display | resource.Resource) -> int
     r = IsActive(display=self.display,
                  opcode=self.display.get_extension_major(extname),
                  )
@@ -184,6 +191,7 @@ class QueryScreens(rq.ReplyRequest):
         )
 
 def query_screens(self):
+    # type: (Display | resource.Resource) -> QueryScreens
     # Hmm. This one needs to read the screen data from the socket. Ooops...
     return QueryScreens(display=self.display,
                         opcode=self.display.get_extension_major(extname),
@@ -208,11 +216,13 @@ class GetInfo(rq.ReplyRequest):
         )
 
 def get_info(self, visual):
+    # type: (Display | resource.Resource, int) -> None
     r = GetInfo(display=self.display,
              opcode=self.display.get_extension_major(extname),
              visual=visual)
 
 def init(disp, info):
+    # type: (Display, object) -> None
     disp.extension_add_method('display', 'xinerama_query_version', query_version)
     disp.extension_add_method('window', 'xinerama_get_state', get_state)
     disp.extension_add_method('window', 'xinerama_get_screen_count', get_screen_count)

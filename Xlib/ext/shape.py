@@ -3,6 +3,15 @@
 
 from Xlib.protocol import rq, structs
 
+try:
+    from typing import TYPE_CHECKING
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from Xlib.display import Display
+    from Xlib.protocol import request
+    from Xlib.xobject import resource, drawable
+    from collections.abc import Sequence
 
 extname = 'SHAPE'
 
@@ -23,6 +32,7 @@ class SK:
 class KIND(rq.Set):
 
     def __init__(self, name):
+        # type: (str) -> None
         super(KIND, self).__init__(name, 1,
                                    values=(SK.Bounding,
                                            SK.Clip,
@@ -201,6 +211,7 @@ class Event:
     Notify = 0
 
 def combine(self, operation, destination_kind, source_kind, x_offset, y_offset):
+    # type: (drawable.Window, int, int, int, int, int) -> None
     Combine(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -213,6 +224,7 @@ def combine(self, operation, destination_kind, source_kind, x_offset, y_offset):
     )
 
 def get_rectangles(self, source_kind):
+    # type: (drawable.Window, int) -> GetRectangles
     return GetRectangles(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -221,6 +233,7 @@ def get_rectangles(self, source_kind):
     )
 
 def input_selected(self, ):
+    # type: (drawable.Window) -> InputSelected
     return InputSelected(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -228,6 +241,7 @@ def input_selected(self, ):
     )
 
 def mask(self, operation, destination_kind, x_offset, y_offset, source_bitmap):
+    # type: (drawable.Window, int, int, int, int, int) -> None
     Mask(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -240,6 +254,7 @@ def mask(self, operation, destination_kind, x_offset, y_offset, source_bitmap):
     )
 
 def offset(self, destination_kind, x_offset, y_offset):
+    # type: (drawable.Window, int, int, int) -> None
     Offset(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -250,6 +265,7 @@ def offset(self, destination_kind, x_offset, y_offset):
     )
 
 def query_extents(self, ):
+    # type: (drawable.Window) -> QueryExtents
     return QueryExtents(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -257,12 +273,14 @@ def query_extents(self, ):
     )
 
 def query_version(self, ):
+    # type: (Display | resource.Resource) -> QueryVersion
     return QueryVersion(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
     )
 
 def rectangles(self, operation, destination_kind, ordering, x_offset, y_offset, rectangles):
+    # type: (drawable.Window, int, int, int, int, int, Sequence[tuple[int, int, int, int]]) -> None
     Rectangles(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -276,6 +294,7 @@ def rectangles(self, operation, destination_kind, ordering, x_offset, y_offset, 
     )
 
 def select_input(self, enable):
+    # type: (drawable.Window, int) -> None
     SelectInput(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -284,6 +303,7 @@ def select_input(self, enable):
     )
 
 def init(disp, info):
+    # type: (Display, request.QueryExtension) -> None
     disp.extension_add_method('window', 'shape_combine', combine)
     disp.extension_add_method('window', 'shape_get_rectangles', get_rectangles)
     disp.extension_add_method('window', 'shape_input_selected', input_selected)

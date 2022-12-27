@@ -29,6 +29,14 @@ XCB Protocol specification:
     https://cgit.freedesktop.org/xcb/proto/tree/src/res.xml
 """
 from Xlib.protocol import rq
+try:
+    from typing import TYPE_CHECKING
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from Xlib.display import Display
+    from Xlib.xobject import resource
+    from collections.abc import Sequence
 
 RES_MAJOR_VERSION = 1
 RES_MINOR_VERSION = 2
@@ -65,6 +73,7 @@ class QueryVersion(rq.ReplyRequest):
 
 def query_version(self, client_major=RES_MAJOR_VERSION,
                   client_minor=RES_MINOR_VERSION):
+    # type: (Display | resource.Resource, int, int) -> QueryVersion
     """ Query the protocol version supported by the X server.
 
     The client sends the highest supported version to the server and the
@@ -98,6 +107,7 @@ class QueryClients(rq.ReplyRequest):
 
 
 def query_clients(self):
+    # type: (Display | resource.Resource) -> QueryClients
     """Request the list of all currently connected clients."""
     return QueryClients(
             display=self.display,
@@ -126,6 +136,7 @@ class QueryClientResources(rq.ReplyRequest):
 
 
 def query_client_resources(self, client):
+    # type: (Display | resource.Resource, int) -> QueryClientResources
     """Request the number of resources owned by a client.
 
     The server will return the counts of each type of resource.
@@ -153,6 +164,7 @@ class QueryClientPixmapBytes(rq.ReplyRequest):
 
 
 def query_client_pixmap_bytes(self, client):
+    # type: (Display | resource.Resource, int) -> QueryClientPixmapBytes
     """Query the pixmap usage of some client.
 
     The returned number is a sum of memory usage of each pixmap that can be
@@ -169,10 +181,12 @@ class SizeOf(rq.LengthOf):
     may vary, e.g. List
     """
     def __init__(self, name, size, item_size):
+        # type: (str | list[str] | tuple[str, ...], int, int) -> None
         rq.LengthOf.__init__(self, name, size)
         self.item_size = item_size
 
     def parse_value(self, length, display):
+        # type: (int, object) -> int
         return length // self.item_size
 
 
@@ -209,6 +223,7 @@ class QueryClientIds(rq.ReplyRequest):
 
 
 def query_client_ids(self, specs):
+    # type: (Display | resource.Resource, Sequence[tuple[int, int]]) -> QueryClientIds
     """Request to identify a given set of clients with some identification method.
 
     The request sends a list of specifiers that select clients and
@@ -262,6 +277,7 @@ class QueryResourceBytes(rq.ReplyRequest):
 
 
 def query_resource_bytes(self, client, specs):
+    # type: (Display | resource.Resource, int, Sequence[tuple[int, int]]) -> QueryResourceBytes
     """Query the sizes of resources from X server.
 
     The request sends a list of specifiers that selects resources for size
@@ -276,6 +292,7 @@ def query_resource_bytes(self, client, specs):
 
 
 def init(disp, info):
+    # type: (Display, object) -> None
     disp.extension_add_method("display", "res_query_version", query_version)
     disp.extension_add_method("display", "res_query_clients", query_clients)
     disp.extension_add_method("display", "res_query_client_resources",

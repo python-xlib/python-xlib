@@ -25,7 +25,11 @@ from .. import X
 # Xlib.protocol modules
 from . import rq
 
+# TODO: Complete all classes using WindowValues and GCValues
+# Currently *object is used to represent the ValueList instead of the possible attribute types
+
 def WindowValues(arg):
+    # type: (str) -> rq.ValueList
     return rq.ValueList( arg, 4, 0,
                          rq.Pixmap('background_pixmap'),
                          rq.Card32('background_pixel'),
@@ -46,6 +50,7 @@ def WindowValues(arg):
                          )
 
 def GCValues(arg):
+    # type: (str) -> rq.ValueList
     return rq.ValueList( arg, 4, 0,
                          rq.Set('function', 1,
                                 (X.GXclear, X.GXand, X.GXandReverse,

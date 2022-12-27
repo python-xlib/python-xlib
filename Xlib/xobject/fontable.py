@@ -24,6 +24,18 @@ from Xlib.protocol import request
 from . import resource
 from . import cursor
 
+try:
+    from typing import TYPE_CHECKING, TypeVar, Optional
+except ImportError:
+    TYPE_CHECKING = False
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from Xlib.error import XError
+    from Xlib.protocol.rq import Request
+    from collections.abc import Sequence
+    _T = TypeVar("_T")
+    _ErrorHandler = Callable[[XError, Optional[Request]], _T]
+
 class Fontable(resource.Resource):
     __fontable__ = resource.Resource.__resource__
 
@@ -32,6 +44,7 @@ class Fontable(resource.Resource):
                                  font = self.id)
 
     def query_text_extents(self, string):
+        # type: (str) -> request.QueryTextExtents
         return request.QueryTextExtents(display = self.display,
                                         font = self.id,
                                         string = string)
@@ -41,6 +54,7 @@ class GC(Fontable):
     __gc__ = resource.Resource.__resource__
 
     def change(self, onerror = None, **keys):
+        # type: (_ErrorHandler[object] | None, object) -> None
         request.ChangeGC(display = self.display,
                          onerror = onerror,
                          gc = self.id,
@@ -48,6 +62,7 @@ class GC(Fontable):
 
 
     def copy(self, src_gc, mask, onerror = None):
+        # type: (int, int, _ErrorHandler[object] | None) -> None
         request.CopyGC(display = self.display,
                        onerror = onerror,
                        src_gc = src_gc,
@@ -55,6 +70,7 @@ class GC(Fontable):
                        mask = mask)
 
     def set_dashes(self, offset, dashes, onerror = None):
+        # type: (int, Sequence[int], _ErrorHandler[object] | None) -> None
         request.SetDashes(display = self.display,
                           onerror = onerror,
                           gc = self.id,
@@ -62,6 +78,7 @@ class GC(Fontable):
                           dashes = dashes)
 
     def set_clip_rectangles(self, x_origin, y_origin, rectangles, ordering, onerror = None):
+        # type: (int, int, Sequence[Sequence[int] | tuple[int, int, int, int]], Sequence[int] | tuple[int, int, int, int], _ErrorHandler[object] | None) -> None
         request.SetClipRectangles(display = self.display,
                                   onerror = onerror,
                                   ordering = ordering,
@@ -70,6 +87,7 @@ class GC(Fontable):
                                   y_origin = y_origin,
                                   rectangles = rectangles)
     def free(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.FreeGC(display = self.display,
                        onerror = onerror,
                        gc = self.id)
@@ -82,6 +100,7 @@ class Font(Fontable):
     __font__ = resource.Resource.__resource__
 
     def close(self, onerror = None):
+        # type: (_ErrorHandler[object] | None) -> None
         request.CloseFont(display = self.display,
                           onerror = onerror,
                           font = self.id)
@@ -89,6 +108,7 @@ class Font(Fontable):
 
     def create_glyph_cursor(self, mask, source_char, mask_char,
                             foreground, background):
+        # type: (Font, int, int, tuple[int, int, int], tuple[int, int, int]) -> cursor.Cursor
         fore_red, fore_green, fore_blue = foreground
         back_red, back_green, back_blue = background
 
