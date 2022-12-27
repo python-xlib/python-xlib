@@ -24,7 +24,6 @@ import sys
 import traceback
 import struct
 from array import array
-import types
 
 # Python 2/3 compatibility.
 from six import PY3, binary_type, byte2int, indexbytes, iterbytes
@@ -119,7 +118,7 @@ class Field(object):
     check_value = None
     parse_value = None
 
-    keyword_args = 0
+    keyword_args = False
 
     def __init__(self):
         pass
@@ -724,7 +723,7 @@ class FixedPropertyData(PropertyData):
 
 class ValueList(Field):
     structcode = None
-    keyword_args = 1
+    keyword_args = True
     default = 'usekeywords'
 
     def __init__(self, name, mask, pad, *fields):
@@ -1089,7 +1088,7 @@ class Struct(object):
             raise BadDataError('%s is not a tuple or a list' % (value))
 
 
-    def parse_value(self, val, display, rawdict = 0):
+    def parse_value(self, val, display, rawdict = False):
 
         """This function is used by List and Object fields to convert
         Struct objects with no var_fields into Python values.
@@ -1132,9 +1131,9 @@ class Struct(object):
             return DictWrapper(ret)
         return ret
 
-    def parse_binary(self, data, display, rawdict = 0):
+    def parse_binary(self, data, display, rawdict = False):
 
-        """values, remdata = s.parse_binary(data, display, rawdict = 0)
+        """values, remdata = s.parse_binary(data, display, rawdict = False)
 
         Convert a binary representation of the structure into Python values.
 
@@ -1355,7 +1354,7 @@ class Request(object):
             return 0
 
 class ReplyRequest(GetAttrData):
-    def __init__(self, display, defer = 0, *args, **keys):
+    def __init__(self, display, defer = False, *args, **keys):
         self._display = display
         self._binary = self._request.to_binary(*args, **keys)
         self._serial = None
@@ -1364,7 +1363,7 @@ class ReplyRequest(GetAttrData):
 
         self._response_lock = lock.allocate_lock()
 
-        self._display.send_request(self, 1)
+        self._display.send_request(self, True)
         if not defer:
             self.reply()
 
@@ -1390,7 +1389,7 @@ class ReplyRequest(GetAttrData):
 
     def _parse_response(self, data):
         self._response_lock.acquire()
-        self._data, d = self._reply.parse_binary(data, self._display, rawdict = 1)
+        self._data, d = self._reply.parse_binary(data, self._display, rawdict = True)
         self._response_lock.release()
 
     def _set_error(self, error):
@@ -1409,7 +1408,7 @@ class Event(GetAttrData):
         if binarydata:
             self._binary = binarydata
             self._data, data = self._fields.parse_binary(binarydata, display,
-                                                         rawdict = 1)
+                                                         rawdict = True)
             # split event type into type and send_event bit
             self._data['send_event'] = not not self._data['type'] & 0x80
             self._data['type'] = self._data['type'] & 0x7f
