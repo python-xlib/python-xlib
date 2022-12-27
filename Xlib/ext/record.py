@@ -19,7 +19,6 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-from Xlib import X
 from Xlib.protocol import rq
 
 extname = 'RECORD'

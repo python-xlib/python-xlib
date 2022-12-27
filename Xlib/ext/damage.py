@@ -22,7 +22,6 @@
 
 from Xlib import X
 from Xlib.protocol import rq, structs
-from Xlib.xobject import resource
 from Xlib.error import XError
 
 extname = 'DAMAGE'
