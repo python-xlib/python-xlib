@@ -226,8 +226,9 @@ class Mask(rq.List):
             # bytes we build a longer array, being careful to maintain native
             # byte order across the entire set of values.
             if sys.byteorder == 'little':
-                def fun(val):
-                    mask_seq.insert(0, val)
+                def fun(__v):
+                    # type: (int) -> None
+                    mask_seq.insert(0, __v)
             elif sys.byteorder == 'big':
                 fun = mask_seq.append
             else:
@@ -308,6 +309,8 @@ class ButtonState(rq.ValueField):
         rq.ValueField.__init__(self, name)
 
     def parse_binary_value(self, data, display, length, fmt):
+        if length is None:
+            length = len(data)
         # Mask: bitfield of <length> button states.
         mask_len = 4 * ((((length + 7) >> 3) + 3) >> 2)
         mask_data = data[:mask_len]
@@ -378,7 +381,7 @@ INFO_CLASSES = {
 }
 
 class ClassInfoClass(object):
-
+    check_value = None
     structcode = None
 
     def parse_binary(self, data, display):

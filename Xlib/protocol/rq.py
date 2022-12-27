@@ -109,8 +109,9 @@ class Field(object):
     f.parse_binary_value() instead.  See its documentation string for
     details.
     """
-    name = None
+    name = ""
     default = None
+    pack_value = None  # type: Callable[[Any], tuple[Any, int | None, int | None]] | None
 
     structcode = None
     structvalues = 0
@@ -183,6 +184,10 @@ class LengthField(Field):
     structcode = 'L'
     structvalues = 1
     other_fields = None
+
+    def parse_binary_value(self, data = None, display = None, length = None, format = None):
+        # type: (object, object, object, object) -> tuple[Any, _SliceableBuffer]
+        return b'', b''
 
     def calc_length(self, length):
         """newlen = lf.calc_length(length)
@@ -301,8 +306,8 @@ class Resource(Card32):
             return value
 
     def parse_value(self, value, display):
-        # if not display:
-        #    return value
+        if not display:
+           return value
         if value in self.codes:
             return value
 
@@ -468,7 +473,9 @@ class String16(ValueField):
         return struct.pack('>' + 'H' * slen, *val) + pad, slen, None
 
     def parse_binary_value(self, data, display, length, format):
-        if length == 'odd':
+        if length is None:
+            length = len(data)
+        elif length == 'odd':
             length = len(data) // 2 - 1
         elif length == 'even':
             length = len(data) // 2
@@ -653,10 +660,9 @@ class PropertyData(ValueField):
         else:
             length = int(length)
 
-        if format == 0:
-            ret = None
+        ret = None
 
-        elif format == 8:
+        if format == 8:
             ret = (8, data[:length])
             data = data[length + ((4 - length % 4) % 4):]
 
@@ -892,8 +898,8 @@ class ResourceObj(object):
         self.check_value = None
 
     def parse_value(self, value, display):
-        # if not display:
-        #     return value
+        if not display:
+            return value
         c = display.get_resource_class(self.class_name)
         if c:
             return c(display, value)
@@ -937,6 +943,9 @@ class Struct(object):
     object to make conversion as fast as possible.  They are
     generated the first time the methods are called.
     """
+    name = ""
+    check_value = None  # type: Callable[[Any], Any] | None
+    keyword_args = False
 
     def __init__(self, *fields):
         self.fields = fields
@@ -1014,6 +1023,9 @@ class Struct(object):
         formats = {}
 
         for f in self.var_fields:
+            if not f.pack_value:
+                continue
+
             if f.keyword_args:
                 v, l, fm = f.pack_value(field_args[f.name], keys)
             else:
@@ -1287,13 +1299,13 @@ class TextElements16(TextElements8):
 
 
 class GetAttrData(object):
+    _data = {} # type: dict[str, object]
+    # GetAttrData classes get their attributes dynamically
+    # TODO: Complete all classes inheriting from GetAttrData
     def __getattr__(self, attr):
         try:
-            if self._data:
-                return self._data[attr]
-            else:
-                raise AttributeError(attr)
-        except KeyError:
+            return self._data[attr]
+        except (KeyError, AttributeError):
             raise AttributeError(attr)
 
 class DictWrapper(GetAttrData):
@@ -1341,6 +1353,7 @@ class DictWrapper(GetAttrData):
 
 
 class Request(object):
+    _request = None  # type: Struct
     def __init__(self, display, onerror = None, *args, **keys):
         self._errorhandler = onerror
         self._binary = self._request.to_binary(*args, **keys)
@@ -1354,11 +1367,11 @@ class Request(object):
             return 0
 
 class ReplyRequest(GetAttrData):
+    _request = None  # type: Struct
     def __init__(self, display, defer = False, *args, **keys):
         self._display = display
         self._binary = self._request.to_binary(*args, **keys)
         self._serial = None
-        self._data = None
         self._error = None
 
         self._response_lock = lock.allocate_lock()
@@ -1371,9 +1384,11 @@ class ReplyRequest(GetAttrData):
         # Send request and wait for reply if we hasn't
         # already got one.  This means that reply() can safely
         # be called more than one time.
+        if self._display is None:
+            raise TypeError
 
         self._response_lock.acquire()
-        while self._data is None and self._error is None:
+        while not self._data and self._error is None:
             self._display.send_recv_lock.acquire()
             self._response_lock.release()
 
@@ -1403,6 +1418,7 @@ class ReplyRequest(GetAttrData):
 
 
 class Event(GetAttrData):
+    _fields = None # type: Struct
     def __init__(self, binarydata = None, display = None,
                  **keys):
         if binarydata:
