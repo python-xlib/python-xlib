@@ -23,6 +23,9 @@
 # extname is the name of the extension according to the X
 # protocol.  extmod is the name of the module in this package.
 
+from . import (composite, damage, dpms, ge, nvcontrol, randr, record, res, screensaver, security, shape, xfixes,
+               xinerama, xinput, xtest)
+
 __extensions__ = [
     # We load this first so other extensions can register generic event data
     # structures.
@@ -43,4 +46,6 @@ __extensions__ = [
     ('MIT-SCREEN-SAVER', 'screensaver'),
     ]
 
-__all__ = map(lambda x: x[1], __extensions__)
+
+__all__ = ['ge', 'xtest', 'shape', 'xinerama', 'record', 'composite', 'randr',
+           'xfixes', 'security', 'xinput', 'nvcontrol', 'damage', 'dpms', 'res', 'screensaver']

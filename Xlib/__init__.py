@@ -19,6 +19,8 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+from . import XK, X, Xatom, Xcursorfont, Xutil, display, error, rdb
+
 __version__ = (0, 33)
 
 __version_extra__ = ''

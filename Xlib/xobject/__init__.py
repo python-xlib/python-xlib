@@ -19,6 +19,8 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+from . import colormap, cursor, drawable, fontable, icccm, resource
+
 __all__ = [
     'colormap',
     'cursor',
