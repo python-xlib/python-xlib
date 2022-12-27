@@ -19,7 +19,7 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-from Xlib import X, Xatom, Xutil
+from Xlib import X, Xatom
 from Xlib.protocol import request, rq
 
 # Other X resource objects
@@ -505,7 +505,7 @@ class Window(Drawable):
                                window = self.id,
                                property = property)
 
-    def get_property(self, property, property_type, offset, length, delete = 0):
+    def get_property(self, property, property_type, offset, length, delete = False):
         # type: (int, int, int, int, bool) -> request.GetProperty | None
         r = request.GetProperty(display = self.display,
                                 delete = delete,
@@ -576,7 +576,7 @@ class Window(Drawable):
                                  property = property,
                                  time = time)
 
-    def send_event(self, event, event_mask = 0, propagate = 0, onerror = None):
+    def send_event(self, event, event_mask = 0, propagate = False, onerror = None):
         # type: (rq.Event, int, bool, _ErrorHandler[object] | None) -> None
         request.SendEvent(display = self.display,
                           onerror = onerror,
@@ -700,7 +700,7 @@ class Window(Drawable):
                               focus = self.id,
                               time = time)
 
-    def clear_area(self, x = 0, y = 0, width = 0, height = 0, exposures = 0, onerror = None):
+    def clear_area(self, x = 0, y = 0, width = 0, height = 0, exposures = False, onerror = None):
         # type: (int, int, int, int, bool, _ErrorHandler[object] | None) -> None
         request.ClearArea(display = self.display,
                           onerror = onerror,

@@ -34,15 +34,13 @@ http://www.x.org/releases/X11R7.5/doc/randrproto/randrproto.txt
 """
 
 
-from tkinter import W
 from Xlib import X
-from Xlib.protocol import rq, structs
+from Xlib.protocol import rq
 try:
     from typing import TYPE_CHECKING
 except ImportError:
     TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from Xlib import error
     from Xlib.display import Display
     from Xlib.protocol import request
     from Xlib.xobject import resource, drawable

@@ -84,7 +84,7 @@ class XError(rq.GetAttrData, Exception):
 
     def __init__(self, display, data):
         # type: (display.Display, _SliceableBuffer) -> None
-        self._data, data = self._fields.parse_binary(data, display, rawdict = 1)
+        self._data, _ = self._fields.parse_binary(data, display, rawdict = True)
 
     def __str__(self):
         s = []

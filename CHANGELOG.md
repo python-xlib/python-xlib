@@ -1,5 +1,19 @@
 NEWS for Python X Library
 
+Version 0.33
+============
+
+Bug Fixes
+---------
+
+- Removed unused imports (thanks @Avasam).
+- Avoid to use fcntl module on some environments (thanks @i2y).
+- Change a test behavior for `unix_connect.get_socket` (thanks @i2y).
+- Fix accidental data change (thanks @Avasam).
+- Prefer `bool` over `Literal[0, 1, None]` (thanks @Avasam).
+- Change parentheses to brackets in LICENSE (thanks @mtelka).
+
+---
 Version 0.32
 ============
 

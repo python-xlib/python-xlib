@@ -33,7 +33,6 @@ also need RENDER or glX or some similar method of creating fancy
 graphics.
 """
 
-from Xlib import X
 from Xlib.protocol import rq
 from Xlib.xobject import drawable
 

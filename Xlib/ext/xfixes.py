@@ -25,7 +25,6 @@ A partial implementation of the XFIXES extension.  Only the HideCursor and
 ShowCursor requests and SelectionNotify events are provided.
 '''
 
-from Xlib import X
 from Xlib.protocol import rq, request
 from Xlib.display import Display
 from Xlib.xobject import resource, drawable
