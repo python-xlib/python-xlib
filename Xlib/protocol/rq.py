@@ -860,7 +860,7 @@ class EventField(ValueField):
         from . import event
 
         estruct = display.event_classes.get(byte2int(data) & 0x7f, event.AnyEvent)
-        if type(estruct) == dict:
+        if isinstance(estruct, dict):
             # this etype refers to a set of sub-events with individual subcodes
             estruct = estruct[indexbytes(data, 1)]
 
@@ -1078,7 +1078,7 @@ class Struct(object):
 
         """
 
-        if type(value) is tuple:
+        if isinstance(value, tuple):
             return self.to_binary(*value)
         elif isinstance(value, dict):
             return self.to_binary(**value)
@@ -1220,7 +1220,7 @@ class TextElements8(ValueField):
 
         for v in value:
             # Let values be simple strings, meaning a delta of 0
-            if type(v) in (str, bytes):
+            if isinstance(v, (str, bytes)):
                 v = (0, v)
 
             # A tuple, it should be (delta, string)
@@ -1373,7 +1373,7 @@ class ReplyRequest(GetAttrData):
         # be called more than one time.
 
         self._response_lock.acquire()
-        while self._data is None and self._error is None:
+        while not self._data and self._error is None:
             self._display.send_recv_lock.acquire()
             self._response_lock.release()
 

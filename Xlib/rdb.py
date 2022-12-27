@@ -70,7 +70,7 @@ class ResourceDB(object):
 
         """
 
-        if type(file) is bytes:
+        if isinstance(file, bytes):
             file = open(file, 'r')
 
         self.insert_string(file.read())
@@ -382,7 +382,7 @@ class _Match(object):
     def __init__(self, path, dbs):
         self.path = path
 
-        if type(dbs) is tuple:
+        if isinstance(dbs, tuple):
             self.skip = 0
             self.group = dbs
 
