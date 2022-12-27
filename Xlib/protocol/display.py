@@ -214,7 +214,7 @@ class Display(object):
 
             # Call send_and_recv, which will return when
             # something has occured
-            self.send_and_recv(event = 1)
+            self.send_and_recv(event = True)
 
             # Before looping around, lock the event queue against
             # modifications.
@@ -240,7 +240,7 @@ class Display(object):
 
         # Make a send_and_recv pass, receiving any events
         self.send_recv_lock.acquire()
-        self.send_and_recv(recv = 1)
+        self.send_and_recv(recv = True)
 
         # Lock the queue, get the event count, and unlock again.
         self.event_queue_write_lock.acquire()
@@ -252,7 +252,7 @@ class Display(object):
     def flush(self):
         self.check_for_error()
         self.send_recv_lock.acquire()
-        self.send_and_recv(flush = 1)
+        self.send_and_recv(flush = True)
 
     def close(self):
         self.flush()
@@ -384,7 +384,7 @@ class Display(object):
         self.socket_error_lock.release()
 
 
-    def send_and_recv(self, flush = None, event = None, request = None, recv = None):
+    def send_and_recv(self, flush = False, event = False, request = None, recv = False):
         """send_and_recv(flush = None, event = None, request = None, recv = None)
 
         Perform I/O, or wait for some other thread to do it for us.
@@ -402,7 +402,7 @@ class Display(object):
         To wait for an event to be received, event should be true.
 
         To wait for a response to a certain request (either an error
-        or a response), request should be set the that request's
+        or a response), request should be set to that request's
         serial number.
 
         To just read any pending data from the server, recv should be true.
@@ -689,8 +689,8 @@ class Display(object):
             return self.parse_connection_setup()
 
         # Parse ordinary server response
-        gotreq = 0
-        while 1:
+        gotreq = False
+        while True:
             if self.data_recv:
                 # Check the first byte to find out what kind of response it is
                 rtype = byte2int(self.data_recv)
@@ -772,7 +772,7 @@ class Display(object):
             else:
                 self.default_error_handler(e)
 
-            return 0
+            return False
 
 
     def default_error_handler(self, err):
@@ -937,7 +937,7 @@ class Display(object):
         # Only the ConnectionSetupRequest has been sent so far
         r = self.sent_requests[0]
 
-        while 1:
+        while True:
             # print 'data_send:', repr(self.data_send)
             # print 'data_recv:', repr(self.data_recv)
 
@@ -946,7 +946,7 @@ class Display(object):
 
                 # The full response haven't arrived yet
                 if len(self.data_recv) < alen:
-                    return 0
+                    return False
 
                 # Connection failed or further authentication is needed.
                 # Set reason to the reason string
@@ -956,22 +956,22 @@ class Display(object):
                 # Else connection succeeded, parse the reply
                 else:
                     x, d = r._success_reply.parse_binary(self.data_recv[:alen],
-                                                         self, rawdict = 1)
+                                                         self, rawdict = True)
                     r._data.update(x)
 
                 del self.sent_requests[0]
 
                 self.data_recv = self.data_recv[alen:]
 
-                return 1
+                return True
 
             else:
                 # The base reply is 8 bytes long
                 if len(self.data_recv) < 8:
-                    return 0
+                    return False
 
                 r._data, d = r._reply.parse_binary(self.data_recv[:8],
-                                                   self, rawdict = 1)
+                                                   self, rawdict = True)
                 self.data_recv = self.data_recv[8:]
 
                 # Loop around to see if we have got the additional data
@@ -1066,7 +1066,7 @@ class ConnectionSetupRequest(rq.GetAttrData):
         # Don't bother about locking, since no other threads have
         # access to the display yet
 
-        display.request_queue.append((self, 1))
+        display.request_queue.append((self, True))
 
         # However, we must lock send_and_recv, but we don't have
         # to loop.

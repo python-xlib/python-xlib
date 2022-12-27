@@ -70,7 +70,7 @@ class _BaseDisplay(protocol_display.Display):
         protocol_display.Display.__init__(self, *args, **keys)
         self._atom_cache = {}
 
-    def get_atom(self, atomname, only_if_exists=0):
+    def get_atom(self, atomname, only_if_exists=False):
         if atomname in self._atom_cache:
             return self._atom_cache[atomname]
 
@@ -472,7 +472,7 @@ class Display(object):
     ### X requests
     ###
 
-    def intern_atom(self, name, only_if_exists = 0):
+    def intern_atom(self, name, only_if_exists = False):
         """Intern the string name, returning its atom number. If
         only_if_exists is true and the atom does not already exist, it
         will not be created and X.NONE is returned."""
@@ -481,7 +481,7 @@ class Display(object):
                                only_if_exists = only_if_exists)
         return r.atom
 
-    def get_atom(self, atom, only_if_exists = 0):
+    def get_atom(self, atom, only_if_exists = False):
         """Alias for intern_atom, using internal cache"""
         return self.display.get_atom(atom, only_if_exists)
 
@@ -500,7 +500,7 @@ class Display(object):
                                       selection = selection)
         return r.owner
 
-    def send_event(self, destination, event, event_mask = 0, propagate = 0,
+    def send_event(self, destination, event, event_mask = 0, propagate = False,
                    onerror = None):
         """Send a synthetic event to the window destination which can be
         a window object, or X.PointerWindow or X.InputFocus. event is the

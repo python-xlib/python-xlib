@@ -21,7 +21,7 @@
 
 from . import XK, X, Xatom, Xcursorfont, Xutil, display, error, rdb
 
-__version__ = (0, 32)
+__version__ = (0, 33)
 
 __version_extra__ = ''
 
