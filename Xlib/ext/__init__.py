@@ -44,7 +44,7 @@ __extensions__ = [
     ('DPMS', 'dpms'),
     ('X-Resource', 'res'),
     ('MIT-SCREEN-SAVER', 'screensaver'),
-]
+    ]
 
 
 __all__ = ['ge', 'xtest', 'shape', 'xinerama', 'record', 'composite', 'randr',
