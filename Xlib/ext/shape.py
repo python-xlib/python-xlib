@@ -204,7 +204,6 @@ def combine(self, operation, destination_kind, source_kind, x_offset, y_offset, 
     Combine(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
-        source_window=source_window
         destination_window=self,
         operation=operation,
         destination_kind=destination_kind,
