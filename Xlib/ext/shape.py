@@ -200,16 +200,18 @@ class Event:
     # Sub events.
     Notify = 0
 
-def combine(self, operation, destination_kind, source_kind, x_offset, y_offset):
+def combine(self, operation, destination_kind, source_kind, x_offset, y_offset, source_window):
     Combine(
         display=self.display,
         opcode=self.display.get_extension_major(extname),
-        source_window=self,
+        source_window=source_window
+        destination_window=self,
         operation=operation,
         destination_kind=destination_kind,
         source_kind=source_kind,
         x_offset=x_offset,
         y_offset=y_offset,
+        source_window=source_window
     )
 
 def get_rectangles(self, source_kind):
