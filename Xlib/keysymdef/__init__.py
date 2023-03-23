@@ -22,6 +22,7 @@
 __all__ = [
     'apl',
     'arabic',
+    'currency',
     'cyrillic',
     'greek',
     'hebrew',
