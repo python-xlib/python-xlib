@@ -295,10 +295,7 @@ class Resource(Card32):
         self.codes = codes
 
     def check_value(self, value):
-        if hasattr(value, self.cast_function):
-            return getattr(value, self.cast_function)()
-        else:
-            return value
+        return getattr(value, self.cast_function, lambda: value)()
 
     def parse_value(self, value, display):
         # if not display:
@@ -860,7 +857,7 @@ class EventField(ValueField):
         from . import event
 
         estruct = display.event_classes.get(byte2int(data) & 0x7f, event.AnyEvent)
-        if type(estruct) == dict:
+        if isinstance(estruct, dict):
             # this etype refers to a set of sub-events with individual subcodes
             estruct = estruct[indexbytes(data, 1)]
 
@@ -1078,7 +1075,7 @@ class Struct(object):
 
         """
 
-        if type(value) is tuple:
+        if isinstance(value, tuple):
             return self.to_binary(*value)
         elif isinstance(value, dict):
             return self.to_binary(**value)
@@ -1220,7 +1217,7 @@ class TextElements8(ValueField):
 
         for v in value:
             # Let values be simple strings, meaning a delta of 0
-            if type(v) in (str, bytes):
+            if isinstance(v, (str, bytes)):
                 v = (0, v)
 
             # A tuple, it should be (delta, string)

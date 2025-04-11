@@ -326,13 +326,13 @@ class Display(object):
         return self.extension_major_opcodes[extname]
 
     def add_extension_event(self, code, evt, subcode=None):
-       if subcode == None:
-           self.event_classes[code] = evt
-       else:
-           if not code in self.event_classes:
-               self.event_classes[code] = {subcode: evt}
-           else:
-               self.event_classes[code][subcode] = evt
+        if subcode is None:
+            self.event_classes[code] = evt
+        else:
+            if not code in self.event_classes:
+                self.event_classes[code] = {subcode: evt}
+            else:
+                self.event_classes[code][subcode] = evt
 
     def add_extension_error(self, code, err):
         self.error_classes[code] = err
@@ -820,11 +820,11 @@ class Display(object):
             length = 32
 
         estruct = self.event_classes.get(etype, event.AnyEvent)
-        if type(estruct) == dict:
+        if isinstance(estruct, dict):
             subcode = self.data_recv[1]
 
             # Python2 compatibility
-            if type(subcode) == str:
+            if isinstance(subcode, str):
                 subcode = ord(subcode)
 
             # this etype refers to a set of sub-events with individual subcodes

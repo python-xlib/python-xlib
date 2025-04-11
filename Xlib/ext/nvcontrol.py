@@ -302,7 +302,7 @@ def get_cooler_manual_control_enabled(self, target):
 
 
 def set_cooler_manual_control_enabled(self, target, enabled):
-    return set_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL, 1 if enabled else 0) == 1
+    return set_int_attribute(self, target, 0, NV_CTRL_GPU_COOLER_MANUAL_CONTROL, 1 if enabled else 0)
 
 
 def get_fan_duty(self, target):
