@@ -27,10 +27,6 @@ Simple demo for the RECORD extension
 Not very much unlike the xmacrorec2 program in the xmacro package.
 '''
 
-
-# Python 2/3 compatibility.
-from __future__ import print_function
-
 import sys
 import os
 

@@ -1,8 +1,5 @@
 #!/usr/bin/python
 
-# Python 2/3 compatibility.
-from __future__ import print_function
-
 import sys
 import os
 

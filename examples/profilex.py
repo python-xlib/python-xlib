@@ -3,10 +3,6 @@
 # Program to generate profiling data.  Run with one argument,
 # the profile stats file to generate.
 
-
-# Python 2/3 compatibility.
-from __future__ import print_function
-
 import sys
 import os
 

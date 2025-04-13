@@ -23,9 +23,6 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-# Python 2/3 compatibility.
-from __future__ import print_function
-
 import sys
 from Xlib.display import Display
 from Xlib.ext import xfixes

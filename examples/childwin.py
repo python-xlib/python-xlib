@@ -22,9 +22,6 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-# Python 2/3 compatibility.
-from __future__ import print_function
-
 import sys
 import os
 
@@ -34,7 +31,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from Xlib import X, display, Xutil
 
 # Application window
-class Window(object):
+class Window:
 	def __init__(self, display):
 		self.d = display
 

@@ -24,8 +24,8 @@ GPL v2.
 Requirements
 ~~~~~~~~~~~~
 
-The Python X Library requires Python 2.7 or newer. It has been tested to
-various extents with Python 2.7 and 3.3 through 3.6.
+The Python X Library requires Python 3.6 or newer. It has been tested to
+various extents with Python 3.6 through 3.12.
 
 The Python X Library will only work on systems that have an X server installed,
 such as most Linux distros, but will not work on Windows or MacOS.

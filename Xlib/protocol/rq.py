@@ -25,8 +25,9 @@ import traceback
 import struct
 from array import array
 
-# Python 2/3 compatibility.
-from six import PY3, binary_type, byte2int, indexbytes, iterbytes
+import operator
+byte2int = operator.itemgetter(0)
+indexbytes = operator.getitem
 
 # Xlib modules
 from .. import X
@@ -36,12 +37,8 @@ from ..support import lock
 def decode_string(bs):
     return bs.decode('latin1')
 
-if PY3:
-    def encode_array(a):
-        return a.tobytes()
-else:
-    def encode_array(a):
-        return a.tostring()
+def encode_array(a):
+    return a.tobytes()
 
 
 class BadDataError(Exception): pass
@@ -456,7 +453,7 @@ class String16(ValueField):
     def pack_value(self, val):
         """Convert 8-byte string into 16-byte list"""
         if isinstance(val, bytes):
-            val = list(iterbytes(val))
+            val = list(iter(val))
 
         slen = len(val)
 
@@ -676,7 +673,7 @@ class PropertyData(ValueField):
         if fmt not in (8, 16, 32):
             raise BadDataError('Invalid property data format {0}'.format(fmt))
 
-        if isinstance(val, binary_type):
+        if isinstance(val, bytes):
             size = fmt // 8
             vlen = len(val)
             if vlen % size:

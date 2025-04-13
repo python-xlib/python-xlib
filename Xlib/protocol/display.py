@@ -29,8 +29,9 @@ import socket
 import struct
 import sys
 
-# Python 2/3 compatibility.
-from six import PY3, byte2int, indexbytes
+import operator
+byte2int = operator.itemgetter(0)
+indexbytes = operator.getitem
 
 # Xlib modules
 from .. import error
@@ -42,9 +43,8 @@ from ..support import lock, connect
 from . import rq
 from . import event
 
-if PY3:
 
-    class bytesview(object):
+class bytesview:
 
         def __init__(self, data, offset=0, size=None):
             if size is None:
@@ -64,16 +64,6 @@ if PY3:
             if isinstance(key, slice):
                 return bytes(self.view[key])
             return self.view[key]
-
-else:
-
-    def bytesview(data, offset=0, size=None):
-        if not isinstance(data, (bytes, buffer)):
-            raise TypeError('unsupported type: {}'.format(type(data)))
-        if size is None:
-            size = len(data)-offset
-        return buffer(data, offset, size)
-
 
 class Display(object):
     extension_major_opcodes = {}

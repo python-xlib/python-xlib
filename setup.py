@@ -10,7 +10,6 @@ assert setuptools_version in setuptools_require, '{} is required'.format(setupto
 
 
 setup(
-    install_requires=['six>=1.10.0'],
     setup_requires=['setuptools-scm'],
     packages=[
         'Xlib',

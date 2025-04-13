@@ -28,9 +28,6 @@ import sys
 import array
 import struct
 
-# Python 2/3 compatibility.
-from six import integer_types
-
 from Xlib.protocol import rq
 from Xlib import X
 
@@ -218,7 +215,7 @@ class Mask(rq.List):
 
         mask_seq = array.array(rq.struct_to_array_codes['L'])
 
-        if isinstance(val, integer_types):
+        if isinstance(val, int):
             # We need to build a "binary mask" that (as far as I can tell) is
             # encoded in native byte order from end to end.  The simple case is
             # with a single unsigned 32-bit value, for which we construct an

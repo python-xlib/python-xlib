@@ -5,8 +5,6 @@ import struct
 import types
 import re
 
-from six import binary_type, iterbytes
-
 from Xlib.protocol import rq
 from . import DummyDisplay, TestCase
 
@@ -85,7 +83,7 @@ def _struct_test(name, fields):
                 values_in[field_name] = field_value_in
             if field_value_out is not None:
                 values_out[field_name] = field_value_out
-        if isinstance(field_binary, binary_type):
+        if isinstance(field_binary, bytes):
             binary += field_binary
         elif isinstance(field_binary, (types.FunctionType, types.LambdaType, partial)):
             binary += field_binary(field_value_in)
@@ -167,7 +165,7 @@ _struct_test('simple string16', (
     (None, lambda name: rq.LengthOf('s2', 2)   , None            , pack('H', 3) ),
     ('s1', lambda name: rq.String16(name, pad=0), (0, 1, 2), lambda s: struct.pack('>' + 'H' * len(s), *s)),
     # An 8-bits string is also allowed on input.
-    ('s2', lambda name: rq.String16(name, pad=0), b'\x03\x04\x05', lambda s: struct.pack('>' + 'H' * len(s), *iterbytes(s)), (3, 4, 5)),
+    ('s2', lambda name: rq.String16(name, pad=0), b'\x03\x04\x05', lambda s: struct.pack('>' + 'H' * len(s), *iter(s)), (3, 4, 5)),
 ))
 
 _struct_test('binary', (

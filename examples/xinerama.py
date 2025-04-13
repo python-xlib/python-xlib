@@ -21,10 +21,6 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
-
-# Python 2/3 compatibility.
-from __future__ import print_function
-
 import sys
 import os
 import pprint
@@ -36,7 +32,7 @@ from Xlib import X, display, Xutil
 from Xlib.ext import xinerama
 
 # Application window (only one)
-class Window(object):
+class Window:
     def __init__(self, display):
         self.d = display
 
