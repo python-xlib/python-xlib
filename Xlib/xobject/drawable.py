@@ -435,6 +435,25 @@ class Window(Drawable):
                                type = property_type,
                                data = (format, data))
 
+    def change_full_property(self, property, property_type, format, data, onerror = None):
+        maxlen = (self.display.info.max_request_length << 2) \
+            - request.ChangeProperty._request.static_size
+        mode = X.PropModeReplace
+        if maxlen >= len(data):
+            self.change_property(property, property_type, format,
+                                 data, mode, onerror)
+        else:
+            off = 0
+            self.display.grab_server()
+            try:
+                while off < len(data) - 1:
+                    self.change_property(property, property_type, format,
+                                         data[off:off + maxlen], mode, onerror)
+                    mode = X.PropModeAppend
+                    off += maxlen
+            finally:
+                self.display.ungrab_server()
+
     def change_text_property(self, property, property_type, data,
                         mode = X.PropModeReplace, onerror = None):
         if not isinstance(data, bytes):
@@ -444,6 +463,14 @@ class Window(Drawable):
                 data = data.encode(self._UTF8_STRING_ENCODING)
         self.change_property(property, property_type, 8, data,
                              mode=mode, onerror=onerror)
+
+    def change_full_text_property(self, property, property_type, data, onerror = None):
+        if not isinstance(data, bytes):
+            if property_type == Xatom.STRING:
+                data = data.encode(self._STRING_ENCODING)
+            elif property_type == self.display.get_atom('UTF8_STRING'):
+                data = data.encode(self._UTF8_STRING_ENCODING)
+        self.change_property(property, property_type, 8, data, onerror=onerror)
 
     def delete_property(self, property, onerror = None):
         request.DeleteProperty(display = self.display,
