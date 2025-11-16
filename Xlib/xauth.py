@@ -21,6 +21,7 @@
 
 import os
 import struct
+import sys
 
 from Xlib import X, error
 
@@ -89,10 +90,10 @@ class Xauthority(object):
 
                 self.entries.append((family, addr, num, name, data))
         except struct.error:
-            print("Xlib.xauth: warning, failed to parse part of xauthority file {0}, aborting all further parsing".format(filename))
+            print("Xlib.xauth: warning, failed to parse part of xauthority file {0}, aborting all further parsing".format(filename), file=sys.stderr)
 
         if len(self.entries) == 0:
-            print("Xlib.xauth: warning, no xauthority details available")
+            print("Xlib.xauth: warning, no xauthority details available", file=sys.stderr)
             # raise an error?  this should get partially caught by the XNoAuthError in get_best_auth..
 
     def __len__(self):
