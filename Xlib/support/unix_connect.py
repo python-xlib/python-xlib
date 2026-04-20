@@ -23,6 +23,7 @@ import re
 import os
 import platform
 import socket
+import tempfile
 from Xlib import error, xauth
 
 
@@ -96,7 +97,7 @@ def get_socket(dname, protocol, host, dno):
 
         # Unix socket.
         else:
-            address = '/tmp/.X11-unix/X%d' % dno
+            address = os.path.join(tempfile.gettempdir(), '.X11-unix', 'X%d' % dno)
             if not os.path.exists(address):
                 # Use abstract address.
                 address = '\0' + address
