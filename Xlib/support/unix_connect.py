@@ -73,13 +73,21 @@ def get_display(display):
 
 def _get_tcp_socket(host, dno):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host, 6000 + dno))
+    try:
+        s.connect((host, 6000 + dno))
+    except Exception:
+        s.close()
+        raise
     return s
 
 
 def _get_unix_socket(address):
     s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    s.connect(address)
+    try:
+        s.connect(address)
+    except Exception:
+        s.close()
+        raise
     return s
 
 

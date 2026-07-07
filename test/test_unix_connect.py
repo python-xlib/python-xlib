@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*
 
 from functools import partial
+import gc
 import socket
 import sys
 import unittest
+import warnings
 
 from mock import patch
 
@@ -151,6 +153,22 @@ class TestUnixConnect(unittest.TestCase):
                     self.assertIsInstance(s, FakeSocket)
                     expected_calls.append(('ensure_not_inheritable', s))
                 self.assertEqual(calls, expected_calls)
+
+    def test_leaking_sockets(self):
+        with warnings.catch_warnings():
+            warnings.simplefilter("error", ResourceWarning)
+            try:
+                unix_connect._get_tcp_socket("invalid!", 0x10000)
+            except:
+                pass
+            finally:
+                gc.collect()
+            try:
+                unix_connect._get_unix_socket(f"/tmp/too_long_socket_name{' ' * 1024}")
+            except:
+                pass
+            finally:
+                gc.collect()
 
 
 if __name__ == '__main__':
