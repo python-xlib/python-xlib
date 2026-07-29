@@ -1034,7 +1034,7 @@ class SetPanning(rq.ReplyRequest):
         rq.Pad(20),
         )
 
-def set_panning(self, crtc, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_width, border_height, timestamp=X.CurrentTime):
+def set_panning(self, crtc, left, top, width, height, track_left, track_top, track_width, track_height, border_left, border_top, border_right, border_bottom, timestamp=X.CurrentTime):
     return SetPanning (
         display=self.display,
         opcode=self.display.get_extension_major(extname),
@@ -1049,8 +1049,8 @@ def set_panning(self, crtc, left, top, width, height, track_left, track_top, tra
         track_height=track_height,
         border_left=border_left,
         border_top=border_top,
-        border_width=border_width,
-        border_height=border_height,
+        border_right=border_right,
+        border_bottom=border_bottom,
         timestamp=timestamp,
         )
 
