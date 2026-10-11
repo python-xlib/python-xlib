@@ -30,6 +30,7 @@ FamilyChaos = X.FamilyChaos
 FamilyServerInterpreted = X.FamilyServerInterpreted
 FamilyInternetV6 = X.FamilyInternetV6
 FamilyLocal = 256
+FamilyWild = 0xFFFF
 
 class Xauthority(object):
     def __init__(self, filename = None):
@@ -120,10 +121,12 @@ class Xauthority(object):
         matches = {}
 
         for efam, eaddr, enum, ename, edata in self.entries:
-            if enum == b'' and ename not in matches:
-                enum = num
-            if efam == family and eaddr == address and num == enum:
-                matches[ename] = edata
+            # As in libXau's XauGetBestAuthByAddr: a FamilyWild entry
+            # matches any family and address, and an empty entry number
+            # matches any display number.
+            if efam == FamilyWild or (efam == family and eaddr == address):
+                if enum == b'' or enum == num:
+                    matches[ename] = edata
 
         for t in types:
             try:
