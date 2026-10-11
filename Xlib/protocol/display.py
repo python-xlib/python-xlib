@@ -317,7 +317,7 @@ class Display(object):
         CLASS_NAME, or DEFAULT if no such class is set.
         """
 
-        return self.resource_classes.get(class_name, default)
+        return getattr(self, 'resource_classes', {}).get(class_name, default)
 
     def set_extension_major(self, extname, major):
         self.extension_major_opcodes[extname] = major
