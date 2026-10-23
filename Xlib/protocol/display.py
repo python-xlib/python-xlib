@@ -131,6 +131,8 @@ class Display(object):
         self.recv_packet_len = 0
         self.data_send = b''
         self.data_recv = b''
+        self._data_recv_pending = []
+        self._data_recv_pending_len = 0
         self.data_sent_bytes = 0
 
         # Resource ID structures
@@ -374,6 +376,7 @@ class Display(object):
         self.event_queue = None
         self.data_send = None
         self.data_recv = None
+        self._data_recv_pending = None
 
         # Close the connection
         self.socket.close()
@@ -596,7 +599,8 @@ class Display(object):
                 # We're the receiving thread, parse the data
                 if receiving:
                     try:
-                        count = self.recv_packet_len - len(self.data_recv)
+                        count = (self.recv_packet_len - len(self.data_recv)
+                                 - self._data_recv_pending_len)
                         count = max(self.recv_buffer_size, count)
                         bytes_recv = self.socket.recv(count)
                     except socket.error as err:
@@ -608,8 +612,20 @@ class Display(object):
                         self.close_internal('server')
                         raise self.socket_error
 
-                    self.data_recv = bytes(self.data_recv) + bytes_recv
-                    gotreq = self.parse_response(request)
+                    # Concatenating each chunk as it arrives is quadratic for
+                    # large replies (e.g. GetImage), so hold the chunks until
+                    # the packet being received is complete.
+                    self._data_recv_pending.append(bytes_recv)
+                    self._data_recv_pending_len = self._data_recv_pending_len + len(bytes_recv)
+                    if (self.recv_packet_len and len(self.data_recv)
+                            + self._data_recv_pending_len < self.recv_packet_len):
+                        gotreq = 0
+                    else:
+                        self.data_recv = b''.join([bytes(self.data_recv)]
+                                                  + self._data_recv_pending)
+                        self._data_recv_pending = []
+                        self._data_recv_pending_len = 0
+                        gotreq = self.parse_response(request)
 
                 # Otherwise return, allowing the calling thread to figure
                 # out if it has got the data it needs
