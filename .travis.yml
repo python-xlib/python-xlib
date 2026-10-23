@@ -16,7 +16,8 @@ install:
 
 # command to run tests
 script:
-  python -W all runtests.py --with-coverage --cover-html --cover-html-dir=Coverage_report
+  - python -W all -m coverage run runtests.py
+  - coverage html -d Coverage_report
 
 after_success:
   - codecov

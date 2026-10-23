@@ -8,9 +8,7 @@ import signal
 import subprocess
 import sys
 import tempfile
-import textwrap
-
-from pkg_resources import load_entry_point
+import unittest
 
 
 class SigException(BaseException):
@@ -38,42 +36,24 @@ def xserver_start(display, executable='Xvfb', authfile=None):
     print('starting xserver: `{0}`'.format(' '.join(cmd)))
     os.execlp(cmd[0], *cmd)
 
-def tests_run(display, authfile=None):
-    pid = os.fork()
-    if pid != 0:
-        return pid
+def tests_run(display, authfile=None, test_names=()):
+    # Run in this process (not a fork) so `coverage run runtests.py` sees the tests.
     if authfile is None:
         authfile = os.devnull
     os.environ['DISPLAY'] = display
     os.environ['XAUTHORITY'] = authfile
-    cmd = [
-        sys.executable,
-        '-c', textwrap.dedent(
-            '''
-            from pkg_resources import load_entry_point
-            sys.exit(load_entry_point(
-                'nose', 'console_scripts', 'nosetests',
-            )())
-            '''
-        ).lstrip(),
-        '--exe', '--with-xunit', '--verbosity=3',
-    ]
-    has_custom_tests = False
-    for arg in sys.argv[1:]:
-        if not arg.startswith('-'):
-            has_custom_tests = True
-        cmd.append(arg)
-    if not has_custom_tests:
-        cmd.extend(('test/', 'examples/run_examples.py'))
-    print('running tests: `{0}`'.format(' '.join(cmd)))
-    sys.argv = cmd
-    try:
-        load_entry_point('nose', 'console_scripts', 'nosetests')()
-    except SystemExit as err:
-        code = err.code
+    loader = unittest.TestLoader()
+    if test_names:
+        print('running tests: `{0}`'.format(' '.join(test_names)))
+        suite = loader.loadTestsFromNames(test_names)
     else:
-        code = 0
-    os._exit(code)
+        print('running tests: `test/`, `examples/run_examples.py`')
+        suite = unittest.TestSuite((
+            loader.discover('test', top_level_dir='.'),
+            # `examples` is not a package, so it is its own top level directory.
+            loader.discover('examples', pattern='run_examples.py', top_level_dir='examples'),
+        ))
+    return unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful()
 
 
 def runtests():
@@ -117,10 +97,8 @@ def runtests():
             signal.alarm(0)
 
         # Run tests.
-        tests_pid = tests_run(server_display, authfile=authfile.name)
-        pid, status = os.waitpid(tests_pid, 0)
-        assert pid == tests_pid
-        sys.exit(status >> 8)
+        success = tests_run(server_display, authfile=authfile.name, test_names=sys.argv[1:])
+        sys.exit(0 if success else 1)
 
     except KeyboardInterrupt:
         sys.exit(1)
