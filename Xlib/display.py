@@ -26,7 +26,6 @@ import types
 from six import create_unbound_method
 
 # Xlib modules
-from . import error
 from . import ext
 from . import X
 
@@ -949,3 +948,6 @@ hosts
         """Do nothing but send a request to the server."""
         request.NoOperation(display = self.display,
                             onerror = onerror)
+
+# Late import because of circular dependency
+from . import error

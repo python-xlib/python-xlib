@@ -19,6 +19,9 @@
 #    Suite 330,
 #    Boston, MA 02111-1307 USA
 
+from . import (apl, arabic, cyrillic, greek, hebrew, katakana, korean, latin1, latin2, latin3, latin4,  miscellany,
+               publishing, special, technical, thai, xf86, xk3270, xkb)
+
 __all__ = [
     'apl',
     'arabic',
