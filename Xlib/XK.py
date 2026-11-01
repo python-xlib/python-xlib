@@ -25,6 +25,8 @@
 
 from Xlib.X import NoSymbol
 
+TYPE_CHECKING = False
+
 def string_to_keysym(keysym):
     '''Return the (16 bit) numeric code of keysym.
 
@@ -64,7 +66,11 @@ def _load_keysyms_into_XK(mod):
 
 # Always import miscellany and latin1 keysyms
 load_keysym_group('miscellany')
+if TYPE_CHECKING:
+    from Xlib.keysymdef.miscellany import *
 load_keysym_group('latin1')
+if TYPE_CHECKING:
+    from Xlib.keysymdef.latin1 import *
 
 
 def keysym_to_string(keysym):

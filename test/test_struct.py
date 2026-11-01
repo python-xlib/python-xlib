@@ -5,9 +5,11 @@ import struct
 import types
 import re
 
+from mock import Mock
 from six import binary_type, iterbytes
 
 from Xlib.protocol import rq
+from Xlib.support import lock
 from . import DummyDisplay, TestCase
 
 
@@ -195,3 +197,64 @@ _struct_test('fixed binary', (
     # Make sure fixed binary fields are handled as static fields.
     ('c8', rq.Card8, 0x42, partial(pack, 'B')),
 ))
+
+
+class TestResourceParseValue(TestCase):
+    """ Resource fields return the raw id when there is no display to look up a class with. """
+
+    def test_resource_without_display(self):
+        self.assertEqual(rq.Window('w').parse_value(42, None), 42)
+
+    def test_resource_obj_without_display(self):
+        self.assertEqual(rq.ResourceObj('window').parse_value(42, None), 42)
+
+
+class ParseOnly(rq.ValueField):
+    """ A variable size field without pack_value, like xinput.ButtonState. """
+    structcode = None
+
+    def parse_binary_value(self, data, display, length, format):
+        return data, b''
+
+
+class TestStructWithParseOnlyField(TestCase):
+
+    def setUp(self):
+        self.struct = rq.Struct(rq.Card8('c8'), ParseOnly('po'))
+
+    def test_parse_binary(self):
+        values, remain = self.struct.parse_binary(pack('B', 0x42) + b'data', dummy_display)
+        self.assertEqual(values, rq.DictWrapper({'c8': 0x42, 'po': b'data'}))
+        self.assertBinaryEmpty(remain)
+
+    def test_to_binary_names_the_field(self):
+        with self.assertRaises(RuntimeError) as cm:
+            self.struct.to_binary(c8=0x42, po=b'data')
+        self.assertIn('po (ParseOnly)', str(cm.exception))
+
+
+class TestPropertyData(TestCase):
+
+    def test_format_0_has_no_data(self):
+        field = rq.PropertyData('value')
+        for length in (0, None):
+            self.assertEqual(field.parse_binary_value(b'rest', dummy_display, length, 0), (None, b'rest'))
+
+    def test_invalid_format(self):
+        with self.assertRaises(rq.BadDataError):
+            rq.PropertyData('value').parse_binary_value(b'rest', dummy_display, 1, 24)
+
+
+class TestReplyRequest(TestCase):
+
+    def test_reply_already_received_as_empty_list(self):
+        """ ListFontsWithInfo stores [] when no font matches, which is still a reply. """
+        req = rq.ReplyRequest.__new__(rq.ReplyRequest)
+        req._display = Mock()
+        req._display.send_and_recv.side_effect = AssertionError('waited for a reply that already arrived')
+        req._serial = 1
+        req._data = []
+        req._error = None
+        req._response_lock = lock.allocate_lock()
+        req.reply()
+        self.assertIsNone(req._display)
